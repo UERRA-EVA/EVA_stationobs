@@ -1,7 +1,7 @@
 #' @title Compute the distance on a sphere
-#' @description \code(getNearest) computes the distance on the surface of a sphere;
-#' the idea was taken from (Wikipedia, Orthodrome) and coded by L. bierdel and S.
-#' Bentzien in 2011 of Uni Bonn.
+#' @description \code{getNearest} computes the distance on the surface of a sphere;
+#'   the idea was taken from (Wikipedia, Orthodrome) and coded by L. bierdel and S.
+#'   Bentzien in 2011 of Uni Bonn.
 #' @param b1 latitude of station
 #' @param b2 latitude of gridpoints
 #' @param l1 longitude of station
@@ -49,7 +49,7 @@ getNearest <- function(b1,b2,l1,l2){
 #' @param herz.tsstart is the start date of HErZ data
 #' @param herz.tsend is the end date of the HErZ data
 #' @return MM.station[timestr] is the potentially gab filled monthly mean station
-#' data spanning the time period of the longest ranging reanalysis time series.
+#'   data spanning the time period of the longest ranging reanalysis time series.
 ExtractStationData <- function(station.data, era20c.tsstart, era20c.tsend,
                                eraI.tsstart, eraI.tsend, herz.tsstart, herz.tsend,
                                daily=FALSE) {
@@ -108,20 +108,20 @@ ExtractStationData <- function(station.data, era20c.tsstart, era20c.tsend,
 
 #' @title Extract ERA pixel corresponding to station location.
 #' @description \code{ExtractERAxts} extracts the nearest pixel of a provided data
-#' set (reanalysis) given the station location (lon, lat).
+#'   set (reanalysis) given the station location (lon, lat).
 #' @param data data set (reanalysis) from which to extract the time series at the
-#' station location
+#'   station location
 #' @param time.vales time period covered by the data set
 #' @param lon longitude grid points of the data set
 #' @param lat latitude grid points of the data set
 #' @param tsstart character string of the format (YYYY,M) of the start date of the
-#' data set time series
+#'   data set time series
 #' @param tsend character string as above of the end date of the data set
 #' @param stat.lon station longitude
 #' @param stat.lat station latitude
 #' @return era.xts[timestr] is the time series extracted off the data set at the
-#' pixel corresponding to the provided station location
-#' Extract nearest pixel of reanalysis corresponding to station lon, lat.
+#'   pixel corresponding to the provided station location
+#'   Extract nearest pixel of reanalysis corresponding to station lon, lat.
 ExtractERAxts <- function(data, time.vals,
                           lon, lat, tsstart, tsend, stat.lon, stat.lat) {
 
@@ -147,22 +147,22 @@ ExtractERAxts <- function(data, time.vals,
 
 #' @title Extract HErZ pixel corresponding to station location.
 #' @description \code{ExtractHErZxts} extracts the time series of the HErZ pixel
-#' corresponding to the station location. HErZ data come in an irregular polar
-#' projection which calls for a function to extract the correct pixel off that grid.
+#'   corresponding to the station location. HErZ data come in an irregular polar
+#'   projection which calls for a function to extract the correct pixel off that grid.
 #' @param herz.data is the HErZ data set from which to extract the time series at the
-#' station location
+#'   station location
 #' @param time.vales time period covered by the HErZ data set
 #' @param herz.lon longitude grid points of the HErZ data set
 #' @param herz.lat latitude grid points of the HErZ data set
 #' @param tsstart character string of the format (YYYY,M) of the start date of the
-#' HErZ data set time series
+#'   HErZ data set time series
 #' @param tsend character string as above of the end date of the HErZ data set
 #' @param stat.lon station longitude
 #' @param stat.lat station latitude
 #' @return herz.xts[timestr]is the time series extracted off the HErZ reanalysis at
-#' the pixel corresponding to the provided station location
-#' Extract nearest HErZ pixel corresponding to station lon, lat calling Uni Bonn
-#' function getNearest.
+#'   the pixel corresponding to the provided station location
+#'   Extract nearest HErZ pixel corresponding to station lon, lat calling Uni Bonn
+#'   function getNearest.
 ExtractHErZxts <- function(herz.data, time.vals,
                            herz.lon, herz.lat, tsstart, tsend, stat.lon, stat.lat) {
 

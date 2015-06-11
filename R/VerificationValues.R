@@ -1,11 +1,12 @@
 
-
-#' paper: Identifying added value in high-resolution climate simulations over
-#' Scandinavia, Mayer et al., 2015, tellus
-#' @title
-#' @description
-#' @param
-#' @return
+#' @title A PDF based skill score.
+#' @description This skill score is descripted in the paper by Mayer et al., 2015,
+#'   Identifying added value in high-resolution climate simulations over Scandinavia,
+#'   Tellus. It compares the PDFs of two populations, in this case here that of two
+#'   reanalysis data products, or one reanalyis and one measurement data product.
+#' @param xts1,xts2 are the two time series from which a PDF is determined and
+#'   the PDF skill score calcualted
+#' @return pdfscore is the PDF skill score
 PDFscore <- function(xts1, xts2) {
 
   min.step = 0
@@ -30,13 +31,18 @@ PDFscore <- function(xts1, xts2) {
 
 #-----------------------------------------------------------------------------------
 
-
-#' Determine correlations between time series if it is possible, i.e., if they spand
-#' the same time period. Otherwise return NA.
-#' @title
-#' @description
-#' @param
-#' @return
+#' @title Correlation between two (extended) time series.
+#' @description \code{GetCorrXts} calculates the correlation between two extended
+#'   time series if it is possible, i.e., if they span the same time period. Otherwise
+#'   return NA. This function is hardcoded to handle all combinations between four
+#'   provided extended time series.
+#' @param Era20cXts extended time series of an ERA20C pixel corresponding locally to
+#'   the station time series
+#' @param EraIXts same as above for ERA-Interim
+#' @param HerzXts same as above for HErZ
+#' @param StatXts same as above for the station values
+#' @return list a list of all possible perturbations of correlations between the
+#'   provided four extended time series.
 GetCorrXts <- function(Era20cXts, EraIXts, HerzXts, StatXts) {
   if ((index(Era20cXts[1]) == index(EraIXts[1])) &
         (tail(index(Era20cXts), 1) == tail(index(EraIXts), 1))) {

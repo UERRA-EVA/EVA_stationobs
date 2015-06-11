@@ -1,8 +1,8 @@
 #' @title A function to remove files.
 #' @description \code{remove.files} can remove any files with provided extensions;
-#' by defaul it explicitely removes *.txt and *.html files.
+#'   by defaul it explicitely removes *.txt and *.html files.
 #' @param extension is a (vector of) string(s) which holds the extensions to of the
-#' files to be removed.
+#'   files to be removed.
 remove.files <- function(extension=NULL){
   if (is.null(extension)){
     extension <- c(".txt",".html")
@@ -17,19 +17,17 @@ remove.files <- function(extension=NULL){
 
 #' @title Download data from the DWD-ftp server.
 #' @description \code{get.data}
-#' Allows downloading data from the DWD-ftp server
-#' according to the metadata information saved in
-#' the output argument \code{metadata} retrieved from
-#' \code{\link{get.metadata}}. The data is then unzipped
-#' and extracted for hourly or daily values as specified.
-#'
+#'   Allows downloading data from the DWD-ftp server
+#'   according to the metadata information saved in
+#'   the output argument \code{metadata} retrieved from
+#'   \code{\link{get.metadata}}. The data is then unzipped
+#'   and extracted for hourly or daily values as specified.
 #' @param metadata list. Argument retrieved
-#' from \code{\link{get.metadata}}. If empty, the
-#' user will be asked to enter the metadata
-#' manually through the R-console.
+#'   from \code{\link{get.metadata}}. If empty, the
+#'   user will be asked to enter the metadata
+#'   manually through the R-console.
 #' @return  \code{data1} data.frame. Contains the data
-#' that correspond to the given metadata.
-#'
+#'   that correspond to the given metadata.
 #' @examples
 #' # If no input argument is known
 #' data1 <- get.data() # R will ask the user through the
@@ -235,15 +233,14 @@ get.data <- function(metadata=NULL){
 
 #' @title Download data from the DWD-ftp server.
 #' @description \code{get.data.download}
-#' Data is downloaded from the DWD-ftp server
-#' according to the metadata information saved in
-#' the output argument \code{metadata} retrieved from
-#' \code{\link{get.metadata}}. No object is returned.
-#'
+#'   Data is downloaded from the DWD-ftp server
+#'   according to the metadata information saved in
+#'   the output argument \code{metadata} retrieved from
+#'   \code{\link{get.metadata}}. No object is returned.
 #' @param metadata list. Argument retrieved
-#' from \code{\link{get.metadata}}. If empty, the
-#' user will be asked to enter the metadata
-#' manually through the R-console.
+#'   from \code{\link{get.metadata}}. If empty, the
+#'   user will be asked to enter the metadata
+#'   manually through the R-console.
 get.data.download <- function(metadata=NULL){
   # Remove everything besides the inputs
   rm(list=ls()[!(ls()%in% c("metadata"))])
@@ -330,15 +327,15 @@ get.data.download <- function(metadata=NULL){
 
 #' @title Provide metadata for downloading data from ftp-server.
 #' @description #' A shortcut to the original \code{get.metadata} function by
-#' using only those settings and fucntionality (e.g., no sql database) needed here.
+#'   using only those settings and fucntionality (e.g., no sql database) needed here.
 #' @param time.resol String of station data time resolution, e.g., daily, hourly
 #' @param station.id string of the station id
 #' @param data.begin string of the begin date of the station data in the format
-#' "YYYY-MM-DD"
+#'   "YYYY-MM-DD"
 #' @param date.end same as above for the end date
 #' @param path.element string as an additional element of the path to the data
 #' @return metadata The metadata saved in a string vector containing the above
-#' parameters
+#'   parameters
 get.metadata.dummy <- function(time.resol, station.id,
                                date.begin, date.end, path.element){
   liste <- c("time.resol" , "station.id" ,  "date.begin" ,
@@ -356,22 +353,23 @@ get.metadata.dummy <- function(time.resol, station.id,
 
 #-----------------------------------------------------------------------------------
 
-#' \code{all.data} retrieves data from the CDC ftp-server using Raffaels function
-#' get.data and the dummy metadata as obtained from the above function. Using these
-#' two functions instead of his complete package is necessary because it was
-#' eveloped to run under Windows, and it was developed to have a user interface.
-#' Here, I have hardcoded to download all available daily climate data. I allow
-#' to choose the station via its station id. I want the output data frame to also
-#' hold information about the station name, longitude, and latitude which are input
-#' to this funciton.
+#' @title Download DWD station data from CDC-ftp server.
+#' @description \code{all.data} retrieves data from the CDC ftp-server using Raffaels
+#'   function get.data and the dummy metadata as obtained from the above function.
+#'   Using these two functions instead of his complete package is necessary because
+#'   it was eveloped to run under Windows, and it was developed to have a user interface.
+#'   Here, I have hardcoded to download all available daily climate data. I allow
+#'   to choose the station via its station id. I want the output data frame to also
+#'   hold information about the station name, longitude, and latitude which are input
+#'   to this funciton.
 #' @param station.id a string of length 5 containing the station id as provided in
-#' the metadata of the downloaded station
+#'   the metadata of the downloaded station
 #' @param station.name string of the station name corresponding to the above station
-#' id
+#'   id
 #' @param station.lon longitude of the station
 #' @param station.lat latitude of the station
 #' @return \code{data1} a data frame (returned as list) containing all this data
-#' including windspeed listed chronologically
+#'   including windspeed listed chronologically
 all.data <- function(station.id, station.name, station.lat, station.lon,
                      daily=TRUE, download=FALSE){
   if (daily) {

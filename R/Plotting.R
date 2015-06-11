@@ -1,16 +1,13 @@
-source("./VerificationValues.R")
-
-#-----------------------------------------------------------------------------------
 
 #' @title Determine ylim ranges from data.
 #' @description \code{GetYlims} determinies the ylim low and high range from four
-#' different time series.
-#' This needs to be enhanced so that not all of those time series need to be
-#' available. Something like present= in FORTRAN.
+#'   different time series.
+#'   This needs to be enhanced so that not all of those time series need to be
+#'   available. Something like present= in FORTRAN.
 #' @param xts1, xts2, xts3, xts4 time series from which to determine the low and
-#' high range of the ylim.
+#'   high range of the ylim.
 #' @return yliml, ylimh a list of yliml and ylimh which are the lower and higher
-#' bond of ylim.
+#'   bond of ylim.
 GetYlims <- function(xts1, xts2, xts3, xts4) {
   if (is.xts(xts1) & (is.xts(xts2)) & is.xts(xts3) & (is.xts(xts4))) {
     yliml = floor(min(min(xts1, na.rm=TRUE), min(xts2, na.rm=TRUE),
@@ -28,11 +25,11 @@ GetYlims <- function(xts1, xts2, xts3, xts4) {
 
 #' @title Plot station measurements together with ERA20C, ERA-I, and HErZ.
 #' @description \code{PlotStationEra} plot the station values together with the
-#' corresponding ERA20C, ERA-I, and HErZ pixel and provides the correlation between
-#' these time series. Optionally, it is possible to plot the anomaly. The plot is
-#' saved in pdf format and there is no return value.
+#'   corresponding ERA20C, ERA-I, and HErZ pixel and provides the correlation between
+#'   these time series. Optionally, it is possible to plot the anomaly. The plot is
+#'   saved in pdf format and there is no return value.
 #' @param Era20cXts monthly mean extended time series of the ERA20C pixel
-#' corresponding to the station location
+#'   corresponding to the station location
 #' @param EraIXts same as above for ERA-Interim
 #' @param HerzXts same as above for HErZ
 #' @param StatXts monthly mean extended time series of the station values
@@ -40,7 +37,7 @@ GetYlims <- function(xts1, xts2, xts3, xts4) {
 #' @param outdir string of the output directory into which the plot is saved
 #' @param width, height of the plot in inches
 #' @param monthly is an optional parameter which determines to plot the monthly
-#' values of the above time series
+#'   values of the above time series
 #' @param anomaly is an optional parameter which determines whether to plot anomalies
 PlotStationEra <- function(Era20cXts, EraIXts, HerzXts, StatXts,
                            titname, outdir, fname, width, height,
@@ -100,10 +97,24 @@ PlotStationEra <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 
 #-----------------------------------------------------------------------------------
 
-#' @title
-#' @description
-#' @param
-#' @return
+#' @title Plot seasonal time series of station data against locally corresponding
+#'   global and reginal reanalyses
+#' @description THIS FUNCTION IS NOT YET FINISHED.
+#'   \code{PlotStationEraSeasons} plots seasonal means of station values against
+#'   locally corresponding time series (pixels) of global and regional reanalyses. The
+#'   rolling mean and optionally the anomalies are plotted. The plot is saved in pdf
+#'   format and there is no return value.
+#' @param Era20cXts monthly mean extended time series of the ERA20C pixel
+#'   corresponding to the station location
+#' @param EraIXts same as above for ERA-Interim
+#' @param HerzXts same as above for HErZ
+#' @param StatXts monthly mean extended time series of the station values
+#' @param titname string of the plot title name
+#' @param outdir string of the output directory into which the plot is saved
+#' @param width, height of the plot in inches
+#' @param seasons is an optional parameter which determines whetther to plot the
+#'   monthly (F) or seasonal (T) values of the above time series
+#' @param anomaly is an optional parameter which determines whether to plot anomalies
 PlotStationEraSeasons <- function(Era20cXts, EraIXts, HerzXts, StatXts,
                                   titname, outdir, fname, width, height,
                                   anomaly=FALSE, seasons=FALSE) {
@@ -206,10 +217,25 @@ PlotStationEraSeasons <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 
 #-----------------------------------------------------------------------------------
 
-#' @title
-#' @description
-#' @param
-#' @return
+#' @title Plot station measurements together with ERA20C, ERA-I, and HErZ.
+#' @description THERE NEEDS TO BE A DIFFERENCE TO \code{\link{PlotStationEra}}.
+#'   CHECK WHICH IT IS !!!
+#'   \code{PlotStationEra} plot the station values together with the
+#'   corresponding ERA20C, ERA-I, and HErZ pixel and provides the correlation between
+#'   these time series. Optionally, it is possible to plot the anomaly. The plot is
+#'   saved in pdf format and there is no return value. The plot is
+#'   saved in pdf format and there is no return value.
+#' @param Era20cXts monthly mean extended time series of the ERA20C pixel
+#'   corresponding to the station location
+#' @param EraIXts same as above for ERA-Interim
+#' @param HerzXts same as above for HErZ
+#' @param StatXts monthly mean extended time series of the station values
+#' @param titname string of the plot title name
+#' @param outdir string of the output directory into which the plot is saved
+#' @param width, height of the plot in inches
+#' @param monthly is an optional parameter which determines to plot the monthly
+#'   values of the above time series
+#' @param anomaly is an optional parameter which determines whether to plot anomalies
 PlotStationEraMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
                                  titname, outdir, fname, width, height,
                                  anomaly=FALSE) {
@@ -307,10 +333,20 @@ PlotStationEraMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 
 #-----------------------------------------------------------------------------------
 
-#' @title
-#' @description
-#' @param
-#' @return
+#' @title Compare 100m wind speed of ERA20C and HErZ pixel by pixel.
+#' @description \code{Plot100mEraHerz} compares the 100m wind speed of the ERA20C
+#'   global reanalysis with the 116m wind speed of the HErZ regional reanalysis. As of
+#'   now THIS FUNCTION IS NOT YET FULLY FUNCTIONAL !!!
+#'   This function will perform a pixel wise comparison to fit into the logic of this
+#'   package. Later an areal comparison is envisaged.
+#'   Scatter plots, PDFs, histograms, PDFscore, etc should all be considered as
+#'   verification scores.
+#' @param Era20cXts monthly mean extended time series of a ERA20C pixel
+#' @param HerzXts same as above for HErZ
+#' @param titname string of the plot title name
+#' @param outdir string of the output directory into which the plot is saved
+#' @param fname string of the file name of the plot
+#' @param width, height of the plot in inches
 Plot100mEraHerz <- function(Era20cXts, HerzXts,
                             titname, outdir, fname, width, height) {
 
@@ -341,10 +377,10 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
 }
 #-----------------------------------------------------------------------------------
 
-#' @title
-#' @description
-#' @param
-#' @return
+#' @title to be filled in
+#' @description to be filled in
+#' @param to be filled in
+#' @return to be filled in
 PlotMonthlyPDFScore <- function(era.xts, station.xts, outdir, fname, titname,
                                 width, height) {
 

@@ -1,12 +1,20 @@
 library(ncdf.tools)
 library(ncdf)
 
-#' @title
-#' @description
-#' @param
-#' @return
-#' Function for reading grib-Files in R
-#' function written by Chris Bollmeyer, received 20140925
+#' @title Reading grib files based on wgrib.
+#' @description \code{readGrib} is based on wgrib to read grib files. It can read
+#'   files by parameter and by specifyed level and time step. This function has been
+#'   written by Chris Bollmeyer of Uni Bonn, received in 2014-09-25
+#' @param filename string of the grib file name to read from
+#' @param nlon, nlat, nlev specify the extent of the data in number of longitude,
+#'   latitude and vertical level steps (pixels)
+#' @param var string of the variable name to read
+#' @param out a temporary file into which output is dumped. NOTE: this needs to be
+#'   specifyied if this function is called more than once in parralel (i.e., totally
+#'   independent from each other)
+#' @param recs up to two concatinated integers which specify the beginning and end of
+#'   the records (time steps) to read
+#' @return x the array containing the read data
 readGrib <- function(filename,nlon,nlat,nlev,var='undef',out='Rfile.dat',recs=c(0),pipe='') {
   if (recs[1]==0) {
     if (var == 'undef') {
@@ -64,10 +72,10 @@ readGrib <- function(filename,nlon,nlat,nlev,var='undef',out='Rfile.dat',recs=c(
 
 #===================================================================================
 
-#' @title
-#' @description
-#' @param
-#' @return
+#' @title to be filled in
+#' @description to be filled in
+#' @param to be filled in
+#' @return to be filled in
 ReadNetcdf <- function(variable, infile, revert=FALSE) {
 
   # === read and use seasonal time series data and plot only these ===
@@ -104,10 +112,10 @@ ReadNetcdf <- function(variable, infile, revert=FALSE) {
 
 #-----------------------------------------------------------------------------------
 
-#' @title
-#' @description
-#' @param
-#' @return
+#' @title to be filled in
+#' @description to be filled in
+#' @param to be filled in
+#' @return to be filled in
 ReadHerzWind <- function(varname, infile, revert=FALSE) {
   # === open nc file and read data, lat, lon
   nc <- open.ncdf(infile)
