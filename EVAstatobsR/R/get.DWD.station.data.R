@@ -8,8 +8,8 @@ remove.files <- function(extension=NULL){
     extension <- c(".txt",".html")
   }
   for (i in c(1:length(extension))){
-    junk <- c(dir(path="data",pattern=extension[i]))
-    file.remove(file.path("data",junk))
+    junk <- c(dir(path="DWD_station_data",pattern=extension[i]))
+    file.remove(file.path("DWD_station_data",junk))
   }
 }
 
@@ -74,7 +74,7 @@ get.data <- function(metadata=NULL){
   ##########################################################
   # DEFINE THE OUTPUT PATH
   a <- getwd()
-  path.output <- file.path(a,"data")
+  path.output <- file.path(a,"DWD_station_data")
   dir.create(path.output,showWarnings=FALSE)
 
   ##########################################################
@@ -134,11 +134,12 @@ get.data <- function(metadata=NULL){
     colnames <- as.matrix(read.table(file.name,sep=";",
                                      nrows=1))
     colnames <- gsub(" ","",colnames)
+    colnames <- tolower(colnames)
     colnames(data1) <- colnames
 
     ##########################################################
     # REMOVE ".txt"
-    remove.files(c(".txt"))
+    remove.files(c(".txt", ".html"))
 
     #######################################################
     # FTP CONNECTION - RECENT
@@ -190,19 +191,19 @@ get.data <- function(metadata=NULL){
       colnames(data2) <- colnames
 
       # Merge "data" and "data2"
-      last.date <- data1$MESS_DATUM[nrow(data1)-1]
-      id210 <- which(data2$MESS_DATUM>last.date)
+      last.date <- data1$mess_datum[nrow(data1)-1]
+      id210 <- which(data2$mess_datum>last.date)
 
       data3 <- rbind(data1,data2[id210,])
 
-      id4 <- which(data3$MESS_DATUM>=date.begin &
-                     data3$MESS_DATUM<=date.end)
+      id4 <- which(data3$mess_datum>=date.begin &
+                     data3$mess_datum<=date.end)
       data5 <- data3[id4,]
     }
 
     #######################################################
     # REMOVE ".txt"
-    remove.files(".txt")
+    remove.files(c(".txt", ".html"))
 
 
     ########################################################
@@ -210,13 +211,13 @@ get.data <- function(metadata=NULL){
 
     # Find data only for the specific dates
     if (time.resol=="hourly"){
-      data1$MESS_DATUM <- format(strptime(
-        as.character(data1$MESS_DATUM),"%Y%m%d%H"),
+      data1$mess_datum <- format(strptime(
+        as.character(data1$mess_datum),"%Y%m%d%H"),
         "%Y-%m-%d %H:%M:%S")
     }else{
       if (time.resol=="daily"){
-        data1$MESS_DATUM <- format(strptime(
-          as.character(data1$MESS_DATUM),"%Y%m%d"),
+        data1$mess_datum <- format(strptime(
+          as.character(data1$mess_datum),"%Y%m%d"),
           "%Y-%m-%d")
       }
     }
@@ -379,8 +380,8 @@ all.data <- function(station.id, station.name, station.lat, station.lon,
   }
   if (!(download)) {
     data1 <- get.data(metadata)
-    data2 <- data.frame(data1$STATIONS_ID, station.name, station.lat, station.lon,
-                        data1$MESS_DATUM,data1$WINDGESCHWINDIGKEIT)
+    data2 <- data.frame(data1$stations_id, station.name, station.lat, station.lon,
+                        data1$mess_datum,data1$windgeschwindigkeit)
     data2 = data2[-nrow(data2),]
     colnames(data2) <- c("STATIONS_ID","STATIONS_NAME", "GEO_BREITE", "GEO_LÄNGE",
                          "MESS_DATUM","WINDGESCHWINDIGKEIT")

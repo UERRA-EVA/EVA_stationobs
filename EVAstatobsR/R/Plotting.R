@@ -217,9 +217,9 @@ PlotStationEraSeasons <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 
 #-----------------------------------------------------------------------------------
 
-#' @title Plot station measurements together with ERA20C, ERA-I, and HErZ.
-#' @description THERE NEEDS TO BE A DIFFERENCE TO \code{\link{PlotStationEra}}.
-#'   CHECK WHICH IT IS !!!
+#' @title Plot station measurements together with ERA20C, ERA-I, and HErZ for
+#' specific months.
+#' @description SCRIPT NEEDS TO BE FINIALIZED
 #'   \code{PlotStationEra} plot the station values together with the
 #'   corresponding ERA20C, ERA-I, and HErZ pixel and provides the correlation between
 #'   these time series. Optionally, it is possible to plot the anomaly. The plot is
@@ -251,15 +251,15 @@ PlotStationEraMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
   # ==================================================================================
   #
 
-  date.eraC <-as.POSIXlt(index(Era20cXts))
-  date.eraI <-as.POSIXlt(index(EraIXts))
-  date.HErZ <-as.POSIXlt(index(HerzXts))
-  date.stat <-as.POSIXlt(index(StatXts))
-
-  monthly.eraC <- Era20cXts[which(date.eraC$mon==months)]
-  monthly.eraI <- EraIXts[which(date.eraI$mon==months)]
-  monthly.Herz <- HerzXts[which(date.Herz$mon==months)]
-  monthly.stat <- StatXts[which(date.stat$mon==months)]
+#   date.eraC <-as.POSIXlt(index(Era20cXts))
+#   date.eraI <-as.POSIXlt(index(EraIXts))
+#   date.HErZ <-as.POSIXlt(index(HerzXts))
+#   date.stat <-as.POSIXlt(index(StatXts))
+#
+#   monthly.eraC <- Era20cXts[which(date.eraC$mon==months)]
+#   monthly.eraI <- EraIXts[which(date.eraI$mon==months)]
+#   monthly.Herz <- HerzXts[which(date.Herz$mon==months)]
+#   monthly.stat <- StatXts[which(date.stat$mon==months)]
 
   #
   # ==================================================================================

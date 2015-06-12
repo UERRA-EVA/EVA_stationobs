@@ -7,7 +7,7 @@ CheckFile <- function(infile) {
   if (any(!file.exists(infile))) {
     idx = which(!file.exists(infile))
     missing.file = infile[idx]
-    err = simpleError("Missing File")
+    err = simpleError(paste0("Missing File: ", infile[idx]))
     tryCatch(stop(err), finally=print(missing.file))
   }
 }

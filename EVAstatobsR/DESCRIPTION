@@ -5,6 +5,7 @@ Authors@R: person("Michael", "Borsche", email = "michael.borsche@dwd.de",
     role = c("aut", "cre"))
 Description: What the package does (one paragraph)
 Depends:
-    R (>= 3.0.2)
+    R (>= 3.0.2),
+    ncdf, ncdf.tools
 License: GPL (>=3)
-LazyData: true
+LazyData: false
