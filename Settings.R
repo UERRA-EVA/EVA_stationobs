@@ -1,5 +1,3 @@
-daily = FALSE # station data base (daily (T) or hourly (F))
-
 a4width = 29.7/2.54
 a4height = 21./2.54
 
@@ -26,10 +24,18 @@ eraI.param = "si10"
 
 #=== HErZ ===
 herz.fname = "./data/WindSpeed_HErZ_MonMean_19982014.nc"
-herz.grid = "./data/COSMO_REA6_CONST_withOUTsponge"
+herz.grid = "./data/COSMO_REA6_CONST_withOUTsponge.grb"
 herz10.param = "windspeed_10m"
 herz116.param = "windspeed_116m"
 
 #=== Station data ===
+daily = TRUE # station data based on daily (T) or hourly (F) measurements
 station.daily.fname = "./data/KL_Tageswerte_Beschreibung_Stationen.txt"
-station.hourly.fname = "./data/FF_Stundenwerte_Beschreibung_Stationen_wind_selected3.txt"
+station.hourly.fname = "./data/FF_Stundenwerte_Beschreibung_Stationen.txt"
+
+#=== plotting ===
+plot.EraStatComp = TRUE
+plot.100mEraHerz = TRUE
+plot.EraStationSeasons = TRUE
+plot.EraStationMonths = TRUE
+plot.PDFscore = TRUE
