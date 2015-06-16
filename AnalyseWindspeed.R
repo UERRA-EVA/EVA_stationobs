@@ -4,12 +4,7 @@ library(xts)
 library(EVAstatobsR)
 rm(list=ls())
 
-################ **D A S  M U S S  W I E D E R  W E G** ############################
-
-setwd("/home/mborsche/work/UERRA/EVA_stationobs/")
-
 interactive = FALSE
-
 if (interactive) {
   arguments <- commandArgs(TRUE)
   config.file<-arguments[1]
@@ -21,6 +16,7 @@ if (interactive) {
     quit(status=1)
   }
 } else {
+  setwd("/home/mborsche/work/UERRA/EVA_stationobs/")
   config.file = paste0(getwd(), "/Settings.R")
   CheckFile(config.file)
 }

@@ -34,8 +34,8 @@ station.daily.fname = "./data/KL_Tageswerte_Beschreibung_Stationen.txt"
 station.hourly.fname = "./data/FF_Stundenwerte_Beschreibung_Stationen.txt"
 
 #=== plotting ===
-plot.EraStatComp = TRUE
-plot.100mEraHerz = TRUE
-plot.EraStationSeasons = TRUE
-plot.EraStationMonths = TRUE
-plot.PDFscore = TRUE
+plot.EraStatComp = T
+plot.100mEraHerz = T
+plot.EraStationSeasons = T
+plot.EraStationMonths = T
+plot.PDFscore = T

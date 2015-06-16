@@ -64,24 +64,32 @@ PlotStationEra <- function(Era20cXts, EraIXts, HerzXts, StatXts,
   dummy = xts(dummy, order.by = index(Era20cXts))
   plot(dummy, main=titname, ylab="windspeed [m/s^2]", ylim=c(yliml, ylimh))
 
-  if (monthly) { points(Era20cXts, type="b", pch=16, col="blue", lw=1.5) }
-  if (!monthly & roll.mean) { points(rollmean(Era20cXts, roll.time),
-                                     type="b", pch=16, col="blue", lw=1.5) }
+  if (monthly) { lines(Era20cXts, type="b", pch=16, col="blue", lw=1.5) }
+  if (!monthly & roll.mean) {
+    lines(rollmean(Era20cXts, roll.time), type="p", pch=16, col="blue", lw=1.5)
+    lines(rollmean(Era20cXts, roll.time), col="blue", lw=1.5)
+  }
 
   # ERA-I
-  if (monthly) { points(EraIXts, type="b", pch=16, col="red", lw=1.5) }
-  if (!monthly & roll.mean) { lines(rollmean(EraIXts, roll.time),
-                                    type="b", pch=16, col="red", lw=1.5) }
+  if (monthly) { lines(EraIXts, type="b", pch=16, col="red", lw=1.5) }
+  if (!monthly & roll.mean) {
+    lines(rollmean(EraIXts, roll.time), type="p", pch=16, col="red", lw=1.5)
+    lines(rollmean(EraIXts, roll.time), col="red", lw=1.5)
+  }
 
   # HErZ
-  if (monthly) { points(HerzXts, type="b", pch=16, col="green3", lw=1.5) }
-  if (!monthly & roll.mean) { lines(rollmean(HerzXts, roll.time),
-                                    type="b", pch=16, col="green3", lw=1.5) }
+  if (monthly) { lines(HerzXts, type="b", pch=16, col="green3", lw=1.5) }
+  if (!monthly & roll.mean) {
+    lines(rollmean(HerzXts, roll.time), type="p", pch=16, col="green3", lw=1.5)
+    lines(rollmean(HerzXts, roll.time), col="green3", lw=1.5)
+  }
 
   # Station
-  if (monthly) { points(StatXts, type="b", pch=16, col="black", lw=1.5) }
-  if (!monthly & roll.mean) { lines(rollmean(StatXts, roll.time),
-                                    type="b", pch=16, col="black", lw=1.5) }
+  if (monthly) { lines(StatXts, type="b", pch=16, col="black", lw=1.5) }
+  if (!monthly & roll.mean) {
+    lines(rollmean(StatXts, roll.time), type="p", pch=16, col="black", lw=1.5)
+    lines(rollmean(StatXts, roll.time), col="black", lw=1.5)
+  }
 
   Corr.vals = GetCorrXts(Era20cXts, EraIXts, HerzXts, StatXts)
 
@@ -217,14 +225,13 @@ PlotStationEraSeasons <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 
 #-----------------------------------------------------------------------------------
 
-#' @title Plot station measurements together with ERA20C, ERA-I, and HErZ for
-#' specific months.
-#' @description SCRIPT NEEDS TO BE FINIALIZED
-#'   \code{PlotStationEra} plot the station values together with the
-#'   corresponding ERA20C, ERA-I, and HErZ pixel and provides the correlation between
-#'   these time series. Optionally, it is possible to plot the anomaly. The plot is
-#'   saved in pdf format and there is no return value. The plot is
-#'   saved in pdf format and there is no return value.
+#' @title Plot only specific months of station data together with ERA20C, ERA-I,
+#'   and HErZ.
+#' @description
+#'   \code{PlotStationEra} plots the station values together with the
+#'   corresponding ERA20C, ERA-I, and HErZ pixel - for specific months only. These
+#'   need to be set hard-coded within this function. Optionally, it is possible to
+#'   plot the anomaly. The plot is saved in pdf format and there is no return value.
 #' @param Era20cXts monthly mean extended time series of the ERA20C pixel
 #'   corresponding to the station location
 #' @param EraIXts same as above for ERA-Interim
@@ -240,86 +247,66 @@ PlotStationEraMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
                                  titname, outdir, fname, width, height,
                                  anomaly=FALSE) {
 
-  roll.mean = FALSE
-  roll.time = 12
-  months = list(1,8)
+  # specify months to plot starting from 0 for January to 11 for December
+  # within the list below
+  months = list(0,7)
+  mon.Era20c = list()
+  mon.EraI = list()
+  mon.Herz = list()
+  mon.Stat = list()
+
+  date.Era20c <- as.POSIXlt(index(Era20cXts))
+  date.EraI <- as.POSIXlt(index(EraIXts))
+  date.Herz <- as.POSIXlt(index(HerzXts))
+  date.Stat <- as.POSIXlt(index(StatXts))
+
+  for (cnt in seq(1,length(months))) {
+    mon.Era20c[[cnt]] = Era20cXts[which( date.Era20c$mon==months[[cnt]] )]
+    mon.EraI[[cnt]] = EraIXts[which( date.EraI$mon==months[[cnt]] )]
+    mon.Herz[[cnt]] = HerzXts[which( date.Herz$mon==months[[cnt]] )]
+    mon.Stat[[cnt]] = StatXts[which( date.Stat$mon==months[[cnt]] )]
+
+    if (anomaly) {
+      mon.Era20c[[cnt]] = mon.Era20c[[cnt]] - mean(mon.Era20c[[cnt]])
+      mon.EraI[[cnt]] = mon.EraI[[cnt]] - mean(mon.EraI[[cnt]])
+      mon.Herz[[cnt]] = mon.Herz[[cnt]] - mean(mon.Herz[[cnt]])
+      mon.Stat[[cnt]] = mon.Stat[[cnt]] - mean(mon.Stat[[cnt]])
+    }
+  }
 
   pdf(paste(outdir, fname, sep=""), width=width, height=height,
       onefile=TRUE, pointsize=13)
 
-  #
-  # ==================================================================================
-  #
-
-#   date.eraC <-as.POSIXlt(index(Era20cXts))
-#   date.eraI <-as.POSIXlt(index(EraIXts))
-#   date.HErZ <-as.POSIXlt(index(HerzXts))
-#   date.stat <-as.POSIXlt(index(StatXts))
-#
-#   monthly.eraC <- Era20cXts[which(date.eraC$mon==months)]
-#   monthly.eraI <- EraIXts[which(date.eraI$mon==months)]
-#   monthly.Herz <- HerzXts[which(date.Herz$mon==months)]
-#   monthly.stat <- StatXts[which(date.stat$mon==months)]
-
-  #
-  # ==================================================================================
-  #
-
-  if (anomaly) {
-    Era20cXts = Era20cXts - mean(Era20cXts)
-    EraIXts = EraIXts - mean(EraIXts)
-    HerzXts = HerzXts - mean(HerzXts)
-    StatXts = StatXts - mean(StatXts)
+  yliml = vector(mode="numeric", length=length(months))
+  ylimh = vector(mode="numeric", length=length(months))
+  for (cnt in seq(1,length(months))) {
+    Ylims = GetYlims(mon.Era20c[[cnt]], mon.EraI[[cnt]], mon.Herz[[cnt]], mon.Stat[[cnt]])
+    yliml[cnt] = Ylims[[1]]
+    ylimh[cnt] = Ylims[[2]]
   }
-  Ylims = GetYlims(Era20cXts, EraIXts, HerzXts, StatXts)
-  yliml = Ylims[[1]]
-  ylimh = Ylims[[2]]
+  yliml = min(yliml)
+  ylimh = max(ylimh)
 
-  # ERA20C
-  dummy = numeric(length=length(Era20cXts)) * NA
+  dummy = numeric(length=length(mon.Era20c[[1]])) * NA
+  dummy = xts(dummy, order.by = index(mon.Era20c[[1]]))
   plot(dummy, main=titname, ylab="windspeed [m/s^2]", ylim=c(yliml, ylimh))
 
-  if (roll.mean) {
-    lines(rollmean(eracsum, roll.time), type="p", pch=21, col="blue", bg="blue", lw=2)
-    lines(rollmean(eracwin, roll.time), type="p", pch=21, col="blue",
-          bg="blue", lw=2)
-  } else {
-    lines(eracsum, type="p", pch=21, col="blue", bg="blue", lw=2)
-    lines(eracwin, type="p", pch=21, col="blue",
-          bg="blue", lw=2)
-  }
+  for (cnt in seq(1,length(months))) {
+    # ERA20C
+    lines(mon.Era20c[[cnt]], type="b", pch=21, col=rgb(0,0,1,1./cnt),
+          bg=rgb(0,0,0,1./cnt), lw=2)
 
-  # ERA-I
-  if (roll.mean) {
-    lines(rollmean(eraisum, roll.time), type="p", pch=21, col="red", bg="red", lw=2)
-    lines(rollmean(eraiwin, roll.time), type="p", pch=21, col="red", bg="red",
-          lw=2)
-  } else {
-    lines(eraisum, type="p", pch=21, col="red", bg="red", lw=2)
-    lines(eraiwin, type="p", pch=21, col="red", bg="red", lw=2)
+    # ERA-I
+    lines(mon.EraI[[cnt]], type="b", pch=21, col=rgb(1,0,0,1./cnt),
+          bg=rgb(1,0,0,1./cnt), lw=2)
 
-  }
-  # HErZ
-  if (roll.mean) {
-    lines(rollmean(herzsum, roll.time), type="p", pch=21, col="green3", bg="green3",
-          lw=2)
-    lines(rollmean(herzwin, roll.time), type="p", pch=21, col="green3",
-          bg="green3", lw=2)
-  } else {
-    lines(herzsum, type="p", pch=21, col="green3", bg="green3", lw=2)
-    lines(herzwin, type="p", pch=21, col="green3", bg="green3",
-          lw=2)
-  }
+    # HErZ
+    lines(mon.Herz[[cnt]], type="b", pch=21, col=rgb(0,1,0,1./cnt),
+          bg=rgb(0,1,0,1./cnt), lw=2)
 
-  # Station
-  if (roll.mean) {
-    lines(rollmean(statsum, roll.time), type="p", pch=21, col="black", bg="black",
-          lw=2)
-    lines(rollmean(statwin, roll.time), type="p", pch=21, col="black", bg="black",
-          lw=2)
-  } else {
-    lines(statsum, type="p", pch=21, col="black", bg="black", lw=2)
-    lines(statwin, type="p", pch=21, col="black", bg="black", lw=2)
+    # Station
+    lines(mon.Stat[[cnt]], type="b", pch=21, col=rgb(0,0,0,1./cnt),
+          bg=rgb(0,0,0,1./cnt), lw=2)
   }
 
   legend("topleft", legend=c(paste0("ERA20C"),
@@ -327,6 +314,7 @@ PlotStationEraMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
                              paste0("HErZ"),
                              paste0("Station")),
          text.col=c("blue", "red", "green3", "black"))
+
   dev.off()
 
 }
@@ -363,10 +351,10 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
   plot(dummy, main=titname, ylab="windspeed [m/s^2]", ylim=c(yliml, ylimh))
 
   # ERA20C
-  points(Era20cXts, type="b", pch=16, col="blue", lw=1.5)
+  lines(Era20cXts, type="b", pch=16, col="blue", lw=1.5)
 
   # HErZ
-  points(HerzXts, type="b", pch=16, col="green3", lw=1.5)
+  lines(HerzXts, type="b", pch=16, col="green3", lw=1.5)
 
   Corr.vals = GetCorrXts(Era20cXts, HerzXts, dummy, dummy)
 
@@ -384,14 +372,14 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
 PlotMonthlyPDFScore <- function(era.xts, station.xts, outdir, fname, titname,
                                 width, height) {
 
-  date.era <-as.POSIXlt(index(era.xts))
-  date.stat <-as.POSIXlt(index(station.xts))
+  date.era  <- as.POSIXlt(index(era.xts))
+  date.stat <- as.POSIXlt(index(station.xts))
 
   PDF.score.anncycle = vector(mode="numeric", length=12)
   PDF.score.ann = vector(mode="numeric", length=12)
 
   for (month in seq(0,11)) {
-    monthly.era <- era.xts[which(date.era$mon==month)]
+    monthly.era  <- era.xts[which(date.era$mon==month)]
     monthly.stat <- station.xts[which(date.stat$mon==month)]
 
     PDF.score.anncycle[month+1] = PDFscore(monthly.era, monthly.stat)
