@@ -1,4 +1,3 @@
-
 #' @title Reading grib files based on wgrib.
 #' @description \code{readGrib} is based on wgrib to read grib files. It can read
 #'   files by parameter and by specifyed level and time step. This function has been

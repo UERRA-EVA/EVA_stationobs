@@ -1,4 +1,3 @@
-
 #' @title A PDF based skill score.
 #' @description This skill score is descripted in the paper by Mayer et al., 2015,
 #'   Identifying added value in high-resolution climate simulations over Scandinavia,
