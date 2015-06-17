@@ -1,4 +1,3 @@
-
 #' @title Determine ylim ranges from data.
 #' @description \code{GetYlims} determinies the ylim low and high range from four
 #'   different time series.
