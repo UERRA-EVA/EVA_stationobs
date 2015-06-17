@@ -48,6 +48,7 @@ getNearest <- function(b1,b2,l1,l2){
 #' @param eraI.tsend is the end date of ERA-Interim data
 #' @param herz.tsstart is the start date of HErZ data
 #' @param herz.tsend is the end date of the HErZ data
+#' @param daily optional parameter to specify whether station data is aggregated in hourly or daily time steps. Default is hourly (daily=FALSE).
 #' @return MM.station[timestr] is the potentially gab filled monthly mean station
 #'   data spanning the time period of the longest ranging reanalysis time series.
 ExtractStationData <- function(station.data, era20c.tsstart, era20c.tsend,
@@ -111,7 +112,7 @@ ExtractStationData <- function(station.data, era20c.tsstart, era20c.tsend,
 #'   set (reanalysis) given the station location (lon, lat).
 #' @param data data set (reanalysis) from which to extract the time series at the
 #'   station location
-#' @param time.vales time period covered by the data set
+#' @param time.vals time period covered by the data set
 #' @param lon longitude grid points of the data set
 #' @param lat latitude grid points of the data set
 #' @param tsstart character string of the format (YYYY,M) of the start date of the
@@ -151,7 +152,7 @@ ExtractERAxts <- function(data, time.vals,
 #'   projection which calls for a function to extract the correct pixel off that grid.
 #' @param herz.data is the HErZ data set from which to extract the time series at the
 #'   station location
-#' @param time.vales time period covered by the HErZ data set
+#' @param time.vals time period covered by the HErZ data set
 #' @param herz.lon longitude grid points of the HErZ data set
 #' @param herz.lat latitude grid points of the HErZ data set
 #' @param tsstart character string of the format (YYYY,M) of the start date of the

@@ -26,6 +26,8 @@ of the form c(YYYY,MM)}
 \item{herz.tsstart}{is the start date of HErZ data}
 
 \item{herz.tsend}{is the end date of the HErZ data}
+
+\item{daily}{optional parameter to specify whether station data is aggregated in hourly or daily time steps. Default is hourly (daily=FALSE).}
 }
 \value{
 MM.station[timestr] is the potentially gab filled monthly mean station

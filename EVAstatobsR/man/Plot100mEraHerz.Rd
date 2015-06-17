@@ -16,7 +16,7 @@ Plot100mEraHerz(Era20cXts, HerzXts, titname, outdir, fname, width, height)
 
 \item{fname}{string of the file name of the plot}
 
-\item{width,}{height of the plot in inches}
+\item{width,height}{of the plot in inches}
 }
 \description{
 \code{Plot100mEraHerz} compares the 100m wind speed of the ERA20C

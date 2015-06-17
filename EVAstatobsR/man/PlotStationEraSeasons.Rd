@@ -21,7 +21,9 @@ corresponding to the station location}
 
 \item{outdir}{string of the output directory into which the plot is saved}
 
-\item{width,}{height of the plot in inches}
+\item{fname}{string of the file name of the plot}
+
+\item{width,height}{of the plot in inches}
 
 \item{anomaly}{is an optional parameter which determines whether to plot anomalies}
 

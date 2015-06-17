@@ -6,11 +6,11 @@
 GetYlims(xts1, xts2, xts3, xts4)
 }
 \arguments{
-\item{xts1,}{xts2, xts3, xts4 time series from which to determine the low and
+\item{xts1,xts2,xts3,xts4}{time series from which to determine the low and
 high range of the ylim.}
 }
 \value{
-yliml, ylimh a list of yliml and ylimh which are the lower and higher
+yliml,ylimh a list of yliml and ylimh which are the lower and higher
   bond of ylim.
 }
 \description{

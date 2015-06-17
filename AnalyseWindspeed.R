@@ -70,11 +70,11 @@ for (res.steps in seq(from=1, to=length(res.switch), by=1)) {
   herz.lat = readGrib(herz.grid, nlon, nlat, 1, var='RLAT')
 
   CheckFile(herz.fname)
-  dat = ReadHerzWind(var=herz10.param, infile=herz.fname)
+  dat = ReadNetcdf(var=herz10.param, infile=herz.fname)
   herz10.data <- dat[[1]]
   herz.time.vals <- dat[[2]]
 
-  dat = ReadHerzWind(var=herz116.param, infile=herz.fname)
+  dat = ReadNetcdf(var=herz116.param, infile=herz.fname)
   herz116.data <- dat[[1]]
 
   # loop over time periods to analyse

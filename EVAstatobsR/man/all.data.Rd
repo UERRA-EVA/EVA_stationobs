@@ -16,6 +16,13 @@ id}
 \item{station.lat}{latitude of the station}
 
 \item{station.lon}{longitude of the station}
+
+\item{daily}{optional boolean to specify whether station data has daily or hourly
+time steps. Default is daily (TRUE).}
+
+\item{download}{optional boolean to specify whether only downloading shall be
+performed or unzipping and data extraction shall be performed as well. Default
+is perform unzipping and extraction also (FALSE).}
 }
 \value{
 \code{data1} a data frame (returned as list) containing all this data

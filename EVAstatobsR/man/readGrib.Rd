@@ -9,7 +9,7 @@ readGrib(filename, nlon, nlat, nlev, var = "undef", out = "Rfile.dat",
 \arguments{
 \item{filename}{string of the grib file name to read from}
 
-\item{nlon,}{nlat, nlev specify the extent of the data in number of longitude,
+\item{nlon,nlat,nlev}{specify the extent of the data in number of longitude,
 latitude and vertical level steps (pixels)}
 
 \item{var}{string of the variable name to read}
@@ -20,6 +20,9 @@ independent from each other)}
 
 \item{recs}{up to two concatinated integers which specify the beginning and end of
 the records (time steps) to read}
+
+\item{pipe}{string to optionally specify additional selection chriterium. Default
+is an empty string.}
 }
 \value{
 x the array containing the read data

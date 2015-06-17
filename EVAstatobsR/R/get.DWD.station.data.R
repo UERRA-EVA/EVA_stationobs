@@ -267,7 +267,6 @@ get.data.download <- function(metadata=NULL){
   # CHECK THE EXISTENCE OF THE INPUT ARGUMENTS
   # Check if the input arguments are not null
   if (is.null(metadata)){
-    # source("get.metadata.R")
     metadata <- get.metadata()
   }
 
@@ -326,18 +325,18 @@ get.data.download <- function(metadata=NULL){
 
 #-----------------------------------------------------------------------------------
 
-#' @title Provide metadata for downloading data from ftp-server.
-#' @description #' A shortcut to the original \code{get.metadata} function by
-#'   using only those settings and fucntionality (e.g., no sql database) needed here.
+#' @title Provide metadata for downloading data from DWD-ftp server.
+#' @description Load metadata which specifies which data to download from the DWD-ftp
+#' server.
 #' @param time.resol String of station data time resolution, e.g., daily, hourly
 #' @param station.id string of the station id
-#' @param data.begin string of the begin date of the station data in the format
+#' @param date.begin string of the begin date of the station data in the format
 #'   "YYYY-MM-DD"
 #' @param date.end same as above for the end date
 #' @param path.element string as an additional element of the path to the data
 #' @return metadata The metadata saved in a string vector containing the above
 #'   parameters
-get.metadata.dummy <- function(time.resol, station.id,
+get.metadata <- function(time.resol, station.id,
                                date.begin, date.end, path.element){
   liste <- c("time.resol" , "station.id" ,  "date.begin" ,
              "date.end", "path.element")
@@ -369,14 +368,19 @@ get.metadata.dummy <- function(time.resol, station.id,
 #'   id
 #' @param station.lon longitude of the station
 #' @param station.lat latitude of the station
+#' @param daily optional boolean to specify whether station data has daily or hourly
+#'   time steps. Default is daily (TRUE).
+#' @param  download optional boolean to specify whether only downloading shall be
+#'   performed or unzipping and data extraction shall be performed as well. Default
+#'   is perform unzipping and extraction also (FALSE).
 #' @return \code{data1} a data frame (returned as list) containing all this data
 #'   including windspeed listed chronologically
 all.data <- function(station.id, station.name, station.lat, station.lon,
                      daily=TRUE, download=FALSE){
   if (daily) {
-    metadata <- get.metadata.dummy("daily",station.id,"1800-01-01","2020-12-31","kl")
+    metadata <- get.metadata("daily",station.id,"1800-01-01","2020-12-31","kl")
   } else {
-    metadata <- get.metadata.dummy("hourly",station.id,"1800-01-01","2020-12-31","wind")
+    metadata <- get.metadata("hourly",station.id,"1800-01-01","2020-12-31","wind")
   }
   if (!(download)) {
     data1 <- get.data(metadata)

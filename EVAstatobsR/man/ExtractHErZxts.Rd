@@ -10,6 +10,8 @@ ExtractHErZxts(herz.data, time.vals, herz.lon, herz.lat, tsstart, tsend,
 \item{herz.data}{is the HErZ data set from which to extract the time series at the
 station location}
 
+\item{time.vals}{time period covered by the HErZ data set}
+
 \item{herz.lon}{longitude grid points of the HErZ data set}
 
 \item{herz.lat}{latitude grid points of the HErZ data set}
@@ -22,8 +24,6 @@ HErZ data set time series}
 \item{stat.lon}{station longitude}
 
 \item{stat.lat}{station latitude}
-
-\item{time.vales}{time period covered by the HErZ data set}
 }
 \value{
 herz.xts[timestr]is the time series extracted off the HErZ reanalysis at

@@ -4,9 +4,9 @@
 #'   different time series.
 #'   This needs to be enhanced so that not all of those time series need to be
 #'   available. Something like present= in FORTRAN.
-#' @param xts1, xts2, xts3, xts4 time series from which to determine the low and
+#' @param xts1,xts2,xts3,xts4 time series from which to determine the low and
 #'   high range of the ylim.
-#' @return yliml, ylimh a list of yliml and ylimh which are the lower and higher
+#' @return yliml,ylimh a list of yliml and ylimh which are the lower and higher
 #'   bond of ylim.
 GetYlims <- function(xts1, xts2, xts3, xts4) {
   if (is.xts(xts1) & (is.xts(xts2)) & is.xts(xts3) & (is.xts(xts4))) {
@@ -35,7 +35,8 @@ GetYlims <- function(xts1, xts2, xts3, xts4) {
 #' @param StatXts monthly mean extended time series of the station values
 #' @param titname string of the plot title name
 #' @param outdir string of the output directory into which the plot is saved
-#' @param width, height of the plot in inches
+#' @param fname string of the file name of the plot
+#' @param width,height of the plot in inches
 #' @param monthly is an optional parameter which determines to plot the monthly
 #'   values of the above time series
 #' @param anomaly is an optional parameter which determines whether to plot anomalies
@@ -119,7 +120,8 @@ PlotStationEra <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 #' @param StatXts monthly mean extended time series of the station values
 #' @param titname string of the plot title name
 #' @param outdir string of the output directory into which the plot is saved
-#' @param width, height of the plot in inches
+#' @param fname string of the file name of the plot
+#' @param width,height of the plot in inches
 #' @param seasons is an optional parameter which determines whetther to plot the
 #'   monthly (F) or seasonal (T) values of the above time series
 #' @param anomaly is an optional parameter which determines whether to plot anomalies
@@ -239,10 +241,10 @@ PlotStationEraSeasons <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 #' @param StatXts monthly mean extended time series of the station values
 #' @param titname string of the plot title name
 #' @param outdir string of the output directory into which the plot is saved
-#' @param width, height of the plot in inches
-#' @param monthly is an optional parameter which determines to plot the monthly
-#'   values of the above time series
+#' @param fname string of the output file name
+#' @param width,height of the plot in inches
 #' @param anomaly is an optional parameter which determines whether to plot anomalies
+#' @note need to adopt titname to months; need to plot into four different panals
 PlotStationEraMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
                                  titname, outdir, fname, width, height,
                                  anomaly=FALSE) {
@@ -334,7 +336,7 @@ PlotStationEraMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 #' @param titname string of the plot title name
 #' @param outdir string of the output directory into which the plot is saved
 #' @param fname string of the file name of the plot
-#' @param width, height of the plot in inches
+#' @param width,height of the plot in inches
 Plot100mEraHerz <- function(Era20cXts, HerzXts,
                             titname, outdir, fname, width, height) {
 
@@ -365,10 +367,20 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
 }
 #-----------------------------------------------------------------------------------
 
-#' @title to be filled in
-#' @description to be filled in
-#' @param to be filled in
-#' @return to be filled in
+#' @title Calculate the S_score as described in Mayer et al., 2015.
+#' @description Mayer et al., 2015: "Identifying added value in high-resolution
+#'   climate simulations over Scandinavia" describe the S_score based on the
+#'   examination of two PDFs and checking their overlap. Here, these two PDFs are
+#'   built off one pixel of a reanalysis time series and the corresponding station
+#'   time series. Here, the S_score is plotted as January through December values,
+#'   displaying the annual cycle.  The plot is saved in pdf format and there is no
+#'   return value.
+#' @param era.xts is the reanalysis time series of one pixel
+#' @param station.xts is the corresponding station time series
+#' @param outdir is a string containing the output path of the plot
+#' @param fname is a string of the file name of the plot file
+#' @param titname is a string containig the title name of the plot
+#' @param width,height of the plot in inches
 PlotMonthlyPDFScore <- function(era.xts, station.xts, outdir, fname, titname,
                                 width, height) {
 

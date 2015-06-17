@@ -9,6 +9,8 @@ ExtractERAxts(data, time.vals, lon, lat, tsstart, tsend, stat.lon, stat.lat)
 \item{data}{data set (reanalysis) from which to extract the time series at the
 station location}
 
+\item{time.vals}{time period covered by the data set}
+
 \item{lon}{longitude grid points of the data set}
 
 \item{lat}{latitude grid points of the data set}
@@ -21,8 +23,6 @@ data set time series}
 \item{stat.lon}{station longitude}
 
 \item{stat.lat}{station latitude}
-
-\item{time.vales}{time period covered by the data set}
 }
 \value{
 era.xts[timestr] is the time series extracted off the data set at the

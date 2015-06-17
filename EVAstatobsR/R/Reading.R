@@ -4,7 +4,7 @@
 #'   files by parameter and by specifyed level and time step. This function has been
 #'   written by Chris Bollmeyer of Uni Bonn, received in 2014-09-25
 #' @param filename string of the grib file name to read from
-#' @param nlon, nlat, nlev specify the extent of the data in number of longitude,
+#' @param nlon,nlat,nlev specify the extent of the data in number of longitude,
 #'   latitude and vertical level steps (pixels)
 #' @param var string of the variable name to read
 #' @param out a temporary file into which output is dumped. NOTE: this needs to be
@@ -12,8 +12,11 @@
 #'   independent from each other)
 #' @param recs up to two concatinated integers which specify the beginning and end of
 #'   the records (time steps) to read
+#' @param pipe string to optionally specify additional selection chriterium. Default
+#'   is an empty string.
 #' @return x the array containing the read data
-readGrib <- function(filename,nlon,nlat,nlev,var='undef',out='Rfile.dat',recs=c(0),pipe='') {
+readGrib <- function(filename, nlon, nlat, nlev, var='undef', out='Rfile.dat',
+                     recs=c(0), pipe='') {
   if (recs[1]==0) {
     if (var == 'undef') {
       system(paste('wgrib -d all ',filename,' -bin -nh -o ',out,sep=''))
@@ -70,10 +73,17 @@ readGrib <- function(filename,nlon,nlat,nlev,var='undef',out='Rfile.dat',recs=c(
 
 #===================================================================================
 
-#' @title to be filled in
-#' @description to be filled in
-#' @param to be filled in
-#' @return to be filled in
+#' @title Reading netCDF files.
+#' @description \code{ReadNetcdf} read nc-files provided a variable name and the
+#'   file name to read from. Longitude, latitude, and time values are read if
+#'   available. An optional paramter "revert" regulates whether the data values
+#'   should be reverted in North-South.
+#' @param variable is a string containing the variable name to be read of the nc-file
+#' @param infile is a string holding the file name to read
+#' @param revert in an optional boolean to decided whether to revert the data in
+#'   North-South direction. Default is not to revert the data (FALSE)
+#' @return data,lon,lat,time.vals in a list holding the read data, longitude,
+#'   latitude, and time values
 ReadNetcdf <- function(variable, infile, revert=FALSE) {
 
   # === read and use seasonal time series data and plot only these ===
@@ -106,40 +116,6 @@ ReadNetcdf <- function(variable, infile, revert=FALSE) {
   }
 
   return(list(data, lon, lat, time.vals))
-}
-
-#-----------------------------------------------------------------------------------
-
-#' @title to be filled in
-#' @description to be filled in
-#' @param to be filled in
-#' @return to be filled in
-ReadHerzWind <- function(varname, infile, revert=FALSE) {
-  # === open nc file and read data, lat, lon
-  nc <- open.ncdf(infile)
-  data <- get.var.ncdf(nc, varname)
-
-  # set missing value
-  data[data==nc$var[[varname]]$missval] <- NA
-  close.ncdf(nc)
-
-  # read time
-  time.vals <- convertDateNcdf2R(infile)
-
-  #=== reverse latitude vector
-  if (revert) {
-    lat <- rev(lat)
-    # flip data along latitude
-    if (length(dim(data)) == 3) {
-      data <- data[, ncol(data):1, ] #lat being dimension number 2
-    } else if (length(dim(data)) == 2) {
-      data <- data[, ncol(data):1] #lat being dimension number 2
-    } else {
-      stop("   @@@   UNEXPECTED LENGTH OF DATA: ", dim(data))
-    }
-  }
-
-  return(list(data, time.vals))
 }
 
 #-----------------------------------------------------------------------------------
