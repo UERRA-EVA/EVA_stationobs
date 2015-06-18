@@ -4,24 +4,23 @@ library(xts)
 library(EVAstatobsR)
 rm(list=ls())
 
-interactive = FALSE
+interactive = F
 if (interactive) {
   arguments <- commandArgs(TRUE)
   config.file<-arguments[1]
-  CheckFile(config.file)
-  # checks on variables:
-  if (!res.switch == "HighRes" & !res.switch == "OrigRes") {
-    cat("\n   *** Unexpected res.switch, ABORTING!\n   res.switch = ", res.switch,
-        "\n   should be either HighRes or OrigRes\n   ***\n")
-    quit(status=1)
-  }
 } else {
-  setwd("/home/mborsche/work/UERRA/EVA_stationobs/")
-  config.file = paste0(getwd(), "/Settings.R")
+  config.file = "./Settings.R"
   CheckFile(config.file)
 }
-# read config parameters
+CheckFile(config.file)
 source(config.file)
+
+# checks on variables:
+if (!res.switch == "HighRes" & !res.switch == "OrigRes") {
+  cat("\n   *** Unexpected res.switch, ABORTING!\n   res.switch = ", res.switch,
+      "\n   should be either HighRes or OrigRes\n   ***\n")
+  quit(status=1)
+}
 
 #==================
 #
