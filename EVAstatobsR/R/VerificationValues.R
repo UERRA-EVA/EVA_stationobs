@@ -42,48 +42,50 @@ PDFscore <- function(xts1, xts2) {
 #' @param StatXts same as above for the station values
 #' @return list a list of all possible perturbations of correlations between the
 #'   provided four extended time series.
-GetCorrXts <- function(Era20cXts, EraIXts, HerzXts, StatXts) {
-  if ((index(Era20cXts[1]) == index(EraIXts[1])) &
-        (tail(index(Era20cXts), 1) == tail(index(EraIXts), 1))) {
-    Corr.Era20cEraI = cor(Era20cXts, EraIXts)
+GetCorrXts <- function(era20c=Era20cXts, eraI=EraIXts, herz=HerzXts, stat=StatXts) {
+  if ((index(era20c[1]) == index(eraI[1])) &
+        (tail(index(era20c), 1) == tail(index(eraI), 1))) {
+    Corr.Era20cEraI = cor(era20c, eraI)
   } else{
     Corr.Era20cEraI = NA
   }
-  if ((index(Era20cXts[1]) == index(HerzXts[1])) &
-        (tail(index(Era20cXts), 1) == tail(index(HerzXts), 1))) {
-    Corr.Era20cHerz = cor(Era20cXts, HerzXts)
+  if ((index(era20c[1]) == index(herz[1])) &
+        (tail(index(era20c), 1) == tail(index(herz), 1))) {
+    Corr.Era20cHerz = cor(era20c, herz)
   } else{
     Corr.Era20cHerz = NA
   }
 
-  if ((index(EraIXts[1]) == index(HerzXts[1])) &
-        (tail(index(EraIXts), 1) == tail(index(HerzXts), 1))) {
-    Corr.EraIHerz = cor(EraIXts, HerzXts)
+  if ((index(eraI[1]) == index(herz[1])) &
+        (tail(index(eraI), 1) == tail(index(herz), 1))) {
+    Corr.EraIHerz = cor(eraI, herz)
   } else{
     Corr.EraIHerz = NA
   }
 
-  if ((index(Era20cXts[1]) == index(StatXts[1])) &
-        (tail(index(Era20cXts), 1) == tail(index(StatXts), 1))) {
-    Corr.Era20cStat = cor(Era20cXts, StatXts)
+  if ((index(era20c[1]) == index(stat[1])) &
+        (tail(index(era20c), 1) == tail(index(stat), 1))) {
+    Corr.Era20cStat = cor(era20c, stat)
   } else{
     Corr.Era20cStat = NA
   }
-  if ((index(EraIXts[1]) == index(StatXts[1])) &
-        (tail(index(EraIXts), 1) == tail(index(StatXts), 1))){
-    Corr.EraIStat = cor(EraIXts, StatXts)
+  if ((index(eraI[1]) == index(stat[1])) &
+        (tail(index(eraI), 1) == tail(index(stat), 1))){
+    Corr.EraIStat = cor(eraI, stat)
   } else{
     Corr.EraIStat = NA
   }
-  if ((index(HerzXts[1]) == index(StatXts[1])) &
-        (tail(index(HerzXts), 1) == tail(index(StatXts), 1))) {
-    Corr.HerzStat = cor(HerzXts, StatXts)
+  if ((index(herz[1]) == index(stat[1])) &
+        (tail(index(herz), 1) == tail(index(stat), 1))) {
+    Corr.HerzStat = cor(herz, stat)
   } else{
     Corr.HerzStat = NA
   }
 
-  return(list(Corr.Era20cEraI, Corr.Era20cHerz, Corr.Era20cStat, Corr.EraIHerz,
-              Corr.EraIStat, Corr.HerzStat))
+  # naming means, e.g., for c.H.S: correlation between Herz and Station data
+  return(list(c.20c.I=Corr.Era20cEraI, c.20c.H=Corr.Era20cHerz,
+              c.20c.S=Corr.Era20cStat, c.I.H=Corr.EraIHerz,
+              c.I.S=Corr.EraIStat, c.H.S=Corr.HerzStat))
 
 }
 

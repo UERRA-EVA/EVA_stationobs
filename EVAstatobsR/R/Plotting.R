@@ -17,7 +17,7 @@ GetYlims <- function(xts1, xts2, xts3, xts4) {
     stop("\nXTS1 OR XTS2 OR XTS3 OR XTS4 IS NOT AN XTS !! ABORTING\n")
   }
 
-  return(list(yliml, ylimh))
+  return(list(yll=yliml, ylh=ylimh))
 }
 
 #-----------------------------------------------------------------------------------
@@ -56,8 +56,8 @@ PlotStationEra <- function(Era20cXts, EraIXts, HerzXts, StatXts,
     StatXts = StatXts - mean(StatXts)
   }
   Ylims = GetYlims(Era20cXts, EraIXts, HerzXts, StatXts)
-  yliml = Ylims[[1]]
-  ylimh = Ylims[[2]]
+  yliml = Ylims$yll
+  ylimh = Ylims$ylh
 
   # ERA20C
   dummy = numeric(length=length(Era20cXts)) * NA
@@ -91,14 +91,14 @@ PlotStationEra <- function(Era20cXts, EraIXts, HerzXts, StatXts,
     lines(rollmean(StatXts, roll.time), col="black", lw=1.5)
   }
 
-  Corr.vals = GetCorrXts(Era20cXts, EraIXts, HerzXts, StatXts)
+  Corr.vals = GetCorrXts(era20c=Era20cXts, eraI=EraIXts, herz=HerzXts, stat=StatXts)
 
-  legend("topleft", legend=c(paste0("Corr(ERA20C, Stat) = ", round(Corr.vals[[3]], 2)),
-                             paste0("Corr(ERAI, Stat) = ", round(Corr.vals[[5]], 2)),
-                             paste0("Corr(HErZ, Stat) = ", round(Corr.vals[[6]], 2)),
-                             paste0("Corr(ERA20C, ERAI)= ", round(Corr.vals[[1]], 2)),
-                             paste0("Corr(ERA20C, HErZ)= ", round(Corr.vals[[2]], 2)),
-                             paste0("Corr(ERAI, HErZ)= ", round(Corr.vals[[4]], 2))),
+  legend("topleft", legend=c(paste0("Corr(ERA20C, Stat) = ", round(Corr.vals$c.20c.S, 2)),
+                             paste0("Corr(ERAI, Stat) = ", round(Corr.vals$c.I.S, 2)),
+                             paste0("Corr(HErZ, Stat) = ", round(Corr.vals$c.H.S, 2)),
+                             paste0("Corr(ERA20C, ERAI)= ", round(Corr.vals$c.20c.I, 2)),
+                             paste0("Corr(ERA20C, HErZ)= ", round(Corr.vals$c.20c.H, 2)),
+                             paste0("Corr(ERAI, HErZ)= ", round(Corr.vals$c.I.H, 2))),
          text.col=c("blue", "red", "green", "black", "black", "black"))
   dev.off()
 }
@@ -147,8 +147,8 @@ PlotStationEraSeasons <- function(Era20cXts, EraIXts, HerzXts, StatXts,
   statwin = StatXts[.indexmon(StatXts) %in% c(0,1,11)]
 
   Ylims = GetYlims(eracwin, eraiwin, herzwin, statwin)
-  yliml = Ylims[[1]]
-  ylimh = Ylims[[2]]
+  yliml = Ylims$yll
+  ylimh = Ylims$ylh
 
   if (anomaly) {
     eracsum = eracsum - mean(eracsum)
@@ -282,8 +282,8 @@ PlotStationEraMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
   ylimh = vector(mode="numeric", length=length(months))
   for (cnt in seq(1,length(months))) {
     Ylims = GetYlims(mon.Era20c[[cnt]], mon.EraI[[cnt]], mon.Herz[[cnt]], mon.Stat[[cnt]])
-    yliml[cnt] = Ylims[[1]]
-    ylimh[cnt] = Ylims[[2]]
+    yliml[cnt] = Ylims$yll
+    ylimh[cnt] = Ylims$ylh
   }
   yliml = min(yliml)
   ylimh = max(ylimh)
@@ -346,8 +346,8 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
   dummy = xts(dummy, order.by = index(Era20cXts))
 
   Ylims = GetYlims(Era20cXts, HerzXts, dummy, dummy)
-  yliml = Ylims[[1]]
-  ylimh = Ylims[[2]]
+  yliml = Ylims$yll
+  ylimh = Ylims$ylh
 
   plot(dummy, main=titname, ylab="windspeed [m/s^2]", ylim=c(yliml, ylimh))
 
@@ -357,10 +357,12 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
   # HErZ
   lines(HerzXts, type="b", pch=16, col="green3", lw=1.5)
 
-  Corr.vals = GetCorrXts(Era20cXts, HerzXts, dummy, dummy)
+  Corr.vals = GetCorrXts(era20c=Era20cXts, herz=HerzXts, eraI=dummy, stat=dummy)
 
-  legend("topleft", legend=c(paste0("Corr(ERA20C, HErZ)= ", round(Corr.vals[[2]], 2)),
+  legend("topleft", legend=c(paste0("Corr(ERA20C, HErZ)= ",
+                                    round(Corr.vals$c.20c.H, 2)),
                              text.col=c("blue")))
+
   dev.off()
 
 }

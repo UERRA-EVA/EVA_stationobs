@@ -9,6 +9,7 @@ if (interactive) {
   arguments <- commandArgs(TRUE)
   config.file<-arguments[1]
 } else {
+  setwd("/home/mborsche/work/UERRA/EVA_stationobs")
   config.file = "./Settings.R"
   CheckFile(config.file)
 }
@@ -39,13 +40,13 @@ for (res.steps in seq(from=1, to=length(res.switch), by=1)) {
   CheckFile(era20c.fname)
 
   era20c = ReadNetcdf(era20c.param, era20c.fname)
-  era20c.data = era20c[[1]]
-  era20c.lon = era20c[[2]]
-  era20c.lat = era20c[[3]]
-  era20c.time.vals = era20c[[4]]
+  era20c.data = era20c$data
+  era20c.lon = era20c$lon
+  era20c.lat = era20c$lat
+  era20c.time.vals = era20c$time
 
   era20c = ReadNetcdf(era20c100.param, era20c.fname)
-  era20c100.data = era20c[[1]]
+  era20c100.data = era20c$data
 
   # read ERA-Interim monthly mean windspeed
   if (res.switch[res.steps] == "HighRes") {
@@ -56,10 +57,10 @@ for (res.steps in seq(from=1, to=length(res.switch), by=1)) {
   CheckFile(eraI.fname)
 
   eraI = ReadNetcdf(eraI.param, eraI.fname)
-  eraI.data = eraI[[1]]
-  eraI.lon = eraI[[2]]
-  eraI.lat = eraI[[3]]
-  eraI.time.vals = eraI[[4]]
+  eraI.data = eraI$data
+  eraI.lon = eraI$lon
+  eraI.lat = eraI$lat
+  eraI.time.vals = eraI$time
 
   # read HErZ monthly mean windspeed
   CheckFile(herz.grid)
@@ -70,11 +71,11 @@ for (res.steps in seq(from=1, to=length(res.switch), by=1)) {
 
   CheckFile(herz.fname)
   dat = ReadNetcdf(var=herz10.param, infile=herz.fname)
-  herz10.data <- dat[[1]]
-  herz.time.vals <- dat[[4]]
+  herz10.data <- dat$data
+  herz.time.vals <- dat$time
 
   dat = ReadNetcdf(var=herz116.param, infile=herz.fname)
-  herz116.data <- dat[[1]]
+  herz116.data <- dat$data
 
   # loop over time periods to analyse
   for (switch.steps in seq(from=1, to=length(time.switch), by=1)) {

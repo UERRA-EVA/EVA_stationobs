@@ -114,7 +114,7 @@ ReadNetcdf <- function(variable, infile, revert=FALSE) {
     }
   }
 
-  return(list(data, lon, lat, time.vals))
+  return(list(data=data, lon=lon, lat=lat, time=time.vals))
 }
 
 #-----------------------------------------------------------------------------------
