@@ -360,8 +360,8 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
   Corr.vals = GetCorrXts(era20c=Era20cXts, herz=HerzXts, eraI=dummy, stat=dummy)
 
   legend("topleft", legend=c(paste0("Corr(ERA20C, HErZ)= ",
-                                    round(Corr.vals$c.20c.H, 2)),
-                             text.col=c("blue")))
+                                    round(Corr.vals$c.20c.H, 2))),
+                             text.col=c("blue"))
 
   dev.off()
 
