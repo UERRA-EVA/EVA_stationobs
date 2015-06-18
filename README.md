@@ -33,10 +33,10 @@ Installation:
  * git clone https://github.com/UERRA-EVA/EVA_stationobs.git
 
 5. Build the package:
- * in RStudio use **Build -> Build and Reload**
+ * in RStudio use *Build -> Build and Reload*
  * with devtools use **build()** and then **install()**
 
-Configuration in **Settings.R**
+Configuration in *Settings.R*
 ---------------------------
 The *Settings.R* file holds the settings of variable configurations to the script.
 Please refer to the explanations within this file for further details.
@@ -44,6 +44,12 @@ Please refer to the explanations within this file for further details.
 
 Running the package:
 --------------------
+In order to run the package, execute the main script "AnalyseWindspeed.R" together with its configuration file *Settings.R*.
+ * ./AnalyseWindspeed.R Settings.R
 
-In order to run the program , the file "./AnalyseWindspeed.R" needs to be executedwith its settings file Settings.R needs to be run.
-In "Settings.R" data files and plotting options need to be set. The folders holding the data and the output plots need to be specified.
+The verification can be run on four different pre-defined time periods.
+For each time period, four different analyses can be performed:
+ * plot monthly mean time series of station data and reanalyses, their anomalies, and correlations of 10m wind speed
+ * the same as above for 100m wind speed between ERA20C and COSMO HErZ reanalyses
+ * the same as the first for specific monthss only
+ * calculate an S_score between two PDFs and determine their overlapping following Mayer et al., 2015 (determine whether the PDFs belong to the same distribution with the Smirnov test will be added soon)
