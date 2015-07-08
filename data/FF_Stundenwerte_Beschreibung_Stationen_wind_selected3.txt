@@ -1,0 +1,5 @@
+Stations_id;von_datum;bis_datum;Stationshoehe;geoBreite;geoLaenge;Stationsname;Bundesland
+-----------;---------;---------;-------------;---------;---------;-----------------------------------------;----------
+1975;19500101;20150330;11;53.6332;9.9881;Hamburg-Fuhlsbüttel;Hamburg
+2014;19500101;20150330;55;52.4644;9.6779;Hannover;Niedersachsen
+3668;19490101;20150330;314;49.5031;11.0549;Nürnberg;Bayern

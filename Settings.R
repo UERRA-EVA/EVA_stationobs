@@ -33,7 +33,7 @@ eraI.param = "si10"
 
 #=== HErZ ===
 # filename to COSMO HErZ reanalysis file
-herz.fname = "./data/WindSpeed_HErZ_MonMean_19982014.nc"
+herz.fname = "./data/WindSpeed_HErZ_MonMean_1997to2014.nc"
 herz.grid = "./data/COSMO_REA6_CONST_withOUTsponge.grb"
 # variable names to read from above files
 herz10.param = "windspeed_10m"
@@ -44,18 +44,18 @@ herz116.param = "windspeed_116m"
 daily = FALSE
 # filename of station name list
 station.daily.fname = "./data/KL_Tageswerte_Beschreibung_Stationen.txt"
-station.hourly.fname = "./data/FF_Stundenwerte_Beschreibung_Stationen_wind.txt"
+station.hourly.fname = "./data/FF_Stundenwerte_Beschreibung_Stationen_wind_selected3.txt"
 
 #=== plotting ===
 # The following switches decided on which plots to generate
 
 # monthly mean time series between reanalyses and station data at 10m height
-plot.EraStatComp = T
+plot.EraStatComp = F
 # monthly mean time series between ERA20C and COSMO HErZ reanalyses at 100m height
-plot.100mEraHerz = T
+plot.100mEraHerz = F
 # only specific seasons of reanalyses and station data at 10m height - NOT YET FINISHED
 plot.EraStationSeasons = F
 # only specific months of reanalyses and station data at 10m height
-plot.EraStationMonths = T
-# PDF score between station data and each reanalysis at 10m height 
+plot.EraStationMonths = F
+# PDF score between station data and each reanalysis at 10m height
 plot.PDFscore = T

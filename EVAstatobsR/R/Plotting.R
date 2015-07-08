@@ -339,6 +339,9 @@ PlotStationEraMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 Plot100mEraHerz <- function(Era20cXts, HerzXts,
                             titname, outdir, fname, width, height) {
 
+  same.length = F
+  if (length(Era20cXts) == length(HerzXts)) {same.length = T}
+
   pdf(paste(outdir, fname, sep=""), width=width, height=height,
       onefile=TRUE, pointsize=13)
 
@@ -348,6 +351,11 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
   Ylims = GetYlims(Era20cXts, HerzXts, dummy, dummy)
   yliml = Ylims$yll
   ylimh = Ylims$ylh
+
+  if (same.length) {
+    oldpar = par
+    par(mfrow=c(2,1), mar=c(3,3,1,1), oma=c(0,0,3,1))
+  }
 
   plot(dummy, main=titname, ylab="windspeed [m/s^2]", ylim=c(yliml, ylimh))
 
@@ -361,7 +369,31 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
 
   legend("topleft", legend=c(paste0("Corr(ERA20C, HErZ)= ",
                                     round(Corr.vals$c.20c.H, 2))),
-                             text.col=c("blue"))
+         text.col=c("blue"))
+
+  if (same.length) {
+    Herz = as.numeric(HerzXts)
+    Era = as.numeric(Era20cXts)
+    plot(Era, Herz, pch=19,
+         xlim=c(yliml,ylimh), ylim=c(yliml, ylimh),
+         main=titname, xlab="100m HErZ windspeed [m/s]",
+         ylab="116m ERA20C windspeed [m/s]", col="blue")
+    lines(c(yliml-1,ylimh), c(yliml-1,ylimh))
+    abline(lm(Herz ~ Era), col="blue")
+    qqplot(Era, Herz, pch=19,
+           xlim=c(yliml-1,ylimh), ylim=c(yliml-1, ylimh),
+           main="Quantile-quantile plot", xlab="100m HErZ windspeed [m/s]",
+           ylab="116m ERA20C windspeed [m/s]")
+    abline(0,1)
+    hist(Era, freq=F, breaks=ceiling(max(Era))*2,
+         col="green", border="blue",
+         main="Frequency distribution of ERA20C", xlab="100m windspeed [m/s]")
+    hist(Herz, freq=F, breaks=ceiling(max(Era))*2,
+         col="green", border="blue",
+         main="Frequency distribution of COSMO HErZ", xlab="116m windspeed [m/s]")
+    PlotMonthlyPDFScore(Era20cXts, HerzXts, outdir, "PDFScore_100mEraHerz.pdf",
+                        "PDF Score between 100m Era20C and 116m HErZ windspeed [m7s]")
+  }
 
   dev.off()
 
@@ -385,25 +417,41 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
 PlotMonthlyPDFScore <- function(era.xts, station.xts, outdir, fname, titname,
                                 width, height) {
 
+  pdf(paste(outdir, fname, sep=""), onefile=TRUE, pointsize=11, width=21./2.54)
+
   date.era  <- as.POSIXlt(index(era.xts))
   date.stat <- as.POSIXlt(index(station.xts))
-
   PDF.score.anncycle = vector(mode="numeric", length=12)
   PDF.score.ann = vector(mode="numeric", length=12)
-
+  months = c("Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep",
+             "Okt", "Nov", "Dez")
+  max.abs.val = ceiling(max(max(era.xts), max(station.xts)))
   for (month in seq(0,11)) {
     monthly.era  <- era.xts[which(date.era$mon==month)]
     monthly.stat <- station.xts[which(date.stat$mon==month)]
+
+    min.val = floor(min(min(monthly.era), min(monthly.stat)))
+    max.val = ceiling(max(max(monthly.era), max(monthly.stat)))
+    hist(monthly.era, freq=F, col="green", xlab="windspeed [m/s]",
+         main="Histogram between \nreanalysis (green) and station data (shaded)",
+         breaks=seq(min.val, max.val, 0.25), xlim=c(1,max.abs.val))
+    hist(monthly.stat, freq=F, add=T, border="blue", density=10, angle=45,
+         breaks=seq(min.val, max.val, 0.25))
+    # par("usr") prvides the currently set axis limits
+    #     text(min.val+0.1, par("usr")[4]-0.05, months[month+1], cex=2.)
+    text(1+0.1, par("usr")[4]-0.05, months[month+1], cex=2.)
 
     PDF.score.anncycle[month+1] = PDFscore(monthly.era, monthly.stat)
   }
   PDF.score.ann[] = PDFscore(era.xts, station.xts)
 
-  pdf(paste(outdir, fname, sep=""), onefile=TRUE, pointsize=11, width=21./2.54)
-
   plot(PDF.score.anncycle, main=titname, ylab="pdf score", xlab="months of the year",
        type="b", pch=16, col="blue")
   lines(PDF.score.ann, type="b", lty=2, pch=20, col="red")
+
+  library(vioplot)
+  vioplot(era.xts, station.xts, horizontal=TRUE,
+          names=c("reanalysis", "station data"))
 
   dev.off()
 }

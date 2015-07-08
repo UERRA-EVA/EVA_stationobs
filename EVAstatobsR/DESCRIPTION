@@ -6,6 +6,6 @@ Authors@R: person("Michael", "Borsche", email = "michael.borsche@dwd.de",
 Description: What the package does (one paragraph)
 Depends:
     R (>= 3.0.2),
-    ncdf, ncdf.tools, xts
+    ncdf, ncdf.tools, xts, vioplot
 License: GPL (>=3)
 LazyData: false
