@@ -248,7 +248,7 @@ for (res.steps in seq(from=1, to=length(res.switch), by=1)) {
         ### COMPARE 100m ERA20c AND 116m HErZ###
         fname = paste0("100m-Era20cHerz_", gsub("/", "-", station.data$STATIONS_NAME[1]),
                        "_TimeSeriesMonthly_", res.switch[res.steps], '_', fname_ext, ".pdf")
-        titname = paste0('Windspeed [m/s^2] for station ',
+        titname = paste0('100m Windspeed [m/s^2] at station location ',
                          as.character(station.data$STATIONS_NAME[1]))
         Plot100mEraHerz(era20c100.data.xts, herz116.data.xts,
                         titname, outdir, fname, width=a4width, height=a4height)
