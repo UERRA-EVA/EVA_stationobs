@@ -4,6 +4,11 @@
 #' @param infile Character string or concatenated character strings holding the file
 #' name(s).
 CheckFile <- function(infile) {
+  if (!class(infile) == "character") {
+    err = simpleError(paste0("\n\n *** Unexpected type of infile, stopping!: ",
+                             class(infile), "\n\n"))
+    tryCatch(stop(err))
+  }
   if (any(!file.exists(infile))) {
     idx = which(!file.exists(infile))
     missing.file = infile[idx]
