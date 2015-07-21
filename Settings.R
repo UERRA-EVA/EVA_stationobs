@@ -1,13 +1,6 @@
 a4width = 29.7/2.54
 a4height = 21./2.54
 
-# this switch concerns the time period to analyse and depends on the availability
-# of the reanalyses:
-# * short.term: 2007-01 to 2010-12 (arbitrarily chosen short term analysis)
-# * mid.term:   1998-01 to 2010-12 (availability of COSMO HErZ reanalysis)
-# * long.term:  1979-01 to 2010-12 (availablity of ERA-Interim reanalysis to end of HErZ reanalysis)
-# * all.term:   1901-01 to 2010-12 and 2014-12 (availability of ERA20C reanalysis to end of global and regional reanalysis, respectively)
-time.switch = c("long.term")  # short.term, mid.term, long.term, all.term
 # this switch concerns the resolution of the ERA20C and ERA-Interim reanalyses
 # (HR is the version interpolated to 0.125°)
 res.switch = c("HighRes")   # HighRes, OrigRes
@@ -46,16 +39,29 @@ daily = FALSE
 station.daily.fname = "./data/KL_Tageswerte_Beschreibung_Stationen.txt"
 station.hourly.fname = "./data/FF_Stundenwerte_Beschreibung_Stationen_wind_selected3.txt"
 
+#=== time period ===
+# available data (beginning to end of year):
+#- era20c: 1900 to 2010
+#- eraI: 1979 to 2014
+#- herz: 1995 to 2014
+era20c.tsstart = c(1997,1)
+era20c.tsend = c(2010,12)
+eraI.tsstart = c(2007,1)
+eraI.tsend = c(2010,12)
+herz.tsstart = c(1997,1)
+herz.tsend = c(2010,12)
+fname_ext = "1997to2010"
+
 #=== plotting ===
 # The following switches decided on which plots to generate
 
 # monthly mean time series between reanalyses and station data at 10m height
 plot.EraStatComp = F
 # monthly mean time series between ERA20C and COSMO HErZ reanalyses at 100m height
-plot.100mEraHerz = F
+plot.100mEraHerz = T
 # only specific seasons of reanalyses and station data at 10m height - NOT YET FINISHED
 plot.EraStationSeasons = F
 # only specific months of reanalyses and station data at 10m height
 plot.EraStationMonths = F
 # PDF score between station data and each reanalysis at 10m height
-plot.PDFscore = T
+plot.PDFscore = F
