@@ -208,12 +208,12 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
 
     if (plot.100mEraHerz) {
       ### COMPARE 100m ERA20c AND 116m HErZ###
-      fname = paste0("100m-Era20cHerz_", gsub("/", "-", station.data$STATIONS_NAME[1]),
+      statname = as.character(station.data$STATIONS_NAME[1])
+      fname = paste0("100m-Era20cHerz_", gsub("/", "-", statname),
                      "_TimeSeriesMonthly_", res.switch[res.steps], '_', fname_ext, ".pdf")
-      titname = paste0('100m Windspeed [m/s^2] at station location ',
-                       as.character(station.data$STATIONS_NAME[1]))
-      Plot100mEraHerz(era20c100.data.xts, herz116.data.xts,
-                      titname, outdir, fname, width=a4width, height=a4height)
+      titname = paste0('100m Windspeed [m/s^2] at station location ', statname)
+      Plot100mEraHerz(era20c100.data.xts, herz116.data.xts, titname, statname,
+                      outdir, fname, width=a4width, height=a4height)
     }
 
     #-----------------------------------------------------------------------------

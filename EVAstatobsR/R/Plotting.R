@@ -337,7 +337,7 @@ PlotStationEraMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 #' @param fname string of the file name of the plot
 #' @param width,height of the plot in inches
 Plot100mEraHerz <- function(Era20cXts, HerzXts,
-                            titname, outdir, fname, width, height) {
+                            titname, statname, outdir, fname, width, height) {
 
   same.length = F
   if (length(Era20cXts) == length(HerzXts)) {same.length = T}
@@ -352,10 +352,10 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
   yliml = Ylims$yll
   ylimh = Ylims$ylh
 
-  if (same.length) {
-    oldpar = par
-    par(mfrow=c(2,1), mar=c(3,3,1,1), oma=c(0,0,3,1))
-  }
+  #   if (same.length) {
+  #     oldpar = par
+  #     par(mfrow=c(2,1), mar=c(3,3,1,1), oma=c(0,0,3,1))
+  #   }
 
   plot(dummy, main=titname, ylab="windspeed [m/s^2]", ylim=c(yliml, ylimh))
 
@@ -365,39 +365,39 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
   # HErZ
   lines(HerzXts, type="b", pch=16, col="green3", lw=1.5)
 
-  Corr.vals = GetCorrXts(era20c=Era20cXts, herz=HerzXts, eraI=dummy, stat=dummy)
+  if (same.length) {
+    Corr.vals = GetCorrXts(era20c=Era20cXts, herz=HerzXts, eraI=dummy, stat=dummy)
 
-  legend("topleft", legend=c(paste0("Corr(ERA20C, HErZ)= ",
-                                    round(Corr.vals$c.20c.H, 2))),
-         text.col=c("blue"))
+    legend("topleft", legend=c(paste0("Corr(ERA20C, HErZ)= ",
+                                      round(Corr.vals$c.20c.H, 2))),
+           text.col=c("blue"))
+  }
 
   if (same.length) {
     Herz = as.numeric(HerzXts)
     Era = as.numeric(Era20cXts)
-    plot(Era, Herz, pch=19,
-         xlim=c(yliml,ylimh), ylim=c(yliml, ylimh),
-         main=titname, xlab="100m HErZ windspeed [m/s]",
-         ylab="116m ERA20C windspeed [m/s]", col="blue")
-    lines(c(yliml-1,ylimh), c(yliml-1,ylimh))
-    abline(lm(Herz ~ Era), col="blue")
-    qqplot(Era, Herz, pch=19,
-           xlim=c(yliml-1,ylimh), ylim=c(yliml-1, ylimh),
-           main="Quantile-quantile plot", xlab="100m HErZ windspeed [m/s]",
-           ylab="116m ERA20C windspeed [m/s]")
-    abline(0,1)
-    hist(Era, freq=F, breaks=ceiling(max(Era))*2,
-         col="green", border="blue",
-         main="Frequency distribution of ERA20C", xlab="100m windspeed [m/s]")
-    hist(Herz, freq=F, breaks=ceiling(max(Era))*2,
-         col="green", border="blue",
-         main="Frequency distribution of COSMO HErZ", xlab="116m windspeed [m/s]")
-    PlotMonthlyPDFScore(Era20cXts, HerzXts, outdir, "PDFScore_100mEraHerz.pdf",
-                        "PDF Score between 100m Era20C and 116m HErZ windspeed [m7s]")
+
+    xlabname = "100m ERA20C windspeed [m/s]"
+    ylabname = "116m HErZ windspeed [m/s]"
+    scatterPlot(Era, Herz, yliml, ylimh, titname, xlabname, ylabname)
+
+    titname = "Quantile-quantile plot"
+    qqPlot(Era, Herz, yliml, ylimh, titname, xlabname, ylabname)
+
+    titname = "Frequency distribution of ERA20C"
+    breaks = ceiling(max(Era))*2
+    histoPlot(Era, breaks, titname, xlabname)
+    titname = "Frequency distribution of COSMO HErZ"
+    xlabname = ylabname
+    histoPlot(Herz, breaks, titname, xlabname)
+
+    PlotMonthlyPDFScore(Era20cXts, HerzXts, outdir, paste0("PDFScore_100mEraHerz_",
+                                                           statname,".pdf"),
+                        "PDF Score between 100m Era20C and 116m HErZ windspeed [m/s]")
   }
-
   dev.off()
-
 }
+
 #-----------------------------------------------------------------------------------
 
 #' @title Calculate the S_score as described in Mayer et al., 2015.
@@ -454,5 +454,32 @@ PlotMonthlyPDFScore <- function(era.xts, station.xts, outdir, fname, titname,
           names=c("reanalysis", "station data"))
 
   dev.off()
+}
+#-----------------------------------------------------------------------------------
+#'
+#'
+scatterPlot <- function(X, Y, yliml, ylimh, titname, xlabname, ylabname) {
+  plot(X, Y, pch=19,
+       xlim=c(yliml,ylimh), ylim=c(yliml, ylimh),
+       main=titname, xlab=xlabname, ylab=ylabname, col="blue")
+  lines(c(yliml-1,ylimh), c(yliml-1,ylimh))
+  abline(lm(Y ~ X), col="blue")
+}
+#-----------------------------------------------------------------------------------
+#'
+#'
+histoPlot <- function(X, breaks, titname, xlabname) {
+  hist(X, freq=F, breaks=breaks, col="green", border="blue",
+       main=titname, xlab=xlabname)
+}
+#-----------------------------------------------------------------------------------
+#'
+#'
+qqPlot <- function(X, Y, yliml, ylimh, titname, xlabname, ylabname) {
+  qqplot(X, Y, pch=19,
+         xlim=c(yliml-1,ylimh), ylim=c(yliml-1, ylimh),
+         main=titname, xlab=xlabname, ylab=ylabname)
+  abline(0,1)
+
 }
 #-----------------------------------------------------------------------------------
