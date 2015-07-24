@@ -62,7 +62,7 @@ PlotStationEra <- function(Era20cXts, EraIXts, HerzXts, StatXts,
   # ERA20C
   dummy = numeric(length=length(Era20cXts)) * NA
   dummy = xts(dummy, order.by = index(Era20cXts))
-  plot(dummy, main=titname, ylab="windspeed [m/s^2]", ylim=c(yliml, ylimh))
+  plot(dummy, main=titname, ylab="windspeed [m/s]", ylim=c(yliml, ylimh))
 
   if (monthly) { lines(Era20cXts, type="b", pch=16, col="blue", lw=1.5) }
   if (!monthly & roll.mean) {
@@ -170,7 +170,7 @@ PlotStationEraSeasons <- function(Era20cXts, EraIXts, HerzXts, StatXts,
   # ERA20C
   dummy = numeric(length=length(eracwin)) * NA
   dummy = xts(dummy, order.by = index(eracwin))
-  plot(dummy, main=titname, ylab="windspeed [m/s^2]", ylim=c(yliml, ylimh))
+  plot(dummy, main=titname, ylab="windspeed [m/s]", ylim=c(yliml, ylimh))
 
   if (roll.mean) {
     lines(rollmean(eracsum, roll.time), type="p", pch=21, col="blue", bg="blue", lw=2)
@@ -290,7 +290,7 @@ PlotStationEraMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 
   dummy = numeric(length=length(mon.Era20c[[1]])) * NA
   dummy = xts(dummy, order.by = index(mon.Era20c[[1]]))
-  plot(dummy, main=titname, ylab="windspeed [m/s^2]", ylim=c(yliml, ylimh))
+  plot(dummy, main=titname, ylab="windspeed [m/s]", ylim=c(yliml, ylimh))
 
   for (cnt in seq(1,length(months))) {
     # ERA20C
@@ -342,7 +342,7 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
   same.length = F
   if (length(Era20cXts) == length(HerzXts)) {same.length = T}
 
-  pdf(paste(outdir, fname, sep=""), width=width, height=height,
+  pdf(paste0(outdir, fname), width=width, height=height,
       onefile=TRUE, pointsize=13)
 
   dummy = numeric(length=length(Era20cXts)) * NA
@@ -357,7 +357,7 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
   #     par(mfrow=c(2,1), mar=c(3,3,1,1), oma=c(0,0,3,1))
   #   }
 
-  plot(dummy, main=titname, ylab="windspeed [m/s^2]", ylim=c(yliml, ylimh))
+  plot(dummy, main=titname, ylab="windspeed [m/s]", ylim=c(yliml, ylimh))
 
   # ERA20C
   lines(Era20cXts, type="b", pch=16, col="blue", lw=1.5)
@@ -385,11 +385,21 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
     qqPlot(Era, Herz, yliml, ylimh, titname, xlabname, ylabname)
 
     titname = "Frequency distribution of ERA20C"
-    breaks = ceiling(max(Era))*2
-    histoPlot(Era, breaks, titname, xlabname)
+    #     breaks = ceiling(max(max(Era),max(Herz)))*2
+
+    min.val = floor(min(min(Era), min(Herz)))
+    max.val = ceiling(max(max(Era), max(Herz)))
+    breaks = seq(min.val, max.val, 0.25)
+    dummy = numeric(length=length(Era)) * NA
+
+    histoPlot(Era, dummy, breaks, xlims=c(min.val, max.val), titname, xlabname)
     titname = "Frequency distribution of COSMO HErZ"
     xlabname = ylabname
-    histoPlot(Herz, breaks, titname, xlabname)
+    histoPlot(Herz, dummy, breaks, xlims=c(min.val, max.val), titname, xlabname)
+    titname = paste0("Frequency distribution of ERA20C windspeed at 100m\n",
+                     "in green and COSMO HErZ at 116m shaded")
+    xlabname = "windspeed [m/s]"
+    histoPlot(Era, Herz, breaks, xlims=c(min.val, max.val), titname, xlabname, addPlot=T)
 
     PlotMonthlyPDFScore(Era20cXts, HerzXts, outdir, paste0("PDFScore_100mEraHerz_",
                                                            statname,".pdf"),
@@ -432,11 +442,13 @@ PlotMonthlyPDFScore <- function(era.xts, station.xts, outdir, fname, titname,
 
     min.val = floor(min(min(monthly.era), min(monthly.stat)))
     max.val = ceiling(max(max(monthly.era), max(monthly.stat)))
-    hist(monthly.era, freq=F, col="green", xlab="windspeed [m/s]",
-         main="Histogram between \nreanalysis (green) and station data (shaded)",
-         breaks=seq(min.val, max.val, 0.25), xlim=c(1,max.abs.val))
-    hist(monthly.stat, freq=F, add=T, border="blue", density=10, angle=45,
-         breaks=seq(min.val, max.val, 0.25))
+
+    breaks = seq(min.val, max.val, 0.25)
+    titname = "Histogram between \nreanalysis (green) and station data (shaded)"
+    xlabname = "windspeed [m/s]"
+    histoPlot(monthly.era, monthly.stat, breaks, xlims=c(min.val, max.val),
+              titname, xlabname, addPlot=T)
+
     # par("usr") prvides the currently set axis limits
     #     text(min.val+0.1, par("usr")[4]-0.05, months[month+1], cex=2.)
     text(1+0.1, par("usr")[4]-0.05, months[month+1], cex=2.)
@@ -468,9 +480,21 @@ scatterPlot <- function(X, Y, yliml, ylimh, titname, xlabname, ylabname) {
 #-----------------------------------------------------------------------------------
 #'
 #'
-histoPlot <- function(X, breaks, titname, xlabname) {
-  hist(X, freq=F, breaks=breaks, col="green", border="blue",
-       main=titname, xlab=xlabname)
+histoPlot <- function(X, Y, breaks, xlims, titname, xlabname, addPlot=FALSE) {
+  if (addPlot) {
+    # get high ylim for overplotting histograms
+    hist1 = hist(X, breaks=breaks, plot=F)
+    hist2 = hist(Y, breaks=breaks, plot=F)
+    ylimh = ceiling(10.*max(hist1$density, hist2$density))/10.
+    # plot both histograms
+    hist(X, freq=F, breaks=breaks, xlim=xlims, ylim=c(0.0, ylimh),
+         col="green", border="blue", main=titname, xlab=xlabname)
+    hist(Y, freq=F, add=T, breaks=breaks, border="blue", density=10, angle=45)
+  } else {
+    hist(X, freq=F, breaks=breaks, xlim=xlims, col="green", border="blue",
+         main=titname, xlab=xlabname)
+    lines(density(X), col="red", lw=1.5)
+  }
 }
 #-----------------------------------------------------------------------------------
 #'
