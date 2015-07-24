@@ -352,11 +352,6 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
   yliml = Ylims$yll
   ylimh = Ylims$ylh
 
-  #   if (same.length) {
-  #     oldpar = par
-  #     par(mfrow=c(2,1), mar=c(3,3,1,1), oma=c(0,0,3,1))
-  #   }
-
   plot(dummy, main=titname, ylab="windspeed [m/s]", ylim=c(yliml, ylimh))
 
   # ERA20C
@@ -385,7 +380,6 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
     qqPlot(Era, Herz, yliml, ylimh, titname, xlabname, ylabname)
 
     titname = "Frequency distribution of ERA20C"
-    #     breaks = ceiling(max(max(Era),max(Herz)))*2
 
     min.val = floor(min(min(Era), min(Herz)))
     max.val = ceiling(max(max(Era), max(Herz)))
