@@ -31,14 +31,14 @@ if (!res.switch == "HighRes" & !res.switch == "OrigRes") {
 
 # read station data
 path = "~/datensicherung/transfer/"
-if (daily) {
+if (station.daily) {
   station.fname = station.daily.fname
 } else {
   station.fname = station.hourly.fname
 }
 CheckFile(station.fname)
 
-if (daily) {
+if (station.daily) {
   station.data = read.table(station.fname, skip=2, sep=";")
   colnames(station.data) = c("Station_id", "von_datum", "bis_datum", "Stationshoehe",
                              "geoBreite", "geoLaenge", "Stationsname", "Bundesland")
@@ -63,12 +63,12 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
   station.data = data.frame()
   station.data = all.data(station.info[[1]][steps], station.info[[2]][steps],
                           station.info[[3]][steps], station.info[[4]][steps],
-                          daily = daily)
+                          daily = station.daily)
 
   MM.station = ExtractStationData(station.data, era20c.tsstart, era20c.tsend,
                                   eraI.tsstart, eraI.tsend,
                                   herz.tsstart, herz.tsend,
-                                  daily=daily)
+                                  daily=station.daily)
   if(length(MM.station) == 0) {
     cat(paste0("\n  ***  ",
                "The length of the station data record ",
