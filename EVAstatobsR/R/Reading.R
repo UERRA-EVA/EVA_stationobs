@@ -83,11 +83,23 @@ readGrib <- function(filename, nlon, nlat, nlev, var='undef', out='Rfile.dat',
 #'   North-South direction. Default is not to revert the data (FALSE)
 #' @return data,lon,lat,time.vals in a list holding the read data, longitude,
 #'   latitude, and time values
-ReadNetcdf <- function(variable, infile, revert=FALSE) {
+ReadNetcdf <- function(variable, infile, start=NULL, count=NULL, revert=FALSE) {
 
-  # === read and use seasonal time series data and plot only these ===
+  # === read netCDF file depending on start and count of variable index ===
   nc <- open.ncdf(infile)
-  data <- get.var.ncdf(nc, variable)
+  if (is.numeric(start)) {
+    if (is.numeric(count)) {
+      data <- get.var.ncdf(nc, variable, start=start, count=count)
+    } else {
+      data <- get.var.ncdf(nc, variable, start=start)
+    }
+  } else {
+    if (is.numeric(count)) {
+      data <- get.var.ncdf(nc, variable, count=count)
+    } else {
+      data <- get.var.ncdf(nc, variable)
+    }
+  }
 
   # set missing value
   data[data==nc$var[[variable]]$missval] <- NA
@@ -118,3 +130,17 @@ ReadNetcdf <- function(variable, infile, revert=FALSE) {
 }
 
 #-----------------------------------------------------------------------------------
+#' @title Read longitude and latitude arrays off a netCDF file.
+#' @description \code{ReadnercdfLonLat} is a shortcut to only read the longitude and latitude
+#' information off a netCDF file. If they don't exist a NULL value will be returned.
+#' @param infile string of the file name to be read
+#' @return lon,lat the longitude and latitude arrays (1D or 2D) read off the netCDF
+#' file.
+ReadNetcdfLonLat <- function(infile) {
+  CheckFile(infile)
+  nc <- open.ncdf(infile)
+  lon <- nc$dim$lon$vals
+  lat <- nc$dim$lat$vals
+  close.ncdf(nc)
+  return(list(lon=lon, lat=lat))
+}
