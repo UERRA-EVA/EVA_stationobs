@@ -34,7 +34,7 @@ getNearest <- function(b1,b2,l1,l2){
 
 #-----------------------------------------------------------------------------------
 
-#' @title Extract and align wind station data to reanalysis data
+#' @title Extract and align wind station data to reanalysis data.
 #' \code{ExtractStationData} reads wind speed values and dates from station data and
 #' creates a gap filled extended time series. Monthly mean time series are calculated
 #' which span the time period of the longest stretching reanalysis data set.
@@ -107,7 +107,7 @@ ExtractStationData <- function(station.data, era20c.tsstart, era20c.tsend,
 
 #-----------------------------------------------------------------------------------
 
-#' @title Extract ERA pixel corresponding to station location.
+#' @title Extract extended times series of ERA pixel corresponding to station location.
 #' @description \code{ExtractERAxts} extracts the nearest pixel of a provided data
 #'   set (reanalysis) given the station location (lon, lat).
 #' @param data data set (reanalysis) from which to extract the time series at the
@@ -130,8 +130,8 @@ ExtractERAxts <- function(data, time.vals,
   time.vals = as.yearmon(time.vals)
 
   # need to get pixel from ERA20C corresponding to lonlat of station
-  latidx = which( abs(lat - stat.lat) == min(abs(lat - stat.lat)) )
-  lonidx = which( abs(lon - stat.lon) == min(abs(lon - stat.lon)) )
+  latidx = get.nearest.idx(lat, stat.lat)
+  lonidx = get.nearest.idx(lon, stat.lon)
   data.vals = data[lonidx,latidx,]
 
   time.series.frame = data.frame(time.vals, data.vals)
@@ -146,7 +146,7 @@ ExtractERAxts <- function(data, time.vals,
 
 #-----------------------------------------------------------------------------------
 
-#' @title Extract HErZ pixel corresponding to station location.
+#' @title Extract extended time series of HErZ pixel corresponding to station location.
 #' @description \code{ExtractHErZxts} extracts the time series of the HErZ pixel
 #'   corresponding to the station location. HErZ data come in an irregular polar
 #'   projection which calls for a function to extract the correct pixel off that grid.
@@ -170,7 +170,7 @@ ExtractHErZxts <- function(herz.data, time.vals,
   # set time.vals to class yearmon
   time.vals = as.yearmon(time.vals)
 
-  # need to get pixel from HErZ corresponding to lonlat of station
+  # need to get pixel from HErZ corresponding to lon, lat of station
   dist.to.point = getNearest(stat.lat, herz.lat, stat.lon, herz.lon)
   index.at.point = arrayInd(which.min(dist.to.point), dim(dist.to.point))
   data.vals = herz.data[index.at.point[1],index.at.point[2],]
