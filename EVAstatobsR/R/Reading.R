@@ -9,59 +9,83 @@
 #' @param out a temporary file into which output is dumped. NOTE: this needs to be
 #'   specifyied if this function is called more than once in parralel (i.e., totally
 #'   independent from each other)
-#' @param recs up to two concatinated integers which specify the beginning and end of
-#'   the records (time steps) to read
+#' @param recs up to two concatinated integers which specify the beginning and end
+#'   of the records (time steps) to read
 #' @param pipe string to optionally specify additional selection chriterium. Default
 #'   is an empty string.
 #' @return x the array containing the read data
 readGrib <- function(filename, nlon, nlat, nlev, var='undef', out='Rfile.dat',
-                     recs=c(0), pipe='') {
+                     recs=c(0), pipe='', verb.grib=FALSE) {
   if (recs[1]==0) {
     if (var == 'undef') {
-      system(paste('wgrib -d all ',filename,' -bin -nh -o ',out,sep=''))
+      system(paste0('wgrib -d all ',filename,' -bin -nh -o ',out))
       openfile<-file(out,'rb')
       if (nlev == 1) {
-        x<-array(readBin(con=out,'numeric',n=nlon*nlat,size=4), c(nlon,nlat) )
+        x<-array(readBin(con=out,'numeric',n=nlon*nlat,size=4),
+                 c(nlon,nlat) )
       } else {
-        x<-array(readBin(con=out,'numeric',n=nlon*nlat*nlev,size=4), c(nlon,nlat,nlev) )
+        x<-array(readBin(con=out,'numeric',n=nlon*nlat*nlev,size=4),
+                 c(nlon,nlat,nlev) )
       }
       close(openfile)
       system(paste('rm',out,sep=' '))
     } else {
-      system(paste("wgrib -v ",filename," | grep '",var,"' ",pipe,
-                   " | wgrib -i -bin -nh ",filename," -o ",out,sep=''))
+      if (verb.grib) {
+        system(paste0("wgrib ",filename," | grep '",var,"' ",pipe,
+                     " | wgrib -i -bin -nh ",filename," -o ",out))
+      } else {
+        system(paste0("wgrib ",filename," | grep '",var,"' ",pipe,
+                     " | wgrib -i -bin -nh ",filename," -o ",out,
+                     " &> /dev/null"))
+      }
       openfile<-file(out,'rb')
       if (nlev == 1) {
-        x<-array(readBin(con=out,'numeric',n=nlon*nlat,size=4), c(nlon,nlat) )
+        x<-array(readBin(con=out,'numeric',n=nlon*nlat,size=4),
+                 c(nlon,nlat) )
       } else {
-        x<-array(readBin(con=out,'numeric',n=nlon*nlat*nlev,size=4), c(nlon,nlat,nlev) )
+        x<-array(readBin(con=out,'numeric',n=nlon*nlat*nlev,size=4),
+                 c(nlon,nlat,nlev) )
       }
       close(openfile)
       system(paste('rm',out,sep=' '))
     }
   } else {
     if (var == 'undef') {
-      system(paste("wgrib -s ",filename," | awk '{if ($1 >= ",recs[1],
+      system(paste0("wgrib ",filename," | awk '{if ($1 >= ",recs[1],
                    " && $1 <= ",recs[2],") print $0}' FS=':' | wgrib -i ",
-                   filename," -bin -nh -o ",out,sep=''))
+                   filename," -bin -nh -o ",out))
       openfile<-file(out,'rb')
       if (nlev == 1) {
-        x<-array(readBin(con=out,'numeric',n=nlon*nlat,size=4), c(nlon,nlat) )
+        x<-array(readBin(con=out,'numeric',n=nlon*nlat,size=4),
+                 c(nlon,nlat) )
       } else {
-        x<-array(readBin(con=out,'numeric',n=nlon*nlat*nlev,size=4), c(nlon,nlat,nlev) )
+        x<-array(readBin(con=out,'numeric',n=nlon*nlat*nlev,size=4),
+                 c(nlon,nlat,nlev) )
       }
       close(openfile)
       system(paste('rm',out,sep=' '))
     } else {
-      system(paste("wgrib -v ",filename," | grep '",var,"' | wgrib -i ",
-                   filename," -grib -o tmp.grib",sep=''))
-      system(paste("wgrib -s tmp.grib | awk '{if ($1 >= ",recs[1],
-                   " && $1 <= ",recs[2],") print $0}' FS=':' | wgrib -i tmp.grib -bin -nh -o ",out,sep=''))
+      if (verb.grib) {
+        system(paste("wgrib -v ",filename," | grep '",var,"' | wgrib -i ",
+                     filename," -grib -o tmp.grib"))
+        system(paste("wgrib -s tmp.grib | awk '{if ($1 >= ",recs[1]," && $1 <= ",
+                     recs[2],") print $0}' FS=':' | wgrib -i tmp.grib -bin -nh -o ",
+                     out))
+      } else {
+        system(paste0("wgrib ",filename," | grep '",var,"' | wgrib -i ",
+                     filename," -grib -o tmp.grib"))
+        system(paste0("wgrib tmp.grib | awk '{if ($1 >= ",
+                      recs[1], " && $1 <= ",recs[2],
+                      ") print $0}' FS=':' | wgrib -i tmp.grib -bin -nh -o ",
+                      out," &> /dev/null"))
+      }
       openfile<-file(out,'rb')
       if (nlev == 1) {
-        x<-array(readBin(con=out,'numeric',n=nlon*nlat,size=4), c(nlon,nlat) )
+        x<-array(readBin(con=out,'numeric',n=nlon*nlat,size=4),
+                 c(nlon,nlat) )
       } else {
-        x<-array(readBin(con=out,'numeric',n=nlon*nlat*nlev,size=4), c(nlon,nlat,nlev) )
+        x<-array(readBin(con=out,'numeric',n=nlon*nlat*nlev,size=4),
+                 c(nlon,nlat,nlev) )
       }
       close(openfile)
       system(paste('rm',out,sep=' '))
@@ -83,21 +107,22 @@ readGrib <- function(filename, nlon, nlat, nlev, var='undef', out='Rfile.dat',
 #'   North-South direction. Default is not to revert the data (FALSE)
 #' @return data,lon,lat,time.vals in a list holding the read data, longitude,
 #'   latitude, and time values
-ReadNetcdf <- function(variable, infile, start=NULL, count=NULL, revert=FALSE) {
+ReadNetcdf <- function(variable, infile, start=NULL,
+                       count=NULL, revert=FALSE, verb.dat=FALSE) {
 
   # === read netCDF file depending on start and count of variable index ===
   nc <- open.ncdf(infile)
   if (is.numeric(start)) {
     if (is.numeric(count)) {
-      data <- get.var.ncdf(nc, variable, start=start, count=count)
+      data <- get.var.ncdf(nc, variable, start=start, count=count, verbose=verb.dat)
     } else {
-      data <- get.var.ncdf(nc, variable, start=start)
+      data <- get.var.ncdf(nc, variable, start=start, verbose=verb.dat)
     }
   } else {
     if (is.numeric(count)) {
-      data <- get.var.ncdf(nc, variable, count=count)
+      data <- get.var.ncdf(nc, variable, count=count, verbose=verb.dat)
     } else {
-      data <- get.var.ncdf(nc, variable)
+      data <- get.var.ncdf(nc, variable, verbose=verb.dat)
     }
   }
 

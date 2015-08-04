@@ -5,10 +5,15 @@ a4height = 21./2.54
 # (HR is the version interpolated to 0.125°)
 res.switch = "HighRes"   # HighRes, OrigRes
 # set whether to use monthly (T) or daily (F) reanalysis data for analysis
-era.monthly = FALSE
+era.monthly = TRUE
 # choose whether to analyse the profile of six model levels of HErZ data or only
 # 10m and 116m
 herz.profile = FALSE
+
+#=== diagnostics ===
+verb.era.dat = FALSE
+verb.stat.dat = FALSE
+verb.grib = FALSE
 
 #=== Paths ===
 # path to store resulting plots into
@@ -98,7 +103,7 @@ if (herz.profile) {
   herz35.param = "windspeed_35m"
   herz69.param = "windspeed_69m"
   herz178.param = "windspeed_178m"
-  herz258.param = "windspeed_158m"
+  herz258.param = "windspeed_258m"
 }
 
 #=== Station data ===

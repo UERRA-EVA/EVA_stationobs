@@ -55,11 +55,11 @@ station.info[[1]] = sprintf("%05d", station.info[[1]])
 #========================================
 # loop over number of stations
 for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
-  cat(paste0("\n  **  Reading station data: ", station.info[[2]][steps],"\n\n"))
+  cat(paste0("  **  Reading station data: ", station.info[[2]][steps], "\n"))
   station.data = data.frame()
   station.data = all.data(station.info[[1]][steps], station.info[[2]][steps],
                           station.info[[3]][steps], station.info[[4]][steps],
-                          daily = station.daily)
+                          daily = station.daily, verbose.DWD=verb.stat.dat)
 
   MM.station = ExtractStationData(station.data, era20c.tsstart, era20c.tsend,
                                   eraI.tsstart, eraI.tsend,
@@ -85,106 +85,108 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
   #=================================
 
   # read ERA20C data
+  cat(paste0("  **  Reading ERA20C reanalysis data\n"))
   CheckFile(era20c.fname)
 
-  stat.lat = station.data$GEO_LÄNGE[1]
-  stat.lon = station.data$GEO_BREITE[1]
+  stat.lon = station.data$GEO_LÄNGE[1]
+  stat.lat = station.data$GEO_BREITE[1]
 
-  idx = get.lon.lat.idx(eraI.fname, stat.lon, stat.lat)
+  idx = get.lon.lat.idx(era20c.fname, stat.lon, stat.lat)
   lonidx = idx$lonidx
   latidx = idx$latidx
 
-  era20c = ReadNetcdf(era20c.param, era20c.fname, start=c(lonidx, latidx, 1))
+  era20c = ReadNetcdf(era20c.param, era20c.fname, count=c(1,1,-1),
+                      start=c(lonidx, latidx, 1), verb.dat=verb.era.dat)
   era20c.data = era20c$data
   era20c.lon = era20c$lon
   era20c.lat = era20c$lat
   era20c.time.vals = era20c$time
 
-  era20c = ReadNetcdf(era20c100.param, era20c.fname, start=c(lonidx, latidx, 1))
+  era20c = ReadNetcdf(era20c100.param, era20c.fname, count=c(1,1,-1),
+                      start=c(lonidx, latidx, 1), verb.dat=verb.era.dat)
   era20c100.data = era20c$data
 
   # read ERA-Interim data
-  if (res.switch == "HighRes") {
-    eraI.fname = eraI.HRes.fname
-  } else {
-    eraI.fname = eraI.ORes.fname
-  }
+  cat(paste0("  **  Reading ERA-Interim reanalysis data\n"))
   CheckFile(eraI.fname)
 
   idx = get.lon.lat.idx(eraI.fname, stat.lon, stat.lat)
   lonidx = idx$lonidx
   latidx = idx$latidx
 
-  eraI = ReadNetcdf(eraI.param, eraI.fname, start=c(lonidx, latidx, 1))
+  eraI = ReadNetcdf(eraI.param, eraI.fname, count=c(1,1,-1),
+                    start=c(lonidx, latidx, 1), verb.dat=verb.era.dat)
   eraI.data = eraI$data
   eraI.lon = eraI$lon
   eraI.lat = eraI$lat
   eraI.time.vals = eraI$time
 
   # read HErZ data
+  cat(paste0("  **  Reading HErZ reanalysis data\n"))
   CheckFile(herz.grid)
   nlon = 848
   nlat = 824
-  herz.lon = readGrib(herz.grid, nlon, nlat, 1, var='RLON')
-  herz.lat = readGrib(herz.grid, nlon, nlat, 1, var='RLAT')
+  herz.lon = readGrib(herz.grid, nlon, nlat, 1, var='RLON', verb.grib=verb.grib)
+  herz.lat = readGrib(herz.grid, nlon, nlat, 1, var='RLAT', verb.grib=verb.grib)
 
-  idx = get.lon.lat.idx(eraI.fname, stat.lon, stat.lat, herz.lon, herz.lat)
+  idx = get.lon.lat.idx(herz.fname, stat.lon, stat.lat, herz.lon, herz.lat)
   lonidx = idx$lonidx
   latidx = idx$latidx
 
   CheckFile(herz.fname)
 
-  dat = ReadNetcdf(herz10.param, herz.fname, start=c(lonidx, latidx, 1))
+  dat = ReadNetcdf(herz10.param, herz.fname,  count=c(1,1,-1),
+                   start=c(lonidx, latidx, 1), verb.dat=verb.era.dat)
   herz10.data = dat$data
   herz.time.vals <- dat$time
 
-  dat = ReadNetcdf(var=herz116.param, infile=herz.fname)
+  dat = ReadNetcdf(herz116.param, herz.fname,  count=c(1,1,-1),
+                   start=c(lonidx, latidx, 1), verb.dat=verb.era.dat)
   herz116.data <- dat$data
 
   if (herz.profile) {
-    dat = ReadNetcdf(var=herz35.param, infile=herz.fname)
+    dat = ReadNetcdf(herz35.param, herz.fname,  count=c(1,1,-1),
+                     start=c(lonidx, latidx, 1), verb.dat=verb.era.dat)
     herz35.data <- dat$data
-    dat = ReadNetcdf(var=herz69.param, infile=herz.fname)
+    dat = ReadNetcdf(herz69.param, herz.fname,  count=c(1,1,-1),
+                     start=c(lonidx, latidx, 1), verb.dat=verb.era.dat)
     herz69.data <- dat$data
-    dat = ReadNetcdf(var=herz178.param, infile=herz.fname)
+    dat = ReadNetcdf(herz178.param, herz.fname,  count=c(1,1,-1),
+                     start=c(lonidx, latidx, 1), verb.dat=verb.era.dat)
     herz178.data <- dat$data
-    dat = ReadNetcdf(var=herz258.param, infile=herz.fname)
+    dat = ReadNetcdf(herz258.param, herz.fname,  count=c(1,1,-1),
+                     start=c(lonidx, latidx, 1), verb.dat=verb.era.dat)
     herz258.data <- dat$data
   }
 
-  # extract ERA data at location of station
-  era20c.data.xts = ExtractERAxts(era20c.data, era20c.time.vals,
-                                  era20c.lon, era20c.lat,
-                                  era20c.tsstart, era20c.tsend,
-                                  station.data$GEO_LÄNGE[1],
-                                  station.data$GEO_BREITE[1])
+  # convert data and time values into an extended time series
+  # and apply start and end date
+  era20c.data.xts = xts(era20c.data, order.by=era20c.time.vals)
+  era20c.data.xts = era20c.data.xts[set.to.date(era20c.tsstart, era20c.tsend)]
+  era20c100.data.xts = xts(era20c100.data, order.by=era20c.time.vals)
+  era20c100.data.xts = era20c100.data.xts[set.to.date(era20c.tsstart, era20c.tsend)]
+  eraI.data.xts = xts(eraI.data, order.by=eraI.time.vals)
+  eraI.data.xts = eraI.data.xts[set.to.date(eraI.tsstart, eraI.tsend)]
 
-  era20c100.data.xts = ExtractERAxts(era20c100.data, era20c.time.vals,
-                                     era20c.lon, era20c.lat,
-                                     era20c.tsstart, era20c.tsend,
-                                     station.data$GEO_LÄNGE[1],
-                                     station.data$GEO_BREITE[1])
+  timestr = set.to.date(herz.tsstart, herz.tsend)
+  herz10.data.xts = xts(herz10.data, order.by=herz.time.vals)
+  herz10.data.xts = herz10.data.xts[timestr]
+  herz116.data.xts = xts(herz116.data, order.by=herz.time.vals)
+  herz116.data.xts = herz116.data.xts[timestr]
+  if (herz.profile) {
+    herz35.data.xts = xts(herz35.data, order.by=herz.time.vals)
+    herz35.data.xts = herz35.data.xts[timestr]
+    herz69.data.xts = xts(herz69.data, order.by=herz.time.vals)
+    herz69.data.xts = herz69.data.xts[timestr]
+    herz178.data.xts = xts(herz178.data, order.by=herz.time.vals)
+    herz178.data.xts = herz178.data.xts[timestr]
+    herz258.data.xts = xts(herz258.data, order.by=herz.time.vals)
+    herz258.data.xts = herz258.data.xts[timestr]
+  }
 
-  eraI.data.xts = ExtractERAxts(eraI.data, eraI.time.vals,
-                                eraI.lon, eraI.lat,
-                                eraI.tsstart, eraI.tsend,
-                                station.data$GEO_LÄNGE[1],
-                                station.data$GEO_BREITE[1])
-
-  herz.data.xts = ExtractHErZxts(herz10.data, herz.time.vals,
-                                 herz.lon, herz.lat,
-                                 herz.tsstart, herz.tsend,
-                                 station.data$GEO_LÄNGE[1],
-                                 station.data$GEO_BREITE[1])
-
-  herz116.data.xts = ExtractHErZxts(herz116.data, herz.time.vals,
-                                    herz.lon, herz.lat,
-                                    herz.tsstart, herz.tsend,
-                                    station.data$GEO_LÄNGE[1],
-                                    station.data$GEO_BREITE[1])
   #-----------------------------------------------------------------------------
 
-  cat("\n  **  Plotting\n")
+  cat("  **  Plotting\n")
 
   if (plot.EraStatComp) {
     fname = paste0("ERA-Station_", gsub("/", "-", station.data$STATIONS_NAME[1]),

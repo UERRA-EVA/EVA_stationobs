@@ -18,6 +18,8 @@ CheckFile <- function(infile) {
   }
 }
 
+#-----------------------------------------------------------------------------------
+
 #' @title Get nearest neighbor index of a point within a vector.
 #' @description \code{get.lonidx} calculates the nearest neighbor of a point within
 #' a vector. Here, it is used to find the index within a regular lon, lat grid of a
@@ -31,6 +33,8 @@ get.nearest.idx <- function(vec, num) {
   return(idx)
 }
 
+#-----------------------------------------------------------------------------------
+
 #' @title Extract longitude and latitude index off a lon, lat regular grid.
 #' @description \code{get.lon.lat.idx} extracts the longitude and latitude index of
 #' a point off a netCDF file which holds data on a regular grid with longitude and
@@ -41,9 +45,9 @@ get.lon.lat.idx <- function(fname, point.lon, point.lat,
                             grid.lon=NULL, grid.lat=NULL) {
   CheckFile(fname)
   if (is.null(grid.lon)) { # ERA20C, ERA-Interim data
-    dat = ReadNetcdfLonLat(fname, count=c(1,1,1))
-    grid.lon = dat[[2]]
-    grid.lat = dat[[3]]
+    dat = ReadNetcdfLonLat(fname)
+    grid.lon = dat$lon
+    grid.lat = dat$lat
     latidx = get.nearest.idx(grid.lat, point.lat)
     lonidx = get.nearest.idx(grid.lon, point.lon)
     return(list(lonidx=lonidx, latidx=latidx))
@@ -53,3 +57,19 @@ get.lon.lat.idx <- function(fname, point.lon, point.lat,
     return(list(lonidx=index.at.point[1], latidx=index.at.point[2]))
   }
 }
+
+#-----------------------------------------------------------------------------------
+
+#' @title Determine start/end string to set extended time series.
+#' @description A start and end date in the format of c(YYYY,M) are put together in
+#'   a string of the format YYYYM/YYYYM.
+#' @param tsstart numeric of the format c(YYYY,M) holding the start date
+#' @param tsend as above holding the end date
+#' @return timestr string of the format YYYYM/YYYYM holding start date/end date.
+set.to.date <- function(tsstart, tsend) {
+  timestr = paste0(toString(tsstart[1]), toString(tsstart[2]), '/',
+                   toString(tsend[1]), toString(tsend[2]))
+  return(timestr)
+}
+
+#-----------------------------------------------------------------------------------

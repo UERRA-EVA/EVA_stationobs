@@ -35,20 +35,23 @@ getNearest <- function(b1,b2,l1,l2){
 #-----------------------------------------------------------------------------------
 
 #' @title Extract and align wind station data to reanalysis data.
-#' \code{ExtractStationData} reads wind speed values and dates from station data and
-#' creates a gap filled extended time series. Monthly mean time series are calculated
-#' which span the time period of the longest stretching reanalysis data set.
-#' Parts taken from get.timeseries.R of GetPlotsFromFtp and off website
-#' http://bocoup.com/weblog/padding-time-series-with-r/
-#' @param station.data is an extended time series holding monthly mean station wind data
+#'   \code{ExtractStationData} reads wind speed values and dates from station data
+#'   and creates a gap filled extended time series. Monthly mean time series are
+#'   calculated which span the time period of the longest stretching reanalysis data
+#'   set.
+#'   Parts taken from get.timeseries.R of GetPlotsFromFtp and off website
+#'   http://bocoup.com/weblog/padding-time-series-with-r/
+#' @param station.data is an extended time series holding monthly mean station wind
+#'   data
 #' @param era20c.tsstart is a charcter string of the start date of the ERA20C data
-#' of the form c(YYYY,MM)
+#'   of the form c(YYYY,MM)
 #' @param era20c.tsend is the same as above for the end date
 #' @param eraI.tsstart is the start date of ERA-Interim data
 #' @param eraI.tsend is the end date of ERA-Interim data
 #' @param herz.tsstart is the start date of HErZ data
 #' @param herz.tsend is the end date of the HErZ data
-#' @param daily optional parameter to specify whether station data is aggregated in hourly or daily time steps. Default is hourly (daily=FALSE).
+#' @param daily optional parameter to specify whether station data is aggregated in
+#'   hourly or daily time steps. Default is hourly (daily=FALSE).
 #' @return MM.station[timestr] is the potentially gab filled monthly mean station
 #'   data spanning the time period of the longest ranging reanalysis time series.
 ExtractStationData <- function(station.data, era20c.tsstart, era20c.tsend,
@@ -57,10 +60,11 @@ ExtractStationData <- function(station.data, era20c.tsstart, era20c.tsend,
 
   # extract station values and times
   data.vals = station.data$WINDGESCHWINDIGKEIT
-  idx = which(data.vals <= 0.0) #!! exclude all these 0s (and correct missing values)!!
+  idx = which(data.vals <= 0.0) #!! exclude all these 0s (and correct missing values)
   data.vals[idx] = NA
   if (!daily){ # hourly station data
-    time.vals <- as.POSIXct(strptime(station.data$MESS_DATUM, format="%Y-%m-%d %H:%M:%S"),
+    time.vals <- as.POSIXct(strptime(station.data$MESS_DATUM,
+                                     format="%Y-%m-%d %H:%M:%S"),
                             format="%Y-%m-%d %H:%M:%S", tz="UTC")
   } else { # daily station data
     time.vals <- as.POSIXct(strptime(station.data$MESS_DATUM, format="%Y-%m-%d"),
@@ -107,22 +111,22 @@ ExtractStationData <- function(station.data, era20c.tsstart, era20c.tsend,
 
 #-----------------------------------------------------------------------------------
 
-#' @title Extract extended times series of ERA pixel corresponding to station location.
+#' @title Extract an extended time series off a 2D ERA data (ERA20C, ERA-I)
+#' corresponding to a provided point (lon, lat) location.
 #' @description \code{ExtractERAxts} extracts the nearest pixel of a provided data
 #'   set (reanalysis) given the station location (lon, lat).
-#' @param data data set (reanalysis) from which to extract the time series at the
-#'   station location
+#' @param data (reanalysis=) data set from which to extract the time series at the
+#'   provided station location
 #' @param time.vals time period covered by the data set
 #' @param lon longitude grid points of the data set
 #' @param lat latitude grid points of the data set
-#' @param tsstart character string of the format (YYYY,M) of the start date of the
-#'   data set time series
-#' @param tsend character string as above of the end date of the data set
+#' @param tsstart character string of the format (YYYY,M) for the newly to be set
+#'   start date of the data set
+#' @param tsend character string as above for the end date
 #' @param stat.lon station longitude
 #' @param stat.lat station latitude
-#' @return era.xts[timestr] is the time series extracted off the data set at the
-#'   pixel corresponding to the provided station location
-#'   Extract nearest pixel of reanalysis corresponding to station lon, lat.
+#' @return era.xts is the time series extracted off the data set at the
+#'   pixel corresponding to the provided station location.
 ExtractERAxts <- function(data, time.vals,
                           lon, lat, tsstart, tsend, stat.lon, stat.lat) {
 
@@ -146,12 +150,13 @@ ExtractERAxts <- function(data, time.vals,
 
 #-----------------------------------------------------------------------------------
 
-#' @title Extract extended time series of HErZ pixel corresponding to station location.
+#' @title Extract an extended time series off 2D HErZ data corresponding to a
+#' provided point (lon, lat) location.
 #' @description \code{ExtractHErZxts} extracts the time series of the HErZ pixel
 #'   corresponding to the station location. HErZ data come in an irregular polar
 #'   projection which calls for a function to extract the correct pixel off that grid.
-#' @param herz.data is the HErZ data set from which to extract the time series at the
-#'   station location
+#' @param herz.data is the HErZ data set from which to extract the time series at
+#'   the station location
 #' @param time.vals time period covered by the HErZ data set
 #' @param herz.lon longitude grid points of the HErZ data set
 #' @param herz.lat latitude grid points of the HErZ data set
@@ -179,11 +184,9 @@ ExtractHErZxts <- function(herz.data, time.vals,
   herz.xts = xts(time.series.frame$data.vals, order.by=time.series.frame$time.vals)
 
   # adjust to time period as provided by tsstart and tsend
-  timestr = paste0(toString(tsstart[1]), toString(tsstart[2]), '/',
-                   toString(tsend[1]), toString(tsend[2]))
+  timestr = set.to.date(tsstart, tsstend)
 
   return(herz.xts[timestr])
 }
 
 #-----------------------------------------------------------------------------------
-

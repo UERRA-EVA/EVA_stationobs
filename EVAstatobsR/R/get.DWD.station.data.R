@@ -17,27 +17,26 @@ remove.files <- function(extension=NULL){
 
 #' @title Download data from the DWD-ftp server.
 #' @description \code{get.data}
-#'   Allows downloading data from the DWD-ftp server
-#'   according to the metadata information saved in
-#'   the output argument \code{metadata} retrieved from
-#'   \code{\link{get.metadata}}. The data is then unzipped
-#'   and extracted for hourly or daily values as specified.
-#' @param metadata list. Argument retrieved
-#'   from \code{\link{get.metadata}}. If empty, the
-#'   user will be asked to enter the metadata
-#'   manually through the R-console.
-#' @return  \code{data1} data.frame. Contains the data
-#'   that correspond to the given metadata.
+#'   Allows downloading data from the DWD-ftp server according to the metadata
+#'   information saved in the output argument \code{metadata} retrieved from
+#'   \code{\link{get.metadata}}. The data is then unzipped and extracted for hourly
+#'   or daily values as specified.
+#' @param metadata list; argument retrieved from \code{\link{get.metadata}}. If
+#'   empty, the user will be asked to enter the metadata manually through the
+#'   R-console.
+#' @param verbose.DWD boolean; determines whether to tell what's going on.
+#' @return  \code{data1} data.frame. Contains the data that correspond to the given
+#'   metadata.
 #' @examples
-#' # If no input argument is known
-#' data1 <- get.data() # R will ask the user through the
-#'                     # console to enter each argument
+#'   # If no input argument is known:
+#'   data1 <- get.data() # R will ask the user through the
+#'                      # console to enter each argument
 #'
-#' # If the input argument is known
-#' data1 <- get.data(metadata)
-get.data <- function(metadata=NULL){
+#'   # If the input argument is known
+#'   data1 <- get.data(metadata)
+get.data <- function(metadata=NULL, verbose.DWD=TRUE){
   # Remove everything besides the inputs
-  rm(list=ls()[!(ls()%in% c("metadata"))])
+  rm(list=ls()[!(ls()%in% c("metadata", "verbose.DWD"))])
 
   ##########################################################
   # CHECK PACKAGES
@@ -46,7 +45,7 @@ get.data <- function(metadata=NULL){
     # Check whether the package is already installed
     id <- find.package(package,quiet=TRUE)
     if (length(id)>0){
-      print(paste("Package:",package,"already exist"))
+      if (verbose.DWD) print(paste("Package:",package,"already exist"))
       # upload the package
       library(package,character.only=TRUE)
     }else{
@@ -108,7 +107,7 @@ get.data <- function(metadata=NULL){
     file.output <- file.path(path.output,zip.file)
     # Check if the file is saved in the computer
     if (file.exists(file.output)){
-      print(paste(zip.file,"already exists"))
+      if (verbose.DWD) print(paste(zip.file,"already exists"))
     }else{
       # Download the data from the FTP
       url1 <- paste(url,zip.file,sep="")
@@ -168,7 +167,7 @@ get.data <- function(metadata=NULL){
       file.output <- file.path(path.output,zip.file)
       # Check if the file is saved in the computer
       if (file.exists(file.output)){
-        print(paste(zip.file,"already exists"))
+        if (verbose.DWD) print(paste(zip.file,"already exists"))
       }else{
         # Download the data from the FTP
         url1 <- paste(url,zip.file,sep="")
@@ -326,8 +325,8 @@ get.data.download <- function(metadata=NULL){
 #-----------------------------------------------------------------------------------
 
 #' @title Provide metadata for downloading data from DWD-ftp server.
-#' @description Load metadata which specifies which data to download from the DWD-ftp
-#' server.
+#' @description Load metadata which specifies which data to download from the
+#'   DWD-ftp server.
 #' @param time.resol String of station data time resolution, e.g., daily, hourly
 #' @param station.id string of the station id
 #' @param date.begin string of the begin date of the station data in the format
@@ -337,7 +336,7 @@ get.data.download <- function(metadata=NULL){
 #' @return metadata The metadata saved in a string vector containing the above
 #'   parameters
 get.metadata <- function(time.resol, station.id,
-                               date.begin, date.end, path.element){
+                         date.begin, date.end, path.element){
   liste <- c("time.resol" , "station.id" ,  "date.begin" ,
              "date.end", "path.element")
   attributes <- list(liste)
@@ -371,19 +370,21 @@ get.metadata <- function(time.resol, station.id,
 #' @param daily optional boolean to specify whether station data has daily or hourly
 #'   time steps. Default is daily (TRUE).
 #' @param  download optional boolean to specify whether only downloading shall be
-#'   performed or unzipping and data extraction shall be performed as well. Default
-#'   is perform unzipping and extraction also (FALSE).
+#'   performed (TRUE) or unzipping and data extraction shall be performed as well
+#'   (FALSE). Default is perform unzipping and extraction also (FALSE).
+#' @param verbose.DWD optional boolean to specivy whether to print out what's going
+#'   (TRUE) on or surpress it (FALSE). Default is to print out messages (TRUE).
 #' @return \code{data1} a data frame (returned as list) containing all this data
 #'   including windspeed listed chronologically
 all.data <- function(station.id, station.name, station.lat, station.lon,
-                     daily=TRUE, download=FALSE){
+                     daily=TRUE, download=FALSE, verbose.DWD=TRUE){
   if (daily) {
     metadata <- get.metadata("daily",station.id,"1800-01-01","2020-12-31","kl")
   } else {
     metadata <- get.metadata("hourly",station.id,"1800-01-01","2020-12-31","wind")
   }
   if (!(download)) {
-    data1 <- get.data(metadata)
+    data1 <- get.data(metadata, verbose.DWD)
     data2 <- data.frame(data1$stations_id, station.name, station.lat, station.lon,
                         data1$mess_datum,data1$windgeschwindigkeit)
     data2 = data2[-nrow(data2),]
@@ -391,7 +392,7 @@ all.data <- function(station.id, station.name, station.lat, station.lon,
                          "MESS_DATUM","WINDGESCHWINDIGKEIT")
     return(data2)
   } else {
-    get.data.download(metadata)
+    get.data.download(metadata, verbose.DWD)
   }
 }
 
