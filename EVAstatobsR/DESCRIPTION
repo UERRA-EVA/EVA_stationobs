@@ -1,9 +1,13 @@
 Package: EVAstatobsR
 Title: Verification of (regional) reanalyses with station measurements
-Version: 0.0.1
+Version: 0.0.2
 Authors@R: person("Michael", "Borsche", email = "michael.borsche@dwd.de",
     role = c("aut", "cre"))
-Description: What the package does (one paragraph)
+Description: A verification package of global (ERA20C and ERA_Interim) and regional
+    (COSMO-REA6 HErZ) reanalyses against German station data. In this first
+    installation, only windspeed data is analysed. Monthly and daily time series are
+    compared; correlations, historgrams, scatter plots, PDF-score, and many more
+    metrics are calcualted and plotted.
 Depends:
     R (>= 3.0.2),
     ncdf, ncdf.tools, xts, vioplot
