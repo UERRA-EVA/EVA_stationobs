@@ -32,17 +32,19 @@ PDFscore <- function(xts1, xts2) {
 
 #' @title Correlation between two (extended) time series.
 #' @description \code{GetCorrXts} calculates the correlation between two extended
-#'   time series if it is possible, i.e., if they span the same time period. Otherwise
-#'   return NA. This function is hardcoded to handle all combinations between four
-#'   provided extended time series.
-#' @param Era20cXts extended time series of an ERA20C pixel corresponding locally to
+#'   time series if it is possible, i.e., if they span the same time period.
+#'   Otherwise return NA. This function is hardcoded to handle all combinations
+#'   between four provided extended time series.
+#' @param era20c extended time series of an ERA20C pixel corresponding locally to
 #'   the station time series
-#' @param EraIXts same as above for ERA-Interim
-#' @param HerzXts same as above for HErZ
-#' @param StatXts same as above for the station values
-#' @return list a list of all possible perturbations of correlations between the
-#'   provided four extended time series.
-GetCorrXts <- function(era20c=Era20cXts, eraI=EraIXts, herz=HerzXts, stat=StatXts) {
+#' @param eraI same as above for ERA-Interim
+#' @param herz same as above for HErZ
+#' @param stat same as above for the station values
+#' @return Return a named list (c.20c.I=,c.20c.H=,c.20c.S=,c.I.H=,c.I.S=,c.H.S=)
+#'   holding all possible perturbations of correlations between the provided four
+#'   extended time series.
+GetCorrXts <- function(era20c, eraI, herz, stat) {
+
   if ((index(era20c[1]) == index(eraI[1])) &
         (tail(index(era20c), 1) == tail(index(eraI), 1))) {
     Corr.Era20cEraI = cor(era20c, eraI)

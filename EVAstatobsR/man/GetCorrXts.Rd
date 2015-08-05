@@ -3,26 +3,27 @@
 \alias{GetCorrXts}
 \title{Correlation between two (extended) time series.}
 \usage{
-GetCorrXts(Era20cXts, EraIXts, HerzXts, StatXts)
+GetCorrXts(era20c, eraI, herz, stat)
 }
 \arguments{
-\item{Era20cXts}{extended time series of an ERA20C pixel corresponding locally to
+\item{era20c}{extended time series of an ERA20C pixel corresponding locally to
 the station time series}
 
-\item{EraIXts}{same as above for ERA-Interim}
+\item{eraI}{same as above for ERA-Interim}
 
-\item{HerzXts}{same as above for HErZ}
+\item{herz}{same as above for HErZ}
 
-\item{StatXts}{same as above for the station values}
+\item{stat}{same as above for the station values}
 }
 \value{
-list a list of all possible perturbations of correlations between the
-  provided four extended time series.
+Return a named list (c.20c.I=,c.20c.H=,c.20c.S=,c.I.H=,c.I.S=,c.H.S=)
+  holding all possible perturbations of correlations between the provided four
+  extended time series.
 }
 \description{
 \code{GetCorrXts} calculates the correlation between two extended
-  time series if it is possible, i.e., if they span the same time period. Otherwise
-  return NA. This function is hardcoded to handle all combinations between four
-  provided extended time series.
+  time series if it is possible, i.e., if they span the same time period.
+  Otherwise return NA. This function is hardcoded to handle all combinations
+  between four provided extended time series.
 }
 

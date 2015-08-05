@@ -3,7 +3,8 @@
 \alias{Plot100mEraHerz}
 \title{Compare 100m wind speed of ERA20C and HErZ pixel by pixel.}
 \usage{
-Plot100mEraHerz(Era20cXts, HerzXts, titname, outdir, fname, width, height)
+Plot100mEraHerz(Era20cXts, HerzXts, titname, statname, outdir, fname, width,
+  height)
 }
 \arguments{
 \item{Era20cXts}{monthly mean extended time series of a ERA20C pixel}
@@ -11,6 +12,8 @@ Plot100mEraHerz(Era20cXts, HerzXts, titname, outdir, fname, width, height)
 \item{HerzXts}{same as above for HErZ}
 
 \item{titname}{string of the plot title name}
+
+\item{statname}{string of the station name whose pixel is plotted}
 
 \item{outdir}{string of the output directory into which the plot is saved}
 

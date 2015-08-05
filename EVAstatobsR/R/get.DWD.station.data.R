@@ -29,14 +29,20 @@ remove.files <- function(extension=NULL){
 #'   metadata.
 #' @examples
 #'   # If no input argument is known:
+#'   \dontrun{
 #'   data1 <- get.data() # R will ask the user through the
-#'                      # console to enter each argument
-#'
+#'                       # console to enter each argument
 #'   # If the input argument is known
 #'   data1 <- get.data(metadata)
+#'   }
 get.data <- function(metadata=NULL, verbose.DWD=TRUE){
   # Remove everything besides the inputs
   rm(list=ls()[!(ls()%in% c("metadata", "verbose.DWD"))])
+  time.resol=""
+  station.id=""
+  date.begin=""
+  date.end=""
+  path.element=""
 
   ##########################################################
   # CHECK PACKAGES
@@ -57,7 +63,7 @@ get.data <- function(metadata=NULL, verbose.DWD=TRUE){
   }
   ##########################################################
   # CHECK THE EXISTENCE OF THE INPUT ARGUMENTS
-  # Check if the input arguments are not null
+  # Check if the input arguments are null
   if (is.null(metadata)){
     # source("get.metadata.R")
     metadata <- get.metadata()
@@ -241,9 +247,15 @@ get.data <- function(metadata=NULL, verbose.DWD=TRUE){
 #'   from \code{\link{get.metadata}}. If empty, the
 #'   user will be asked to enter the metadata
 #'   manually through the R-console.
-get.data.download <- function(metadata=NULL){
+#' @param verbose.DWD boolean; determines whether to tell what's going on.
+get.data.download <- function(metadata=NULL, verbose.DWD=TRUE){
   # Remove everything besides the inputs
-  rm(list=ls()[!(ls()%in% c("metadata"))])
+  rm(list=ls()[!(ls()%in% c("metadata", "verbose.DWD"))])
+  time.resol=""
+  station.id=""
+  date.begin=""
+  date.end=""
+  path.element=""
 
   ##########################################################
   # CHECK PACKAGES
@@ -252,7 +264,7 @@ get.data.download <- function(metadata=NULL){
     # Check whether the package is already installed
     id <- find.package(package,quiet=TRUE)
     if (length(id)>0){
-      print(paste("Package:",package,"already exist"))
+      if (verbose.DWD) print(paste("Package:",package,"already exist"))
       # upload the package
       library(package,character.only=TRUE)
     }else{
@@ -313,7 +325,7 @@ get.data.download <- function(metadata=NULL){
     file.output <- file.path(path.output,zip.file)
     # Check if the file is saved in the computer
     if (file.exists(file.output)){
-      print(paste(zip.file,"already exists"))
+      if (verbose.DWD) print(paste(zip.file,"already exists"))
     }else{
       # Download the data from the FTP
       url1 <- paste(url,zip.file,sep="")

@@ -13,6 +13,9 @@
 #'   of the records (time steps) to read
 #' @param pipe string to optionally specify additional selection chriterium. Default
 #'   is an empty string.
+#' @param verb.grib optional boolean to determine whether to verbosely write out
+#'   what's happening (T) or not (F); the default is to suppress output
+#'   (verb.grib=FALSE).
 #' @return x the array containing the read data
 readGrib <- function(filename, nlon, nlat, nlev, var='undef', out='Rfile.dat',
                      recs=c(0), pipe='', verb.grib=FALSE) {
@@ -96,17 +99,28 @@ readGrib <- function(filename, nlon, nlat, nlev, var='undef', out='Rfile.dat',
 
 #===================================================================================
 
-#' @title Reading netCDF files.
-#' @description \code{ReadNetcdf} read nc-files provided a variable name and the
+#' @title Reading netCDF files
+#' @description \code{ReadNetcdf} reads nc-files provided a variable name and the
 #'   file name to read from. Longitude, latitude, and time values are read if
 #'   available. An optional paramter "revert" regulates whether the data values
-#'   should be reverted in North-South.
+#'   should be reverted in North-South. The variable can be read partially depending
+#'   on the provided start and count parameters, or completely if they are omitted.
 #' @param variable is a string containing the variable name to be read of the nc-file
 #' @param infile is a string holding the file name to read
+#' @param start optional parameter to set the beginning of the variable array to be
+#'   read. It needs to be of the same size as variable (for further details see the
+#'   help of \code{\link{get.var.ncdf}}). The default is to read the complete
+#'   variable which leaves start unset.
+#' @param count optional parameter to set the size of the variable array to be read.
+#'   It needs to be of the same size as variable (for further details see the help
+#'   of \code{\link{get.var.ncdf}}). The default is to read the complete variable
+#'   which leaves count unset.
 #' @param revert in an optional boolean to decided whether to revert the data in
 #'   North-South direction. Default is not to revert the data (FALSE)
-#' @return data,lon,lat,time.vals in a list holding the read data, longitude,
-#'   latitude, and time values
+#' @param verb.dat optional boolean to determine whether to verbosely write out what
+#'   is happening (T) or not (F); the default is to suppress output (verb.dat=FALSE).
+#' @return Return a named list (data=,lon=,lat=,time.vals=) holding the read data,
+#'   longitude, latitude, and time values.
 ReadNetcdf <- function(variable, infile, start=NULL,
                        count=NULL, revert=FALSE, verb.dat=FALSE) {
 
@@ -157,10 +171,10 @@ ReadNetcdf <- function(variable, infile, start=NULL,
 #-----------------------------------------------------------------------------------
 #' @title Read longitude and latitude arrays off a netCDF file.
 #' @description \code{ReadnercdfLonLat} is a shortcut to only read the longitude and latitude
-#' information off a netCDF file. If they don't exist a NULL value will be returned.
+#'   information off a netCDF file. If they don't exist a NULL value will be returned.
 #' @param infile string of the file name to be read
-#' @return lon,lat the longitude and latitude arrays (1D or 2D) read off the netCDF
-#' file.
+#' @return Return a named list (lon=,lat=) for the longitude and latitude arrays
+#'   (1D or 2D) read off the netCDF file.
 ReadNetcdfLonLat <- function(infile) {
   CheckFile(infile)
   nc <- open.ncdf(infile)

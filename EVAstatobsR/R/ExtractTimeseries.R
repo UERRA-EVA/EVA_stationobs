@@ -169,8 +169,8 @@ ExtractERAxts <- function(data, time.vals,
 #'   the pixel corresponding to the provided station location
 #'   Extract nearest HErZ pixel corresponding to station lon, lat calling Uni Bonn
 #'   function getNearest.
-ExtractHErZxts <- function(herz.data, time.vals,
-                           herz.lon, herz.lat, tsstart, tsend, stat.lon, stat.lat) {
+ExtractHErZxts <- function(herz.data, time.vals, herz.lon, herz.lat,
+                           tsstart, tsend, stat.lon, stat.lat) {
 
   # set time.vals to class yearmon
   time.vals = as.yearmon(time.vals)
@@ -184,7 +184,7 @@ ExtractHErZxts <- function(herz.data, time.vals,
   herz.xts = xts(time.series.frame$data.vals, order.by=time.series.frame$time.vals)
 
   # adjust to time period as provided by tsstart and tsend
-  timestr = set.to.date(tsstart, tsstend)
+  timestr = set.to.date(tsstart, tsend)
 
   return(herz.xts[timestr])
 }

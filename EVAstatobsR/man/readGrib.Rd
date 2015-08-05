@@ -4,7 +4,7 @@
 \title{Reading grib files based on wgrib.}
 \usage{
 readGrib(filename, nlon, nlat, nlev, var = "undef", out = "Rfile.dat",
-  recs = c(0), pipe = "")
+  recs = c(0), pipe = "", verb.grib = FALSE)
 }
 \arguments{
 \item{filename}{string of the grib file name to read from}
@@ -18,11 +18,15 @@ latitude and vertical level steps (pixels)}
 specifyied if this function is called more than once in parralel (i.e., totally
 independent from each other)}
 
-\item{recs}{up to two concatinated integers which specify the beginning and end of
-the records (time steps) to read}
+\item{recs}{up to two concatinated integers which specify the beginning and end
+of the records (time steps) to read}
 
 \item{pipe}{string to optionally specify additional selection chriterium. Default
 is an empty string.}
+
+\item{verb.grib}{optional boolean to determine whether to verbosely write out
+what's happening (T) or not (F); the default is to suppress output
+(verb.grib=FALSE).}
 }
 \value{
 x the array containing the read data

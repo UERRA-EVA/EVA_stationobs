@@ -40,7 +40,13 @@ get.nearest.idx <- function(vec, num) {
 #' a point off a netCDF file which holds data on a regular grid with longitude and
 #' latitude values (as vectors) stored.
 #' @param fname string of the file name to read
-#' @return lonidx,latidx longitude and latitude index
+#' @param point.lon longitude point which to match and extract off the grid
+#' @param point.lat latitude point as above
+#' @param grid.lon optional parameter of the grid longitude values. If the grid#
+#'   ongitude is a vector and can be read from nc file this is done and the grid.lon
+#'   parameter needs to be set to NULL. The default is to set grid.lon to NULL.
+#' @param grid.lat same as above for the grid latitude values.
+#' @return Return a named lilst of (lonidx=,latidx=) longitude and latitude index.
 get.lon.lat.idx <- function(fname, point.lon, point.lat,
                             grid.lon=NULL, grid.lat=NULL) {
   CheckFile(fname)

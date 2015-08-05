@@ -1,12 +1,12 @@
-#' @title Determine ylim ranges from data.
-#' @description \code{GetYlims} determinies the ylim low and high range from four
+#' @title Determine y-axis limits from data.
+#' @description \code{GetYlims} determinies the low and high y-axis limits from four
 #'   different time series.
 #'   This needs to be enhanced so that not all of those time series need to be
 #'   available. Something like present= in FORTRAN.
 #' @param xts1,xts2,xts3,xts4 time series from which to determine the low and
-#'   high range of the ylim.
-#' @return yliml,ylimh a list of yliml and ylimh which are the lower and higher
-#'   bond of ylim.
+#'   high range of the y-axis limits.
+#' @return Return a named list (yll=,ylh=) of the lower and high bound of the y-axis
+#'   limits yliml and ylimh.
 GetYlims <- function(xts1, xts2, xts3, xts4) {
   if (is.xts(xts1) & (is.xts(xts2)) & is.xts(xts3) & (is.xts(xts4))) {
     yliml = floor(min(min(xts1, na.rm=TRUE), min(xts2, na.rm=TRUE),
@@ -333,6 +333,7 @@ PlotStationEraMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 #' @param Era20cXts monthly mean extended time series of a ERA20C pixel
 #' @param HerzXts same as above for HErZ
 #' @param titname string of the plot title name
+#' @param statname string of the station name whose pixel is plotted
 #' @param outdir string of the output directory into which the plot is saved
 #' @param fname string of the file name of the plot
 #' @param width,height of the plot in inches
@@ -455,15 +456,21 @@ PlotMonthlyPDFScore <- function(era.xts, station.xts, outdir, fname, titname,
        type="b", pch=16, col="blue")
   lines(PDF.score.ann, type="b", lty=2, pch=20, col="red")
 
-  library(vioplot)
   vioplot(era.xts, station.xts, horizontal=TRUE,
           names=c("reanalysis", "station data"))
 
   dev.off()
 }
 #-----------------------------------------------------------------------------------
-#'
-#'
+#' @title Produce a scatter plot
+#' @description Prodcue a scatter plot of two data set samples.
+#' @param X first data sample for the scatter plot
+#' @param Y second data sample
+#' @param yliml lower numeric bond of the y-axis limits
+#' @param ylimh high numeric bond of the y-axis limits
+#' @param titname string of the title name of the plot
+#' @param xlabname string for the name of the x-axis label
+#' @param ylabname string for the name of the y-axis label
 scatterPlot <- function(X, Y, yliml, ylimh, titname, xlabname, ylabname) {
   plot(X, Y, pch=19,
        xlim=c(yliml,ylimh), ylim=c(yliml, ylimh),
@@ -472,8 +479,20 @@ scatterPlot <- function(X, Y, yliml, ylimh, titname, xlabname, ylabname) {
   abline(lm(Y ~ X), col="blue")
 }
 #-----------------------------------------------------------------------------------
-#'
-#'
+#' @title Produce one or two overlapping histogram plot(s)
+#' @description Procudes a standard histogram plot of one or two data samples. If
+#'   two data samples are to be plotted overlapping into one plot, then the same
+#'   breaks are used and the y-limits of the plot are determined befor plotting.
+#'   Density, rather than frequency, distribution is plotted.
+#' @param X first data sample for the histogram
+#' @param Y second sample; may be empty, NULL, NA, or anything else if
+#'   addPlot is set to FALSE (see below)
+#' @param breaks as described in the hist documentation
+#' @param xlims limits of the x-axis in the format c(x,y)
+#' @param titname string of the title name of the plot
+#' @param xlabname string for the name of the x-axis label
+#' @param addPlot optional boolean to determine whether to plot one (F) are two (T)
+#'   data samples; default is to plot one data sample (addPlot=FALSE)
 histoPlot <- function(X, Y, breaks, xlims, titname, xlabname, addPlot=FALSE) {
   if (addPlot) {
     # get high ylim for overplotting histograms
@@ -491,8 +510,15 @@ histoPlot <- function(X, Y, breaks, xlims, titname, xlabname, addPlot=FALSE) {
   }
 }
 #-----------------------------------------------------------------------------------
-#'
-#'
+#' @title Create QQ plot of two data samples
+#' @description Create a simple Quantile-Quantile plot of two data samples.
+#' @param X first data samples for the QQ plot
+#' @param Y second data sample
+#' @param yliml numeric low value of the y-limits of the plot
+#' @param ylimh numeric high value of the y-limits
+#' @param titname string of the title name
+#' @param xlabname string for the name of the x-axis label
+#' @param ylabname string for the name of the y-axis label
 qqPlot <- function(X, Y, yliml, ylimh, titname, xlabname, ylabname) {
   qqplot(X, Y, pch=19,
          xlim=c(yliml-1,ylimh), ylim=c(yliml-1, ylimh),

@@ -16,9 +16,6 @@ if (interactive) {
 CheckFile(config.file)
 source(config.file)
 
-# checks on variables:
-# ????
-
 #============================================================
 #
 #  read station data and extract ERA data at station location

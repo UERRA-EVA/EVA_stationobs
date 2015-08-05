@@ -4,7 +4,7 @@
 \title{Download DWD station data from CDC-ftp server.}
 \usage{
 \method{all}{data}(station.id, station.name, station.lat, station.lon,
-  daily = TRUE, download = FALSE)
+  daily = TRUE, download = FALSE, verbose.DWD = TRUE)
 }
 \arguments{
 \item{station.id}{a string of length 5 containing the station id as provided in
@@ -21,8 +21,11 @@ id}
 time steps. Default is daily (TRUE).}
 
 \item{download}{optional boolean to specify whether only downloading shall be
-performed or unzipping and data extraction shall be performed as well. Default
-is perform unzipping and extraction also (FALSE).}
+performed (TRUE) or unzipping and data extraction shall be performed as well
+(FALSE). Default is perform unzipping and extraction also (FALSE).}
+
+\item{verbose.DWD}{optional boolean to specivy whether to print out what's going
+(TRUE) on or surpress it (FALSE). Default is to print out messages (TRUE).}
 }
 \value{
 \code{data1} a data frame (returned as list) containing all this data

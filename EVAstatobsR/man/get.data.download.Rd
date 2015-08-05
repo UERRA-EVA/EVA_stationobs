@@ -3,13 +3,15 @@
 \alias{get.data.download}
 \title{Download data from the DWD-ftp server.}
 \usage{
-get.data.download(metadata = NULL)
+get.data.download(metadata = NULL, verbose.DWD = TRUE)
 }
 \arguments{
 \item{metadata}{list. Argument retrieved
 from \code{\link{get.metadata}}. If empty, the
 user will be asked to enter the metadata
 manually through the R-console.}
+
+\item{verbose.DWD}{boolean; determines whether to tell what's going on.}
 }
 \description{
 \code{get.data.download}
