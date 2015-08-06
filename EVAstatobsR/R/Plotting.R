@@ -14,7 +14,9 @@ GetYlims <- function(xts1, xts2, xts3, xts4) {
     ylimh = ceiling(max(max(xts1, na.rm=TRUE), max(xts2, na.rm=TRUE),
                         max(xts3, na.rm=TRUE), max(xts4, na.rm=TRUE)))
   } else {
-    stop("\nXTS1 OR XTS2 OR XTS3 OR XTS4 IS NOT AN XTS !! ABORTING\n")
+    err = simpleError(paste0("\n   ***\n   \nXTS1 or XTS2 or XTS3 or XTS4 ",
+                             "is not an xts, ABORTING!\n   ***\n"))
+    tryCatch(stop(err))
   }
 
   return(list(yll=yliml, ylh=ylimh))
@@ -23,7 +25,7 @@ GetYlims <- function(xts1, xts2, xts3, xts4) {
 #-----------------------------------------------------------------------------------
 
 #' @title Plot station measurements together with ERA20C, ERA-I, and HErZ.
-#' @description \code{PlotStationEra} plot the station values together with the
+#' @description \code{PlotStationEra} plots the station values together with the
 #'   corresponding ERA20C, ERA-I, and HErZ pixel and provides the correlation between
 #'   these time series. Optionally, it is possible to plot the anomaly. The plot is
 #'   saved in pdf format and there is no return value.

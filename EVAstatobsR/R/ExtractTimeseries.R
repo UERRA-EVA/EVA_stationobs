@@ -44,7 +44,7 @@ getNearest <- function(b1,b2,l1,l2){
 #' @param station.data is an extended time series holding monthly mean station wind
 #'   data
 #' @param era20c.tsstart is a charcter string of the start date of the ERA20C data
-#'   of the form c(YYYY,MM)
+#'   of the format c(YYYY,MM)
 #' @param era20c.tsend is the same as above for the end date
 #' @param eraI.tsstart is the start date of ERA-Interim data
 #' @param eraI.tsend is the end date of ERA-Interim data

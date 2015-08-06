@@ -1,3 +1,14 @@
+#' @title
+#' @description
+#' @param errstr is a string which hold the error message to be printed before
+#'   stopping execution
+CallStop <- function(errstr) {
+  err = simpleError(paste0("\n   ***\n   ", errstr, "\n   ***\n"))
+  tryCatch(stop(err))
+}
+
+#-----------------------------------------------------------------------------------
+
 #' @title Check for existence of file.
 #' @description \code{CheckFile} checks for the existence of the file(s) passed to
 #' it. If one file doese not exist it stops with an error message.
@@ -5,16 +16,57 @@
 #' name(s).
 CheckFile <- function(infile) {
   if (!class(infile) == "character") {
-    err = simpleError(paste0("\n   ***\n   Unexpected type of infile, ABORTING!\n",
-                             "   ", class(infile), "\n   should be character\n   ***\n"))
-    tryCatch(stop(err))
+    CallStop(paste0("Unexpected type of infile, ABORTING!\n",
+                    "   ", class(infile), "\n   should be character"))
   }
   if (any(!file.exists(infile))) {
     idx = which(!file.exists(infile))
     missing.file = infile[idx]
-    err = simpleError(paste0("\n   ***\n   Missing File: ", infile[idx], "ABORTING!\n",
-                             "   ***\n"))
-    tryCatch(stop(err), finally=print(missing.file))
+    CallStop(paste0("Missing File: ", infile[idx], "ABORTING!\n"))
+  }
+}
+
+#-----------------------------------------------------------------------------------
+
+#' @title
+#' @description
+#' @param herz.param
+#' @param herz.profile
+CheckHerzParams <- function(herz.param, herz.profile) {
+  if (herz.profile) {
+    if (!herz.param[1] == "windspeed_10m") {
+      CallStop(paste0("Unexpected HErZ parameter: ", herz.param[1],
+                      "\n    Should be: windspeed_10m"))
+    }
+    if (!herz.param[2] == "windspeed_35m") {
+      CallStop(paste0("Unexpected HErZ parameter: ", herz.param[2],
+                      "\n    Should be: windspeed_35m"))
+    }
+    if (!herz.param[3] == "windspeed_69m") {
+      CallStop(paste0("Unexpected HErZ parameter: ", herz.param[3],
+                      "\n    Should be: windspeed_69m"))
+    }
+    if (!herz.param[4] == "windspeed_116m") {
+      CallStop(paste0("Unexpected HErZ parameter: ", herz.param[4],
+                      "\n    Should be: windspeed_116m"))
+    }
+    if (!herz.param[5] == "windspeed_178m") {
+      CallStop(paste0("Unexpected HErZ parameter: ", herz.param[5],
+                      "\n    Should be: windspeed_178m"))
+    }
+    if (!herz.param[6] == "windspeed_258m") {
+      CallStop(paste0("Unexpected HErZ parameter: ", herz.param[6],
+                      "\n    Should be: windspeed_258m"))
+    }
+  } else {
+    if (!herz.param[1] == "windspeed_10m") {
+      CallStop(paste0("Unexpected HErZ parameter: ", herz.param[1],
+                      "\n    Should be: windspeed_10m"))
+    }
+    if (!herz.param[2] == "windspeed_116m") {
+      CallStop(paste0("Unexpected HErZ parameter: ", herz.param[2],
+                      "\n    Should be: windspeed_116m"))
+    }
   }
 }
 

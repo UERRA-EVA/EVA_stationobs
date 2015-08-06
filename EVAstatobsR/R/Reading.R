@@ -161,7 +161,9 @@ ReadNetcdf <- function(variable, infile, start=NULL,
     } else if (length(dim(data)) == 2) {
       data <- data[, ncol(data):1] #lat being dimension number 2
     } else {
-      stop("   @@@   UNEXPECTED LENGTH OF DATA: ", dim(data))
+      err = simpleError(paste0("\n   ***\n   Unexpected length of data: ",
+                               dim(data), "\n   ***\n"))
+      tryCatch(stop(err))
     }
   }
 
@@ -169,6 +171,7 @@ ReadNetcdf <- function(variable, infile, start=NULL,
 }
 
 #-----------------------------------------------------------------------------------
+
 #' @title Read longitude and latitude arrays off a netCDF file.
 #' @description \code{ReadnercdfLonLat} is a shortcut to only read the longitude and latitude
 #'   information off a netCDF file. If they don't exist a NULL value will be returned.
@@ -183,3 +186,5 @@ ReadNetcdfLonLat <- function(infile) {
   close.ncdf(nc)
   return(list(lon=lon, lat=lat))
 }
+
+#-----------------------------------------------------------------------------------

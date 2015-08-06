@@ -5,7 +5,13 @@ a4height = 21./2.54
 # (HR is the version interpolated to 0.125°)
 res.switch = "HighRes"   # HighRes, OrigRes
 # set whether to use monthly (T) or daily (F) reanalysis data for analysis
-era.monthly = TRUE
+era.monthly = FALSE
+if (era.monthly) {
+  time.ext = "Monthly"
+} else {
+  time.ext = "Daily"
+}
+
 # choose whether to analyse the profile of six model levels of HErZ data or only
 # 10m and 116m
 herz.profile = FALSE
@@ -53,9 +59,9 @@ if (era.monthly) {
                            "\n   should be either TRUE or FALSE\n   ***\n"))
   tryCatch(stop(err))
 }
+CheckFile(era20c.fname)
 # variable names to read from above files
-era20c.param = "windspeed_10m"
-era20c100.param = "windspeed_100m"
+era20c.param = c("windspeed_10m", "windspeed_100m")
 
 #=== ERA-I ===
 # filename to ERA-Interim reanalysis file
@@ -76,12 +82,14 @@ if (era.monthly) {
       "./data/10mWindSpeedDirection-2mTemp_ERAInterim_DayMean_origRes_1979to2014.nc"
   }
 }
+CheckFile(eraI.fname)
 # variable names to read from above files
 eraI.param = "windspeed_10m"
 
 #=== HErZ ===
 # grid file name of the COSMO HErZ reanalysis
 herz.grid = "./data/COSMO_REA6_CONST_withOUTsponge.grb"
+CheckFile(herz.grid)
 # filename(s) of the COSMO HErZ reanalysis file(s)
 if (era.monthly) {
   herz.fname = "./data/WindSpeed_HErZ_MonMean_1997to2014.nc"
@@ -96,14 +104,13 @@ if (era.monthly) {
                  "./data/WindSpeed_2011_DayMean.nc", "./data/WindSpeed_2012_DayMean.nc",
                  "./data/WindSpeed_2013_DayMean.nc", "./data/WindSpeed_2014_DayMean.nc")
 }
+CheckFile(herz.fname)
 # variable names to read from above files
-herz10.param = "windspeed_10m"
-herz116.param = "windspeed_116m"
 if (herz.profile) {
-  herz35.param = "windspeed_35m"
-  herz69.param = "windspeed_69m"
-  herz178.param = "windspeed_178m"
-  herz258.param = "windspeed_258m"
+  herz.param = c("windspeed_10m", "windspeed_35m", "windspeed_69m",
+                 "windspeed_116m", "windspeed_178m", "windspeed_258m")
+} else {
+  herz.param = c("windspeed_10m", "windspeed_116m")
 }
 
 #=== Station data ===
@@ -112,6 +119,7 @@ station.daily = FALSE
 # filename of station name list
 station.daily.fname = "./data/KL_Tageswerte_Beschreibung_Stationen.txt"
 station.hourly.fname = "./data/FF_Stundenwerte_Beschreibung_Stationen_wind_selected3.txt"
+CheckFile(c(station.daily.fname, station.hourly.fname))
 
 #=== time period ===
 # available data (beginning to end of year):
@@ -120,7 +128,7 @@ station.hourly.fname = "./data/FF_Stundenwerte_Beschreibung_Stationen_wind_selec
 #- herz: 1995 to 2014
 era20c.tsstart = c(1997,1)
 era20c.tsend = c(2010,12)
-eraI.tsstart = c(2007,1)
+eraI.tsstart = c(1997,1)
 eraI.tsend = c(2010,12)
 herz.tsstart = c(1997,1)
 herz.tsend = c(2010,12)

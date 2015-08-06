@@ -16,6 +16,9 @@ if (interactive) {
 CheckFile(config.file)
 source(config.file)
 
+#Checks on parameters
+CheckHerzParams(herz.param, herz.profile)
+
 #============================================================
 #
 #  read station data and extract ERA data at station location
@@ -29,7 +32,6 @@ if (station.daily) {
 } else {
   station.fname = station.hourly.fname
 }
-CheckFile(station.fname)
 
 if (station.daily) {
   station.data = read.table(station.fname, skip=2, sep=";")
@@ -83,102 +85,51 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
 
   # read ERA20C data
   cat(paste0("  **  Reading ERA20C reanalysis data\n"))
-  CheckFile(era20c.fname)
-
   stat.lon = station.data$GEO_LÄNGE[1]
   stat.lat = station.data$GEO_BREITE[1]
-
   idx = get.lon.lat.idx(era20c.fname, stat.lon, stat.lat)
   lonidx = idx$lonidx
   latidx = idx$latidx
+  era20c.data = ReadEraNetcdf2Xts(era20c.param, era20c.fname,
+                                  era20c.tsstart, era20c.tsend,
+                                  lonidx, latidx, era20c=TRUE,
+                                  verb.dat=verb.era.dat)
+  era20c.data.xts = era20c.data$era10
+  era20c100.data.xts = era20c.data$era20c100
 
-  era20c = ReadNetcdf(era20c.param, era20c.fname, count=c(1,1,-1),
-                      start=c(lonidx, latidx, 1), verb.dat=verb.era.dat)
-  era20c.data = era20c$data
-  era20c.lon = era20c$lon
-  era20c.lat = era20c$lat
-  era20c.time.vals = era20c$time
-
-  era20c = ReadNetcdf(era20c100.param, era20c.fname, count=c(1,1,-1),
-                      start=c(lonidx, latidx, 1), verb.dat=verb.era.dat)
-  era20c100.data = era20c$data
-
-  # read ERA-Interim data
   cat(paste0("  **  Reading ERA-Interim reanalysis data\n"))
-  CheckFile(eraI.fname)
-
   idx = get.lon.lat.idx(eraI.fname, stat.lon, stat.lat)
   lonidx = idx$lonidx
   latidx = idx$latidx
-
-  eraI = ReadNetcdf(eraI.param, eraI.fname, count=c(1,1,-1),
-                    start=c(lonidx, latidx, 1), verb.dat=verb.era.dat)
-  eraI.data = eraI$data
-  eraI.lon = eraI$lon
-  eraI.lat = eraI$lat
-  eraI.time.vals = eraI$time
+  eraI.data = ReadEraNetcdf2Xts(eraI.param, eraI.fname,
+                                  eraI.tsstart, eraI.tsend,
+                                  lonidx, latidx, era20c=FALSE,
+                                  verb.dat=verb.era.dat)
+  eraI.data.xts = eraI.data$era10
 
   # read HErZ data
   cat(paste0("  **  Reading HErZ reanalysis data\n"))
-  CheckFile(herz.grid)
   nlon = 848
   nlat = 824
   herz.lon = readGrib(herz.grid, nlon, nlat, 1, var='RLON', verb.grib=verb.grib)
   herz.lat = readGrib(herz.grid, nlon, nlat, 1, var='RLAT', verb.grib=verb.grib)
 
-  idx = get.lon.lat.idx(herz.fname, stat.lon, stat.lat, herz.lon, herz.lat)
+  # only read first file name (if there are more than one)
+  # because all daily files have the same grid
+  idx = get.lon.lat.idx(herz.fname[1], stat.lon, stat.lat, herz.lon, herz.lat)
   lonidx = idx$lonidx
   latidx = idx$latidx
-
-  CheckFile(herz.fname)
-
-  dat = ReadNetcdf(herz10.param, herz.fname,  count=c(1,1,-1),
-                   start=c(lonidx, latidx, 1), verb.dat=verb.era.dat)
-  herz10.data = dat$data
-  herz.time.vals <- dat$time
-
-  dat = ReadNetcdf(herz116.param, herz.fname,  count=c(1,1,-1),
-                   start=c(lonidx, latidx, 1), verb.dat=verb.era.dat)
-  herz116.data <- dat$data
-
+  herz.data = ReadHerzNetcdfMonthlyDaily2Xts(herz.param, herz.fname,
+                                             herz.tsstart, herz.tsend,
+                                             lonidx, latidx,
+                                             era.monthly, herz.profile, verb.dat)
+  herz10.data.xts = herz.data$herz10
+  herz116.data.xts = herz.data$herz116
   if (herz.profile) {
-    dat = ReadNetcdf(herz35.param, herz.fname,  count=c(1,1,-1),
-                     start=c(lonidx, latidx, 1), verb.dat=verb.era.dat)
-    herz35.data <- dat$data
-    dat = ReadNetcdf(herz69.param, herz.fname,  count=c(1,1,-1),
-                     start=c(lonidx, latidx, 1), verb.dat=verb.era.dat)
-    herz69.data <- dat$data
-    dat = ReadNetcdf(herz178.param, herz.fname,  count=c(1,1,-1),
-                     start=c(lonidx, latidx, 1), verb.dat=verb.era.dat)
-    herz178.data <- dat$data
-    dat = ReadNetcdf(herz258.param, herz.fname,  count=c(1,1,-1),
-                     start=c(lonidx, latidx, 1), verb.dat=verb.era.dat)
-    herz258.data <- dat$data
-  }
-
-  # convert data and time values into an extended time series
-  # and apply start and end date
-  era20c.data.xts = xts(era20c.data, order.by=era20c.time.vals)
-  era20c.data.xts = era20c.data.xts[set.to.date(era20c.tsstart, era20c.tsend)]
-  era20c100.data.xts = xts(era20c100.data, order.by=era20c.time.vals)
-  era20c100.data.xts = era20c100.data.xts[set.to.date(era20c.tsstart, era20c.tsend)]
-  eraI.data.xts = xts(eraI.data, order.by=eraI.time.vals)
-  eraI.data.xts = eraI.data.xts[set.to.date(eraI.tsstart, eraI.tsend)]
-
-  timestr = set.to.date(herz.tsstart, herz.tsend)
-  herz10.data.xts = xts(herz10.data, order.by=herz.time.vals)
-  herz10.data.xts = herz10.data.xts[timestr]
-  herz116.data.xts = xts(herz116.data, order.by=herz.time.vals)
-  herz116.data.xts = herz116.data.xts[timestr]
-  if (herz.profile) {
-    herz35.data.xts = xts(herz35.data, order.by=herz.time.vals)
-    herz35.data.xts = herz35.data.xts[timestr]
-    herz69.data.xts = xts(herz69.data, order.by=herz.time.vals)
-    herz69.data.xts = herz69.data.xts[timestr]
-    herz178.data.xts = xts(herz178.data, order.by=herz.time.vals)
-    herz178.data.xts = herz178.data.xts[timestr]
-    herz258.data.xts = xts(herz258.data, order.by=herz.time.vals)
-    herz258.data.xts = herz258.data.xts[timestr]
+    herz35.data.xts = herz.data$herz35
+    herz69.data.xts = herz.data$herz69
+    herz178.data.xts = herz.data$herz178
+    herz258.data.xts = herz.data$herz258
   }
 
   #-----------------------------------------------------------------------------
@@ -187,7 +138,7 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
 
   if (plot.EraStatComp) {
     fname = paste0("ERA-Station_", gsub("/", "-", station.data$STATIONS_NAME[1]),
-                   "_TimeSeriesMonthly_", res.switch, '_', fname_ext, ".pdf")
+                   "_TimeSeries", time.ext,"_", res.switch, '_', fname_ext, ".pdf")
     titname = paste0('Windspeed [m/s^2] for station ',
                      as.character(station.data$STATIONS_NAME[1]))
     PlotStationEra(era20c.data.xts, eraI.data.xts, herz.data.xts, MM.station,
@@ -203,7 +154,7 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
                    monthly=FALSE, anomaly=FALSE)
 
     fname = paste0("ERA-Station_Anomlay_", gsub("/", "-", station.data$STATIONS_NAME[1]),
-                   "_TimeSeriesMonthly_", res.switch, '_', fname_ext, ".pdf")
+                   "_TimeSeries", time.ext, "_", res.switch, '_', fname_ext, ".pdf")
     titname = paste0('Windspeed anomaly [m/s^2] for station ',
                      as.character(station.data$STATIONS_NAME[1]))
     PlotStationEra(era20c.data.xts, eraI.data.xts, herz.data.xts, MM.station,
@@ -225,7 +176,7 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
     ### COMPARE 100m ERA20c AND 116m HErZ###
     statname = as.character(station.data$STATIONS_NAME[1])
     fname = paste0("100m-Era20cHerz_", gsub("/", "-", statname),
-                   "_TimeSeriesMonthly_", res.switch, '_', fname_ext, ".pdf")
+                   "_TimeSeries", time.ext, "_", res.switch, '_', fname_ext, ".pdf")
     titname = paste0('100m Windspeed [m/s^2] at station location ', statname)
     Plot100mEraHerz(era20c100.data.xts, herz116.data.xts, titname, statname,
                     outdir, fname, width=a4width, height=a4height)
@@ -257,7 +208,7 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
 
   if (plot.EraStationMonths) {
     #@*** THIS PLOTTING FUNCTION NEEDS TO BE FINALIZED ***@#
-    fname = paste0("ERA-Station_Months_",
+    fname = paste0("ERA-Station_", time.ext, "_",
                    gsub("/", "-", station.data$STATIONS_NAME[1]),
                    "_TimeSeries_", res.switch, '_', fname_ext, ".pdf")
     titname = paste0('Windspeed [m/s^2] for station ',
@@ -266,7 +217,7 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
                          titname, outdir, fname, width=a4width, height=a4height,
                          anomaly=FALSE)
 
-    fname = paste0("ERA-Station_MonthsAnomlay_",
+    fname = paste0("ERA-Station_", time.ext, "Anomlay_",
                    gsub("/", "-", station.data$STATIONS_NAME[1]),
                    "_TimeSeries_", res.switch, '_', fname_ext, ".pdf")
     titname = paste0('Windspeed anomaly [m/s^2] for station ',
@@ -280,19 +231,19 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
 
   if(plot.PDFscore) {
     fname = paste0("PDFscore_ERA20C_", gsub("/", "-", station.data$STATIONS_NAME[1]),
-                   '_', res.switch, '_', fname_ext, ".pdf")
+                   '_', res.switch, '_', time.ext, "_", fname_ext, ".pdf")
     titname = paste0('PDF score of ERA20C and station ',
                      as.character(station.data$STATIONS_NAME[1]))
     PlotMonthlyPDFScore(era20c.data.xts, MM.station, outdir, fname, titname)
 
     fname = paste0("PDFscore_ERAI_", gsub("/", "-", station.data$STATIONS_NAME[1]),
-                   '_', res.switch, '_', fname_ext, ".pdf")
+                   '_', res.switch, '_', time.ext, "_", fname_ext, ".pdf")
     titname = paste0('PDF score of ERA-I and station ',
                      as.character(station.data$STATIONS_NAME[1]))
     PlotMonthlyPDFScore(eraI.data.xts, MM.station, outdir, fname, titname)
 
     fname = paste0("PDFscore_HErZ_", gsub("/", "-", station.data$STATIONS_NAME[1]),
-                   '_', res.switch, '_', fname_ext, ".pdf")
+                   '_', res.switch, '_', time.ext, "_", fname_ext, ".pdf")
     titname = paste0('PDF score of HErZ and station ',
                      as.character(station.data$STATIONS_NAME[1]))
     PlotMonthlyPDFScore(herz.data.xts, MM.station, outdir, fname, titname)
