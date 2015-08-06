@@ -23,11 +23,9 @@ Plot100mEraHerz(Era20cXts, HerzXts, titname, statname, outdir, fname, width,
 }
 \description{
 \code{Plot100mEraHerz} compares the 100m wind speed of the ERA20C
-  global reanalysis with the 116m wind speed of the HErZ regional reanalysis. As of
-  now THIS FUNCTION IS NOT YET FULLY FUNCTIONAL !!!
-  This function will perform a pixel wise comparison to fit into the logic of this
-  package. Later an areal comparison is envisaged.
-  Scatter plots, PDFs, histograms, PDFscore, etc should all be considered as
-  verification scores.
+  global reanalysis with the 116m wind speed of the HErZ regional reanalysis.
+  This function performs a pixel wise comparison at the station locationto
+  provided by the package. Scatter plots, QQplots, histogram plots, and the
+  PDFscore are produced.
 }
 

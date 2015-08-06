@@ -33,8 +33,8 @@ monthly (F) or seasonal (T) values of the above time series}
 \description{
 THIS FUNCTION IS NOT YET FINISHED.
   \code{PlotStationEraSeasons} plots seasonal means of station values against
-  locally corresponding time series (pixels) of global and regional reanalyses. The
-  rolling mean and optionally the anomalies are plotted. The plot is saved in pdf
-  format and there is no return value.
+  locally corresponding time series (pixels) of global and regional reanalyses.
+  The rolling mean and optionally the anomalies are plotted. The plot is saved in
+  pdf format and there is no return value.
 }
 

@@ -26,9 +26,9 @@ GetYlims <- function(xts1, xts2, xts3, xts4) {
 
 #' @title Plot station measurements together with ERA20C, ERA-I, and HErZ.
 #' @description \code{PlotStationEra} plots the station values together with the
-#'   corresponding ERA20C, ERA-I, and HErZ pixel and provides the correlation between
-#'   these time series. Optionally, it is possible to plot the anomaly. The plot is
-#'   saved in pdf format and there is no return value.
+#'   corresponding ERA20C, ERA-I, and HErZ pixel and provides the correlation
+#'   between these time series. Optionally, it is possible to plot the anomaly.
+#'   The plot is saved in pdf format and there is no return value.
 #' @param Era20cXts monthly mean extended time series of the ERA20C pixel
 #'   corresponding to the station location
 #' @param EraIXts same as above for ERA-Interim
@@ -111,9 +111,9 @@ PlotStationEra <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 #'   global and reginal reanalyses
 #' @description THIS FUNCTION IS NOT YET FINISHED.
 #'   \code{PlotStationEraSeasons} plots seasonal means of station values against
-#'   locally corresponding time series (pixels) of global and regional reanalyses. The
-#'   rolling mean and optionally the anomalies are plotted. The plot is saved in pdf
-#'   format and there is no return value.
+#'   locally corresponding time series (pixels) of global and regional reanalyses.
+#'   The rolling mean and optionally the anomalies are plotted. The plot is saved in
+#'   pdf format and there is no return value.
 #' @param Era20cXts monthly mean extended time series of the ERA20C pixel
 #'   corresponding to the station location
 #' @param EraIXts same as above for ERA-Interim
@@ -136,8 +136,8 @@ PlotStationEraSeasons <- function(Era20cXts, EraIXts, HerzXts, StatXts,
   pdf(paste(outdir, fname, sep=""), width=width, height=height,
       onefile=TRUE, pointsize=13)
 
-  eracsum = Era20cXts[.indexmon(Era20cXts) %in% c(5,6,7)]
-  eracwin = Era20cXts[.indexmon(Era20cXts) %in% c(0,1,11)]
+  eracsum = Era20cXts[.indexmon(Era20cXts) %in% c(5,6,7)] # JJA
+  eracwin = Era20cXts[.indexmon(Era20cXts) %in% c(0,1,11)] # JFD
 
   eraisum = EraIXts[.indexmon(EraIXts) %in% c(5,6,7)]
   eraiwin = EraIXts[.indexmon(EraIXts) %in% c(0,1,11)]
@@ -326,12 +326,10 @@ PlotStationEraMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 
 #' @title Compare 100m wind speed of ERA20C and HErZ pixel by pixel.
 #' @description \code{Plot100mEraHerz} compares the 100m wind speed of the ERA20C
-#'   global reanalysis with the 116m wind speed of the HErZ regional reanalysis. As of
-#'   now THIS FUNCTION IS NOT YET FULLY FUNCTIONAL !!!
-#'   This function will perform a pixel wise comparison to fit into the logic of this
-#'   package. Later an areal comparison is envisaged.
-#'   Scatter plots, PDFs, histograms, PDFscore, etc should all be considered as
-#'   verification scores.
+#'   global reanalysis with the 116m wind speed of the HErZ regional reanalysis.
+#'   This function performs a pixel wise comparison at the station locationto
+#'   provided by the package. Scatter plots, QQplots, histogram plots, and the
+#'   PDFscore are produced.
 #' @param Era20cXts monthly mean extended time series of a ERA20C pixel
 #' @param HerzXts same as above for HErZ
 #' @param titname string of the plot title name
