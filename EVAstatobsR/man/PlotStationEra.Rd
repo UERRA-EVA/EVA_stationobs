@@ -30,7 +30,7 @@ values of the above time series}
 \item{anomaly}{is an optional parameter which determines whether to plot anomalies}
 }
 \description{
-\code{PlotStationEra} plot the station values together with the
+\code{PlotStationEra} plots the station values together with the
   corresponding ERA20C, ERA-I, and HErZ pixel and provides the correlation between
   these time series. Optionally, it is possible to plot the anomaly. The plot is
   saved in pdf format and there is no return value.

@@ -17,7 +17,7 @@ ExtractStationData(station.data, era20c.tsstart, era20c.tsend, eraI.tsstart,
 data}
 
 \item{era20c.tsstart}{is a charcter string of the start date of the ERA20C data
-of the form c(YYYY,MM)}
+of the format c(YYYY,MM)}
 
 \item{era20c.tsend}{is the same as above for the end date}
 

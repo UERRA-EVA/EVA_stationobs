@@ -1,5 +1,6 @@
-#' @title
-#' @description
+#' @title Stop on error and print error message.
+#' @description This function stops and prints an error message which has been
+#'   passed to it. It does not have a return value.
 #' @param errstr is a string which hold the error message to be printed before
 #'   stopping execution
 CallStop <- function(errstr) {
@@ -28,10 +29,15 @@ CheckFile <- function(infile) {
 
 #-----------------------------------------------------------------------------------
 
-#' @title
-#' @description
-#' @param herz.param
-#' @param herz.profile
+#' @title Check HErZ parameter names.
+#' @description HErZ parameter names are checked which is especially important if
+#'   the complete profile is passed. Within the package the names are expected to
+#'   follow a certain structure: "windspeed_xxxm", whereas xxx equals the height of
+#'   the model level and is expected to be increasing, i.e., 10m, 35m, 69m, 116m,
+#'   178m, 258m. This function does not have a return value.
+#' @param herz.param a string of length n which holds n parameter names.
+#' @param herz.profile boolean which determines whether to check for the complete
+#'   HErZ profile or only the two levels 10m and 116m.
 CheckHerzParams <- function(herz.param, herz.profile) {
   if (herz.profile) {
     if (!herz.param[1] == "windspeed_10m") {
