@@ -108,7 +108,7 @@ PlotStationEra <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 #-----------------------------------------------------------------------------------
 
 #' @title Plot seasonal time series of station data against locally corresponding
-#'   global and reginal reanalyses
+#'   global and reginal reanalyses.
 #' @description THIS FUNCTION IS NOT YET FINISHED.
 #'   \code{PlotStationEraSeasons} plots seasonal means of station values against
 #'   locally corresponding time series (pixels) of global and regional reanalyses.
@@ -167,6 +167,7 @@ PlotStationEraSeasons <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 
   # !!!!!!!!!!!!!!!!!!!!!!!!!
   # need to get a seasonal time series and plot all seasons
+  # THAT SEEMS THE PROBLEM
   # !!!!!!!!!!!!!!!!!!!!!!!!!
 
   # ERA20C
