@@ -253,6 +253,8 @@ PlotStationEraMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
   # specify months to plot starting from 0 for January to 11 for December
   # within the list below
   months = list(0,7)
+  all.months = c("January","February","March","April","May","June","July",
+                 "August","September","October","November","December")
   mon.Era20c = list()
   mon.EraI = list()
   mon.Herz = list()
@@ -283,7 +285,8 @@ PlotStationEraMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
   yliml = vector(mode="numeric", length=length(months))
   ylimh = vector(mode="numeric", length=length(months))
   for (cnt in seq(1,length(months))) {
-    Ylims = GetYlims(mon.Era20c[[cnt]], mon.EraI[[cnt]], mon.Herz[[cnt]], mon.Stat[[cnt]])
+    Ylims = GetYlims(mon.Era20c[[cnt]], mon.EraI[[cnt]],
+                     mon.Herz[[cnt]], mon.Stat[[cnt]])
     yliml[cnt] = Ylims$yll
     ylimh[cnt] = Ylims$ylh
   }
@@ -292,31 +295,50 @@ PlotStationEraMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 
   dummy = numeric(length=length(mon.Era20c[[1]])) * NA
   dummy = xts(dummy, order.by = index(mon.Era20c[[1]]))
-  plot(dummy, main=titname, ylab="windspeed [m/s]", ylim=c(yliml, ylimh))
 
+  par(mfrow=c(2,2))
+  par(mar=c(0,0,0,0), oma=c(3,5,3,0.5))
+  color = c("red", "black")
+
+  plot(dummy, main=NULL, axes=FALSE, ylim=c(yliml, ylimh))
+  axis(2)
   for (cnt in seq(1,length(months))) {
-    # ERA20C
-    lines(mon.Era20c[[cnt]], type="b", pch=21, col=rgb(0,0,1,1./cnt),
-          bg=rgb(0,0,0,1./cnt), lw=2)
-
-    # ERA-I
-    lines(mon.EraI[[cnt]], type="b", pch=21, col=rgb(1,0,0,1./cnt),
-          bg=rgb(1,0,0,1./cnt), lw=2)
-
-    # HErZ
-    lines(mon.Herz[[cnt]], type="b", pch=21, col=rgb(0,1,0,1./cnt),
-          bg=rgb(0,1,0,1./cnt), lw=2)
-
-    # Station
-    lines(mon.Stat[[cnt]], type="b", pch=21, col=rgb(0,0,0,1./cnt),
+    lines(mon.Era20c[[cnt]], type="b", pch=21, col=color[cnt],
           bg=rgb(0,0,0,1./cnt), lw=2)
   }
+  legend("topleft", legend=c(paste0("ERA20C ", all.months[months[[1]]+1]),
+                             paste0("ERA20C ", all.months[months[[2]]+1])),
+         text.col=color)
 
-  legend("topleft", legend=c(paste0("ERA20C"),
-                             paste0("ERAI"),
-                             paste0("HErZ"),
-                             paste0("Station")),
-         text.col=c("blue", "red", "green3", "black"))
+  plot(dummy, main=NULL, axes=FALSE, ylim=c(yliml, ylimh))
+  for (cnt in seq(1,length(months))) {
+    lines(mon.EraI[[cnt]], type="b", pch=21, col=color[cnt],
+          bg=rgb(0,0,0,1./cnt), lw=2)
+  }
+  legend("topleft", legend=c(paste0("ERA-I ", all.months[months[[1]]+1]),
+                             paste0("ERA-I ", all.months[months[[2]]+1])),
+         text.col=color)
+
+  plot(dummy, main=NULL, ylim=c(yliml, ylimh))
+  for (cnt in seq(1,length(months))) {
+    lines(mon.Herz[[cnt]], type="b", pch=21, col=color[cnt],
+          bg=rgb(0,0,0,1./cnt), lw=2)
+  }
+  legend("topleft", legend=c(paste0("HErZ ", all.months[months[[1]]+1]),
+                             paste0("HErZ ", all.months[months[[2]]+1])),
+         text.col=color)
+
+  plot(dummy, main=NULL, yaxt="n", ylim=c(yliml, ylimh))
+  for (cnt in seq(1,length(months))) {
+    lines(mon.Stat[[cnt]], type="b", pch=21, col=color[cnt],
+          bg=rgb(0,0,0,1./cnt), lw=2)
+  }
+  legend("topleft", legend=c(paste0("Station ", all.months[months[[1]]+1]),
+                             paste0("Station ", all.months[months[[2]]+1])),
+         text.col=color)
+
+  mtext(titname, outer=TRUE)
+  mtext("windspeed [m/s]", side=2, line=3, outer=TRUE)
 
   dev.off()
 
