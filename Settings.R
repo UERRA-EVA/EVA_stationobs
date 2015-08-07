@@ -142,8 +142,8 @@ plot.EraStatComp = F
 # monthly mean time series between ERA20C and COSMO HErZ reanalyses at 100m height
 plot.100mEraHerz = F
 # only specific seasons of reanalyses and station data at 10m height - NOT YET FINISHED
-plot.EraStationSeasons = F
+plot.EraStationSeasons = T
 # only specific months of reanalyses and station data at 10m height
-plot.EraStationMonths = T
+plot.EraStationMonths = F
 # PDF score between station data and each reanalysis at 10m height
 plot.PDFscore = F

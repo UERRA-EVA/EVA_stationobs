@@ -98,6 +98,9 @@ ReadHerzNetcdfMonthlyDaily2Xts <- function(herz.param, herz.fname,
   }
 
   # convert data.frame of HErZ data into an extended time series
+  if (era.monthly) {
+    ndf$dat10.time = as.yearmon(ndf$dat10.time)
+  }
   timestr = set.to.date(herz.tsstart, herz.tsend)
   herz10.xts = xts(ndf$dat10.data, order.by=ndf$dat10.time)
   herz10.xts = herz10.xts[timestr]
@@ -145,7 +148,7 @@ ReadHerzNetcdfMonthlyDaily2Xts <- function(herz.param, herz.fname,
 #'   ERA-Interim data is read, a NULL value will be returned for era20c100.
 ReadEraNetcdf2Xts <- function(era.param, era.fname,
                               era.tsstart, era.tsend,
-                              lonidx, latidx,
+                              lonidx, latidx, era.monthly,
                               era20c=TRUE, verb.dat=FALSE) {
 
   # Read ERA-I or ERA20C monthly or daily data
@@ -161,6 +164,9 @@ ReadEraNetcdf2Xts <- function(era.param, era.fname,
 
   # convert ERA data and time values into an extended time series
   # and apply start and end date
+  if (era.monthly) {
+    df$dat10m.time = as.yearmon(df$era10m.time)
+  }
   timestr = set.to.date(era.tsstart, era.tsend)
   era.xts = xts(df$era10m.data, order.by=df$era10m.time)
   era.xts = era.xts[timestr]

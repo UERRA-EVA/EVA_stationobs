@@ -92,8 +92,8 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
   latidx = idx$latidx
   era20c.data = ReadEraNetcdf2Xts(era20c.param, era20c.fname,
                                   era20c.tsstart, era20c.tsend,
-                                  lonidx, latidx, era20c=TRUE,
-                                  verb.dat=verb.era.dat)
+                                  lonidx, latidx, era.monthly,
+                                  era20c=TRUE, verb.dat=verb.era.dat)
   era20c.data.xts = era20c.data$era10
   era20c100.data.xts = era20c.data$era20c100
 
@@ -185,26 +185,26 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
 
   #-----------------------------------------------------------------------------
 
-#   if (plot.EraStationSeasons) {
-#     #@*** THIS PLOTTING FUNCTION NEEDS TO BE FINALIZED ***@#
-#     fname = paste0("ERA-Station_Seasons_",
-#                    gsub("/", "-", station.data$STATIONS_NAME[1]),
-#                    "_TimeSeries_", res.switch, '_', fname_ext, ".pdf")
-#     titname = paste0('Seasonal windspeed [m/s^2] for station ',
-#                      as.character(station.data$STATIONS_NAME[1]))
-#     PlotStationEraSeasons(era20c.data.xts, eraI.data.xts, herz10.data.xts, MM.station,
-#                           titname, outdir, fname, width=a4width, height=a4height,
-#                           anomaly=FALSE, seasons=FALSE)
-#
-#     fname = paste0("ERA-Station_SeasonsAnomlay_",
-#                    gsub("/", "-",station.data$STATIONS_NAME[1]),
-#                    "_TimeSeries_", res.switch, '_', fname_ext, ".pdf")
-#     titname = paste0('Seasonal windspeed anomaly [m/s^2] for station ',
-#                      as.character(station.data$STATIONS_NAME[1]))
-#     PlotStationEraSeasons(era20c.data.xts, eraI.data.xts, herz10.data.xts, MM.station,
-#                           titname, outdir, fname, width=a4width, height=a4height,
-#                           anomaly=TRUE, seasons=TRUE)
-#   }
+  if (plot.EraStationSeasons) {
+    #@*** THIS PLOTTING FUNCTION NEEDS TO BE FINALIZED ***@#
+    fname = paste0("ERA-Station_Seasons_",
+                   gsub("/", "-", station.data$STATIONS_NAME[1]),
+                   "_TimeSeries_", res.switch, '_', fname_ext, ".pdf")
+    titname = paste0('Seasonal windspeed [m/s^2] for station ',
+                     as.character(station.data$STATIONS_NAME[1]))
+    PlotStationEraSeasons(era20c.data.xts, eraI.data.xts, herz10.data.xts, MM.station,
+                          titname, outdir, fname, width=a4width, height=a4height,
+                          anomaly=FALSE, seasons=FALSE)
+
+    fname = paste0("ERA-Station_SeasonsAnomlay_",
+                   gsub("/", "-",station.data$STATIONS_NAME[1]),
+                   "_TimeSeries_", res.switch, '_', fname_ext, ".pdf")
+    titname = paste0('Seasonal windspeed anomaly [m/s^2] for station ',
+                     as.character(station.data$STATIONS_NAME[1]))
+    PlotStationEraSeasons(era20c.data.xts, eraI.data.xts, herz10.data.xts, MM.station,
+                          titname, outdir, fname, width=a4width, height=a4height,
+                          anomaly=TRUE, seasons=TRUE)
+  }
 
   #-----------------------------------------------------------------------------
 

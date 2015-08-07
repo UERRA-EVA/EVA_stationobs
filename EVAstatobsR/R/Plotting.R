@@ -107,6 +107,40 @@ PlotStationEra <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 
 #-----------------------------------------------------------------------------------
 
+#' @title
+#' @description
+#' @param
+#' @return
+GetSeasonalXts <- function(vals.xts) {
+
+  vals.split.xts = split.xts(vals.xts, f="quarters")
+  vals.time = vector(mode="character", length=length(vals.split.xts))
+  vals.values = vector(mode="numeric", length=length(vals.split.xts))
+  for (ii in seq(length(vals.split.xts))) {
+    vals.time[[ii]] = as.character(index(vals.split.xts[[ii]])[3])
+    vals.values[[ii]] = mean(vals.split.xts[[ii]])
+  }
+  vals.time = as.POSIXct(strptime(vals.time, format="%Y-%m-%d"),
+                         format="%Y-%m-%d", tz="UTC")
+  vals.xts = as.xts(vals.values, order.by=vals.time)
+
+
+#   as.POSIXct(as.yearmon(vals.time, "%b %Y", tz="UTC"), format="%Y-%m-%d", tz="UTC")
+
+
+  date.xts  <- as.POSIXlt(index(vals.xts))
+  winter.xts  <- vals.xts[which(date.xts$mon==2)]
+  spring.xts  <- vals.xts[which(date.xts$mon==5)]
+  summer.xts  <- vals.xts[which(date.xts$mon==8)]
+  autumn.xts  <- vals.xts[which(date.xts$mon==11)]
+
+  return(list(winter.xts=winter.xts, spring.xts=spring.xts,
+              summer.xts=summer.xts, autumn.xts=autumn.xts))
+
+}
+
+#-----------------------------------------------------------------------------------
+
 #' @title Plot seasonal time series of station data against locally corresponding
 #'   global and reginal reanalyses.
 #' @description THIS FUNCTION IS NOT YET FINISHED.
@@ -130,93 +164,82 @@ PlotStationEraSeasons <- function(Era20cXts, EraIXts, HerzXts, StatXts,
                                   titname, outdir, fname, width, height,
                                   anomaly=FALSE, seasons=FALSE) {
 
-  roll.mean = FALSE
-  roll.time = 12
+  seas.Era20c = list()
+  seas.EraI = list()
+  seas.Herz = list()
+  seas.Stat = list()
 
-  pdf(paste(outdir, fname, sep=""), width=width, height=height,
-      onefile=TRUE, pointsize=13)
+  era20c.seasons = GetSeasonalXts(Era20cXts)
+  seas.Era20c[[1]] = era20c.seasons$winter.xts
+  seas.Era20c[[2]] = era20c.seasons$spring.xts
+  seas.Era20c[[3]] = era20c.seasons$summer.xts
+  seas.Era20c[[4]] = era20c.seasons$autumn.xts
 
-  eracsum = Era20cXts[.indexmon(Era20cXts) %in% c(5,6,7)] # JJA
-  eracwin = Era20cXts[.indexmon(Era20cXts) %in% c(0,1,11)] # JFD
+  eraI.seasons = GetSeasonalXts(EraIXts)
+  seas.EraI[[1]] = eraI.seasons$winter.xts
+  seas.EraI[[2]] = eraI.seasons$spring.xts
+  seas.EraI[[3]] = eraI.seasons$summer.xts
+  seas.EraI[[4]] = eraI.seasons$autumn.xts
 
-  eraisum = EraIXts[.indexmon(EraIXts) %in% c(5,6,7)]
-  eraiwin = EraIXts[.indexmon(EraIXts) %in% c(0,1,11)]
+  herz.seasons = GetSeasonalXts(HerzXts)
+  seas.Herz[[1]] = herz.seasons$winter.xts
+  seas.Herz[[2]] = herz.seasons$spring.xts
+  seas.Herz[[3]] = herz.seasons$summer.xts
+  seas.Herz[[4]] = herz.seasons$autumn.xts
 
-  herzsum = HerzXts[.indexmon(HerzXts) %in% c(5,6,7)]
-  herzwin = HerzXts[.indexmon(HerzXts) %in% c(0,1,11)]
-
-  statsum = StatXts[.indexmon(StatXts) %in% c(5,6,7)]
-  statwin = StatXts[.indexmon(StatXts) %in% c(0,1,11)]
-
-  Ylims = GetYlims(eracwin, eraiwin, herzwin, statwin)
-  yliml = Ylims$yll
-  ylimh = Ylims$ylh
+  stat.seasons = GetSeasonalXts(StatXts)
+  seas.Stat[[1]] = stat.seasons$winter.xts
+  seas.Stat[[2]] = stat.seasons$spring.xts
+  seas.Stat[[3]] = stat.seasons$summer.xts
+  seas.Stat[[4]] = stat.seasons$autumn.xts
 
   if (anomaly) {
-    eracsum = eracsum - mean(eracsum)
-    eracwin = eracwin - mean(eracwin)
-    eraisum = eraisum - mean(eraisum)
-    eraiwin = eraiwin - mean(eraiwin)
-    herzsum = herzsum - mean(herzsum)
-    herzwin = herzwin - mean(herzwin)
-    statsum = statsum - mean(statsum)
-    statwin = statwin - mean(statwin)
+    for (cnt in seq(4)) {
+      seas.Era20c[[cnt]] = seas.Era20c[[cnt]] - mean(seas.Era20c[[cnt]])
+      seas.EraI[[cnt]] = seas.EraI[[cnt]] - mean(seas.EraI[[cnt]])
+      seas.Herz[[cnt]] = seas.Herz[[cnt]] - mean(seas.Herz[[cnt]])
+      seas.Stat[[cnt]] = seas.Stat[[cnt]] - mean(seas.Stat[[cnt]])
+    }
     yliml = -1.5
     ylimh = 1.5
   }
 
-  # !!!!!!!!!!!!!!!!!!!!!!!!!
-  # need to get a seasonal time series and plot all seasons
-  # THAT SEEMS THE PROBLEM
-  # !!!!!!!!!!!!!!!!!!!!!!!!!
+  pdf(paste(outdir, fname, sep=""), width=width, height=height,
+      onefile=TRUE, pointsize=13)
+
+  yliml = vector(mode="numeric", length=length(4))
+  ylimh = vector(mode="numeric", length=length(4))
+  for (cnt in seq(4)) {
+    Ylims = GetYlims(seas.Era20c[[cnt]], seas.EraI[[cnt]],
+                     seas.Herz[[cnt]], seas.Stat[[cnt]])
+    yliml[cnt] = Ylims$yll
+    ylimh[cnt] = Ylims$ylh
+  }
+  yliml = min(yliml)
+  ylimh = max(ylimh)
 
   # ERA20C
-  dummy = numeric(length=length(eracwin)) * NA
-  dummy = xts(dummy, order.by = index(eracwin))
+  dummy = numeric(length=length(seas.Era20c[[1]])) * NA
+  dummy = xts(dummy, order.by = index(seas.Era20c[[1]]))
   plot(dummy, main=titname, ylab="windspeed [m/s]", ylim=c(yliml, ylimh))
 
-  if (roll.mean) {
-    lines(rollmean(eracsum, roll.time), type="p", pch=21, col="blue", bg="blue", lw=2)
-    lines(rollmean(eracwin, roll.time), type="p", pch=21, col="blue",
-          bg="blue", lw=2)
-  } else {
-    lines(eracsum, type="p", pch=21, col="blue", bg="blue", lw=2)
-    lines(eracwin, type="p", pch=21, col="blue",
-          bg="blue", lw=2)
-  }
+  lines(seas.Era20c[[1]], type="b", pch=21, col="blue", bg="blue", lw=2)
+  lines(seas.Era20c[[3]], type="b", pch=21, col="blue",
+        bg="blue", lw=2)
 
   # ERA-I
-  if (roll.mean) {
-    lines(rollmean(eraisum, roll.time), type="p", pch=21, col="red", bg="red", lw=2)
-    lines(rollmean(eraiwin, roll.time), type="p", pch=21, col="red", bg="red",
-          lw=2)
-  } else {
-    lines(eraisum, type="p", pch=21, col="red", bg="red", lw=2)
-    lines(eraiwin, type="p", pch=21, col="red", bg="red", lw=2)
+  lines(seas.EraI[[1]], type="b", pch=21, col="red", bg="red", lw=2)
+  lines(seas.EraI[[3]], type="b", pch=21, col="red", bg="red", lw=2)
 
-  }
+
   # HErZ
-  if (roll.mean) {
-    lines(rollmean(herzsum, roll.time), type="p", pch=21, col="green3", bg="green3",
-          lw=2)
-    lines(rollmean(herzwin, roll.time), type="p", pch=21, col="green3",
-          bg="green3", lw=2)
-  } else {
-    lines(herzsum, type="p", pch=21, col="green3", bg="green3", lw=2)
-    lines(herzwin, type="p", pch=21, col="green3", bg="green3",
-          lw=2)
-  }
+  lines(seas.Herz[[1]], type="b", pch=21, col="green3", bg="green3", lw=2)
+  lines(seas.Herz[[3]], type="b", pch=21, col="green3", bg="green3",
+        lw=2)
 
   # Station
-  if (roll.mean) {
-    lines(rollmean(statsum, roll.time), type="p", pch=21, col="black", bg="black",
-          lw=2)
-    lines(rollmean(statwin, roll.time), type="p", pch=21, col="black", bg="black",
-          lw=2)
-  } else {
-    lines(statsum, type="p", pch=21, col="black", bg="black", lw=2)
-    lines(statwin, type="p", pch=21, col="black", bg="black", lw=2)
-  }
+  lines(seas.Stat[[1]], type="b", pch=21, col="black", bg="black", lw=2)
+  lines(seas.Stat[[1]], type="b", pch=21, col="black", bg="black", lw=2)
 
   legend("topleft", legend=c(paste0("ERA20C"),
                              paste0("ERAI"),
@@ -266,7 +289,7 @@ PlotStationEraMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
   date.Herz <- as.POSIXlt(index(HerzXts))
   date.Stat <- as.POSIXlt(index(StatXts))
 
-  for (cnt in seq(1,length(months))) {
+  for (cnt in seq(months)) {
     mon.Era20c[[cnt]] = Era20cXts[which( date.Era20c$mon==months[[cnt]] )]
     mon.EraI[[cnt]] = EraIXts[which( date.EraI$mon==months[[cnt]] )]
     mon.Herz[[cnt]] = HerzXts[which( date.Herz$mon==months[[cnt]] )]
@@ -285,7 +308,7 @@ PlotStationEraMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 
   yliml = vector(mode="numeric", length=length(months))
   ylimh = vector(mode="numeric", length=length(months))
-  for (cnt in seq(1,length(months))) {
+  for (cnt in seq(months)) {
     Ylims = GetYlims(mon.Era20c[[cnt]], mon.EraI[[cnt]],
                      mon.Herz[[cnt]], mon.Stat[[cnt]])
     yliml[cnt] = Ylims$yll
@@ -303,7 +326,7 @@ PlotStationEraMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 
   plot(dummy, main=NULL, axes=FALSE, ylim=c(yliml, ylimh))
   axis(2)
-  for (cnt in seq(1,length(months))) {
+  for (cnt in seq(months)) {
     lines(mon.Era20c[[cnt]], type="b", pch=21, col=color[cnt],
           bg=rgb(0,0,0,1./cnt), lw=2)
   }
@@ -312,7 +335,7 @@ PlotStationEraMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
          text.col=color)
 
   plot(dummy, main=NULL, axes=FALSE, ylim=c(yliml, ylimh))
-  for (cnt in seq(1,length(months))) {
+  for (cnt in seq(months)) {
     lines(mon.EraI[[cnt]], type="b", pch=21, col=color[cnt],
           bg=rgb(0,0,0,1./cnt), lw=2)
   }
@@ -321,7 +344,7 @@ PlotStationEraMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
          text.col=color)
 
   plot(dummy, main=NULL, ylim=c(yliml, ylimh))
-  for (cnt in seq(1,length(months))) {
+  for (cnt in seq(months)) {
     lines(mon.Herz[[cnt]], type="b", pch=21, col=color[cnt],
           bg=rgb(0,0,0,1./cnt), lw=2)
   }
@@ -330,7 +353,7 @@ PlotStationEraMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
          text.col=color)
 
   plot(dummy, main=NULL, yaxt="n", ylim=c(yliml, ylimh))
-  for (cnt in seq(1,length(months))) {
+  for (cnt in seq(months)) {
     lines(mon.Stat[[cnt]], type="b", pch=21, col=color[cnt],
           bg=rgb(0,0,0,1./cnt), lw=2)
   }
@@ -484,7 +507,9 @@ PlotMonthlyPDFScore <- function(era.xts, station.xts, outdir, fname, titname,
 
   dev.off()
 }
+
 #-----------------------------------------------------------------------------------
+
 #' @title Produce a scatter plot
 #' @description Prodcue a scatter plot of two data set samples.
 #' @param X first data sample for the scatter plot
@@ -501,7 +526,9 @@ scatterPlot <- function(X, Y, yliml, ylimh, titname, xlabname, ylabname) {
   lines(c(yliml-1,ylimh), c(yliml-1,ylimh))
   abline(lm(Y ~ X), col="blue")
 }
+
 #-----------------------------------------------------------------------------------
+
 #' @title Produce one or two overlapping histogram plot(s)
 #' @description Procudes a standard histogram plot of one or two data samples. If
 #'   two data samples are to be plotted overlapping into one plot, then the same
@@ -532,7 +559,9 @@ histoPlot <- function(X, Y, breaks, xlims, titname, xlabname, addPlot=FALSE) {
     lines(density(X), col="red", lw=1.5)
   }
 }
+
 #-----------------------------------------------------------------------------------
+
 #' @title Create QQ plot of two data samples
 #' @description Create a simple Quantile-Quantile plot of two data samples.
 #' @param X first data samples for the QQ plot
@@ -549,4 +578,5 @@ qqPlot <- function(X, Y, yliml, ylimh, titname, xlabname, ylabname) {
   abline(0,1)
 
 }
+
 #-----------------------------------------------------------------------------------
