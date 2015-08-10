@@ -107,40 +107,6 @@ PlotStationEra <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 
 #-----------------------------------------------------------------------------------
 
-#' @title
-#' @description
-#' @param
-#' @return
-GetSeasonalXts <- function(vals.xts) {
-
-  vals.split.xts = split.xts(vals.xts, f="quarters")
-  vals.time = vector(mode="character", length=length(vals.split.xts))
-  vals.values = vector(mode="numeric", length=length(vals.split.xts))
-  for (ii in seq(length(vals.split.xts))) {
-    vals.time[[ii]] = as.character(index(vals.split.xts[[ii]])[3])
-    vals.values[[ii]] = mean(vals.split.xts[[ii]])
-  }
-  vals.time = as.POSIXct(strptime(vals.time, format="%Y-%m-%d"),
-                         format="%Y-%m-%d", tz="UTC")
-  vals.xts = as.xts(vals.values, order.by=vals.time)
-
-
-#   as.POSIXct(as.yearmon(vals.time, "%b %Y", tz="UTC"), format="%Y-%m-%d", tz="UTC")
-
-
-  date.xts  <- as.POSIXlt(index(vals.xts))
-  winter.xts  <- vals.xts[which(date.xts$mon==2)]
-  spring.xts  <- vals.xts[which(date.xts$mon==5)]
-  summer.xts  <- vals.xts[which(date.xts$mon==8)]
-  autumn.xts  <- vals.xts[which(date.xts$mon==11)]
-
-  return(list(winter.xts=winter.xts, spring.xts=spring.xts,
-              summer.xts=summer.xts, autumn.xts=autumn.xts))
-
-}
-
-#-----------------------------------------------------------------------------------
-
 #' @title Plot seasonal time series of station data against locally corresponding
 #'   global and reginal reanalyses.
 #' @description THIS FUNCTION IS NOT YET FINISHED.

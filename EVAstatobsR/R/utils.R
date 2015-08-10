@@ -137,3 +137,39 @@ set.to.date <- function(tsstart, tsend) {
 }
 
 #-----------------------------------------------------------------------------------
+
+#' @title Extract seasonal time series off a monthly time series.
+#' @description This fucntion extracts a seasonal time series off a monthly time
+#'   series by using the function split.xts. However, it only splits into calendar
+#'   quarters, not into meteorological seasons. The return values are the separate
+#'   seasonal (quarterly) time series.
+#' @param vals.xts is the input extended time series which is divided into seasonal
+#'   (quarterly) xts.
+#' @return A named list returning a winter, spring, summer, and autumn extended
+#'  time series which was split off the input xts.
+#' @note could be enhanced by manually splitting into meteorol. seasons DJF, MAM,
+#'   JJA, SON instead of using the generic split 'f="quarters"'.
+GetSeasonalXts <- function(vals.xts) {
+
+  vals.split.xts = split.xts(vals.xts, f="quarters")
+  vals.time = vector(mode="character", length=length(vals.split.xts))
+  vals.values = vector(mode="numeric", length=length(vals.split.xts))
+  for (ii in seq(length(vals.split.xts))) {
+    vals.time[[ii]] = as.character(index(vals.split.xts[[ii]])[3])
+    vals.values[[ii]] = mean(vals.split.xts[[ii]])
+  }
+  vals.time = as.POSIXlt(as.yearmon(vals.time, format="%b %Y"), format="%Y-%m-%d")
+  vals.xts = as.xts(vals.values, order.by=vals.time)
+
+  # e.g., winter.xts is up to March, including JFM
+  winter.xts  = vals.xts[which(index(vals.xts)$mon==2)]
+  spring.xts  = vals.xts[which(index(vals.xts)$mon==5)]
+  summer.xts  = vals.xts[which(index(vals.xts)$mon==8)]
+  autumn.xts  = vals.xts[which(index(vals.xts)$mon==11)]
+
+  return(list(winter.xts=winter.xts, spring.xts=spring.xts,
+              summer.xts=summer.xts, autumn.xts=autumn.xts))
+
+}
+
+#-----------------------------------------------------------------------------------
