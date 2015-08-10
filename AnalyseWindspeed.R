@@ -102,9 +102,9 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
   lonidx = idx$lonidx
   latidx = idx$latidx
   eraI.data = ReadEraNetcdf2Xts(eraI.param, eraI.fname,
-                                  eraI.tsstart, eraI.tsend,
-                                  lonidx, latidx, era20c=FALSE,
-                                  verb.dat=verb.era.dat)
+                                eraI.tsstart, eraI.tsend,
+                                lonidx, latidx, era.monthly,
+                                era20c=FALSE, verb.dat=verb.era.dat)
   eraI.data.xts = eraI.data$era10
 
   # read HErZ data
