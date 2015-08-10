@@ -186,7 +186,6 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
   #-----------------------------------------------------------------------------
 
   if (plot.EraStationSeasons) {
-    #@*** THIS PLOTTING FUNCTION NEEDS TO BE FINALIZED ***@#
     fname = paste0("ERA-Station_Seasons_",
                    gsub("/", "-", station.data$STATIONS_NAME[1]),
                    "_TimeSeries_", res.switch, '_', fname_ext, ".pdf")
