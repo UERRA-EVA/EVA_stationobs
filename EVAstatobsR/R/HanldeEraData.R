@@ -165,7 +165,7 @@ ReadEraNetcdf2Xts <- function(era.param, era.fname,
   # convert ERA data and time values into an extended time series
   # and apply start and end date
   if (era.monthly) {
-    df$dat10m.time = as.yearmon(df$era10m.time)
+    df$era10m.time = as.yearmon(df$era10m.time)
   }
   timestr = set.to.date(era.tsstart, era.tsend)
   era.xts = xts(df$era10m.data, order.by=df$era10m.time)
