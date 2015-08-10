@@ -135,9 +135,8 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
 
   #-----------------------------------------------------------------------------
 
-  cat("  **  Plotting\n")
-
   if (plot.EraStatComp) {
+    cat("  **  Plotting Era-station comparison\n")
     fname = paste0("ERA-Station_", gsub("/", "-", station.data$STATIONS_NAME[1]),
                    "_TimeSeries", time.ext,"_", res.switch, '_', fname_ext, ".pdf")
     titname = paste0('Windspeed [m/s] for station ',
@@ -174,7 +173,7 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
   #------------------------------------------------------------------------------
 
   if (plot.100mEraHerz) {
-    ### COMPARE 100m ERA20c AND 116m HErZ###
+    cat("  **  Plotting 100m Era vs HErZ\n")
     statname = as.character(station.data$STATIONS_NAME[1])
     fname = paste0("100m-Era20cHerz_", gsub("/", "-", statname),
                    "_TimeSeries", time.ext, "_", res.switch, '_', fname_ext, ".pdf")
@@ -186,6 +185,7 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
   #-----------------------------------------------------------------------------
 
   if (plot.EraStationSeasons) {
+    cat("  **  Plotting seasonal analysis\n")
     fname = paste0("ERA-Station_Seasons_",
                    gsub("/", "-", station.data$STATIONS_NAME[1]),
                    "_TimeSeries_", res.switch, '_', fname_ext, ".pdf")
@@ -208,6 +208,7 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
   #-----------------------------------------------------------------------------
 
   if (plot.EraStationMonths) {
+    cat("  **  Plotting monthyl analysis\n")
     fname = paste0("ERA-Station_", time.ext, "_",
                    gsub("/", "-", station.data$STATIONS_NAME[1]),
                    "_TimeSeries_", res.switch, '_', fname_ext, ".pdf")
