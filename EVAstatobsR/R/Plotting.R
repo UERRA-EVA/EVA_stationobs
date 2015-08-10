@@ -107,13 +107,127 @@ PlotStationEra <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 
 #-----------------------------------------------------------------------------------
 
-#' @title Plot seasonal time series of station data against locally corresponding
-#'   global and reginal reanalyses.
-#' @description THIS FUNCTION IS NOT YET FINISHED.
-#'   \code{PlotStationEraSeasons} plots seasonal means of station values against
-#'   locally corresponding time series (pixels) of global and regional reanalyses.
-#'   The rolling mean and optionally the anomalies are plotted. The plot is saved in
-#'   pdf format and there is no return value.
+#' @title Plot a 2-by-2 multi panel plot.
+#' @description This is supposed to be a rather generic routine to plot a 2-by-2
+#'   multi panel plot. So far, it is used to plot the four different data sources
+#'   (ERA20C, ERA-Interim, HErZ, station data) for monthly and seasonal values. The
+#'   plot is saved into a pdf file, and the function does not have a return value.
+#' @param outdir string of the output directory into which the plot is saved
+#' @param fname string of the file name of the plot
+#' @param Era20c extended time series of monthly or seasonal ERA20C data
+#' @param EraI extended time series of momthly or seasonal ERA-Interim data
+#' @param Herz extended time series of monthly or seasonal HErZ data
+#' @param Stat extended time series of monthly or seasonal station data
+#' @param width,height of the plot in inches
+#' @param length.plot a list holding integers for the months or seasons to plot.
+#'   It holds 0, .., 11 specifying the months, or 1,..,4 specifying the seasons.
+#' @param era.months boolean which specifies whether monthly or seasonal data
+#'   shall be plotted.
+PlotMultiPanel <- function(outdir, fname, Era20c, EraI, Herz, Stat,
+                           width, height, length.plot, era.months) {
+
+  if (era.months) { # months will be plotted
+    all.months = c("January","February","March","April","May","June","July",
+                   "August","September","October","November","December")
+  } else { # seasons will be plotted
+    all.seasons = c("Winter", "Spring", "Summer", "Autumn")
+  }
+
+  pdf(paste(outdir, fname, sep=""), width=width, height=height,
+      onefile=TRUE, pointsize=13)
+
+  yliml = vector(mode="numeric", length=length(length.plot))
+  ylimh = vector(mode="numeric", length=length(length.plot))
+  for (cnt in seq(length.plot)) {
+    Ylims = GetYlims(Era20c[[length.plot[[cnt]]]], EraI[[length.plot[[cnt]]]],
+                     Herz[[length.plot[[cnt]]]], Stat[[length.plot[[cnt]]]])
+    yliml[cnt] = Ylims$yll
+    ylimh[cnt] = Ylims$ylh
+  }
+  yliml = min(yliml)
+  ylimh = max(ylimh)
+
+  dummy = numeric(length=length(Era20c[[1]])) * NA
+  dummy = xts(dummy, order.by = index(Era20c[[1]]))
+
+  par(mfrow=c(2,2))
+  par(mar=c(0,0,0,0), oma=c(3,5,3,0.5))
+  color = c("red", "black")
+
+  plot(dummy, main=NULL, axes=FALSE, ylim=c(yliml, ylimh))
+  axis(2)
+  for (cnt in seq(length.plot)) {
+    lines(Era20c[[length.plot[[cnt]]]], type="b", pch=21, col=color[cnt],
+          bg=rgb(0,0,0,1./cnt), lw=2)
+  }
+  if (era.months) {
+    legend("topleft", legend=c(paste0("ERA20C ", all.months[length.plot[[1]]]),
+                               paste0("ERA20C ", all.months[length.plot[[2]]])),
+           text.col=color)
+  } else {
+    legend("topleft", legend=c(paste0("ERA20C ", all.seasons[length.plot[[1]]]),
+                               paste0("ERA20C ", all.seasons[length.plot[[2]]])),
+           text.col=color)
+  }
+
+  plot(dummy, main=NULL, axes=FALSE, ylim=c(yliml, ylimh))
+  for (cnt in seq(length.plot)) {
+    lines(EraI[[length.plot[[cnt]]]], type="b", pch=21, col=color[cnt],
+          bg=rgb(0,0,0,1./cnt), lw=2)
+  }
+  if (era.months) {
+  legend("topleft", legend=c(paste0("ERA-I ", all.months[length.plot[[1]]]),
+                             paste0("ERA-I ", all.months[length.plot[[2]]])),
+         text.col=color)
+  } else {
+    legend("topleft", legend=c(paste0("ERA-I ", all.seasons[length.plot[[1]]]),
+                               paste0("ERA-I ", all.seasons[length.plot[[2]]])),
+           text.col=color)
+  }
+  plot(dummy, main=NULL, ylim=c(yliml, ylimh))
+  for (cnt in seq(length.plot)) {
+    lines(Herz[[length.plot[[cnt]]]], type="b", pch=21, col=color[cnt],
+          bg=rgb(0,0,0,1./cnt), lw=2)
+  }
+  if (era.months) {
+    legend("topleft", legend=c(paste0("HErZ ", all.months[length.plot[[1]]]),
+                               paste0("HErZ ", all.months[length.plot[[2]]])),
+           text.col=color)
+  } else {
+    legend("topleft", legend=c(paste0("HErZ ", all.seasons[length.plot[[1]]]),
+                               paste0("HErZ ", all.seasons[length.plot[[2]]])),
+           text.col=color)
+  }
+  plot(dummy, main=NULL, yaxt="n", ylim=c(yliml, ylimh))
+  for (cnt in seq(length.plot)) {
+    lines(Stat[[length.plot[[cnt]]]], type="b", pch=21, col=color[cnt],
+          bg=rgb(0,0,0,1./cnt), lw=2)
+  }
+  if (era.months) {
+    legend("topleft", legend=c(paste0("Station ", all.months[length.plot[[1]]]),
+                               paste0("Station ", all.months[length.plot[[2]]])),
+           text.col=color)
+  } else {
+    legend("topleft", legend=c(paste0("Station ", all.seasons[length.plot[[1]]]),
+                               paste0("Station ", all.seasons[length.plot[[2]]])),
+           text.col=color)
+  }
+  mtext(titname, outer=TRUE)
+  mtext("windspeed [m/s]", side=2, line=3, outer=TRUE)
+
+  dev.off()
+}
+
+#-----------------------------------------------------------------------------------
+
+#' @title Prepare and plot seasonal time series of station data and ERA20C, ERA-I,
+#'   and HErZ data.
+#' @description \code{PlotStationEraSeasons} prepares extended time series of
+#'   seasonal means, and optionally their anomalies, of station data and locally
+#'   corresponding global and regional reanalyses. The seasons for which data shall
+#'   be prepared and plotted need to be set hard-coded within this function. Of
+#'   course, this setting can be put into the Settings.R file if necessary.
+#'   A generic plotting routine is called which actually performs the plotting.
 #' @param Era20cXts monthly mean extended time series of the ERA20C pixel
 #'   corresponding to the station location
 #' @param EraIXts same as above for ERA-Interim
@@ -129,6 +243,10 @@ PlotStationEra <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 PlotStationEraSeasons <- function(Era20cXts, EraIXts, HerzXts, StatXts,
                                   titname, outdir, fname, width, height,
                                   anomaly=FALSE, seasons=FALSE) {
+
+  # specify seasons to plot with 1 for winter, 2 spring, 3 summer, and 4 for autumn
+  # within the list below; the list must exactly hold two entries!
+  seasons = list(1,3)
 
   seas.Era20c = list()
   seas.EraI = list()
@@ -170,61 +288,22 @@ PlotStationEraSeasons <- function(Era20cXts, EraIXts, HerzXts, StatXts,
     ylimh = 1.5
   }
 
-  pdf(paste(outdir, fname, sep=""), width=width, height=height,
-      onefile=TRUE, pointsize=13)
-
-  yliml = vector(mode="numeric", length=length(4))
-  ylimh = vector(mode="numeric", length=length(4))
-  for (cnt in seq(4)) {
-    Ylims = GetYlims(seas.Era20c[[cnt]], seas.EraI[[cnt]],
-                     seas.Herz[[cnt]], seas.Stat[[cnt]])
-    yliml[cnt] = Ylims$yll
-    ylimh[cnt] = Ylims$ylh
-  }
-  yliml = min(yliml)
-  ylimh = max(ylimh)
-
-  # ERA20C
-  dummy = numeric(length=length(seas.Era20c[[1]])) * NA
-  dummy = xts(dummy, order.by = index(seas.Era20c[[1]]))
-  plot(dummy, main=titname, ylab="windspeed [m/s]", ylim=c(yliml, ylimh))
-
-  lines(seas.Era20c[[1]], type="b", pch=21, col="blue", bg="blue", lw=2)
-  lines(seas.Era20c[[3]], type="b", pch=21, col="blue",
-        bg="blue", lw=2)
-
-  # ERA-I
-  lines(seas.EraI[[1]], type="b", pch=21, col="red", bg="red", lw=2)
-  lines(seas.EraI[[3]], type="b", pch=21, col="red", bg="red", lw=2)
-
-
-  # HErZ
-  lines(seas.Herz[[1]], type="b", pch=21, col="green3", bg="green3", lw=2)
-  lines(seas.Herz[[3]], type="b", pch=21, col="green3", bg="green3",
-        lw=2)
-
-  # Station
-  lines(seas.Stat[[1]], type="b", pch=21, col="black", bg="black", lw=2)
-  lines(seas.Stat[[1]], type="b", pch=21, col="black", bg="black", lw=2)
-
-  legend("topleft", legend=c(paste0("ERA20C"),
-                             paste0("ERAI"),
-                             paste0("HErZ"),
-                             paste0("Station")),
-         text.col=c("blue", "red", "green3", "black"))
-  dev.off()
+  PlotMultiPanel(outdir, fname, seas.Era20c, seas.EraI, seas.Herz, seas.Stat,
+                 width, height, seasons, era.months=FALSE)
 
 }
 
 #-----------------------------------------------------------------------------------
 
-#' @title Plot only specific months of station data together with ERA20C, ERA-I,
-#'   and HErZ.
-#' @description
-#'   \code{PlotStationEra} plots the station values together with the
-#'   corresponding ERA20C, ERA-I, and HErZ pixel - for specific months only. These
-#'   need to be set hard-coded within this function. Optionally, it is possible to
-#'   plot the anomaly. The plot is saved in pdf format and there is no return value.
+#' @title Prepare and plot specifically selected months of station data and ERA20C,
+#'   ERA-I, and HErZ data.
+#' @description \code{PlotStationEra} prepares extended time series of station data,
+#'   ERA20C, ERA-I, and HErZ data - for specific months only. These months are set
+#'   hard-coded within this function.  Of course, this setting can be put into the
+#'   Settings.R file if necessary.
+#'   Optionally, it is possible to prepare the
+#'   anomalies. A generic plotting routine is called which actually performs the
+#'   plotting.
 #' @param Era20cXts monthly mean extended time series of the ERA20C pixel
 #'   corresponding to the station location
 #' @param EraIXts same as above for ERA-Interim
@@ -240,11 +319,10 @@ PlotStationEraMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
                                  titname, outdir, fname, width, height,
                                  anomaly=FALSE) {
 
-  # specify months to plot starting from 0 for January to 11 for December
-  # within the list below
-  months = list(0,7)
-  all.months = c("January","February","March","April","May","June","July",
-                 "August","September","October","November","December")
+  # specify months to plot starting from 1 for January to 12 for December
+  # within the list below; the list must exactly hold two entries!
+  months = list(1,8)
+
   mon.Era20c = list()
   mon.EraI = list()
   mon.Herz = list()
@@ -255,11 +333,11 @@ PlotStationEraMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
   date.Herz <- as.POSIXlt(index(HerzXts))
   date.Stat <- as.POSIXlt(index(StatXts))
 
-  for (cnt in seq(months)) {
-    mon.Era20c[[cnt]] = Era20cXts[which( date.Era20c$mon==months[[cnt]] )]
-    mon.EraI[[cnt]] = EraIXts[which( date.EraI$mon==months[[cnt]] )]
-    mon.Herz[[cnt]] = HerzXts[which( date.Herz$mon==months[[cnt]] )]
-    mon.Stat[[cnt]] = StatXts[which( date.Stat$mon==months[[cnt]] )]
+  for (cnt in seq(12)) {
+    mon.Era20c[[cnt]] = Era20cXts[which( date.Era20c$mon==cnt )]
+    mon.EraI[[cnt]] = EraIXts[which( date.EraI$mon==cnt )]
+    mon.Herz[[cnt]] = HerzXts[which( date.Herz$mon==cnt )]
+    mon.Stat[[cnt]] = StatXts[which( date.Stat$mon==cnt )]
 
     if (anomaly) {
       mon.Era20c[[cnt]] = mon.Era20c[[cnt]] - mean(mon.Era20c[[cnt]])
@@ -269,69 +347,8 @@ PlotStationEraMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
     }
   }
 
-  pdf(paste(outdir, fname, sep=""), width=width, height=height,
-      onefile=TRUE, pointsize=13)
-
-  yliml = vector(mode="numeric", length=length(months))
-  ylimh = vector(mode="numeric", length=length(months))
-  for (cnt in seq(months)) {
-    Ylims = GetYlims(mon.Era20c[[cnt]], mon.EraI[[cnt]],
-                     mon.Herz[[cnt]], mon.Stat[[cnt]])
-    yliml[cnt] = Ylims$yll
-    ylimh[cnt] = Ylims$ylh
-  }
-  yliml = min(yliml)
-  ylimh = max(ylimh)
-
-  dummy = numeric(length=length(mon.Era20c[[1]])) * NA
-  dummy = xts(dummy, order.by = index(mon.Era20c[[1]]))
-
-  par(mfrow=c(2,2))
-  par(mar=c(0,0,0,0), oma=c(3,5,3,0.5))
-  color = c("red", "black")
-
-  plot(dummy, main=NULL, axes=FALSE, ylim=c(yliml, ylimh))
-  axis(2)
-  for (cnt in seq(months)) {
-    lines(mon.Era20c[[cnt]], type="b", pch=21, col=color[cnt],
-          bg=rgb(0,0,0,1./cnt), lw=2)
-  }
-  legend("topleft", legend=c(paste0("ERA20C ", all.months[months[[1]]+1]),
-                             paste0("ERA20C ", all.months[months[[2]]+1])),
-         text.col=color)
-
-  plot(dummy, main=NULL, axes=FALSE, ylim=c(yliml, ylimh))
-  for (cnt in seq(months)) {
-    lines(mon.EraI[[cnt]], type="b", pch=21, col=color[cnt],
-          bg=rgb(0,0,0,1./cnt), lw=2)
-  }
-  legend("topleft", legend=c(paste0("ERA-I ", all.months[months[[1]]+1]),
-                             paste0("ERA-I ", all.months[months[[2]]+1])),
-         text.col=color)
-
-  plot(dummy, main=NULL, ylim=c(yliml, ylimh))
-  for (cnt in seq(months)) {
-    lines(mon.Herz[[cnt]], type="b", pch=21, col=color[cnt],
-          bg=rgb(0,0,0,1./cnt), lw=2)
-  }
-  legend("topleft", legend=c(paste0("HErZ ", all.months[months[[1]]+1]),
-                             paste0("HErZ ", all.months[months[[2]]+1])),
-         text.col=color)
-
-  plot(dummy, main=NULL, yaxt="n", ylim=c(yliml, ylimh))
-  for (cnt in seq(months)) {
-    lines(mon.Stat[[cnt]], type="b", pch=21, col=color[cnt],
-          bg=rgb(0,0,0,1./cnt), lw=2)
-  }
-  legend("topleft", legend=c(paste0("Station ", all.months[months[[1]]+1]),
-                             paste0("Station ", all.months[months[[2]]+1])),
-         text.col=color)
-
-  mtext(titname, outer=TRUE)
-  mtext("windspeed [m/s]", side=2, line=3, outer=TRUE)
-
-  dev.off()
-
+  PlotMultiPanel(outdir, fname, mon.Era20c, mon.EraI, mon.Herz, mon.Stat,
+                 width, height, months, era.months=TRUE)
 }
 
 #-----------------------------------------------------------------------------------
