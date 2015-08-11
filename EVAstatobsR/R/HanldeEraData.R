@@ -139,6 +139,7 @@ ReadHerzNetcdfMonthlyDaily2Xts <- function(herz.param, herz.fname,
 #' @param lonidx numeric value of the longitude station location which to extract
 #'   off the ERA grid.
 #' @param latidx same as above for latitude.
+#' @param era.monthly boolean to determine whether to read daily or mothly HErZ data.
 #' @param era20c boolean to determine whether the data is ERA20C (T) or
 #'   ERA-Interim (F).
 #' @param verb.dat optional boolean to determine whether to print out what's going

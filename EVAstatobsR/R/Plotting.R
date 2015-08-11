@@ -114,15 +114,21 @@ PlotStationEra <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 #'   plot is saved into a pdf file, and the function does not have a return value.
 #' @param outdir string of the output directory into which the plot is saved
 #' @param fname string of the file name of the plot
+#' @param titname string of the plot title name
 #' @param Era20c extended time series of monthly or seasonal ERA20C data
 #' @param EraI extended time series of momthly or seasonal ERA-Interim data
 #' @param Herz extended time series of monthly or seasonal HErZ data
 #' @param Stat extended time series of monthly or seasonal station data
 #' @param width,height of the plot in inches
 #' @param length.plot a list holding integers for the months or seasons to plot.
-#'   It holds 0, .., 11 specifying the months, or 1,..,4 specifying the seasons.
+#'   It holds 1, .., 12 specifying the months, or 1,..,4 specifying the seasons.
 #' @param era.months boolean which specifies whether monthly or seasonal data
 #'   shall be plotted.
+#' @param plot.diff optional boolean which determines whether to plot the difference
+#'   of the reanalyses to the station data or the absolute values of each time
+#'   series. When plotting the difference, only three panels will be plotted. The
+#'   default value is to plot the absolute values of each time series
+#'   (plot.diff=FALSE).
 PlotMultiPanel <- function(outdir, fname, titname, Era20c, EraI, Herz, Stat,
                            width, height, length.plot,
                            era.months, plot.diff=FALSE) {
