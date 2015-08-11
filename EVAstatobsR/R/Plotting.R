@@ -123,8 +123,9 @@ PlotStationEra <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 #'   It holds 0, .., 11 specifying the months, or 1,..,4 specifying the seasons.
 #' @param era.months boolean which specifies whether monthly or seasonal data
 #'   shall be plotted.
-PlotMultiPanel <- function(outdir, fname, Era20c, EraI, Herz, Stat,
-                           width, height, length.plot, era.months) {
+PlotMultiPanel <- function(outdir, fname, titname, Era20c, EraI, Herz, Stat,
+                           width, height, length.plot,
+                           era.months, plot.diff=FALSE) {
 
   if (era.months) { # months will be plotted
     all.months = c("January","February","March","April","May","June","July",
@@ -184,6 +185,7 @@ PlotMultiPanel <- function(outdir, fname, Era20c, EraI, Herz, Stat,
                                paste0("ERA-I ", all.seasons[length.plot[[2]]])),
            text.col=color)
   }
+
   plot(dummy, main=NULL, ylim=c(yliml, ylimh))
   for (cnt in seq(length.plot)) {
     lines(Herz[[length.plot[[cnt]]]], type="b", pch=21, col=color[cnt],
@@ -198,19 +200,22 @@ PlotMultiPanel <- function(outdir, fname, Era20c, EraI, Herz, Stat,
                                paste0("HErZ ", all.seasons[length.plot[[2]]])),
            text.col=color)
   }
-  plot(dummy, main=NULL, yaxt="n", ylim=c(yliml, ylimh))
-  for (cnt in seq(length.plot)) {
-    lines(Stat[[length.plot[[cnt]]]], type="b", pch=21, col=color[cnt],
-          bg=rgb(0,0,0,1./cnt), lw=2)
-  }
-  if (era.months) {
-    legend("topleft", legend=c(paste0("Station ", all.months[length.plot[[1]]]),
-                               paste0("Station ", all.months[length.plot[[2]]])),
-           text.col=color)
-  } else {
-    legend("topleft", legend=c(paste0("Station ", all.seasons[length.plot[[1]]]),
-                               paste0("Station ", all.seasons[length.plot[[2]]])),
-           text.col=color)
+
+  if (!plot.diff) {
+    plot(dummy, main=NULL, yaxt="n", ylim=c(yliml, ylimh))
+    for (cnt in seq(length.plot)) {
+      lines(Stat[[length.plot[[cnt]]]], type="b", pch=21, col=color[cnt],
+            bg=rgb(0,0,0,1./cnt), lw=2)
+    }
+    if (era.months) {
+      legend("topleft", legend=c(paste0("Station ", all.months[length.plot[[1]]]),
+                                 paste0("Station ", all.months[length.plot[[2]]])),
+             text.col=color)
+    } else {
+      legend("topleft", legend=c(paste0("Station ", all.seasons[length.plot[[1]]]),
+                                 paste0("Station ", all.seasons[length.plot[[2]]])),
+             text.col=color)
+    }
   }
   mtext(titname, outer=TRUE)
   mtext("windspeed [m/s]", side=2, line=3, outer=TRUE)
@@ -284,13 +289,26 @@ PlotStationEraSeasons <- function(Era20cXts, EraIXts, HerzXts, StatXts,
       seas.Herz[[cnt]] = seas.Herz[[cnt]] - mean(seas.Herz[[cnt]])
       seas.Stat[[cnt]] = seas.Stat[[cnt]] - mean(seas.Stat[[cnt]])
     }
-    yliml = -1.5
-    ylimh = 1.5
   }
 
-  PlotMultiPanel(outdir, fname, seas.Era20c, seas.EraI, seas.Herz, seas.Stat,
+  PlotMultiPanel(outdir, fname, titname,
+                 seas.Era20c, seas.EraI, seas.Herz, seas.Stat,
                  width, height, seasons, era.months=FALSE)
 
+  station.diff = TRUE
+  if (station.diff & !anomaly) {
+    for (cnt in seq(4)) {
+      seas.Era20c[[cnt]] = seas.Era20c[[cnt]] - seas.Stat[[cnt]]
+      seas.EraI[[cnt]] = seas.EraI[[cnt]] - seas.Stat[[cnt]]
+      seas.Herz[[cnt]] = seas.Herz[[cnt]] - seas.Stat[[cnt]]
+      seas.Stat[[cnt]] = seas.Stat[[cnt]] - seas.Stat[[cnt]]
+    }
+    fname = gsub(".pdf", "_diff.pdf", fname)
+    titname = gsub("Seasonal", "Seasonal difference in", titname)
+    PlotMultiPanel(outdir, fname, titname,
+                   seas.Era20c, seas.EraI, seas.Herz, seas.Stat,
+                   width, height, seasons, era.months=FALSE, station.diff)
+  }
 }
 
 #-----------------------------------------------------------------------------------
@@ -347,8 +365,24 @@ PlotStationEraMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
     }
   }
 
-  PlotMultiPanel(outdir, fname, mon.Era20c, mon.EraI, mon.Herz, mon.Stat,
+  PlotMultiPanel(outdir, fname, titname,
+                 mon.Era20c, mon.EraI, mon.Herz, mon.Stat,
                  width, height, months, era.months=TRUE)
+
+  station.diff = TRUE
+  if (station.diff & !anomaly) {
+    for (cnt in seq(12)) {
+      mon.Era20c[[cnt]] = mon.Era20c[[cnt]] - mon.Stat[[cnt]]
+      mon.EraI[[cnt]] = mon.EraI[[cnt]] - mon.Stat[[cnt]]
+      mon.Herz[[cnt]] = mon.Herz[[cnt]] - mon.Stat[[cnt]]
+      mon.Stat[[cnt]] = mon.Stat[[cnt]] - mon.Stat[[cnt]]
+    }
+    fname = gsub(".pdf", "_diff.pdf", fname)
+    titname = gsub("Windspeed", "Monthly difference in windspeed", titname)
+    PlotMultiPanel(outdir, fname, titname,
+                   mon.Era20c, mon.EraI, mon.Herz, mon.Stat,
+                   width, height, months, era.months=TRUE, station.diff)
+  }
 }
 
 #-----------------------------------------------------------------------------------
