@@ -35,11 +35,11 @@ readGrib <- function(filename, nlon, nlat, nlev, var='undef', out='Rfile.dat',
     } else {
       if (verb.grib) {
         system(paste0("wgrib ",filename," | grep '",var,"' ",pipe,
-                     " | wgrib -i -bin -nh ",filename," -o ",out))
+                      " | wgrib -i -bin -nh ",filename," -o ",out))
       } else {
         system(paste0("wgrib ",filename," | grep '",var,"' ",pipe,
-                     " | wgrib -i -bin -nh ",filename," -o ",out,
-                     " &> /dev/null"))
+                      " | wgrib -i -bin -nh ",filename," -o ",out,
+                      " &> /dev/null"))
       }
       openfile<-file(out,'rb')
       if (nlev == 1) {
@@ -55,8 +55,8 @@ readGrib <- function(filename, nlon, nlat, nlev, var='undef', out='Rfile.dat',
   } else {
     if (var == 'undef') {
       system(paste0("wgrib ",filename," | awk '{if ($1 >= ",recs[1],
-                   " && $1 <= ",recs[2],") print $0}' FS=':' | wgrib -i ",
-                   filename," -bin -nh -o ",out))
+                    " && $1 <= ",recs[2],") print $0}' FS=':' | wgrib -i ",
+                    filename," -bin -nh -o ",out))
       openfile<-file(out,'rb')
       if (nlev == 1) {
         x<-array(readBin(con=out,'numeric',n=nlon*nlat,size=4),
@@ -76,7 +76,7 @@ readGrib <- function(filename, nlon, nlat, nlev, var='undef', out='Rfile.dat',
                      out))
       } else {
         system(paste0("wgrib ",filename," | grep '",var,"' | wgrib -i ",
-                     filename," -grib -o tmp.grib"))
+                      filename," -grib -o tmp.grib"))
         system(paste0("wgrib tmp.grib | awk '{if ($1 >= ",
                       recs[1], " && $1 <= ",recs[2],
                       ") print $0}' FS=':' | wgrib -i tmp.grib -bin -nh -o ",

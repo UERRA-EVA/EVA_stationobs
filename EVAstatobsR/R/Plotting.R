@@ -183,9 +183,9 @@ PlotMultiPanel <- function(outdir, fname, titname, Era20c, EraI, Herz, Stat,
           bg=rgb(0,0,0,1./cnt), lw=2)
   }
   if (era.months) {
-  legend("topleft", legend=c(paste0("ERA-I ", all.months[length.plot[[1]]]),
-                             paste0("ERA-I ", all.months[length.plot[[2]]])),
-         text.col=color)
+    legend("topleft", legend=c(paste0("ERA-I ", all.months[length.plot[[1]]]),
+                               paste0("ERA-I ", all.months[length.plot[[2]]])),
+           text.col=color)
   } else {
     legend("topleft", legend=c(paste0("ERA-I ", all.seasons[length.plot[[1]]]),
                                paste0("ERA-I ", all.seasons[length.plot[[2]]])),
