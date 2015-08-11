@@ -56,7 +56,7 @@ getNearest <- function(b1,b2,l1,l2){
 #'   data spanning the time period of the longest ranging reanalysis time series.
 ExtractStationData <- function(station.data, era20c.tsstart, era20c.tsend,
                                eraI.tsstart, eraI.tsend, herz.tsstart, herz.tsend,
-                               daily=FALSE) {
+                               era.monthly, daily=FALSE) {
 
   # extract station values and times
   data.vals = station.data$WINDGESCHWINDIGKEIT
@@ -87,9 +87,15 @@ ExtractStationData <- function(station.data, era20c.tsstart, era20c.tsend,
   # calculate monmean of the station time series
   stat.tsstart = c(as.numeric(substr(as.character(merged.data$time.vals[1]),1,4)),
                    as.numeric(substr(as.character(merged.data$time.vals[1]),6,7)))
-  MM.station = as.xts( ts( as.numeric(lapply(split(StatXTS, "months"), mean,
-                                             na.rm=TRUE)), # exclude all NANs
-                           start=stat.tsstart, frequency=12 ) )
+  if(era.monthly) { # produce a monthly mean xts
+    MM.station = as.xts( ts( as.numeric(lapply(split(StatXTS, "months"), mean,
+                                               na.rm=TRUE)), # exclude all NANs
+                             start=stat.tsstart, frequency=12 ) )
+  } else if (!era.monthly) { # produce a daily mean xts
+    MM.station = period.apply(StatXTS, endpoints(StatXTS, "days"), mean, na.rm=TRUE)
+  } else { # produce an hourly mean xts
+    MM.station = StatXTS
+  }
 
   # cut station time series to length of longest dataset (if shorter than station ts)
   if (era20c.tsstart[1] == eraI.tsstart[1] & era20c.tsstart[1] == herz.tsstart[1] &
@@ -99,7 +105,7 @@ ExtractStationData <- function(station.data, era20c.tsstart, era20c.tsend,
   } else {
     year.start.stat = as.numeric(substr(toString(index(MM.station[1])),5,8))
     year.end.stat = as.numeric(substr(toString(index(tail(MM.station,1))),5,8))
-    # set start to January (station data may start in a different month than January)
+    # set start to January (station data may start in a different month)
     stat.tsstart = c(max(year.start.stat, era20c.tsstart[1]), 1)
     stat.tsend = c(min(year.end.stat, era20c.tsend[1]), 12) # same for December here
   }

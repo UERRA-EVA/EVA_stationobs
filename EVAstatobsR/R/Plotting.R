@@ -393,6 +393,28 @@ PlotStationEraMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 
 #-----------------------------------------------------------------------------------
 
+#' @title Prepare and plot daily time series of station data and ERA20C, ERA-I,
+#'   and HErZ data.
+#' @description This function plots daily station and reanalysis data.
+#' @param Era20cXts daily mean extended time series of the ERA20C pixel
+#'   corresponding to the station location
+#' @param EraIXts same as above for ERA-Interim
+#' @param HerzXts same as above for HErZ
+#' @param StatXts daily mean extended time series of the station values
+#' @param titname string of the plot title name
+#' @param outdir string of the output directory into which the plot/s is/are saved
+#' @param fname string of the output file name
+#' @param width,height of the plot in inches
+#' @note
+PlotStationEraDaily <- function(Era20cXts, EraIXts, HerzXts, StatXts,
+                                titname, outdir, fname, width, height) {
+
+  a = 1.
+
+}
+
+#-----------------------------------------------------------------------------------
+
 #' @title Compare 100m wind speed of ERA20C and HErZ pixel by pixel.
 #' @description \code{Plot100mEraHerz} compares the 100m wind speed of the ERA20C
 #'   global reanalysis with the 116m wind speed of the HErZ regional reanalysis.

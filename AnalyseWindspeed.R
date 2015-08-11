@@ -63,7 +63,7 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
   MM.station = ExtractStationData(station.data, era20c.tsstart, era20c.tsend,
                                   eraI.tsstart, eraI.tsend,
                                   herz.tsstart, herz.tsend,
-                                  daily=station.daily)
+                                  era.monthly, daily=station.daily)
   if(length(MM.station) == 0) {
     cat(paste0("\n  ***  ",
                "The length of the station data record ",
@@ -212,7 +212,7 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
     fname = paste0("ERA-Station_", time.ext, "_",
                    gsub("/", "-", station.data$STATIONS_NAME[1]),
                    "_TimeSeries_", res.switch, '_', fname_ext, ".pdf")
-    titname = paste0('Windspeed [m/s] at station location ',
+    titname = paste0('Monthly windspeed [m/s] at station location ',
                      as.character(station.data$STATIONS_NAME[1]))
     PlotStationEraMonths(era20c.data.xts, eraI.data.xts, herz10.data.xts, MM.station,
                          titname, outdir, fname, width=a4width, height=a4height,
@@ -221,7 +221,7 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
     fname = paste0("ERA-Station_", time.ext, "Anomlay_",
                    gsub("/", "-", station.data$STATIONS_NAME[1]),
                    "_TimeSeries_", res.switch, '_', fname_ext, ".pdf")
-    titname = paste0('Windspeed anomaly [m/s] at station location ',
+    titname = paste0('Monthly windspeed anomaly [m/s] at station location ',
                      as.character(station.data$STATIONS_NAME[1]))
     PlotStationEraMonths(era20c.data.xts, eraI.data.xts, herz10.data.xts, MM.station,
                          titname, outdir, fname, width=a4width, height=a4height,
@@ -232,6 +232,13 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
 
   if(plot.EraStationDaily) {
     cat("  **  Plotting daily analysis\n")
+    fname = paste0("ERA-Station_", time.ext, "_",
+                   gsub("/", "-", station.data$STATIONS_NAME[1]),
+                   "_TimeSeries_", res.switch, '_', fname_ext, ".pdf")
+    titname = paste0('Daily windspeed [m/s] at station location ',
+                     as.character(station.data$STATIONS_NAME[1]))
+    PlotStationEraDaily(era20c.data.xts, eraI.data.xts, herz10.data.xts, MM.station,
+                        titname, outdir, fname, width=a4width, height=a4height)
   }
 
   #-----------------------------------------------------------------------------
