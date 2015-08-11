@@ -230,7 +230,20 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
 
   #-----------------------------------------------------------------------------
 
+  if(plot.EraStationDaily) {
+    cat("  **  Plotting daily analysis\n")
+  }
+
+  #-----------------------------------------------------------------------------
+
+  if(plot.HerzProfile) {
+    cat("  **  Plotting HErZ profile\n")
+  }
+
+  #-----------------------------------------------------------------------------
+
   if(plot.PDFscore) {
+    cat("  **  Plotting PDFscore\n")
     fname = paste0("PDFscore_ERA20C_", gsub("/", "-", station.data$STATIONS_NAME[1]),
                    '_', res.switch, '_', time.ext, "_", fname_ext, ".pdf")
     titname = paste0('PDF score of ERA20C and station ',

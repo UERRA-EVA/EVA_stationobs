@@ -5,7 +5,7 @@ a4height = 21./2.54
 # (HR is the version interpolated to 0.125°)
 res.switch = "HighRes"   # HighRes, OrigRes
 # set whether to use monthly (T) or daily (F) reanalysis data for analysis
-era.monthly = TRUE
+era.monthly = FALSE
 if (era.monthly) {
   time.ext = "Monthly"
 } else {
@@ -140,10 +140,14 @@ fname_ext = "1997to2010"
 # monthly mean time series between reanalyses and station data at 10m height
 plot.EraStatComp = F
 # monthly mean time series between ERA20C and COSMO HErZ reanalyses at 100m height
-plot.100mEraHerz = F
+plot.100mEraHerz = T
 # only specific seasons of reanalyses and station data at 10m height - NOT YET FINISHED
-plot.EraStationSeasons = T
+plot.EraStationSeasons = F
 # only specific months of reanalyses and station data at 10m height
 plot.EraStationMonths = F
+# daily mean time series analysis of reanalyses and station data fo 10m wind speed
+plot.EraStationDaily = F
+# perform analysis of the HErZ profile
+plot.HerzProfile = F
 # PDF score between station data and each reanalysis at 10m height
 plot.PDFscore = F
