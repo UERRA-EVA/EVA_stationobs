@@ -94,15 +94,24 @@ CheckFile(herz.grid)
 if (era.monthly) {
   herz.fname = "./data/WindSpeed_HErZ_MonMean_1997to2014.nc"
 } else {
-  herz.fname = c("./data/WindSpeed_1997_DayMean.nc", "./data/WindSpeed_1998_DayMean.nc",
-                 "./data/WindSpeed_1999_DayMean.nc", "./data/WindSpeed_2000_DayMean.nc",
-                 "./data/WindSpeed_2001_DayMean.nc", "./data/WindSpeed_2002_DayMean.nc",
-                 "./data/WindSpeed_2003_DayMean.nc", "./data/WindSpeed_2004_DayMean.nc",
-                 "./data/WindSpeed_2005_DayMean.nc", "./data/WindSpeed_2006_DayMean.nc",
-                 "./data/WindSpeed_2007_DayMean.nc", "./data/WindSpeed_2008_DayMean.nc",
-                 "./data/WindSpeed_2009_DayMean.nc", "./data/WindSpeed_2010_DayMean.nc",
-                 "./data/WindSpeed_2011_DayMean.nc", "./data/WindSpeed_2012_DayMean.nc",
-                 "./data/WindSpeed_2013_DayMean.nc", "./data/WindSpeed_2014_DayMean.nc")
+  herz.fname = c("./data/WindSpeed_1997_DayMean.nc",
+                 "./data/WindSpeed_1998_DayMean.nc",
+                 "./data/WindSpeed_1999_DayMean.nc",
+                 "./data/WindSpeed_2000_DayMean.nc",
+                 "./data/WindSpeed_2001_DayMean.nc",
+                 "./data/WindSpeed_2002_DayMean.nc",
+                 "./data/WindSpeed_2003_DayMean.nc",
+                 "./data/WindSpeed_2004_DayMean.nc",
+                 "./data/WindSpeed_2005_DayMean.nc",
+                 "./data/WindSpeed_2006_DayMean.nc",
+                 "./data/WindSpeed_2007_DayMean.nc",
+                 "./data/WindSpeed_2008_DayMean.nc",
+                 "./data/WindSpeed_2009_DayMean.nc",
+                 "./data/WindSpeed_2010_DayMean.nc",
+                 "./data/WindSpeed_2011_DayMean.nc",
+                 "./data/WindSpeed_2012_DayMean.nc",
+                 "./data/WindSpeed_2013_DayMean.nc",
+                 "./data/WindSpeed_2014_DayMean.nc")
 }
 CheckFile(herz.fname)
 # variable names to read from above files
@@ -118,7 +127,8 @@ if (herz.profile) {
 station.daily = FALSE
 # filename of station name list
 station.daily.fname = "./data/KL_Tageswerte_Beschreibung_Stationen.txt"
-station.hourly.fname = "./data/FF_Stundenwerte_Beschreibung_Stationen_wind_selected3.txt"
+station.hourly.fname =
+  paste0("./data/FF_Stundenwerte_Beschreibung_Stationen_wind_selected4.txt")
 CheckFile(c(station.daily.fname, station.hourly.fname))
 
 #=== time period ===
@@ -141,7 +151,7 @@ fname_ext = "1997to2010"
 plot.EraStatComp = F
 # monthly mean time series between ERA20C and COSMO HErZ reanalyses at 100m height
 plot.100mEraHerz = F
-# only specific seasons of reanalyses and station data at 10m height - NOT YET FINISHED
+# only specific seasons of reanalyses and station data at 10m height
 plot.EraStationSeasons = F
 # only specific months of reanalyses and station data at 10m height
 plot.EraStationMonths = F
