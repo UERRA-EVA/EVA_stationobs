@@ -3,8 +3,8 @@
 #'   different time series.
 #'   This needs to be enhanced so that not all of those time series need to be
 #'   available. Something like present= in FORTRAN.
-#' @param xts1,xts2,xts3,xts4 time series from which to determine the low and
-#'   high range of the y-axis limits.
+#' @param xts1,xts2,xts3,xts4 extended time series from which to determine the low
+#'   and high range of the y-axis limits.
 #' @return Return a named list (yll=,ylh=) of the lower and high bound of the y-axis
 #'   limits yliml and ylimh.
 GetYlims <- function(xts1, xts2, xts3, xts4) {
@@ -95,12 +95,18 @@ PlotStationEra <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 
   Corr.vals = GetCorrXts(era20c=Era20cXts, eraI=EraIXts, herz=HerzXts, stat=StatXts)
 
-  legend("topleft", legend=c(paste0("Corr(ERA20C, Stat) = ", round(Corr.vals$c.20c.S, 2)),
-                             paste0("Corr(ERAI, Stat) = ", round(Corr.vals$c.I.S, 2)),
-                             paste0("Corr(HErZ, Stat) = ", round(Corr.vals$c.H.S, 2)),
-                             paste0("Corr(ERA20C, ERAI)= ", round(Corr.vals$c.20c.I, 2)),
-                             paste0("Corr(ERA20C, HErZ)= ", round(Corr.vals$c.20c.H, 2)),
-                             paste0("Corr(ERAI, HErZ)= ", round(Corr.vals$c.I.H, 2))),
+  legend("topleft", legend=c(paste0("Corr(ERA20C, Stat) = ",
+                                    round(Corr.vals$c.20c.S, 2)),
+                             paste0("Corr(ERAI, Stat) = ",
+                                    round(Corr.vals$c.I.S, 2)),
+                             paste0("Corr(HErZ, Stat) = ",
+                                    round(Corr.vals$c.H.S, 2)),
+                             paste0("Corr(ERA20C, ERAI)= ",
+                                    round(Corr.vals$c.20c.I, 2)),
+                             paste0("Corr(ERA20C, HErZ)= ",
+                                    round(Corr.vals$c.20c.H, 2)),
+                             paste0("Corr(ERAI, HErZ)= ",
+                                    round(Corr.vals$c.I.H, 2))),
          text.col=c("blue", "red", "green", "black", "black", "black"))
   dev.off()
 }
@@ -409,7 +415,152 @@ PlotStationEraMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 PlotStationEraDaily <- function(Era20cXts, EraIXts, HerzXts, StatXts,
                                 titname, outdir, fname, width, height) {
 
-  a = 1.
+  Era20  = as.numeric(Era20cXts)
+  EraI = as.numeric(EraIXts)
+  Herz = as.numeric(HerzXts)
+  Stat = as.numeric(StatXts)
+
+  Ylims = GetYlims(Era20cXts, EraIXts, HerzXts, StatXts)
+  yliml = Ylims$yll
+  ylimh = Ylims$ylh
+
+  axis.n = 'n'
+  axis.y = 's'
+
+  fname.scatter = gsub(".pdf", "_scatterQQ-Plots.pdf", fname)
+  pdf(paste0(outdir, fname.scatter), width=height, height=width,
+      onefile=TRUE, pointsize=13)
+
+  par(mfrow=c(3,2))
+  par(mar=c(0,0,0,0), oma=c(5,5,4,0.5))
+
+  xlabname = "10m ERA20C windspeed [m/s]"
+  ylabname = "10m ERA-I windspeed [m/s]"
+  titname.scatter = gsub("Daily", "Scatter plot of daily", titname)
+  text.str = "Era20c vs ERA-Interim"
+  scatterPlot(Era20, EraI, yliml, ylimh, "",
+              xlabname, ylabname, text.str=text.str, xaxis=axis.n, yaxis=axis.y)
+  titname.qq = gsub("Daily", "Quantile-quantile plot of daily", titname)
+  qqPlot(Era20, EraI, yliml, ylimh, "",
+         xlabname, ylabname, text.str=text.str, xaxis=axis.n, yaxis=axis.n)
+
+  xlabname = "10m ERA20C windspeed [m/s]"
+  ylabname = "10m HErZ windspeed [m/s]"
+  text.str = "Era20c vs HErZ"
+  scatterPlot(Era20, Herz, yliml, ylimh, "",
+              xlabname, ylabname, text.str=text.str, xaxis=axis.n, yaxis=axis.y)
+  qqPlot(Era20, Herz, yliml, ylimh, "",
+         xlabname, ylabname, text.str=text.str, xaxis=axis.n, yaxis=axis.n)
+
+  xlabname = "10m ERA-I windspeed [m/s]"
+  ylabname = "10m HErZ windspeed [m/s]"
+  text.str = "ERA-Interim vs HErZ"
+  scatterPlot(EraI, Herz, yliml, ylimh, "",
+              xlabname, ylabname, text.str=text.str, xaxis=axis.y, yaxis=axis.y)
+  qqPlot(EraI, Herz, yliml, ylimh, "",
+         xlabname, ylabname, text.str=text.str, xaxis=axis.y, yaxis=axis.n)
+
+  mtext(titname.scatter, line=1, outer=TRUE)
+  mtext("windspeed [m/s]", side=2, line=3, outer=TRUE)
+  mtext("windspeed [m/s]", side=1, line=3, outer=TRUE)
+
+  xlabname = "10m ERA20C windspeed [m/s]"
+  ylabname = "10m Station windspeed [m/s]"
+  text.str = "ERA20C vs station data"
+  scatterPlot(Era20, Stat, yliml, ylimh, "",
+              xlabname, ylabname, text.str=text.str, xaxis=axis.n, yaxis=axis.y)
+  qqPlot(Era20, Stat, yliml, ylimh, "",
+         xlabname, ylabname, text.str=text.str, xaxis=axis.n, yaxis=axis.n)
+
+  xlabname = "10m ERA-I windspeed [m/s]"
+  ylabname = "10m Station windspeed [m/s]"
+  text.str = "ERA-Interim vs station data"
+  scatterPlot(EraI, Stat, yliml, ylimh, "",
+              xlabname, ylabname, text.str=text.str, xaxis=axis.n, yaxis=axis.y)
+  qqPlot(EraI, Stat, yliml, ylimh, "",
+         xlabname, ylabname, text.str=text.str, xaxis=axis.n, yaxis=axis.n)
+
+  xlabname = "10m HErZ windspeed [m/s]"
+  ylabname = "10m Station windspeed [m/s]"
+  text.str = "HErZ vs station data"
+  scatterPlot(Herz, Stat, yliml, ylimh, "",
+              xlabname, ylabname, text.str=text.str, xaxis=axis.y, yaxis=axis.y)
+  qqPlot(Herz, Stat, yliml, ylimh, "",
+         xlabname, ylabname, text.str=text.str, xaxis=axis.y, yaxis=axis.n)
+
+  mtext(titname.scatter, line=1, outer=TRUE)
+  mtext("windspeed [m/s]", side=2, line=3, outer=TRUE)
+  mtext("windspeed [m/s]", side=1, line=3, outer=TRUE)
+
+  dev.off()
+
+
+  fname.histo = gsub(".pdf", "_histoPlots.pdf", fname)
+  pdf(paste0(outdir, fname.histo), width=width, height=height,
+      onefile=TRUE, pointsize=13)
+
+  par(mfrow=c(2,2))
+  par(mar=c(1,1,2,0.5), oma=c(2.5,3,3,0.5))
+
+  min.val = floor(min(min(Era20), min(EraI), min(Herz), min(Stat)))
+  max.val = ceiling(max(max(Era20), max(EraI), max(Herz), max(Stat)))
+  breaks = seq(min.val, max.val, 0.25)
+  dummy = numeric(length=length(Era20)) * NA
+  xlabname.empty = ""
+  xlabname.full = "10m windspeed [m/s]"
+  ylabname = "Density"
+
+  titname = "Frequency distribution of ERA20C"
+  histoPlot(Era20, dummy, breaks, xlims=c(min.val, max.val),
+            titname, xlabname.empty, ylabname)
+
+  titname = "Frequency distribution of ERA-I"
+  histoPlot(EraI, dummy, breaks, xlims=c(min.val, max.val),
+            titname, xlabname.empty, ylabname)
+
+  titname = "Frequency distribution of HErZ"
+  histoPlot(Herz, dummy, breaks, xlims=c(min.val, max.val),
+            titname, xlabname.full, ylabname)
+
+  titname = "Frequency distribution of station data"
+  histoPlot(Stat, dummy, breaks, xlims=c(min.val, max.val),
+            titname, xlabname.full, ylabname)
+  mtext("Daily windspeed at 10m height", font=2, cex=1.2, outer=TRUE)
+
+  titname = paste0("Frequency distribution of ERA20C\n",
+                   "in green and ERA-Interim shaded")
+  histoPlot(Era20, EraI, breaks, xlims=c(min.val, max.val), titname,
+            xlabname.empty, ylabname, xaxis=axis.n, addPlot=TRUE)
+
+  titname = paste0("Frequency distribution of ERA20C\n",
+                   "in green and COSMO HErZ shaded")
+  histoPlot(Era20, Herz, breaks, xlims=c(min.val, max.val), titname,
+            xlabname.empty, ylabname, xaxis=axis.n, addPlot=TRUE)
+
+  titname = paste0("Frequency distribution of ERA20C\n",
+                   "in green and station data shaded")
+  xlabname = "10m station windspeed [m/s]"
+  histoPlot(Era20, Stat, breaks, xlims=c(min.val, max.val), titname,
+            xlabname.full, ylabname, addPlot=TRUE)
+
+  titname = paste0("Frequency distribution of ERA-Interim\n",
+                   "in green and COSMO HErZ shaded")
+  histoPlot(EraI, Herz, breaks, xlims=c(min.val, max.val), titname,
+            xlabname.full, ylabname, addPlot=TRUE)
+  mtext("Daily windspeed at 10m height", font=2, cex=1.2, outer=TRUE)
+
+  titname = paste0("Frequency distribution of ERA-Interim\n",
+                   "in green and station data shaded")
+  histoPlot(EraI, Stat, breaks, xlims=c(min.val, max.val), titname,
+            xlabname.full, ylabname, addPlot=TRUE)
+
+  titname = paste0("Frequency distribution of COSMO HErZ\n",
+                   "in green and station data shaded")
+  histoPlot(Herz, Stat, breaks, xlims=c(min.val, max.val), titname,
+            xlabname.full, ylabname, addPlot=TRUE)
+  mtext("Daily windspeed at 10m height", font=2, cex=1.2, outer=TRUE)
+
+  dev.off()
 
 }
 
@@ -433,6 +584,9 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
 
   same.length = F
   if (length(Era20cXts) == length(HerzXts)) {same.length = T}
+
+  axis.n = 'n'
+  axis.y = 's'
 
   pdf(paste0(outdir, fname), width=width, height=height,
       onefile=TRUE, pointsize=13)
@@ -466,26 +620,31 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
 
     xlabname = "100m ERA20C windspeed [m/s]"
     ylabname = "116m HErZ windspeed [m/s]"
-    scatterPlot(Era, Herz, yliml, ylimh, titname, xlabname, ylabname)
+    text.str = "100m ERA20C vs 116m HErZ windspeed"
+    scatterPlot(Era, Herz, yliml, ylimh, titname, xlabname, ylabname,
+                text.str=text.str)
 
     titname = "Quantile-quantile plot"
-    qqPlot(Era, Herz, yliml, ylimh, titname, xlabname, ylabname)
-
-    titname = "Frequency distribution of ERA20C"
+    qqPlot(Era, Herz, yliml, ylimh, titname, xlabname, ylabname, text.str=text.str)
 
     min.val = floor(min(min(Era), min(Herz)))
     max.val = ceiling(max(max(Era), max(Herz)))
     breaks = seq(min.val, max.val, 0.25)
     dummy = numeric(length=length(Era)) * NA
 
-    histoPlot(Era, dummy, breaks, xlims=c(min.val, max.val), titname, xlabname)
+    titname = "Frequency distribution of ERA20C"
+    ylabname = "Density"
+    histoPlot(Era, dummy, breaks, xlims=c(min.val, max.val), titname, xlabname,
+              ylabname)
     titname = "Frequency distribution of COSMO HErZ"
     xlabname = ylabname
-    histoPlot(Herz, dummy, breaks, xlims=c(min.val, max.val), titname, xlabname)
+    histoPlot(Herz, dummy, breaks, xlims=c(min.val, max.val), titname, xlabname,
+              ylabname)
     titname = paste0("Frequency distribution of ERA20C windspeed at 100m\n",
                      "in green and COSMO HErZ at 116m shaded")
     xlabname = "windspeed [m/s]"
-    histoPlot(Era, Herz, breaks, xlims=c(min.val, max.val), titname, xlabname, addPlot=T)
+    histoPlot(Era, Herz, breaks, xlims=c(min.val, max.val),
+              titname, xlabname, ylabname, addPlot=T)
 
     PlotMonthlyPDFScore(Era20cXts, HerzXts, outdir, paste0("PDFScore_100mEraHerz_",
                                                            statname,".pdf"),
@@ -532,8 +691,9 @@ PlotMonthlyPDFScore <- function(era.xts, station.xts, outdir, fname, titname,
     breaks = seq(min.val, max.val, 0.25)
     titname = "Histogram between \nreanalysis (green) and station data (shaded)"
     xlabname = "windspeed [m/s]"
+    ylabname = "Density"
     histoPlot(monthly.era, monthly.stat, breaks, xlims=c(min.val, max.val),
-              titname, xlabname, addPlot=T)
+              titname, xlabname, ylabname, addPlot=T)
 
     # par("usr") prvides the currently set axis limits
     #     text(min.val+0.1, par("usr")[4]-0.05, months[month+1], cex=2.)
@@ -564,12 +724,31 @@ PlotMonthlyPDFScore <- function(era.xts, station.xts, outdir, fname, titname,
 #' @param titname string of the title name of the plot
 #' @param xlabname string for the name of the x-axis label
 #' @param ylabname string for the name of the y-axis label
-scatterPlot <- function(X, Y, yliml, ylimh, titname, xlabname, ylabname) {
+#' @param text.str named variable of type string which will be written into the
+#'   plot with \code{text}.
+#' @param xaxis,yaxis are two named variables which set whether to plot the x- and
+#'   y-axis (xaxis='s', yaxis='s') or omit either one (either set to 'n'). It not
+#'   set the default value will be used which is set to 's' meaning that the axis
+#'   will be plotted.
+scatterPlot <- function(X, Y, yliml, ylimh, titname, xlabname, ylabname,
+                        text.str=NULL, xaxis='s', yaxis='s') {
+
+  if ((!xaxis=='n' & !xaxis=='s') & (!yaxis=='n' & !yaxis=='s')) {
+    CallStop(paste0("Either xaxis or yaxis are not set as expected.\n",
+                    "   The allowed values are 's' or 'n'\n",
+                    "   xaxis = ", xaxis, " yaxis = ", yaxis))
+  }
+
   plot(X, Y, pch=19,
        xlim=c(yliml,ylimh), ylim=c(yliml, ylimh),
-       main=titname, xlab=xlabname, ylab=ylabname, col="blue")
+       main=titname, xlab=xlabname, ylab=ylabname, col="blue",
+       xaxt=xaxis, yaxt=yaxis)
   lines(c(yliml-1,ylimh), c(yliml-1,ylimh))
   abline(lm(Y ~ X), col="blue")
+  if(!is.null(text.str)) {
+    text(ceiling(0.1*(ylimh-yliml)), floor(0.9*(ylimh-yliml)),
+         paste(text.str), adj=c(0, 0.5))
+  }
 }
 
 #-----------------------------------------------------------------------------------
@@ -586,9 +765,16 @@ scatterPlot <- function(X, Y, yliml, ylimh, titname, xlabname, ylabname) {
 #' @param xlims limits of the x-axis in the format c(x,y)
 #' @param titname string of the title name of the plot
 #' @param xlabname string for the name of the x-axis label
+#' @param ylabname string for the name of the y-axis label
 #' @param addPlot optional boolean to determine whether to plot one (F) are two (T)
 #'   data samples; default is to plot one data sample (addPlot=FALSE)
-histoPlot <- function(X, Y, breaks, xlims, titname, xlabname, addPlot=FALSE) {
+#' @param xaxis,yaxis are two named variables which set whether to plot the x- and
+#'   y-axis (xaxis='s', yaxis='s') or omit either one (either set to 'n'). It not
+#'   set the default value will be used which is set to 's' meaning that the axis
+#'   will be plotted.
+histoPlot <- function(X, Y, breaks, xlims, titname, xlabname, ylabname,
+                      xaxis='s', yaxis='s', addPlot=FALSE) {
+
   if (addPlot) {
     # get high ylim for overplotting histograms
     hist1 = hist(X, breaks=breaks, plot=F)
@@ -596,13 +782,25 @@ histoPlot <- function(X, Y, breaks, xlims, titname, xlabname, addPlot=FALSE) {
     ylimh = ceiling(10.*max(hist1$density, hist2$density))/10.
     # plot both histograms
     hist(X, freq=F, breaks=breaks, xlim=xlims, ylim=c(0.0, ylimh),
-         col="green", border="blue", main=titname, xlab=xlabname)
+         col="green", border="blue", main="", xlab="", ylab="",
+         xaxt=xaxis, yaxt=yaxis)
     hist(Y, freq=F, add=T, breaks=breaks, border="blue", density=10, angle=45)
-  } else {
+    } else {
     hist(X, freq=F, breaks=breaks, xlim=xlims, col="green", border="blue",
-         main=titname, xlab=xlabname)
+         main="", xlab="", ylab="", xaxt=xaxis, yaxt=yaxis)
     lines(density(X), col="red", lw=1.5)
   }
+  if (xaxis == 's') {
+    mtext(xlabname, side=1, line=2, cex=0.9)
+  } else {
+    mtext(xlabname, side=1, line=0, cex=0.9)
+  }
+  if(yaxis == 's') {
+    mtext(ylabname, side=2, line=2, cex=0.9)
+  } else {
+    mtext(ylabname, side=2, line=0, cex=0.9)
+  }
+  mtext(titname, side=3, line=0, font=2, cex=1.)
 }
 
 #-----------------------------------------------------------------------------------
@@ -616,12 +814,31 @@ histoPlot <- function(X, Y, breaks, xlims, titname, xlabname, addPlot=FALSE) {
 #' @param titname string of the title name
 #' @param xlabname string for the name of the x-axis label
 #' @param ylabname string for the name of the y-axis label
-qqPlot <- function(X, Y, yliml, ylimh, titname, xlabname, ylabname) {
+#' @param text.str named variable of type string which will be written into the
+#'   plot with \code{text}.
+#' @param xaxis,yaxis are two named variables which set whether to plot the x- and
+#'   y-axis (xaxis='s', yaxis='s') or omit either one (either set to 'n'). It not
+#'   set the default value will be used which is set to 's' meaning that the axis
+#'   will be plotted.
+qqPlot <- function(X, Y, yliml, ylimh,
+                   titname, xlabname, ylabname,
+                   text.str=NULL, xaxis='s', yaxis='s') {
+
+  if ((!xaxis=='n' & !xaxis=='s') & (!yaxis=='n' & !yaxis=='s')) {
+    CallStop(paste0("Either xaxis or yaxis are not set as expected.\n",
+                    "   The allowed values are 's' or 'n'\n",
+                    "   xaxis = ", xaxis, " yaxis = ", yaxis))
+  }
+
   qqplot(X, Y, pch=19,
          xlim=c(yliml-1,ylimh), ylim=c(yliml-1, ylimh),
-         main=titname, xlab=xlabname, ylab=ylabname)
+         main=titname, xlab=xlabname, ylab=ylabname,
+         xaxt=xaxis, yaxt=yaxis)
   abline(0,1)
-
+  if(!is.null(text.str)) {
+    text(ceiling(0.1*(ylimh-yliml)), floor(0.9*(ylimh-yliml)),
+         paste(text.str), adj=c(0, 0.5))
+  }
 }
 
 #-----------------------------------------------------------------------------------
