@@ -184,48 +184,50 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
 
   #-----------------------------------------------------------------------------
 
-  if (plot.EraStationSeasons) {
-    cat("  **  Plotting seasonal analysis\n")
+  if (plot.EraStationSelSeasons) {
+    cat("  **  Plotting selected seasonal time series\n")
     fname = paste0("ERA-Station_Seasons_",
                    gsub("/", "-", station.data$STATIONS_NAME[1]),
                    "_TimeSeries_", res.switch, '_', fname_ext, ".pdf")
     titname = paste0('Seasonal windspeed [m/s] for station ',
                      as.character(station.data$STATIONS_NAME[1]))
-    PlotStationEraSeasons(era20c.data.xts, eraI.data.xts, herz10.data.xts, MM.station,
-                          titname, outdir, fname, width=a4width, height=a4height,
-                          anomaly=FALSE, seasons=FALSE)
+    PlotStationEraSelSeasons(era20c.data.xts, eraI.data.xts, herz10.data.xts,
+                             MM.station, titname, outdir, fname,
+                             width=a4width, height=a4height,
+                             anomaly=FALSE, seasons=FALSE)
 
     fname = paste0("ERA-Station_SeasonsAnomlay_",
                    gsub("/", "-",station.data$STATIONS_NAME[1]),
                    "_TimeSeries_", res.switch, '_', fname_ext, ".pdf")
     titname = paste0('Seasonal windspeed anomaly [m/s] for station ',
                      as.character(station.data$STATIONS_NAME[1]))
-    PlotStationEraSeasons(era20c.data.xts, eraI.data.xts, herz10.data.xts, MM.station,
-                          titname, outdir, fname, width=a4width, height=a4height,
-                          anomaly=TRUE, seasons=TRUE)
+    PlotStationEraSelSeasons(era20c.data.xts, eraI.data.xts, herz10.data.xts,
+                             MM.station, titname, outdir, fname,
+                             width=a4width, height=a4height,
+                             anomaly=TRUE, seasons=TRUE)
   }
 
   #-----------------------------------------------------------------------------
 
-  if (plot.EraStationMonths) {
-    cat("  **  Plotting monthyl analysis\n")
+  if (plot.EraStationSelMonths) {
+    cat("  **  Plotting selected monthly time series\n")
     fname = paste0("ERA-Station_", time.ext, "_",
                    gsub("/", "-", station.data$STATIONS_NAME[1]),
                    "_TimeSeries_", res.switch, '_', fname_ext, ".pdf")
     titname = paste0('Monthly windspeed [m/s] at station location ',
                      as.character(station.data$STATIONS_NAME[1]))
-    PlotStationEraMonths(era20c.data.xts, eraI.data.xts, herz10.data.xts, MM.station,
-                         titname, outdir, fname, width=a4width, height=a4height,
-                         anomaly=FALSE)
+    PlotStationEraSelMonths(era20c.data.xts, eraI.data.xts, herz10.data.xts,
+                            MM.station, titname, outdir, fname,
+                            width=a4width, height=a4height, anomaly=FALSE)
 
     fname = paste0("ERA-Station_", time.ext, "Anomlay_",
                    gsub("/", "-", station.data$STATIONS_NAME[1]),
                    "_TimeSeries_", res.switch, '_', fname_ext, ".pdf")
     titname = paste0('Monthly windspeed anomaly [m/s] at station location ',
                      as.character(station.data$STATIONS_NAME[1]))
-    PlotStationEraMonths(era20c.data.xts, eraI.data.xts, herz10.data.xts, MM.station,
-                         titname, outdir, fname, width=a4width, height=a4height,
-                         anomaly=TRUE)
+    PlotStationEraSelMonths(era20c.data.xts, eraI.data.xts, herz10.data.xts,
+                            MM.station, titname, outdir, fname,
+                            width=a4width, height=a4height, anomaly=TRUE)
   }
 
   #-----------------------------------------------------------------------------

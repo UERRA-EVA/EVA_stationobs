@@ -239,7 +239,7 @@ PlotMultiPanel <- function(outdir, fname, titname, Era20c, EraI, Herz, Stat,
 
 #' @title Prepare and plot seasonal time series of station data and ERA20C, ERA-I,
 #'   and HErZ data.
-#' @description \code{PlotStationEraSeasons} prepares extended time series of
+#' @description \code{PlotStationEraSelSeasons} prepares extended time series of
 #'   seasonal means, and optionally their anomalies, of station data and locally
 #'   corresponding global and regional reanalyses. The seasons for which data shall
 #'   be prepared and plotted need to be set hard-coded within this function. Of
@@ -257,9 +257,9 @@ PlotMultiPanel <- function(outdir, fname, titname, Era20c, EraI, Herz, Stat,
 #' @param seasons is an optional parameter which determines whetther to plot the
 #'   monthly (F) or seasonal (T) values of the above time series
 #' @param anomaly is an optional parameter which determines whether to plot anomalies
-PlotStationEraSeasons <- function(Era20cXts, EraIXts, HerzXts, StatXts,
-                                  titname, outdir, fname, width, height,
-                                  anomaly=FALSE, seasons=FALSE) {
+PlotStationEraSelSeasons <- function(Era20cXts, EraIXts, HerzXts, StatXts,
+                                     titname, outdir, fname, width, height,
+                                     anomaly=FALSE, seasons=FALSE) {
 
   # specify seasons to plot with 1 for winter, 2 spring, 3 summer, and 4 for autumn
   # within the list below; the list must exactly hold two entries!
@@ -327,13 +327,12 @@ PlotStationEraSeasons <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 
 #' @title Prepare and plot specifically selected months of station data and ERA20C,
 #'   ERA-I, and HErZ data.
-#' @description \code{PlotStationEra} prepares extended time series of station data,
-#'   ERA20C, ERA-I, and HErZ data - for specific months only. These months are set
-#'   hard-coded within this function.  Of course, this setting can be put into the
-#'   Settings.R file if necessary.
-#'   Optionally, it is possible to prepare the
-#'   anomalies. A generic plotting routine is called which actually performs the
-#'   plotting.
+#' @description \code{PlotStationEraSelMonths} prepares extended time series of
+#'   station data, ERA20C, ERA-I, and HErZ data - for specific months only. These
+#'   months are set hard-coded within this function. Of course, this setting can be
+#'   put into the Settings.R file if necessary.
+#'   Optionally, it is possible to prepare the anomalies. A generic plotting routine
+#'   is called which actually performs the plotting.
 #' @param Era20cXts monthly mean extended time series of the ERA20C pixel
 #'   corresponding to the station location
 #' @param EraIXts same as above for ERA-Interim
@@ -345,7 +344,7 @@ PlotStationEraSeasons <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 #' @param width,height of the plot in inches
 #' @param anomaly is an optional parameter which determines whether to plot anomalies
 #' @note need to adopt titname to months; need to plot into four different panals
-PlotStationEraMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
+PlotStationEraSelMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
                                  titname, outdir, fname, width, height,
                                  anomaly=FALSE) {
 
