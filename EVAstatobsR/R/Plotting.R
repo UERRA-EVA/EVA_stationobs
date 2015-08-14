@@ -447,7 +447,7 @@ PlotStationEraHSQ <- function(Era20cXts, EraIXts, HerzXts, StatXts,
     titname.scatter = gsub("windspeed", "Scatter and QQ-plot of monthly windspeed",
                            titname)
   } else {
-    titname.scatter = gsub("windspeed", "Scatter and QQ-plot of monthly windspeed",
+    titname.scatter = gsub("windspeed", "Scatter and QQ-plot of daily windspeed",
                            titname)
   }
   text.str = "Era20c vs ERA-Interim"
