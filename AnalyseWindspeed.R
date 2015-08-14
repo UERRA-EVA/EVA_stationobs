@@ -180,11 +180,15 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
     titname = paste0('100m Windspeed [m/s] at station location ', statname)
     Plot100mEraHerz(era20c100.data.xts, herz116.data.xts, titname, statname,
                     outdir, fname, width=a4width, height=a4height)
+    PlotPDFScore(era20c100.data.xts, herz116.data.xts,
+                 outdir, paste0("PDFScore_100mEraHerz_", statname,".pdf"),
+                 "PDF Score between 100m Era20C and 116m HErZ windspeed [m/s]",
+                 width=a4width, height=a4height, era.monthly)
   }
 
   #-----------------------------------------------------------------------------
 
-  if (plot.EraStationSelSeasons) {
+  if (plot.EraStationSelSeasons & era.monthly) {
     cat("  **  Plotting selected seasonal time series\n")
     fname = paste0("ERA-Station_Seasons_",
                    gsub("/", "-", station.data$STATIONS_NAME[1]),
@@ -209,7 +213,7 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
 
   #-----------------------------------------------------------------------------
 
-  if (plot.EraStationSelMonths) {
+  if (plot.EraStationSelMonths & era.monthly) {
     cat("  **  Plotting selected monthly time series\n")
     fname = paste0("ERA-Station_", time.ext, "_",
                    gsub("/", "-", station.data$STATIONS_NAME[1]),
@@ -252,24 +256,25 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
   #-----------------------------------------------------------------------------
 
   if(plot.PDFscore) {
+
     cat("  **  Plotting PDFscore\n")
     fname = paste0("PDFscore_ERA20C_", gsub("/", "-", station.data$STATIONS_NAME[1]),
                    '_', res.switch, '_', time.ext, "_", fname_ext, ".pdf")
-    titname = paste0('PDF score of ERA20C and station ',
-                     as.character(station.data$STATIONS_NAME[1]))
-    PlotMonthlyPDFScore(era20c.data.xts, MM.station, outdir, fname, titname)
+    titname = c('ERA20C ', as.character(station.data$STATIONS_NAME[1]))
+    PlotPDFScore(era20c.data.xts, MM.station, outdir, fname, titname,
+                 width=a4width, height=a4height, era.monthly)
 
     fname = paste0("PDFscore_ERAI_", gsub("/", "-", station.data$STATIONS_NAME[1]),
                    '_', res.switch, '_', time.ext, "_", fname_ext, ".pdf")
-    titname = paste0('PDF score of ERA-I and station ',
-                     as.character(station.data$STATIONS_NAME[1]))
-    PlotMonthlyPDFScore(eraI.data.xts, MM.station, outdir, fname, titname)
+    titname = c('ERA-I ', as.character(station.data$STATIONS_NAME[1]))
+    PlotPDFScore(eraI.data.xts, MM.station, outdir, fname, titname,
+                 width=a4width, height=a4height, era.monthly)
 
     fname = paste0("PDFscore_HErZ_", gsub("/", "-", station.data$STATIONS_NAME[1]),
                    '_', res.switch, '_', time.ext, "_", fname_ext, ".pdf")
-    titname = paste0('PDF score of HErZ and station ',
-                     as.character(station.data$STATIONS_NAME[1]))
-    PlotMonthlyPDFScore(herz10.data.xts, MM.station, outdir, fname, titname)
+    titname = c('HErZ ', as.character(station.data$STATIONS_NAME[1]))
+    PlotPDFScore(herz10.data.xts, MM.station, outdir, fname, titname,
+                 width=a4width, height=a4height, era.monthly)
   }
 
 }

@@ -345,8 +345,8 @@ PlotStationEraSelSeasons <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 #' @param anomaly is an optional parameter which determines whether to plot anomalies
 #' @note need to adopt titname to months; need to plot into four different panals
 PlotStationEraSelMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
-                                 titname, outdir, fname, width, height,
-                                 anomaly=FALSE) {
+                                    titname, outdir, fname, width, height,
+                                    anomaly=FALSE) {
 
   # specify months to plot starting from 1 for January to 12 for December
   # within the list below; the list must exactly hold two entries!
@@ -571,7 +571,7 @@ PlotStationEraDaily <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 #'   This function performs a pixel wise comparison at the station locationto
 #'   provided by the package. Scatter plots, QQplots, histogram plots, and the
 #'   PDFscore are produced.
-#' @param Era20cXts monthly mean extended time series of a ERA20C pixel
+#' @param Era20cXts extended time series of an ERA20C pixel
 #' @param HerzXts same as above for HErZ
 #' @param titname string of the plot title name
 #' @param statname string of the station name whose pixel is plotted
@@ -579,7 +579,8 @@ PlotStationEraDaily <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 #' @param fname string of the file name of the plot
 #' @param width,height of the plot in inches
 Plot100mEraHerz <- function(Era20cXts, HerzXts,
-                            titname, statname, outdir, fname, width, height) {
+                            titname, statname, outdir, fname,
+                            width, height) {
 
   same.length = F
   if (length(Era20cXts) == length(HerzXts)) {same.length = T}
@@ -645,9 +646,6 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
     histoPlot(Era, Herz, breaks, xlims=c(min.val, max.val),
               titname, xlabname, ylabname, addPlot=T)
 
-    PlotMonthlyPDFScore(Era20cXts, HerzXts, outdir, paste0("PDFScore_100mEraHerz_",
-                                                           statname,".pdf"),
-                        "PDF Score between 100m Era20C and 116m HErZ windspeed [m/s]")
   }
   dev.off()
 }
@@ -668,10 +666,11 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
 #' @param fname is a string of the file name of the plot file
 #' @param titname is a string containig the title name of the plot
 #' @param width,height of the plot in inches
-PlotMonthlyPDFScore <- function(era.xts, station.xts, outdir, fname, titname,
-                                width, height) {
+PlotPDFScore <- function(era.xts, station.xts, outdir, fname, titname,
+                         width, height, era.monthly=FALSE) {
 
-  pdf(paste(outdir, fname, sep=""), onefile=TRUE, pointsize=11, width=21./2.54)
+  pdf(paste(outdir, fname, sep=""), width=width, height=height,
+      onefile=TRUE, pointsize=13)
 
   date.era  <- as.POSIXlt(index(era.xts))
   date.stat <- as.POSIXlt(index(station.xts))
@@ -688,11 +687,22 @@ PlotMonthlyPDFScore <- function(era.xts, station.xts, outdir, fname, titname,
     max.val = ceiling(max(max(monthly.era), max(monthly.stat)))
 
     breaks = seq(min.val, max.val, 0.25)
-    titname = "Histogram between \nreanalysis (green) and station data (shaded)"
+    if (era.monthly) {
+      titname.ext = "monthly"
+
+    } else {
+      titname.ext = "daily"
+    }
+    if (length(titname) > 1) {
+      titname.new = paste0("Histogram of ", titname.ext, "\n", titname[1],
+                           " (green) and ",titname[2]," station data (shaded)")
+    } else {
+      titname.new = titname
+    }
     xlabname = "windspeed [m/s]"
     ylabname = "Density"
     histoPlot(monthly.era, monthly.stat, breaks, xlims=c(min.val, max.val),
-              titname, xlabname, ylabname, addPlot=T)
+              titname.new, xlabname, ylabname, addPlot=T)
 
     # par("usr") prvides the currently set axis limits
     #     text(min.val+0.1, par("usr")[4]-0.05, months[month+1], cex=2.)
@@ -702,12 +712,25 @@ PlotMonthlyPDFScore <- function(era.xts, station.xts, outdir, fname, titname,
   }
   PDF.score.ann[] = PDFscore(era.xts, station.xts)
 
-  plot(PDF.score.anncycle, main=titname, ylab="pdf score", xlab="months of the year",
-       type="b", pch=16, col="blue")
+  if (length(titname) > 1) {
+    titname.new = paste0("PDF score of ", titname.ext, " ", titname[1], " and ",
+                       titname[2], " station data")
+  } else {
+    titname.new = titname
+  }
+  plot(PDF.score.anncycle, main=titname.new, ylab="pdf score",
+       xlab="months of the year", type="b", pch=16, col="blue")
   lines(PDF.score.ann, type="b", lty=2, pch=20, col="red")
 
   vioplot(era.xts, station.xts, horizontal=TRUE,
           names=c("reanalysis", "station data"))
+  if (length(titname) > 1) {
+    mtext(paste0("Violin plot of ", titname.ext, " ", titname[1], " and ",
+                 titname[2], " station data"), line=1, font=2, cex=1.2)
+  } else {
+    mtext(titname, line=1, font=2, cex=1.2)
+  }
+  mtext(paste0("windspeed [m/s]"), side=1, line=2)
 
   dev.off()
 }
@@ -784,7 +807,7 @@ histoPlot <- function(X, Y, breaks, xlims, titname, xlabname, ylabname,
          col="green", border="blue", main="", xlab="", ylab="",
          xaxt=xaxis, yaxt=yaxis)
     hist(Y, freq=F, add=T, breaks=breaks, border="blue", density=10, angle=45)
-    } else {
+  } else {
     hist(X, freq=F, breaks=breaks, xlim=xlims, col="green", border="blue",
          main="", xlab="", ylab="", xaxt=xaxis, yaxt=yaxis)
     lines(density(X), col="red", lw=1.5)
