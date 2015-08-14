@@ -74,7 +74,7 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
     cat(paste0("\n  ***  ",
                "There were no finite values in the station data record ",
                "for this time period. ***\n\n"))
-    next
+#     next
   }
 
   #=================================

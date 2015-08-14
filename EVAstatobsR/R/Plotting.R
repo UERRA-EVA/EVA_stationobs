@@ -514,8 +514,10 @@ PlotStationEraHSQ <- function(Era20cXts, EraIXts, HerzXts, StatXts,
   par(mfrow=c(2,2))
   par(mar=c(1,1,2,0.5), oma=c(2.5,3,3,0.5))
 
-  min.val = floor(min(min(Era20), min(EraI), min(Herz), min(Stat)))
-  max.val = ceiling(max(max(Era20), max(EraI), max(Herz), max(Stat)))
+  min.val = floor(min(min(Era20, na.rm=TRUE), min(EraI, na.rm=TRUE),
+                      min(Herz, na.rm=TRUE), min(Stat, na.rm=TRUE)))
+  max.val = ceiling(max(max(Era20, na.rm=TRUE), max(EraI, na.rm=TRUE),
+                        max(Herz, na.rm=TRUE), max(Stat, na.rm=TRUE)))
   breaks = seq(min.val, max.val, 0.25)
   dummy = numeric(length=length(Era20)) * NA
   xlabname.empty = ""
@@ -640,8 +642,8 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
     titname = "Quantile-quantile plot"
     qqPlot(Era, Herz, yliml, ylimh, titname, xlabname, ylabname, text.str=text.str)
 
-    min.val = floor(min(min(Era), min(Herz)))
-    max.val = ceiling(max(max(Era), max(Herz)))
+    min.val = floor(min(min(Era, na.rm=TRUE), min(Herz, na.rm=TRUE)))
+    max.val = ceiling(max(max(Era, na.rm=TRUE), max(Herz, na.rm=TRUE)))
     breaks = seq(min.val, max.val, 0.25)
     dummy = numeric(length=length(Era)) * NA
 
@@ -699,8 +701,8 @@ PlotPDFScore <- function(era.xts, station.xts, outdir, fname, titname,
     monthly.era  <- era.xts[which(date.era$mon==month)]
     monthly.stat <- station.xts[which(date.stat$mon==month)]
 
-    min.val = floor(min(min(monthly.era), min(monthly.stat)))
-    max.val = ceiling(max(max(monthly.era), max(monthly.stat)))
+    min.val = floor(min(min(monthly.era, na.rm=TRUE), min(monthly.stat, na.rm=TRUE)))
+    max.val = ceiling(max(max(monthly.era, na.rm=TRUE), max(monthly.stat, na.rm=TRUE)))
 
     breaks = seq(min.val, max.val, 0.25)
     if (era.monthly) {
@@ -825,7 +827,7 @@ histoPlot <- function(X, Y, breaks, xlims, titname, xlabname, ylabname,
   } else {
     hist(X, freq=F, breaks=breaks, xlim=xlims, col="green", border="blue",
          main="", xlab="", ylab="", xaxt=xaxis, yaxt=yaxis)
-    lines(density(X), col="red", lw=1.5)
+    lines(density(X, na.rm=TRUE), col="red", lw=1.5)
   }
   if (xaxis == 's') {
     mtext(xlabname, side=1, line=2, cex=0.9)

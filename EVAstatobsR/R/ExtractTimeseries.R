@@ -94,7 +94,8 @@ ExtractStationData <- function(station.data, era20c.tsstart, era20c.tsend,
   } else if (!era.monthly) { # produce a daily mean xts
     MM.station = period.apply(StatXTS, endpoints(StatXTS, "days"), mean, na.rm=TRUE)
   } else { # produce an hourly mean xts
-    MM.station = StatXTS
+    #MM.station = StatXTS
+    CallStop("It is not yet implemented to produce an hourly xtended time series.")
   }
 
   # cut station time series to length of longest dataset (if shorter than station ts)
