@@ -236,15 +236,16 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
 
   #-----------------------------------------------------------------------------
 
-  if(plot.EraStationDaily) {
-    cat("  **  Plotting daily analysis\n")
+  if(plot.EraStationHSQ) {
+    cat("  **  Plotting HSQ analysis\n")
     fname = paste0("ERA-Station_", time.ext, "_",
                    gsub("/", "-", station.data$STATIONS_NAME[1]),
                    "_TimeSeries_", res.switch, '_', fname_ext, ".pdf")
-    titname = paste0('Daily windspeed [m/s] at station location ',
+    titname = paste0('windspeed [m/s] at station location ',
                      as.character(station.data$STATIONS_NAME[1]))
-    PlotStationEraDaily(era20c.data.xts, eraI.data.xts, herz10.data.xts, MM.station,
-                        titname, outdir, fname, width=a4width, height=a4height)
+    PlotStationEraHSQ(era20c.data.xts, eraI.data.xts, herz10.data.xts, MM.station,
+                      titname, outdir, fname, width=a4width, height=a4height,
+                      era.monthly)
   }
 
   #-----------------------------------------------------------------------------

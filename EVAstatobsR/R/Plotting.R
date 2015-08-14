@@ -398,21 +398,25 @@ PlotStationEraSelMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 
 #-----------------------------------------------------------------------------------
 
-#' @title Prepare and plot daily time series of station data and ERA20C, ERA-I,
+#' @title Prepare and plot time series of station data and ERA20C, ERA-I,
 #'   and HErZ data.
-#' @description This function plots daily station and reanalysis data.
-#' @param Era20cXts daily mean extended time series of the ERA20C pixel
-#'   corresponding to the station location
+#' @description This function plots station and reanalysis data into histogram,
+#'   scatter plots and Quantile-quantile plots (QQ-plot).
+#' @param Era20cXts extended time series of the ERA20C pixel corresponding to the
+#'   station location
 #' @param EraIXts same as above for ERA-Interim
 #' @param HerzXts same as above for HErZ
-#' @param StatXts daily mean extended time series of the station values
+#' @param StatXts extended time series of the station values
 #' @param titname string of the plot title name
 #' @param outdir string of the output directory into which the plot/s is/are saved
 #' @param fname string of the output file name
 #' @param width,height of the plot in inches
-#' @note
-PlotStationEraDaily <- function(Era20cXts, EraIXts, HerzXts, StatXts,
-                                titname, outdir, fname, width, height) {
+#' @param era.monthly is an optional boolean which determines whether data passed
+#'   is monthly (T) or daily (F) data. The default value is to use daily data
+#'   (era.monthly=FALSE).
+PlotStationEraHSQ <- function(Era20cXts, EraIXts, HerzXts, StatXts,
+                              titname, outdir, fname, width, height,
+                              era.monthly=FALSE) {
 
   Era20  = as.numeric(Era20cXts)
   EraI = as.numeric(EraIXts)
@@ -425,6 +429,10 @@ PlotStationEraDaily <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 
   axis.n = 'n'
   axis.y = 's'
+  mtext.titname = "Daily windspeed at 10m height"
+  if (era.monthly) {
+    mtext.titname = "Monthly windspeed at 10m height"
+  }
 
   fname.scatter = gsub(".pdf", "_scatterQQ-Plots.pdf", fname)
   pdf(paste0(outdir, fname.scatter), width=height, height=width,
@@ -435,11 +443,16 @@ PlotStationEraDaily <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 
   xlabname = "10m ERA20C windspeed [m/s]"
   ylabname = "10m ERA-I windspeed [m/s]"
-  titname.scatter = gsub("Daily", "Scatter plot of daily", titname)
+  if (era.monthly) {
+    titname.scatter = gsub("windspeed", "Scatter and QQ-plot of monthly windspeed",
+                           titname)
+  } else {
+    titname.scatter = gsub("windspeed", "Scatter and QQ-plot of monthly windspeed",
+                           titname)
+  }
   text.str = "Era20c vs ERA-Interim"
   scatterPlot(Era20, EraI, yliml, ylimh, "",
               xlabname, ylabname, text.str=text.str, xaxis=axis.n, yaxis=axis.y)
-  titname.qq = gsub("Daily", "Quantile-quantile plot of daily", titname)
   qqPlot(Era20, EraI, yliml, ylimh, "",
          xlabname, ylabname, text.str=text.str, xaxis=axis.n, yaxis=axis.n)
 
@@ -524,7 +537,7 @@ PlotStationEraDaily <- function(Era20cXts, EraIXts, HerzXts, StatXts,
   titname = "Frequency distribution of station data"
   histoPlot(Stat, dummy, breaks, xlims=c(min.val, max.val),
             titname, xlabname.full, ylabname)
-  mtext("Daily windspeed at 10m height", font=2, cex=1.2, outer=TRUE)
+  mtext(mtext.titname, font=2, cex=1.2, line=1, outer=TRUE)
 
   titname = paste0("Frequency distribution of ERA20C\n",
                    "in green and ERA-Interim shaded")
@@ -546,7 +559,7 @@ PlotStationEraDaily <- function(Era20cXts, EraIXts, HerzXts, StatXts,
                    "in green and COSMO HErZ shaded")
   histoPlot(EraI, Herz, breaks, xlims=c(min.val, max.val), titname,
             xlabname.full, ylabname, addPlot=TRUE)
-  mtext("Daily windspeed at 10m height", font=2, cex=1.2, outer=TRUE)
+  mtext(mtext.titname, font=2, cex=1.2, line=1, outer=TRUE)
 
   titname = paste0("Frequency distribution of ERA-Interim\n",
                    "in green and station data shaded")
@@ -557,7 +570,7 @@ PlotStationEraDaily <- function(Era20cXts, EraIXts, HerzXts, StatXts,
                    "in green and station data shaded")
   histoPlot(Herz, Stat, breaks, xlims=c(min.val, max.val), titname,
             xlabname.full, ylabname, addPlot=TRUE)
-  mtext("Daily windspeed at 10m height", font=2, cex=1.2, outer=TRUE)
+  mtext(mtext.titname, font=2, cex=1.2, line=1, outer=TRUE)
 
   dev.off()
 
@@ -666,6 +679,9 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
 #' @param fname is a string of the file name of the plot file
 #' @param titname is a string containig the title name of the plot
 #' @param width,height of the plot in inches
+#' @param era.monthly is an optional boolean which determines whether data passed
+#'   is monthly (T) or daily (F) data. The default value is to use daily data
+#'   (era.monthly=FALSE).
 PlotPDFScore <- function(era.xts, station.xts, outdir, fname, titname,
                          width, height, era.monthly=FALSE) {
 
@@ -689,7 +705,6 @@ PlotPDFScore <- function(era.xts, station.xts, outdir, fname, titname,
     breaks = seq(min.val, max.val, 0.25)
     if (era.monthly) {
       titname.ext = "monthly"
-
     } else {
       titname.ext = "daily"
     }
@@ -714,7 +729,7 @@ PlotPDFScore <- function(era.xts, station.xts, outdir, fname, titname,
 
   if (length(titname) > 1) {
     titname.new = paste0("PDF score of ", titname.ext, " ", titname[1], " and ",
-                       titname[2], " station data")
+                         titname[2], " station data")
   } else {
     titname.new = titname
   }
