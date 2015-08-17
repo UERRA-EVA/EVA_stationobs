@@ -3,14 +3,15 @@
 \alias{ExtractStationData}
 \title{Extract and align wind station data to reanalysis data.
   \code{ExtractStationData} reads wind speed values and dates from station data
-  and creates a gap filled extended time series. Monthly mean time series are
-  calculated which span the time period of the longest stretching reanalysis data
-  set.
+  and creates a gap filled extended time series. Monthly or daily mean time
+  series are calculated which span the time period of the longest stretching
+  reanalysis data set. The time steps of the monthly time series is given with
+  precision of months, those of daily time series with precision of days.
   Parts taken from get.timeseries.R of GetPlotsFromFtp and off website
   http://bocoup.com/weblog/padding-time-series-with-r/}
 \usage{
 ExtractStationData(station.data, era20c.tsstart, era20c.tsend, eraI.tsstart,
-  eraI.tsend, herz.tsstart, herz.tsend, daily = FALSE)
+  eraI.tsend, herz.tsstart, herz.tsend, era.monthly, daily = FALSE)
 }
 \arguments{
 \item{station.data}{is an extended time series holding monthly mean station wind
@@ -29,6 +30,8 @@ of the format c(YYYY,MM)}
 
 \item{herz.tsend}{is the end date of the HErZ data}
 
+\item{era.monthly}{boolean to determine whether to read daily or mothly HErZ data}
+
 \item{daily}{optional parameter to specify whether station data is aggregated in
 hourly or daily time steps. Default is hourly (daily=FALSE).}
 }
@@ -39,9 +42,10 @@ MM.station[timestr] is the potentially gab filled monthly mean station
 \description{
 Extract and align wind station data to reanalysis data.
   \code{ExtractStationData} reads wind speed values and dates from station data
-  and creates a gap filled extended time series. Monthly mean time series are
-  calculated which span the time period of the longest stretching reanalysis data
-  set.
+  and creates a gap filled extended time series. Monthly or daily mean time
+  series are calculated which span the time period of the longest stretching
+  reanalysis data set. The time steps of the monthly time series is given with
+  precision of months, those of daily time series with precision of days.
   Parts taken from get.timeseries.R of GetPlotsFromFtp and off website
   http://bocoup.com/weblog/padding-time-series-with-r/
 }

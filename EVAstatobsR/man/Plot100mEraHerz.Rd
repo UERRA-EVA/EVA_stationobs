@@ -7,7 +7,7 @@ Plot100mEraHerz(Era20cXts, HerzXts, titname, statname, outdir, fname, width,
   height)
 }
 \arguments{
-\item{Era20cXts}{monthly mean extended time series of a ERA20C pixel}
+\item{Era20cXts}{extended time series of an ERA20C pixel}
 
 \item{HerzXts}{same as above for HErZ}
 

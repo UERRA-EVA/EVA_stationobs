@@ -6,8 +6,8 @@
 GetYlims(xts1, xts2, xts3, xts4)
 }
 \arguments{
-\item{xts1,xts2,xts3,xts4}{time series from which to determine the low and
-high range of the y-axis limits.}
+\item{xts1,xts2,xts3,xts4}{extended time series from which to determine the low
+and high range of the y-axis limits.}
 }
 \value{
 Return a named list (yll=,ylh=) of the lower and high bound of the y-axis
