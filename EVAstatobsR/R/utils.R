@@ -86,7 +86,7 @@ CheckHerzParams <- function(herz.param, herz.profile) {
 #' @param vec vector of regularly spaced values
 #' @param num numeric to find the nearest index within the provided vector.
 #' @return idx the nearest index of \code{num} within \code{vec}.
-get.nearest.idx <- function(vec, num) {
+GetNearestIdx <- function(vec, num) {
   idx = which( abs(vec - num) == min(abs(vec - num)) )
   return(idx)
 }
@@ -94,7 +94,7 @@ get.nearest.idx <- function(vec, num) {
 #-----------------------------------------------------------------------------------
 
 #' @title Extract longitude and latitude index off a lon, lat regular grid.
-#' @description \code{get.lon.lat.idx} extracts the longitude and latitude index of
+#' @description \code{GetLonLatIdx} extracts the longitude and latitude index of
 #' a point off a netCDF file which holds data on a regular grid with longitude and
 #' latitude values (as vectors) stored.
 #' @param fname string of the file name to read
@@ -105,15 +105,15 @@ get.nearest.idx <- function(vec, num) {
 #'   parameter needs to be set to NULL. The default is to set grid.lon to NULL.
 #' @param grid.lat same as above for the grid latitude values.
 #' @return Return a named lilst of (lonidx=,latidx=) longitude and latitude index.
-get.lon.lat.idx <- function(fname, point.lon, point.lat,
+GetLonLatIdx <- function(fname, point.lon, point.lat,
                             grid.lon=NULL, grid.lat=NULL) {
   CheckFile(fname)
   if (is.null(grid.lon)) { # ERA20C, ERA-Interim data
     dat = ReadNetcdfLonLat(fname)
     grid.lon = dat$lon
     grid.lat = dat$lat
-    latidx = get.nearest.idx(grid.lat, point.lat)
-    lonidx = get.nearest.idx(grid.lon, point.lon)
+    latidx = GetNearestIdx(grid.lat, point.lat)
+    lonidx = GetNearestIdx(grid.lon, point.lon)
     return(list(lonidx=lonidx, latidx=latidx))
   } else { # HErZ data
     dist.to.point = getNearest(point.lat, grid.lat, point.lon, grid.lon)
@@ -130,7 +130,7 @@ get.lon.lat.idx <- function(fname, point.lon, point.lat,
 #' @param tsstart numeric of the format c(YYYY,M) holding the start date
 #' @param tsend as above holding the end date
 #' @return timestr string of the format YYYYM/YYYYM holding start date/end date.
-set.to.date <- function(tsstart, tsend) {
+SetToDate <- function(tsstart, tsend) {
   timestr = paste0(toString(tsstart[1]), toString(tsstart[2]), '/',
                    toString(tsend[1]), toString(tsend[2]))
   return(timestr)

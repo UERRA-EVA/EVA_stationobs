@@ -141,8 +141,8 @@ ExtractERAxts <- function(data, time.vals,
   time.vals = as.yearmon(time.vals)
 
   # need to get pixel from ERA20C corresponding to lonlat of station
-  latidx = get.nearest.idx(lat, stat.lat)
-  lonidx = get.nearest.idx(lon, stat.lon)
+  latidx = GetNearestIdx(lat, stat.lat)
+  lonidx = GetNearestIdx(lon, stat.lon)
   data.vals = data[lonidx,latidx,]
 
   time.series.frame = data.frame(time.vals, data.vals)
@@ -191,7 +191,7 @@ ExtractHErZxts <- function(herz.data, time.vals, herz.lon, herz.lat,
   herz.xts = xts(time.series.frame$data.vals, order.by=time.series.frame$time.vals)
 
   # adjust to time period as provided by tsstart and tsend
-  timestr = set.to.date(tsstart, tsend)
+  timestr = SetToDate(tsstart, tsend)
 
   return(herz.xts[timestr])
 }

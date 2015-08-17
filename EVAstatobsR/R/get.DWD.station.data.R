@@ -1,9 +1,9 @@
 #' @title A function to remove files.
-#' @description \code{remove.files} can remove any files with provided extensions;
+#' @description \code{RemoveFiles} can remove any files with provided extensions;
 #'   by defaul it explicitely removes *.txt and *.html files.
 #' @param extension is a (vector of) string(s) which holds the extensions to of the
 #'   files to be removed.
-remove.files <- function(extension=NULL){
+RemoveFiles <- function(extension=NULL){
   if (is.null(extension)){
     extension <- c(".txt",".html")
   }
@@ -16,12 +16,12 @@ remove.files <- function(extension=NULL){
 #-----------------------------------------------------------------------------------
 
 #' @title Download data from the DWD-ftp server.
-#' @description \code{get.data}
+#' @description \code{GetData}
 #'   Allows downloading data from the DWD-ftp server according to the metadata
 #'   information saved in the output argument \code{metadata} retrieved from
-#'   \code{\link{get.metadata}}. The data is then unzipped and extracted for hourly
+#'   \code{\link{GetMetadata}}. The data is then unzipped and extracted for hourly
 #'   or daily values as specified.
-#' @param metadata list; argument retrieved from \code{\link{get.metadata}}. If
+#' @param metadata list; argument retrieved from \code{\link{GetMetadata}}. If
 #'   empty, the user will be asked to enter the metadata manually through the
 #'   R-console.
 #' @param verbose.DWD boolean; determines whether to tell what's going on.
@@ -30,12 +30,12 @@ remove.files <- function(extension=NULL){
 #' @examples
 #'   # If no input argument is known:
 #'   \dontrun{
-#'   data1 <- get.data() # R will ask the user through the
+#'   data1 <- GetData() # R will ask the user through the
 #'                       # console to enter each argument
 #'   # If the input argument is known
-#'   data1 <- get.data(metadata)
+#'   data1 <- GetData(metadata)
 #'   }
-get.data <- function(metadata=NULL, verbose.DWD=TRUE){
+GetData <- function(metadata=NULL, verbose.DWD=TRUE){
   # Remove everything besides the inputs
   rm(list=ls()[!(ls()%in% c("metadata", "verbose.DWD"))])
   time.resol=""
@@ -65,8 +65,8 @@ get.data <- function(metadata=NULL, verbose.DWD=TRUE){
   # CHECK THE EXISTENCE OF THE INPUT ARGUMENTS
   # Check if the input arguments are null
   if (is.null(metadata)){
-    # source("get.metadata.R")
-    metadata <- get.metadata()
+    # source("GetMetadata.R")
+    metadata <- GetMetadata()
   }
 
   ##########################################################
@@ -84,7 +84,7 @@ get.data <- function(metadata=NULL, verbose.DWD=TRUE){
 
   ##########################################################
   # REMOVE ".txt" & ".html"
-  remove.files(c(".txt",".html"))
+  RemoveFiles(c(".txt",".html"))
 
   ##########################################################
   # FTP CONNECTION - HISTORICAL
@@ -144,7 +144,7 @@ get.data <- function(metadata=NULL, verbose.DWD=TRUE){
 
     ##########################################################
     # REMOVE ".txt"
-    remove.files(c(".txt", ".html"))
+    RemoveFiles(c(".txt", ".html"))
 
     #######################################################
     # FTP CONNECTION - RECENT
@@ -208,7 +208,7 @@ get.data <- function(metadata=NULL, verbose.DWD=TRUE){
 
     #######################################################
     # REMOVE ".txt"
-    remove.files(c(".txt", ".html"))
+    RemoveFiles(c(".txt", ".html"))
 
 
     ########################################################
@@ -238,17 +238,17 @@ get.data <- function(metadata=NULL, verbose.DWD=TRUE){
 #-----------------------------------------------------------------------------------
 
 #' @title Download data from the DWD-ftp server.
-#' @description \code{get.data.download}
+#' @description \code{GetDataDownload}
 #'   Data is downloaded from the DWD-ftp server
 #'   according to the metadata information saved in
 #'   the output argument \code{metadata} retrieved from
-#'   \code{\link{get.metadata}}. No object is returned.
+#'   \code{\link{GetMetadata}}. No object is returned.
 #' @param metadata list. Argument retrieved
-#'   from \code{\link{get.metadata}}. If empty, the
+#'   from \code{\link{GetMetadata}}. If empty, the
 #'   user will be asked to enter the metadata
 #'   manually through the R-console.
 #' @param verbose.DWD boolean; determines whether to tell what's going on.
-get.data.download <- function(metadata=NULL, verbose.DWD=TRUE){
+GetDataDownload <- function(metadata=NULL, verbose.DWD=TRUE){
   # Remove everything besides the inputs
   rm(list=ls()[!(ls()%in% c("metadata", "verbose.DWD"))])
   time.resol=""
@@ -278,7 +278,7 @@ get.data.download <- function(metadata=NULL, verbose.DWD=TRUE){
   # CHECK THE EXISTENCE OF THE INPUT ARGUMENTS
   # Check if the input arguments are not null
   if (is.null(metadata)){
-    metadata <- get.metadata()
+    metadata <- GetMetadata()
   }
 
   ##########################################################
@@ -296,7 +296,7 @@ get.data.download <- function(metadata=NULL, verbose.DWD=TRUE){
 
   ##########################################################
   # REMOVE ".txt" & ".html"
-  remove.files(c(".txt",".html"))
+  RemoveFiles(c(".txt",".html"))
 
   ##########################################################
   # FTP CONNECTION - HISTORICAL
@@ -347,7 +347,7 @@ get.data.download <- function(metadata=NULL, verbose.DWD=TRUE){
 #' @param path.element string as an additional element of the path to the data
 #' @return metadata The metadata saved in a string vector containing the above
 #'   parameters
-get.metadata <- function(time.resol, station.id,
+GetMetadata <- function(time.resol, station.id,
                          date.begin, date.end, path.element){
   liste <- c("time.resol" , "station.id" ,  "date.begin" ,
              "date.end", "path.element")
@@ -365,8 +365,8 @@ get.metadata <- function(time.resol, station.id,
 #-----------------------------------------------------------------------------------
 
 #' @title Download DWD station data from CDC-ftp server.
-#' @description \code{all.data} retrieves data from the CDC ftp-server using Raffaels
-#'   function get.data and the dummy metadata as obtained from the above function.
+#' @description \code{AllData} retrieves data from the CDC ftp-server using Raffaels
+#'   function GetData and the dummy metadata as obtained from the above function.
 #'   Using these two functions instead of his complete package is necessary because
 #'   it was eveloped to run under Windows, and it was developed to have a user interface.
 #'   Here, I have hardcoded to download all available daily climate data. I allow
@@ -388,15 +388,15 @@ get.metadata <- function(time.resol, station.id,
 #'   (TRUE) on or surpress it (FALSE). Default is to print out messages (TRUE).
 #' @return \code{data1} a data frame (returned as list) containing all this data
 #'   including windspeed listed chronologically
-all.data <- function(station.id, station.name, station.lat, station.lon,
+AllData <- function(station.id, station.name, station.lat, station.lon,
                      daily=TRUE, download=FALSE, verbose.DWD=TRUE){
   if (daily) {
-    metadata <- get.metadata("daily",station.id,"1800-01-01","2020-12-31","kl")
+    metadata <- GetMetadata("daily",station.id,"1800-01-01","2020-12-31","kl")
   } else {
-    metadata <- get.metadata("hourly",station.id,"1800-01-01","2020-12-31","wind")
+    metadata <- GetMetadata("hourly",station.id,"1800-01-01","2020-12-31","wind")
   }
   if (!(download)) {
-    data1 <- get.data(metadata, verbose.DWD)
+    data1 <- GetData(metadata, verbose.DWD)
     data2 <- data.frame(data1$stations_id, station.name, station.lat, station.lon,
                         data1$mess_datum,data1$windgeschwindigkeit)
     data2 = data2[-nrow(data2),]
@@ -404,7 +404,7 @@ all.data <- function(station.id, station.name, station.lat, station.lon,
                          "MESS_DATUM","WINDGESCHWINDIGKEIT")
     return(data2)
   } else {
-    get.data.download(metadata, verbose.DWD)
+    GetDataDownload(metadata, verbose.DWD)
   }
 }
 

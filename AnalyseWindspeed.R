@@ -56,7 +56,7 @@ station.info[[1]] = sprintf("%05d", station.info[[1]])
 for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
   cat(paste0("  **  Reading station data: ", station.info[[2]][steps], "\n"))
   station.data = data.frame()
-  station.data = all.data(station.info[[1]][steps], station.info[[2]][steps],
+  station.data = AllData(station.info[[1]][steps], station.info[[2]][steps],
                           station.info[[3]][steps], station.info[[4]][steps],
                           daily = station.daily, verbose.DWD=verb.stat.dat)
 
@@ -87,7 +87,7 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
   cat(paste0("  **  Reading ERA20C reanalysis data\n"))
   stat.lon = station.data$GEO_LÄNGE[1]
   stat.lat = station.data$GEO_BREITE[1]
-  idx = get.lon.lat.idx(era20c.fname, stat.lon, stat.lat)
+  idx = GetLonLatIdx(era20c.fname, stat.lon, stat.lat)
   lonidx = idx$lonidx
   latidx = idx$latidx
   era20c.data = ReadEraNetcdf2Xts(era20c.param, era20c.fname,
@@ -98,7 +98,7 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
   era20c100.data.xts = era20c.data$era20c100
 
   cat(paste0("  **  Reading ERA-Interim reanalysis data\n"))
-  idx = get.lon.lat.idx(eraI.fname, stat.lon, stat.lat)
+  idx = GetLonLatIdx(eraI.fname, stat.lon, stat.lat)
   lonidx = idx$lonidx
   latidx = idx$latidx
   eraI.data = ReadEraNetcdf2Xts(eraI.param, eraI.fname,
@@ -116,7 +116,7 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
 
   # only read first file name (if there are more than one)
   # because all daily files have the same grid
-  idx = get.lon.lat.idx(herz.fname[1], stat.lon, stat.lat, herz.lon, herz.lat)
+  idx = GetLonLatIdx(herz.fname[1], stat.lon, stat.lat, herz.lon, herz.lat)
   lonidx = idx$lonidx
   latidx = idx$latidx
   herz.data = ReadHerzNetcdfMonthlyDaily2Xts(herz.param, herz.fname,

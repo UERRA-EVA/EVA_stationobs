@@ -101,7 +101,7 @@ ReadHerzNetcdfMonthlyDaily2Xts <- function(herz.param, herz.fname,
   if (era.monthly) {
     ndf$dat10.time = as.yearmon(ndf$dat10.time)
   }
-  timestr = set.to.date(herz.tsstart, herz.tsend)
+  timestr = SetToDate(herz.tsstart, herz.tsend)
   herz10.xts = xts(ndf$dat10.data, order.by=ndf$dat10.time)
   herz10.xts = herz10.xts[timestr]
   herz116.xts = xts(ndf$dat116.data, order.by=ndf$dat10.time)
@@ -168,7 +168,7 @@ ReadEraNetcdf2Xts <- function(era.param, era.fname,
   if (era.monthly) {
     df$era10m.time = as.yearmon(df$era10m.time)
   }
-  timestr = set.to.date(era.tsstart, era.tsend)
+  timestr = SetToDate(era.tsstart, era.tsend)
   era.xts = xts(df$era10m.data, order.by=df$era10m.time)
   era.xts = era.xts[timestr]
   if (era20c) {
