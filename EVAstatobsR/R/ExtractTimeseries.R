@@ -36,9 +36,10 @@ getNearest <- function(b1,b2,l1,l2){
 
 #' @title Extract and align wind station data to reanalysis data.
 #'   \code{ExtractStationData} reads wind speed values and dates from station data
-#'   and creates a gap filled extended time series. Monthly mean time series are
-#'   calculated which span the time period of the longest stretching reanalysis data
-#'   set.
+#'   and creates a gap filled extended time series. Monthly or daily mean time
+#'   series are calculated which span the time period of the longest stretching
+#'   reanalysis data set. The time steps of the monthly time series is given with
+#'   precision of months, those of daily time series with precision of days.
 #'   Parts taken from get.timeseries.R of GetPlotsFromFtp and off website
 #'   http://bocoup.com/weblog/padding-time-series-with-r/
 #' @param station.data is an extended time series holding monthly mean station wind
@@ -50,6 +51,7 @@ getNearest <- function(b1,b2,l1,l2){
 #' @param eraI.tsend is the end date of ERA-Interim data
 #' @param herz.tsstart is the start date of HErZ data
 #' @param herz.tsend is the end date of the HErZ data
+#' @param era.monthly boolean to determine whether to read daily or mothly HErZ data
 #' @param daily optional parameter to specify whether station data is aggregated in
 #'   hourly or daily time steps. Default is hourly (daily=FALSE).
 #' @return MM.station[timestr] is the potentially gab filled monthly mean station
@@ -92,7 +94,10 @@ ExtractStationData <- function(station.data, era20c.tsstart, era20c.tsend,
                                                na.rm=TRUE)), # exclude all NANs
                              start=stat.tsstart, frequency=12 ) )
   } else if (!era.monthly) { # produce a daily mean xts
-    MM.station = period.apply(StatXTS, endpoints(StatXTS, "days"), mean, na.rm=TRUE)
+    daily.xts = period.apply(StatXTS, endpoints(StatXTS, "days"), mean, na.rm=TRUE)
+    daily.vals = as.POSIXct(strptime(index(daily.xts), format="%Y-%m-%d"),
+                            format="%Y-%m-%d", tz = "UTC")
+    MM.station = xts(daily.xts, order.by=daily.vals)
   } else { # produce an hourly mean xts
     #MM.station = StatXTS
     CallStop("It is not yet implemented to produce an hourly xtended time series.")

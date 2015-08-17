@@ -2,9 +2,10 @@
 #' @description This function reads HErZ reanalysis data at the point of the station
 #'   location of monthly or daily data and for the complete profile consisting of
 #'   six model levels or only the 10m and 116m model level. After reading and
-#'   temporarily storing into a data frame, the return value of this function are
-#'   extended time series holding the complete time series (time) at each model level
-#'   (windspeed).
+#'   temporarily storing into a data frame, the return values of this function are
+#'   extended time series holding the complete time series (time) at each model
+#'   level (windspeed). The time steps of the monthly time series is given with
+#'   precision of months, those of daily time series with precision of days.
 #' @param herz.param string of length n holding the parameters of the n different
 #'   model levels.
 #' @param herz.fname string of length n holding the file names of the n different
@@ -102,18 +103,20 @@ ReadHerzNetcdfMonthlyDaily2Xts <- function(herz.param, herz.fname,
     ndf$dat10.time = as.yearmon(ndf$dat10.time)
   }
   timestr = SetToDate(herz.tsstart, herz.tsend)
-  herz10.xts = xts(ndf$dat10.data, order.by=ndf$dat10.time)
+  daily.time.vals = as.POSIXct(strptime(ndf$dat10.time, format="%Y-%m-%d"),
+                               format="%Y-%m-%d", tz = "UTC")
+  herz10.xts = xts(ndf$dat10.data, order.by=daily.time.vals)
   herz10.xts = herz10.xts[timestr]
-  herz116.xts = xts(ndf$dat116.data, order.by=ndf$dat10.time)
+  herz116.xts = xts(ndf$dat116.data, order.by=daily.time.vals)
   herz116.xts = herz116.xts[timestr]
   if (herz.profile) {
-    herz35.xts = xts(ndf$dat35.data, order.by=ndf$dat10.time)
+    herz35.xts = xts(ndf$dat35.data, order.by=daily.time.vals)
     herz35.xts = herz35.xts[timestr]
-    herz69.xts = xts(ndf$dat69.data, order.by=ndf$dat10.time)
+    herz69.xts = xts(ndf$dat69.data, order.by=daily.time.vals)
     herz69.xts = herz69.xts[timestr]
-    herz178.xts = xts(ndf$dat178.data, order.by=ndf$dat10.time)
+    herz178.xts = xts(ndf$dat178.data, order.by=daily.time.vals)
     herz178.xts = herz178.xts[timestr]
-    herz258.xts = xts(ndf$dat258.data, order.by=ndf$dat10.time)
+    herz258.xts = xts(ndf$dat258.data, order.by=daily.time.vals)
     herz258.xts = herz258.xts[timestr]
   } else {
     herz35.xts = NULL
@@ -129,7 +132,11 @@ ReadHerzNetcdfMonthlyDaily2Xts <- function(herz.param, herz.fname,
 #-----------------------------------------------------------------------------------
 
 #' @title Read monthly or daily ERA20C or ERA-Interim data and convert to xts
-#' @description This
+#' @description This function reads monthly or daily Era data at the location of the
+#'   station location. The time steps of the monthly time series is given with
+#'   precision of months, those of daily time series with precision of days. The
+#'   return values are Era 10m windspeed and in case of ERA20C data windspeed in
+#'   100m height.
 #' @param era.param string of length n holding the parameters of the n different
 #'   model levels (one for ERA-I, two for ERA20C).
 #' @param era.fname string holding the file name of the ERA data.
@@ -167,6 +174,9 @@ ReadEraNetcdf2Xts <- function(era.param, era.fname,
   # and apply start and end date
   if (era.monthly) {
     df$era10m.time = as.yearmon(df$era10m.time)
+  } else {
+    df$era10m.time = as.POSIXct(strptime(df$era10m.time, format="%Y-%m-%d"),
+                                format="%Y-%m-%d", tz = "UTC")
   }
   timestr = SetToDate(era.tsstart, era.tsend)
   era.xts = xts(df$era10m.data, order.by=df$era10m.time)
