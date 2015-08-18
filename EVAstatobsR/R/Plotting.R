@@ -14,9 +14,7 @@ GetYlims <- function(xts1, xts2, xts3, xts4) {
     ylimh = ceiling(max(max(xts1, na.rm=TRUE), max(xts2, na.rm=TRUE),
                         max(xts3, na.rm=TRUE), max(xts4, na.rm=TRUE)))
   } else {
-    err = simpleError(paste0("\n   ***\n   \nXTS1 or XTS2 or XTS3 or XTS4 ",
-                             "is not an xts, ABORTING!\n   ***\n"))
-    tryCatch(stop(err))
+    CallStop("XTS1 or XTS2 or XTS3 or XTS4 is not an xts, ABORTING!")
   }
 
   return(list(yll=yliml, ylh=ylimh))
@@ -400,8 +398,8 @@ PlotStationEraSelMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 
 #' @title Prepare and plot time series of station data and ERA20C, ERA-I,
 #'   and HErZ data.
-#' @description This function plots station and reanalysis data into histogram,
-#'   scatter plots and Quantile-quantile plots (QQ-plot).
+#' @description This function plots station and reanalysis data into scatter plots
+#'   and Quantile-quantile plots (QQ-plot).
 #' @param Era20cXts extended time series of the ERA20C pixel corresponding to the
 #'   station location
 #' @param EraIXts same as above for ERA-Interim
@@ -414,9 +412,9 @@ PlotStationEraSelMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 #' @param era.monthly is an optional boolean which determines whether data passed
 #'   is monthly (T) or daily (F) data. The default value is to use daily data
 #'   (era.monthly=FALSE).
-PlotStationEraHSQ <- function(Era20cXts, EraIXts, HerzXts, StatXts,
-                              titname, outdir, fname, width, height,
-                              era.monthly=FALSE) {
+PlotStationEraSQ <- function(Era20cXts, EraIXts, HerzXts, StatXts,
+                             titname, outdir, fname, width, height,
+                             era.monthly=FALSE) {
 
   Era20  = as.numeric(Era20cXts)
   EraI = as.numeric(EraIXts)
@@ -503,76 +501,6 @@ PlotStationEraHSQ <- function(Era20cXts, EraIXts, HerzXts, StatXts,
   mtext(titname.scatter, line=1, outer=TRUE)
   mtext("windspeed [m/s]", side=2, line=3, outer=TRUE)
   mtext("windspeed [m/s]", side=1, line=3, outer=TRUE)
-
-  dev.off()
-
-
-  fname.histo = gsub(".pdf", "_histoPlots.pdf", fname)
-  pdf(paste0(outdir, fname.histo), width=width, height=height,
-      onefile=TRUE, pointsize=13)
-
-  par(mfrow=c(2,2))
-  par(mar=c(1,1,2,0.5), oma=c(2.5,3,3,0.5))
-
-  min.val = floor(min(min(Era20, na.rm=TRUE), min(EraI, na.rm=TRUE),
-                      min(Herz, na.rm=TRUE), min(Stat, na.rm=TRUE)))
-  max.val = ceiling(max(max(Era20, na.rm=TRUE), max(EraI, na.rm=TRUE),
-                        max(Herz, na.rm=TRUE), max(Stat, na.rm=TRUE)))
-  breaks = seq(min.val, max.val, 0.25)
-  dummy = numeric(length=length(Era20)) * NA
-  xlabname.empty = ""
-  xlabname.full = "10m windspeed [m/s]"
-  ylabname = "Density"
-
-  titname = "Frequency distribution of ERA20C"
-  histoPlot(Era20, dummy, breaks, xlims=c(min.val, max.val),
-            titname, xlabname.empty, ylabname)
-
-  titname = "Frequency distribution of ERA-I"
-  histoPlot(EraI, dummy, breaks, xlims=c(min.val, max.val),
-            titname, xlabname.empty, ylabname)
-
-  titname = "Frequency distribution of HErZ"
-  histoPlot(Herz, dummy, breaks, xlims=c(min.val, max.val),
-            titname, xlabname.full, ylabname)
-
-  titname = "Frequency distribution of station data"
-  histoPlot(Stat, dummy, breaks, xlims=c(min.val, max.val),
-            titname, xlabname.full, ylabname)
-  mtext(mtext.titname, font=2, cex=1.2, line=1, outer=TRUE)
-
-  titname = paste0("Frequency distribution of ERA20C\n",
-                   "in green and ERA-Interim shaded")
-  histoPlot(Era20, EraI, breaks, xlims=c(min.val, max.val), titname,
-            xlabname.empty, ylabname, xaxis=axis.n, addPlot=TRUE)
-
-  titname = paste0("Frequency distribution of ERA20C\n",
-                   "in green and COSMO HErZ shaded")
-  histoPlot(Era20, Herz, breaks, xlims=c(min.val, max.val), titname,
-            xlabname.empty, ylabname, xaxis=axis.n, addPlot=TRUE)
-
-  titname = paste0("Frequency distribution of ERA20C\n",
-                   "in green and station data shaded")
-  xlabname = "10m station windspeed [m/s]"
-  histoPlot(Era20, Stat, breaks, xlims=c(min.val, max.val), titname,
-            xlabname.full, ylabname, addPlot=TRUE)
-
-  titname = paste0("Frequency distribution of ERA-Interim\n",
-                   "in green and COSMO HErZ shaded")
-  histoPlot(EraI, Herz, breaks, xlims=c(min.val, max.val), titname,
-            xlabname.full, ylabname, addPlot=TRUE)
-  mtext(mtext.titname, font=2, cex=1.2, line=1, outer=TRUE)
-
-  titname = paste0("Frequency distribution of ERA-Interim\n",
-                   "in green and station data shaded")
-  histoPlot(EraI, Stat, breaks, xlims=c(min.val, max.val), titname,
-            xlabname.full, ylabname, addPlot=TRUE)
-
-  titname = paste0("Frequency distribution of COSMO HErZ\n",
-                   "in green and station data shaded")
-  histoPlot(Herz, Stat, breaks, xlims=c(min.val, max.val), titname,
-            xlabname.full, ylabname, addPlot=TRUE)
-  mtext(mtext.titname, font=2, cex=1.2, line=1, outer=TRUE)
 
   dev.off()
 
@@ -663,6 +591,259 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
 
   }
   dev.off()
+}
+
+#-----------------------------------------------------------------------------------
+
+PlotHistograms <- function(outdir, fname, station.name, era.monthly, width, height,
+                           Era20cXts10=NULL, Era20cXts100=NULL, EraIXts=NULL,
+                           HerzXts10=NULL, HerzXts35=NULL, HerzXts69=NULL,
+                           HerzXts116=NULL, HerzXts178=NULL, HerzXts258=NULL,
+                           StatXts=NULL, plot.10m=FALSE, plot.10m100m=FALSE,
+                           plot.HerzProfile=FALSE) {
+
+  if (is.null(Era20cXts10) & is.null(Era20cXts100)
+      & is.null(EraIXts) & is.null(HerzXts10)
+      & is.null(HerzXts35) & is.null(HerzXts69)
+      & is.null(HerzXts116) & is.null(HerzXts178)
+      & is.null(HerzXts258) & is.null(StatXts)) {
+    CallStop("All passed data are NULL!")
+  }
+
+  plot.cnt = 0
+  if (!is.null(Era20cXts10)) plot.cnt = plot.cnt + 1
+  if (!is.null(Era20cXts100)) plot.cnt = plot.cnt + 1
+  if (!is.null(EraIXts)) plot.cnt = plot.cnt + 1
+  if (!is.null(HerzXts10)) plot.cnt = plot.cnt + 1
+  if (!is.null(HerzXts35)) plot.cnt = plot.cnt + 1
+  if (!is.null(HerzXts69)) plot.cnt = plot.cnt + 1
+  if (!is.null(HerzXts116)) plot.cnt = plot.cnt + 1
+  if (!is.null(HerzXts178)) plot.cnt = plot.cnt + 1
+  if (!is.null(HerzXts258)) plot.cnt = plot.cnt + 1
+  if (!is.null(StatXts)) plot.cnt = plot.cnt + 1
+
+  if(is.null(HerzXts258)) {
+    Ylims = GetYlims(EraIXts, HerzXts10, Era20cXts100, StatXts)
+  } else {
+    Ylims = GetYlims(EraIXts, HerzXts10, HerzXts258, StatXts)
+  }
+  yliml = Ylims$yll
+  ylimh = Ylims$ylh
+
+  era20c10  = as.numeric(Era20cXts10)
+  era20c100  = as.numeric(Era20cXts100)
+  eraI = as.numeric(EraIXts)
+  herz10 = as.numeric(HerzXts10)
+  herz35 = as.numeric(HerzXts35)
+  herz69 = as.numeric(HerzXts69)
+  herz116 = as.numeric(HerzXts116)
+  herz178 = as.numeric(HerzXts178)
+  herz258 = as.numeric(HerzXts258)
+  stat = as.numeric(StatXts)
+
+  axis.n = 'n'
+  axis.y = 's'
+  if (era.monthly) monthly.ext = 'monthly'
+  if (!era.monthly) monthly.ext = 'daily'
+
+  xlabname.empty = ""
+  xlabname.full = "10m windspeed [m/s]"
+  ylabname = "Density"
+
+  if (plot.10m) {
+    if (plot.cnt != 4 & plot.cnt != 6 & plot.cnt != 10) {
+      CallStop(paste0("Depending on data to plot I expect 4, 6, or 10 plots to be ",
+                      "plotted;\n", "   plot.cnt = ", plot.cnt, " for plot.10m: ",
+                      plot.10m, ", plot.10m100m: ", plot.10m100m,
+                      ", and plot.HerzProfile: ", plot.HerzProfile))
+    }
+
+    mtext.titname = "Daily windspeed at 10m height"
+    if (era.monthly) {
+      mtext.titname = "Monthly windspeed at 10m height"
+    }
+
+    fname = gsub('Histogram', 'Histogram_ERA-Station-10m', fname)
+    pdf(paste0(outdir, fname), width=width, height=height,
+        onefile=TRUE, pointsize=13)
+
+    par(mfrow=c(2,2))
+    par(mar=c(1,1,2,0.5), oma=c(2.5,3,3,0.5))
+
+    min.val = floor(min(min(era20c10, na.rm=TRUE), min(eraI, na.rm=TRUE),
+                        min(herz10, na.rm=TRUE), min(stat, na.rm=TRUE)))
+    max.val = ceiling(max(max(era20c10, na.rm=TRUE), max(eraI, na.rm=TRUE),
+                          max(herz10, na.rm=TRUE), max(stat, na.rm=TRUE)))
+    breaks = seq(min.val, max.val, 0.25)
+    dummy = numeric(length=length(era20c10)) * NA
+
+    titname = paste0("Frequency distribution of ", monthly.ext, " ERA20C")
+    histoPlot(era20c10, dummy, breaks, xlims=c(min.val, max.val),
+              titname, xlabname.empty, ylabname)
+
+    titname = paste0("Frequency distribution of ", monthly.ext, " ERA-I")
+    histoPlot(eraI, dummy, breaks, xlims=c(min.val, max.val),
+              titname, xlabname.empty, ylabname)
+
+    titname = paste0("Frequency distribution of ", monthly.ext, " HErZ")
+    histoPlot(herz10, dummy, breaks, xlims=c(min.val, max.val),
+              titname, xlabname.full, ylabname)
+
+    titname = paste0("Frequency distribution of ", monthly.ext, " station data")
+    histoPlot(stat, dummy, breaks, xlims=c(min.val, max.val),
+              titname, xlabname.full, ylabname)
+    mtext(mtext.titname, font=2, cex=1.2, line=1, outer=TRUE)
+
+    titname = paste0("Frequency distribution of ", monthly.ext, " ERA20C\n",
+                     "in green and ERA-Interim shaded")
+    histoPlot(era20c10, eraI, breaks, xlims=c(min.val, max.val), titname,
+              xlabname.empty, ylabname, xaxis=axis.n, addPlot=TRUE)
+
+    titname = paste0("Frequency distribution of ", monthly.ext, " ERA20C\n",
+                     "in green and COSMO HErZ shaded")
+    histoPlot(era20c10, herz10, breaks, xlims=c(min.val, max.val), titname,
+              xlabname.empty, ylabname, xaxis=axis.n, addPlot=TRUE)
+
+    titname = paste0("Frequency distribution of ", monthly.ext, " ERA20C\n",
+                     "in green and station data shaded")
+    xlabname = "10m station windspeed [m/s]"
+    histoPlot(era20c10, stat, breaks, xlims=c(min.val, max.val), titname,
+              xlabname.full, ylabname, addPlot=TRUE)
+
+    titname = paste0("Frequency distribution of ", monthly.ext, " ERA-Interim\n",
+                     "in green and COSMO HErZ shaded")
+    histoPlot(eraI, herz10, breaks, xlims=c(min.val, max.val), titname,
+              xlabname.full, ylabname, addPlot=TRUE)
+    mtext(mtext.titname, font=2, cex=1.2, line=1, outer=TRUE)
+
+    titname = paste0("Frequency distribution of ", monthly.ext, " ERA-Interim\n",
+                     "in green and station data shaded")
+    histoPlot(eraI, stat, breaks, xlims=c(min.val, max.val), titname,
+              xlabname.full, ylabname, addPlot=TRUE)
+
+    titname = paste0("Frequency distribution of ", monthly.ext, " COSMO HErZ\n",
+                     "in green and station data shaded")
+    histoPlot(herz10, stat, breaks, xlims=c(min.val, max.val), titname,
+              xlabname.full, ylabname, addPlot=TRUE)
+    mtext(mtext.titname, font=2, cex=1.2, line=1, outer=TRUE)
+
+    dev.off()
+
+  }
+
+  if (plot.10m100m) {
+
+    if (plot.cnt != 4 & plot.cnt != 6 & plot.cnt != 10) {
+      CallStop(paste0("Depending on data to plot I expect 4, 6, or 10 plots to be ",
+                      "plotted;\n", "   plot.cnt = ", plot.cnt, " for plot.10m: ",
+                      plot.10m, ", plot.10m100m: ", plot.10m100m,
+                      ", and plot.HerzProfile: ", plot.HerzProfile))
+    }
+
+    mtext.titname = "Daily windspeed at 100m height"
+    if (era.monthly) {
+      mtext.titname = "Monthly windspeed at 100m height"
+    }
+
+    fname = gsub('Histogram', 'Histogram_ERA20C-HErZ-100m', fname)
+    pdf(paste0(outdir, fname), width=width, height=height,
+        onefile=TRUE, pointsize=13)
+
+    par(mfrow=c(2,2))
+    par(mar=c(1,1,2,0.5), oma=c(2.5,3,3,0.5))
+
+    min.val = floor(min(min(era20c100, na.rm=TRUE), min(herz116, na.rm=TRUE)))
+    max.val = ceiling(max(max(era20c100, na.rm=TRUE), max(herz116, na.rm=TRUE)))
+    breaks = seq(min.val, max.val, 0.25)
+    dummy = numeric(length=length(era20c100)) * NA
+
+    titname = paste0("Frequency distribution of 100m ", monthly.ext,
+                     " ERA20C windspeed")
+    xlabname = "100m ERA20c windspeed [m/s]"
+    histoPlot(era20c100, dummy, breaks, xlims=c(min.val, max.val), titname,
+              xlabname, ylabname)
+
+    titname = paste0("Frequency distribution of 116m COSMO HErZ windspeed")
+    xlabname = "116m HErZ windspeed [m/s]"
+    histoPlot(herz116, dummy, breaks, xlims=c(min.val, max.val), titname,
+              xlabname, ylabname)
+
+    titname = paste0("Frequency distribution of ", monthly.ext, " ERA20C windspeed",
+                     " at 100m\n", "in green and COSMO HErZ at 116m shaded")
+    xlabname = "windspeed [m/s]"
+    histoPlot(era20c100, herz116, breaks, xlims=c(min.val, max.val),
+              titname, xlabname, ylabname, addPlot=T)
+    mtext(mtext.titname, font=2, cex=1.2, line=1, outer=TRUE)
+
+    dev.off()
+
+  }
+
+  if (plot.HerzProfile) {
+
+    if (plot.cnt != 4 & plot.cnt != 6 & plot.cnt != 10) {
+      CallStop(paste0("Depending on data to plot I expect 4, 6, or 10 plots to be ",
+                      "plotted;\n", "   plot.cnt = ", plot.cnt, " for plot.10m: ",
+                      plot.10m, ", plot.10m100m: ", plot.10m100m,
+                      ", and plot.HerzProfile: ", plot.HerzProfile))
+    }
+
+    mtext.titname = "Daily windspeed of HErZ profile"
+    if (era.monthly) {
+      mtext.titname = "Monthly windspeed of HErZ profile"
+    }
+
+    fname = gsub('Histogram', 'Histogram_HErZ-Profile', fname)
+    pdf(paste0(outdir, fname), width=width, height=height,
+        onefile=TRUE, pointsize=13)
+
+    par(mfrow=c(2,2))
+    par(mar=c(1,1,2,0.5), oma=c(2.5,3,3,0.5))
+
+    min.val = floor(min(min(herz10, na.rm=TRUE), min(herz35, na.rm=TRUE),
+                        min(herz69, na.rm=TRUE), min(herz116, na.rm=TRUE),
+                        min(herz178, na.rm=TRUE), min(herz258, na.rm=TRUE)))
+    max.val = ceiling(max(max(herz10, na.rm=TRUE), max(herz35, na.rm=TRUE),
+                          max(herz69, na.rm=TRUE), max(herz116, na.rm=TRUE),
+                          max(herz178, na.rm=TRUE), max(herz258, na.rm=TRUE)))
+    breaks = seq(min.val, max.val, 0.25)
+    dummy = numeric(length=length(herz10)) * NA
+
+    titname = paste0("Frequency distribution of 10m ", monthly.ext, " HErZ windspeed")
+    xlabname = "10m HErZ windspeed [m/s]"
+    histoPlot(herz10, dummy, breaks, xlims=c(min.val, max.val), titname,
+              xlabname, ylabname)
+
+    titname = paste0("Frequency distribution of 35m ", monthly.ext, " HErZ windspeed")
+    xlabname = "35m HErZ windspeed [m/s]"
+    histoPlot(herz35, dummy, breaks, xlims=c(min.val, max.val), titname,
+              xlabname, ylabname)
+
+    titname = paste0("Frequency distribution of 69m ", monthly.ext, " HErZ windspeed")
+    xlabname = "69m HErZ windspeed [m/s]"
+    histoPlot(herz69, dummy, breaks, xlims=c(min.val, max.val), titname,
+              xlabname, ylabname)
+
+    titname = paste0("Frequency distribution of 116m ", monthly.ext, " HErZ windspeed")
+    xlabname = "116m HErZ windspeed [m/s]"
+    histoPlot(herz116, dummy, breaks, xlims=c(min.val, max.val), titname,
+              xlabname, ylabname)
+    mtext(mtext.titname, font=2, cex=1.2, line=1, outer=TRUE)
+
+    titname = paste0("Frequency distribution of 178m ", monthly.ext, " HErZ windspeed")
+    xlabname = "178m HErZ windspeed [m/s]"
+    histoPlot(herz178, dummy, breaks, xlims=c(min.val, max.val), titname,
+              xlabname, ylabname)
+
+    titname = paste0("Frequency distribution of 258m ", monthly.ext, " HErZ windspeed")
+    xlabname = "258m HErZ windspeed [m/s]"
+    histoPlot(herz258, dummy, breaks, xlims=c(min.val, max.val), titname,
+              xlabname, ylabname)
+    mtext(mtext.titname, font=2, cex=1.2, line=1, outer=TRUE)
+
+    dev.off()
+
+  }
 }
 
 #-----------------------------------------------------------------------------------
@@ -879,5 +1060,3 @@ qqPlot <- function(X, Y, yliml, ylimh,
          paste(text.str), adj=c(0, 0.5))
   }
 }
-
-#-----------------------------------------------------------------------------------

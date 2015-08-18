@@ -57,8 +57,8 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
   cat(paste0("  **  Reading station data: ", station.info[[2]][steps], "\n"))
   station.data = data.frame()
   station.data = AllData(station.info[[1]][steps], station.info[[2]][steps],
-                          station.info[[3]][steps], station.info[[4]][steps],
-                          daily = station.daily, verbose.DWD=verb.stat.dat)
+                         station.info[[3]][steps], station.info[[4]][steps],
+                         daily = station.daily, verbose.DWD=verb.stat.dat)
 
   MM.station = ExtractStationData(station.data, era20c.tsstart, era20c.tsend,
                                   eraI.tsstart, eraI.tsend,
@@ -74,7 +74,7 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
     cat(paste0("\n  ***  ",
                "There were no finite values in the station data record ",
                "for this time period. ***\n\n"))
-#     next
+    #     next
   }
 
   #=================================
@@ -236,14 +236,14 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
 
   #-----------------------------------------------------------------------------
 
-  if(plot.EraStationHSQ) {
-    cat("  **  Plotting HSQ analysis\n")
+  if(plot.EraStationSQ) {
+    cat("  **  Plotting scatter and QQ-plot analysis\n")
     fname = paste0("ERA-Station_", time.ext, "_",
                    gsub("/", "-", station.data$STATIONS_NAME[1]),
                    "_TimeSeries_", res.switch, '_', fname_ext, ".pdf")
     titname = paste0('windspeed [m/s] at station location ',
                      as.character(station.data$STATIONS_NAME[1]))
-    PlotStationEraHSQ(era20c.data.xts, eraI.data.xts, herz10.data.xts, MM.station,
+    PlotStationEraSQ(era20c.data.xts, eraI.data.xts, herz10.data.xts, MM.station,
                       titname, outdir, fname, width=a4width, height=a4height,
                       era.monthly)
   }
@@ -278,4 +278,29 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
                  width=a4width, height=a4height, era.monthly)
   }
 
+  #-----------------------------------------------------------------------------
+
+  if(plot.histograms) {
+
+    cat("  **  Plotting Histograms\n")
+    fname = paste0("Histogram_", gsub("/", "-", station.data$STATIONS_NAME[1]),
+                   '_', res.switch, '_', time.ext, "_", fname_ext, ".pdf")
+    statname = gsub("/", "-", station.data$STATIONS_NAME[1])
+    if (herz.profile) {
+      PlotHistograms(outdir, fname, statname, era.monthly, a4width, a4height,
+                     era20c.data.xts, era20c100.data.xts, eraI.data.xts,
+                     herz10.data.xts, herz35.data.xts, herz69.data.xts,
+                     herz116.data.xts, herz178.data.xts, herz258.data.xts,
+                     MM.station,
+                     plot.10m=TRUE, plot.10m100m=TRUE, plot.HerzProfile=TRUE)
+
+    } else {
+      PlotHistograms(outdir, fname, statname, era.monthly, a4width, a4height,
+                     era20c.data.xts, era20c100.data.xts, eraI.data.xts,
+                     herz10.data.xts, HerzXts35=NULL, HerzXts69=NULL,
+                     herz116.data.xts, HerzXts178=NULL, HerzXts258=NULL,
+                     MM.station,
+                     plot.10m=TRUE, plot.10m100m=TRUE, plot.HerzProfile=FALSE)
+    }
+  }
 }

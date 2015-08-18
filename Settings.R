@@ -156,8 +156,10 @@ plot.EraStationSelSeasons = F
 # only selected months of reanalyses and station data at 10m height
 plot.EraStationSelMonths = F
 # daily mean time series analysis of reanalyses and station data fo 10m wind speed
-plot.EraStationHSQ = T
+plot.EraStationSQ = F
 # perform analysis of the HErZ profile
 plot.HerzProfile = F
 # PDF score between station data and each reanalysis at 10m height
 plot.PDFscore = F
+# plot histograms of 10m and 100m Era and HErZ data, and HErZ profiles
+plot.histograms = T
