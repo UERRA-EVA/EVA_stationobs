@@ -101,22 +101,23 @@ ReadHerzNetcdfMonthlyDaily2Xts <- function(herz.param, herz.fname,
   # convert data.frame of HErZ data into an extended time series
   if (era.monthly) {
     ndf$dat10.time = as.yearmon(ndf$dat10.time)
+  } else {
+    ndf$dat10.time = as.POSIXct(strptime(ndf$dat10.time, format="%Y-%m-%d"),
+                                format="%Y-%m-%d", tz = "UTC")
   }
   timestr = SetToDate(herz.tsstart, herz.tsend)
-  daily.time.vals = as.POSIXct(strptime(ndf$dat10.time, format="%Y-%m-%d"),
-                               format="%Y-%m-%d", tz = "UTC")
-  herz10.xts = xts(ndf$dat10.data, order.by=daily.time.vals)
+  herz10.xts = xts(ndf$dat10.data, order.by=ndf$dat10.time)
   herz10.xts = herz10.xts[timestr]
-  herz116.xts = xts(ndf$dat116.data, order.by=daily.time.vals)
+  herz116.xts = xts(ndf$dat116.data, order.by=ndf$dat10.time)
   herz116.xts = herz116.xts[timestr]
   if (herz.profile) {
-    herz35.xts = xts(ndf$dat35.data, order.by=daily.time.vals)
+    herz35.xts = xts(ndf$dat35.data, order.by=ndf$dat10.time)
     herz35.xts = herz35.xts[timestr]
-    herz69.xts = xts(ndf$dat69.data, order.by=daily.time.vals)
+    herz69.xts = xts(ndf$dat69.data, order.by=ndf$dat10.time)
     herz69.xts = herz69.xts[timestr]
-    herz178.xts = xts(ndf$dat178.data, order.by=daily.time.vals)
+    herz178.xts = xts(ndf$dat178.data, order.by=ndf$dat10.time)
     herz178.xts = herz178.xts[timestr]
-    herz258.xts = xts(ndf$dat258.data, order.by=daily.time.vals)
+    herz258.xts = xts(ndf$dat258.data, order.by=ndf$dat10.time)
     herz258.xts = herz258.xts[timestr]
   } else {
     herz35.xts = NULL
