@@ -523,13 +523,20 @@ PlotStationEraSQ <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 #' @param width,height of the plot in inches
 Plot100mEraHerz <- function(Era20cXts, HerzXts,
                             titname, statname, outdir, fname,
-                            width, height) {
+                            era.monthly, width, height) {
 
   same.length = F
   if (length(Era20cXts) == length(HerzXts)) {same.length = T}
 
   axis.n = 'n'
   axis.y = 's'
+  if (era.monthly) {
+    titname = paste0("Monthly ", titname)
+    titname.ext = "monthly"
+    } else {
+    titname = paste0("Daily ", titname)
+    titname.ext = "daily"
+  }
 
   pdf(paste0(outdir, fname), width=width, height=height,
       onefile=TRUE, pointsize=13)
@@ -553,8 +560,9 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
     Corr.vals = GetCorrXts(era20c=Era20cXts, herz=HerzXts, eraI=dummy, stat=dummy)
 
     legend("topleft", legend=c(paste0("Corr(ERA20C, HErZ)= ",
-                                      round(Corr.vals$c.20c.H, 2))),
-           text.col=c("blue"))
+                                      round(Corr.vals$c.20c.H, 2)),
+                               'ERA20C', 'HErZ'),
+           text.col=c("black", "blue", "green3"))
   }
 
   if (same.length) {
@@ -563,7 +571,8 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
 
     xlabname = "100m ERA20C windspeed [m/s]"
     ylabname = "116m HErZ windspeed [m/s]"
-    text.str = "100m ERA20C vs 116m HErZ windspeed"
+    text.str = ""
+
     scatterPlot(Era, Herz, yliml, ylimh, titname, xlabname, ylabname,
                 text.str=text.str)
 
@@ -575,15 +584,18 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
     breaks = seq(min.val, max.val, 0.25)
     dummy = numeric(length=length(Era)) * NA
 
-    titname = "Frequency distribution of ERA20C"
+    titname = paste0("Frequency distribution of ", titname.ext, " windspeed\nof ",
+                     "ERA20C at 100m")
     ylabname = "Density"
     histoPlot(Era, dummy, breaks, xlims=c(min.val, max.val), titname, xlabname,
               ylabname)
-    titname = "Frequency distribution of COSMO HErZ"
+    titname = paste0("Frequency distribution of ", titname.ext, " windspeed\nof ",
+                     "COSMO HErZ at 116m")
     xlabname = ylabname
     histoPlot(Herz, dummy, breaks, xlims=c(min.val, max.val), titname, xlabname,
               ylabname)
-    titname = paste0("Frequency distribution of ERA20C windspeed at 100m\n",
+    titname = paste0("Frequency distribution of ", titname.ext,
+                     " ERA20C windspeed at 100m\n",
                      "in green and COSMO HErZ at 116m shaded")
     xlabname = "windspeed [m/s]"
     histoPlot(Era, Herz, breaks, xlims=c(min.val, max.val),
@@ -878,6 +890,17 @@ PlotPDFScore <- function(era.xts, station.xts, outdir, fname, titname,
   months = c("Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep",
              "Okt", "Nov", "Dez")
   max.abs.val = ceiling(max(max(era.xts), max(station.xts)))
+
+  if (era.monthly) {
+    titname.hist = paste0("Monthly ", titname)
+    titname.pdfs = paste0("PDF score of monthly ", titname)
+    titname.viol = paste0("Violine plot of monthly ", titname)
+  } else {
+    titname.hist = paste0("Daily ", titname)
+    titname.pdfs = paste0("PDF score of daily ", titname)
+    titname.viol = paste0("Violine plot of daily ", titname)
+  }
+
   for (month in seq(0,11)) {
     monthly.era  <- era.xts[which(date.era$mon==month)]
     monthly.stat <- station.xts[which(date.stat$mon==month)]
@@ -886,48 +909,26 @@ PlotPDFScore <- function(era.xts, station.xts, outdir, fname, titname,
     max.val = ceiling(max(max(monthly.era, na.rm=TRUE), max(monthly.stat, na.rm=TRUE)))
 
     breaks = seq(min.val, max.val, 0.25)
-    if (era.monthly) {
-      titname.ext = "monthly"
-    } else {
-      titname.ext = "daily"
-    }
-    if (length(titname) > 1) {
-      titname.new = paste0("Histogram of ", titname.ext, "\n", titname[1],
-                           " (green) and ",titname[2]," station data (shaded)")
-    } else {
-      titname.new = titname
-    }
+
     xlabname = "windspeed [m/s]"
     ylabname = "Density"
     histoPlot(monthly.era, monthly.stat, breaks, xlims=c(min.val, max.val),
-              titname.new, xlabname, ylabname, addPlot=T)
+              titname.hist, xlabname, ylabname, addPlot=T)
 
     # par("usr") prvides the currently set axis limits
-    #     text(min.val+0.1, par("usr")[4]-0.05, months[month+1], cex=2.)
-    text(1+0.1, par("usr")[4]-0.05, months[month+1], cex=2.)
+    text(min.val+0.1, par("usr")[4]-0.05, months[month+1], cex=2.)
 
     PDF.score.anncycle[month+1] = PDFscore(monthly.era, monthly.stat)
   }
   PDF.score.ann[] = PDFscore(era.xts, station.xts)
 
-  if (length(titname) > 1) {
-    titname.new = paste0("PDF score of ", titname.ext, " ", titname[1], " and ",
-                         titname[2], " station data")
-  } else {
-    titname.new = titname
-  }
-  plot(PDF.score.anncycle, main=titname.new, ylab="pdf score",
+  plot(PDF.score.anncycle, main=titname.pdfs, ylab="pdf score",
        xlab="months of the year", type="b", pch=16, col="blue")
   lines(PDF.score.ann, type="b", lty=2, pch=20, col="red")
 
   vioplot(era.xts, station.xts, horizontal=TRUE,
           names=c("reanalysis", "station data"))
-  if (length(titname) > 1) {
-    mtext(paste0("Violin plot of ", titname.ext, " ", titname[1], " and ",
-                 titname[2], " station data"), line=1, font=2, cex=1.2)
-  } else {
-    mtext(titname, line=1, font=2, cex=1.2)
-  }
+  mtext(titname.viol, line=1, font=2, cex=1.2)
   mtext(paste0("windspeed [m/s]"), side=1, line=2)
 
   dev.off()

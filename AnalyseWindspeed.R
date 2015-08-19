@@ -174,16 +174,19 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
 
   if (plot.100mEraHerz) {
     cat("  **  Plotting 100m Era vs HErZ\n")
+
     statname = as.character(station.data$STATIONS_NAME[1])
+    titname = paste0('100m ERA20C and 116m HErZ windspeed [m/s] at station location ',
+                     statname)
+
     fname = paste0("100m-Era20cHerz_", gsub("/", "-", statname),
-                   "_TimeSeries", time.ext, "_", res.switch, '_', fname_ext, ".pdf")
-    titname = paste0('100m Windspeed [m/s] at station location ', statname)
+                   "_TimeSeries-", time.ext, "_", res.switch, '_', fname_ext, ".pdf")
     Plot100mEraHerz(era20c100.data.xts, herz116.data.xts, titname, statname,
-                    outdir, fname, width=a4width, height=a4height)
+                    outdir, fname, era.monthly, width=a4width, height=a4height)
+    fname = paste0("PDFScore_100mEraHerz_", statname, "_TimeSeries-", time.ext,
+                   "_", res.switch, '_', fname_ext, ".pdf")
     PlotPDFScore(era20c100.data.xts, herz116.data.xts,
-                 outdir, paste0("PDFScore_100mEraHerz_", statname,".pdf"),
-                 "PDF Score between 100m Era20C and 116m HErZ windspeed [m/s]",
-                 width=a4width, height=a4height, era.monthly)
+                 outdir, fname, titname, width=a4width, height=a4height, era.monthly)
   }
 
   #-----------------------------------------------------------------------------
@@ -246,6 +249,7 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
     PlotStationEraSQ(era20c.data.xts, eraI.data.xts, herz10.data.xts, MM.station,
                       titname, outdir, fname, width=a4width, height=a4height,
                       era.monthly)
+
   }
 
   #-----------------------------------------------------------------------------
