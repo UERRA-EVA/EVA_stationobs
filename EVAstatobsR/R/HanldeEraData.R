@@ -1,11 +1,13 @@
 #' @title Read monthly or daily HErZ data and convert to xts
 #' @description This function reads HErZ reanalysis data at the point of the station
 #'   location of monthly or daily data and for the complete profile consisting of
-#'   six model levels or only the 10m and 116m model level. After reading and
-#'   temporarily storing into a data frame, the return values of this function are
-#'   extended time series holding the complete time series (time) at each model
-#'   level (windspeed). The time steps of the monthly time series is given with
-#'   precision of months, those of daily time series with precision of days.
+#'   six model levels (which are hard coded into variable names here because they
+#'   are assumed to stay the way they are) or only the 10m and 116m model level.
+#'   After reading and temporarily storing into a data frame, the return values of
+#'   this function are extended time series holding the complete time series (time)
+#'   at each model level (windspeed). The time steps of the monthly time series is
+#'   given with precision of months, those of daily time series with precision of
+#'   days.
 #' @param herz.param string of length n holding the parameters of the n different
 #'   model levels.
 #' @param herz.fname string of length n holding the file names of the n different

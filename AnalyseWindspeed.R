@@ -11,7 +11,6 @@ if (interactive) {
 } else {
   setwd("/home/mborsche/work/UERRA/EVA_stationobs")
   config.file = "./Settings.R"
-  CheckFile(config.file)
 }
 CheckFile(config.file)
 source(config.file)
@@ -97,6 +96,7 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
   era20c.data.xts = era20c.data$era10
   era20c100.data.xts = era20c.data$era20c100
 
+  # read ERA-Interim data
   cat(paste0("  **  Reading ERA-Interim reanalysis data\n"))
   idx = GetLonLatIdx(eraI.fname, stat.lon, stat.lat)
   lonidx = idx$lonidx

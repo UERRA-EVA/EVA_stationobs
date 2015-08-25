@@ -5,7 +5,7 @@ a4height = 21./2.54
 # (HR is the version interpolated to 0.125°)
 res.switch = "HighRes"   # HighRes, OrigRes
 # set whether to use monthly (T) or daily (F) reanalysis data for analysis
-era.monthly = TRUE
+era.monthly = FALSE
 if (era.monthly) {
   time.ext = "Monthly"
 } else {
@@ -14,7 +14,7 @@ if (era.monthly) {
 
 # choose whether to analyse the profile of six model levels of HErZ data or only
 # 10m and 116m
-herz.profile = FALSE
+herz.profile = TRUE
 
 #=== diagnostics ===
 verb.era.dat = FALSE
