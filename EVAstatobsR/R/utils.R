@@ -78,6 +78,41 @@ CheckHerzParams <- function(herz.param, herz.profile) {
 
 #-----------------------------------------------------------------------------------
 
+#' @title Check parameter names of Lindenberg tower measurements.
+#' @description Lindenberg parameter names are checked. Within the package the names
+#'   are expected to follow a certain structure: "windspeed_xxxm", whereas xxx
+#'   equals the height of the measurement level and is expected to be increasing,
+#'   i.e., 10m, 20m, 40m, 80m, 98m. This function does not have a return value.
+#' @param lind.param a string of length n which holds n parameter names.
+CheckLindParams <- function(lind.param) {
+  if (!lind.param[1] == "windspeed_10m") {
+    CallStop(paste0("Unexpected Lindenberg parameter: ", lind.param[1],
+                    "\n    Should be: windspeed_10m"))
+  }
+  if (!lind.param[2] == "windspeed_20m") {
+    CallStop(paste0("Unexpected Lindenberg parameter: ", lind.param[2],
+                    "\n    Should be: windspeed_20m"))
+  }
+  if (!lind.param[3] == "windspeed_40m") {
+    CallStop(paste0("Unexpected Lindenberg parameter: ", lind.param[3],
+                    "\n    Should be: windspeed_40m"))
+  }
+  if (!lind.param[4] == "windspeed_60m") {
+    CallStop(paste0("Unexpected Lindenberg parameter: ", lind.param[4],
+                    "\n    Should be: windspeed_60m"))
+  }
+  if (!lind.param[5] == "windspeed_80m") {
+    CallStop(paste0("Unexpected Lindenberg parameter: ", lind.param[5],
+                    "\n    Should be: windspeed_80m"))
+  }
+  if (!lind.param[6] == "windspeed_98m") {
+    CallStop(paste0("Unexpected Lindenberg parameter: ", lind.param[6],
+                    "\n    Should be: windspeed_98m"))
+  }
+}
+
+#-----------------------------------------------------------------------------------
+
 #' @title Get nearest neighbor index of a point within a vector.
 #' @description \code{get.lonidx} calculates the nearest neighbor of a point within
 #' a vector. Here, it is used to find the index within a regular lon, lat grid of a
@@ -106,7 +141,7 @@ GetNearestIdx <- function(vec, num) {
 #' @param grid.lat same as above for the grid latitude values.
 #' @return Return a named lilst of (lonidx=,latidx=) longitude and latitude index.
 GetLonLatIdx <- function(fname, point.lon, point.lat,
-                            grid.lon=NULL, grid.lat=NULL) {
+                         grid.lon=NULL, grid.lat=NULL) {
   CheckFile(fname)
   if (is.null(grid.lon)) { # ERA20C, ERA-Interim data
     dat = ReadNetcdfLonLat(fname)

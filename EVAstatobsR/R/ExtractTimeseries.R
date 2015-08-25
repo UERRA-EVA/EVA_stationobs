@@ -202,3 +202,33 @@ ExtractHErZxts <- function(herz.data, time.vals, herz.lon, herz.lat,
 }
 
 #-----------------------------------------------------------------------------------
+
+#' @title Extract tower measurement data.
+#' @description This function reads one or more variable name(s) off a netCDF file
+#'   and formats the time axis. A list named by the variable names is returned
+#'   which holds extended time series for the complete time series of the variable
+#'   name specified (or all).
+#' @param file.name character string holding the file name of the file to be read
+#' @param para.name character string holding the parameter name(s) to be read
+#' @param era.mon optional boolean which decides whether to format the time axis
+#'   as daily or monthly.
+#' @return The return value is a named list with the names of the parameter names
+#'   holding extended time series of that parameter.
+ExtractTowerData <- function(file.name, para.name, era.mon=FALSE) {
+  CheckFile(file.name)
+  data.lst = list()
+  for (cnt in seq(para.name)) {
+    dat = ReadNetcdf(para.name[cnt], file.name)
+    if (era.mon) {
+      time.vals = as.yearmon(dat$time)
+    } else {
+      time.vals = as.POSIXct(strptime(dat$time, format="%Y-%m-%d"),
+                             format="%Y-%m-%d", tz = "UTC")
+    }
+    data.xts = xts(dat$data, order.by=time.vals)
+    data.lst[[para.name[cnt]]] = data.xts
+  }
+  return(data.lst)
+}
+
+#-----------------------------------------------------------------------------------
