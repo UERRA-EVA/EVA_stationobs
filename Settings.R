@@ -5,7 +5,7 @@ a4height = 21./2.54
 # (HR is the version interpolated to 0.125°)
 res.switch = "HighRes"   # HighRes, OrigRes
 # set whether to use monthly (T) or daily (F) reanalysis data for analysis
-era.monthly = FALSE
+era.monthly = TRUE
 if (era.monthly) {
   time.ext = "Monthly"
 } else {

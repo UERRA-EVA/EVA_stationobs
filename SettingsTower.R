@@ -5,7 +5,7 @@ if (era.monthly) {
   fino2.file = paste0("/data/mborsche/tower_measurements/FINO2/completeTS/",
                       "FINO2_Windgeschwindigkeit_102m_20070101_20131231_MonMean.nc")
   lind.file = paste0("/data/mborsche/tower_measurements/Lindenberg/completeTS/",
-                     "20010101to20141231_98m_MonMean.nc")
+                     "20010101to20141231_MonMean.nc")
 } else {
   if (TowerHour) {
     fino1.file = paste0("/data/mborsche/tower_measurements/FINO1/completeTS/",
@@ -13,7 +13,7 @@ if (era.monthly) {
     fino2.file = paste0("/data/mborsche/tower_measurements/FINO2/completeTS/",
                         "FINO2_Windgeschwindigkeit_102m_20070101_20131231_HourMean.nc")
     lind.file = paste0("/data/mborsche/tower_measurements/Lindenberg/completeTS/",
-                       "20010101to20141231_98m_HourMean.nc")
+                       "20010101to20141231_HourMean.nc")
   } else {
     fino1.file = paste0("/data/mborsche/tower_measurements/FINO1/completeTS/",
                         "FINO1_Windgeschwindigkeit_100m_20040101_20131231_DayMean.nc")
@@ -34,8 +34,8 @@ fino1.lon =  6.58764
 fino1.lat = 54.01486
 fino2.lon = 13.15419
 fino2.lat = 55.00693
-lind.lon = 14.117
-lind.lat = 52.217
+lind.lon = 14.12222
+lind.lat = 52.16653
 
 #=== time period ===
 # available data of the tower measurements, ERA20C, and HErZ
@@ -49,7 +49,9 @@ fino1.tsstart = c(2004,1)
 fino1.tsend = c(2013,12)
 fino2.tsstart = c(2007,8)
 fino2.tsend = c(2013,12)
+lind.tsstart = c(2001,1)
+lind.tsend = c(2013,12)
 era20c.tsend = c(2010,12)
-herz.tsend = c(2014,12)
+herz.tsend = c(2013,12)
 
 plot.TowerEraProfile = TRUE
