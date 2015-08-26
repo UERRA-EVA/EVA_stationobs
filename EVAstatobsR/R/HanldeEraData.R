@@ -195,3 +195,75 @@ ReadEraNetcdf2Xts <- function(era.param, era.fname,
 }
 
 #-----------------------------------------------------------------------------------
+
+#' @title
+#' @description
+#' @param
+#' @param
+#' @param
+#' @param
+#' @param
+#' @param
+#' @param
+#' @param
+#' @param
+#' @param
+#' @param
+#' @param
+#' @return
+GetTowerProfileTS <- function(tower.xts, tower2.xts=NULL, tower3.xts=NULL,
+                              tower4.xts=NULL, tower5.xts=NULL, tower6.xts=NULL,
+                              herz10.xts, herz35.xts, herz69.xts, herz116.xts,
+                              herz178.xts, herz258.xts, era20c100.xts,
+                              tower.tsstart, tower.tsend, herz.tsend, era20c.tsend,
+                              tower.name=NULL) {
+
+  if (!is.null(tower.name) & tower.name != "Fino1" & tower.name != "Fino2" &
+        tower.name != "Lindenberg") {
+    CallStop(paste0("Unexpected tower.name: ", tower.name, " "))
+  }
+  tsend = c(min(tower.tsend[1], herz.tsend[1], era20c.tsend[1]), 12)
+  timestr = paste0(toString(tower.tsstart[1]), toString(tower.tsstart[2]), '/',
+                   toString(tsend[1]), toString(tsend[2]))
+
+  tower.xts = tower.xts[timestr]
+  if (tower.name == "Lindenberg") {
+    tower2.xts = tower2.xts[timestr]
+    tower3.xts = tower3.xts[timestr]
+    tower4.xts = tower4.xts[timestr]
+    tower5.xts = tower5.xts[timestr]
+    tower6.xts = tower6.xts[timestr]
+  }
+  herz10.xts = herz10.xts[timestr]
+  herz35.xts = herz35.xts[timestr]
+  herz69.xts = herz69.xts[timestr]
+  herz116.xts = herz116.xts[timestr]
+  herz178.xts = herz178.xts[timestr]
+  herz258.xts = herz258.xts[timestr]
+  era20c100.xts = era20c100.xts[timestr]
+
+  df = data.frame(tower.xts)
+  if (tower.name == "Fino1") {
+    colnames(df) = "Fino1"
+  } else if (tower.name == "Fino2") {
+    colnames(df) = "Fino2"
+  } else if (tower.name == "Lindenberg") {
+    colnames(df) = "Lind10"
+    df$Lind20 = coredata(tower2.xts)
+    df$Lind40 = coredata(tower3.xts)
+    df$Lind60 = coredata(tower4.xts)
+    df$Lind80 = coredata(tower5.xts)
+    df$Lind98 = coredata(tower6.xts)
+  }
+  df$herz10 = coredata(herz10.xts)
+  df$herz35 = coredata(herz35.xts)
+  df$herz69 = coredata(herz69.xts)
+  df$herz116 = coredata(herz116.xts)
+  df$herz178 = coredata(herz178.xts)
+  df$herz258 = coredata(herz258.xts)
+  df$era20c100 = coredata(era20c100.xts)
+
+  return(df)
+}
+
+#-----------------------------------------------------------------------------------

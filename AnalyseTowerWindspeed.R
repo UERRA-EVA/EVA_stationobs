@@ -53,7 +53,6 @@ era20c.data = ReadEraNetcdf2Xts(era20c.param, era20c.fname,
                                 era20c.tsstart, era20c.tsend,
                                 lonidx, latidx, era.monthly,
                                 era20c=TRUE, verb.dat=verb.era.dat)
-era20c.fino1.xts = era20c.data$era10
 era20c100.fino1.xts = era20c.data$era20c100
 
 # for FINO2
@@ -64,7 +63,6 @@ era20c.data = ReadEraNetcdf2Xts(era20c.param, era20c.fname,
                                 era20c.tsstart, era20c.tsend,
                                 lonidx, latidx, era.monthly,
                                 era20c=TRUE, verb.dat=verb.era.dat)
-era20c.fino2.xts = era20c.data$era10
 era20c100.fino2.xts = era20c.data$era20c100
 
 # for Lindenberg
@@ -75,7 +73,6 @@ era20c.data = ReadEraNetcdf2Xts(era20c.param, era20c.fname,
                                 era20c.tsstart, era20c.tsend,
                                 lonidx, latidx, era.monthly,
                                 era20c=TRUE, verb.dat=verb.era.dat)
-era20c.lind.xts = era20c.data$era10
 era20c100.lind.xts = era20c.data$era20c100
 
 # == read HErZ data ==
@@ -135,16 +132,58 @@ herz116.lind.xts = herz.data$herz116
 herz178.lind.xts = herz.data$herz178
 herz258.lind.xts = herz.data$herz258
 
+# == get time series of same length ==
+fino1.df = GetTowerProfileTS(tower.xts=fino1.100.xts,
+                             herz10.xts=herz10.fino1.xts,
+                             herz35.xts=herz35.fino1.xts,
+                             herz69.xts=herz69.fino1.xts,
+                             herz116.xts=herz116.fino1.xts,
+                             herz178.xts=herz178.fino1.xts,
+                             herz258.xts=herz258.fino1.xts,
+                             era20c100.xts=era20c100.fino1.xts,
+                             tower.tsstart=fino1.tsstart, tower.tsend=fino1.tsend,
+                             herz.tsend=herz.tsend, era20c.tsend=era20c.tsend,
+                             tower.name="Fino1")
+
+fino2.df = GetTowerProfileTS(tower.xts=fino2.102.xts,
+                             herz10.xts=herz10.fino2.xts,
+                             herz35.xts=herz35.fino2.xts,
+                             herz69.xts=herz69.fino2.xts,
+                             herz116.xts=herz116.fino2.xts,
+                             herz178.xts=herz178.fino2.xts,
+                             herz258.xts=herz258.fino2.xts,
+                             era20c100.xts=era20c100.fino2.xts,
+                             tower.tsstart=fino2.tsstart, tower.tsend=fino2.tsend,
+                             herz.tsend=herz.tsend, era20c.tsend=era20c.tsend,
+                             tower.name="Fino2")
+
+lind.df = GetTowerProfileTS(tower.xts=lind.10.xts, tower2.xts=lind.20.xts,
+                            tower3.xts=lind.40.xts, tower4.xts=lind.60.xts,
+                            tower5.xts=lind.80.xts, tower6.xts=lind.98.xts,
+                            herz10.xts=herz10.lind.xts,
+                            herz35.xts=herz35.lind.xts,
+                            herz69.xts=herz69.lind.xts,
+                            herz116.xts=herz116.lind.xts,
+                            herz178.xts=herz178.lind.xts,
+                            herz258.xts=herz258.lind.xts,
+                            era20c100.xts=era20c100.lind.xts,
+                            tower.tsstart=lind.tsstart, tower.tsend=lind.tsend,
+                            herz.tsend=herz.tsend, era20c.tsend=era20c.tsend,
+                            tower.name="Lindenberg")
+
 #-----------------------------------------------------------------------------
 
 if (plot.TowerEraProfile) {
   cat("  **  Plotting tower-ERA profile\n")
-  fname = paste0("TowerERAprofile_TimeSeries", time.ext,"_", res.switch, '_',
+  fname = paste0(outdir, "Fino1HErZERA20Cprofile_", time.ext,"_", res.switch, '_',
                  fname_ext, ".pdf")
-  titname = paste0()
-  PlotTowerERAprofile(herz10.data.xts, herz35.data.xts, herz69.data.xts,
-                      herz116.data.xts, herz178.data.xts, herz258.data.xts,
-                      era20c100.data.xts)
+  PlotTowerERAprofile(fino1.df, tower.name="Fino1", fname, era.monthly)
+  fname = paste0(outdir, "Fino2HErZERA20Cprofile_", time.ext,"_", res.switch, '_',
+                 fname_ext, ".pdf")
+  PlotTowerERAprofile(fino2.df, tower.name="Fino2", fname, era.monthly)
+  fname = paste0(outdir, "LindenbergHErZERA20Cprofile_", time.ext,"_", res.switch, '_',
+                 fname_ext, ".pdf")
+  PlotTowerERAprofile(lind.df, tower.name="Lindenberg", fname, era.monthly)
 }
 
 #-----------------------------------------------------------------------------
