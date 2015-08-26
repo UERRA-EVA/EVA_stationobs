@@ -242,13 +242,12 @@ GetTowerProfileTS <- function(tower.xts, tower2.xts=NULL, tower3.xts=NULL,
   herz258.xts = herz258.xts[timestr]
   era20c100.xts = era20c100.xts[timestr]
 
-  df = data.frame(tower.xts)
   if (tower.name == "Fino1") {
-    colnames(df) = "Fino1"
+    df = data.frame(date=index(tower.xts), Fino1=coredata(tower.xts))
   } else if (tower.name == "Fino2") {
-    colnames(df) = "Fino2"
+    df = data.frame(date=index(tower.xts), Fino2=coredata(tower.xts))
   } else if (tower.name == "Lindenberg") {
-    colnames(df) = "Lind10"
+    df = data.frame(date=index(tower.xts), Lind10=coredata(tower.xts))
     df$Lind20 = coredata(tower2.xts)
     df$Lind40 = coredata(tower3.xts)
     df$Lind60 = coredata(tower4.xts)
