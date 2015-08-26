@@ -946,16 +946,22 @@ PlotTowerERAprofile <- function(vals.df, tower.name, fname, era.mon) {
 
   dummy = numeric(length=length(vals.df$herz10)) * NA
   x.labs = "windspeed [m/s]"
+  swex = 0.4
+  bwex = 0.3
+  hori=TRUE
+  nch = TRUE
+  oline = FALSE
   if (era.mon) {wind.range = c(0,15)}
   else {wind.range = c(0,20)}
+
   if (tower.name == "Lindenberg") {
     pdf(fname, width=a4height, height=a4width, onefile=TRUE, pointsize=13)
     par(mar=c(4,7,2,0.5))
     boxplot.default(vals.df$Lind10, vals.df$herz10, vals.df$Lind20, vals.df$herz35,
                     vals.df$Lind40, vals.df$Lind60, vals.df$herz69, vals.df$Lind80,
                     vals.df$Lind98, vals.df$era20c100, vals.df$herz116,
-                    horizontal=TRUE, notch=TRUE, outline=FALSE, na.action=na.pass,
-                    boxwex=.3, staplewex=.4, las=1, ylim=wind.range,
+                    horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
+                    boxwex=bwex, staplewex=swex, las=1, ylim=wind.range,
                     names=c("Lind 10m", "HErZ 10m", "Lind 20m", "HErZ 35m",
                             "Lind 40m", "Lind 60m", "HErZ 69m", "Lind 80m",
                             "Lind 98m", "ERA20C 100m", "HErZ 116m"),
@@ -970,8 +976,8 @@ PlotTowerERAprofile <- function(vals.df, tower.name, fname, era.mon) {
     boxplot.default(dummy, vals.df$herz10, dummy, vals.df$herz35, dummy, dummy,
                     vals.df$herz69, dummy, vals.df$era20c100, vals.df$Fino1,
                     vals.df$herz116,
-                    horizontal=TRUE, notch=TRUE, outline=FALSE, na.action=na.pass,
-                    boxwex=.3, staplewex=.4, las=1, ylim=wind.range,
+                    horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
+                    boxwex=bwex, staplewex=swex, las=1, ylim=wind.range,
                     names=c("", "HErZ 10m", "", "HErZ 35m", "", "", "HErZ 69m",
                             "", "ERA20C 100m", "Fino1 100m", "HErZ 116m"),
                     main="Boxplots of Fino1 at 100m and HErZ profile",
@@ -985,8 +991,8 @@ PlotTowerERAprofile <- function(vals.df, tower.name, fname, era.mon) {
     boxplot.default(dummy, vals.df$herz10, dummy, vals.df$herz35, dummy, dummy,
                     vals.df$herz69, dummy, vals.df$era20c100, vals.df$Fino2,
                     vals.df$herz116,
-                    horizontal=TRUE, notch=TRUE, outline=FALSE, na.action=na.pass,
-                    boxwex=.3, staplewex=.4, las=1, ylim=wind.range,
+                    horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
+                    boxwex=bwex, staplewex=swex, las=1, ylim=wind.range,
                     names=c("", "HErZ 10m", "", "HErZ 35m", "", "", "HErZ 69m",
                             "", "ERA20C 100m", "Fino2 102m", "HErZ 116m"),
                     main="Boxplots of Fino2 at 102m and HErZ profile",
