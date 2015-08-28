@@ -187,3 +187,18 @@ if (plot.TowerEraProfile) {
 }
 
 #-----------------------------------------------------------------------------
+
+if (plot.ProfileTS & era.monthly) {
+  cat("  **  Plotting tower-ERA profile TS\n")
+  fname = paste0(outdir, "LindenbergHErZERA20C_profileTS_", time.ext,"_",
+                 res.switch, '_', fname_ext, ".pdf")
+  PlotTowerERAprofileTS(lind.df, tower.name="Lindenberg", fname)
+
+  fname = paste0(outdir, "Fino1HErZERA20C_profileTS_", time.ext,"_",
+                 res.switch, '_', fname_ext, ".pdf")
+  PlotTowerERAprofileTS(fino1.df, tower.name="Fino1", fname)
+
+  fname = paste0(outdir, "Fino2HErZERA20C_profileTS_", time.ext,"_",
+                 res.switch, '_', fname_ext, ".pdf")
+  PlotTowerERAprofileTS(fino2.df, tower.name="Fino2", fname)
+}
