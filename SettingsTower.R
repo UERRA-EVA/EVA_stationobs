@@ -50,8 +50,9 @@ fino1.tsend = c(2013,12)
 fino2.tsstart = c(2007,8)
 fino2.tsend = c(2013,12)
 lind.tsstart = c(2001,1)
-lind.tsend = c(2013,12)
+lind.tsend = c(2014,12)
 era20c.tsend = c(2010,12)
-herz.tsend = c(2013,12)
+herz.tsend = c(2014,12)
 
-plot.TowerEraProfile = TRUE
+plot.TowerEraProfile = FALSE
+plot.ProfileTS = TRUE

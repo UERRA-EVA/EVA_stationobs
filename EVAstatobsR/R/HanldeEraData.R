@@ -222,6 +222,12 @@ GetTowerProfileTS <- function(tower.xts, tower2.xts=NULL, tower3.xts=NULL,
         tower.name != "Lindenberg") {
     CallStop(paste0("Unexpected tower.name: ", tower.name, " "))
   }
+
+  #XXXXXXXXXXXXXXXXXXXXXXXXX
+  # tsend(max aus allen)
+  # dann die daten reihen mit NA auffüllen, die kürzer als das max tsend sind
+  #XXXXXXXXXXXXXXXXXXXXXXXXX
+
   tsend = c(min(tower.tsend[1], herz.tsend[1], era20c.tsend[1]), 12)
   timestr = paste0(toString(tower.tsstart[1]), toString(tower.tsstart[2]), '/',
                    toString(tsend[1]), toString(tsend[2]))
