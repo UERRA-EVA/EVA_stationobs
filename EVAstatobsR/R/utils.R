@@ -208,3 +208,42 @@ GetSeasonalXts <- function(vals.xts) {
 }
 
 #-----------------------------------------------------------------------------------
+#' @title
+#' @description
+#' @param
+RelDiff <- function(value, mean.value) {
+  return((value - mean.value) / mean.value)
+}
+
+#-----------------------------------------------------------------------------------
+
+#' @title
+#' @description
+#' @param
+NormVals <- function(value, min.val, max.val) {
+  return((value-min.val)/(max.val-min.val))
+}
+
+#-----------------------------------------------------------------------------------
+
+#' @title
+#' @description
+#' @param
+#' @note http://stackoverflow.com/questions/15102254/how-do-i-add-different-trend-lines-in-r
+TrendLines <- function() {
+  # basic straight line of fit
+  fit <- glm(y~x)
+  co <- coef(fit)
+  abline(fit, col="blue", lwd=2)
+
+  # polynomial
+  f <- function(x,a,b,d) {(a*x^2) + (b*x) + d}
+  fit <- nls(y ~ f(x,a,b,d), start = c(a=1, b=1, d=1))
+  co <- coef(fit)
+  curve(f(x, a=co[1], b=co[2], d=co[3]), add = TRUE, col="pink", lwd=2)
+
+  smooth.spline
+
+}
+
+#-----------------------------------------------------------------------------------
