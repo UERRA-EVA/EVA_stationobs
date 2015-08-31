@@ -190,15 +190,49 @@ if (plot.TowerEraProfile) {
 
 if (plot.ProfileTS & era.monthly) {
   cat("  **  Plotting tower-ERA profile TS\n")
-  fname = paste0(outdir, "LindenbergHErZERA20C_profileTS_", time.ext,"_",
+  fname = paste0(outdir, "LindenbergHErZERA20C_boxPlots_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
-  PlotTowerERAprofileTS(lind.df, tower.name="Lindenberg", fname)
+  PlotTowerERAprofileBP(lind.df, tower.name="Lindenberg", fname, era.monthly)
 
-  fname = paste0(outdir, "Fino1HErZERA20C_profileTS_", time.ext,"_",
+  fname = paste0(outdir, "Fino1HErZERA20C_boxPlots_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
-  PlotTowerERAprofileTS(fino1.df, tower.name="Fino1", fname)
+  PlotTowerERAprofileBP(fino1.df, tower.name="Fino1", fname, era.monthly)
 
-  fname = paste0(outdir, "Fino2HErZERA20C_profileTS_", time.ext,"_",
+  fname = paste0(outdir, "Fino2HErZERA20C_boxPlots_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
-  PlotTowerERAprofileTS(fino2.df, tower.name="Fino2", fname)
+  PlotTowerERAprofileBP(fino2.df, tower.name="Fino2", fname, era.monthly)
+
+
+  fname = paste0(outdir, "LindenbergHErZERA20C_relativeDifferences_", time.ext,"_",
+                 res.switch, '_', fname_ext, ".pdf")
+  PlotTowerERAprofileRelDiff(lind.df, tower.name="Lindenberg", fname)
+  fname = paste0(outdir, "Fino1HErZERA20C_relativeDifferences_", time.ext,"_",
+                 res.switch, '_', fname_ext, ".pdf")
+  PlotTowerERAprofileRelDiff(fino1.df, tower.name="Fino1", fname)
+  fname = paste0(outdir, "Fino2HErZERA20C_relativeDifferences_", time.ext,"_",
+                 res.switch, '_', fname_ext, ".pdf")
+  PlotTowerERAprofileRelDiff(fino2.df, tower.name="Fino2", fname)
+
+
+  fname = paste0(outdir, "LindenbergHErZERA20C_selectedMonths_", time.ext,"_",
+                 res.switch, '_', fname_ext, ".pdf")
+  PlotTowerERAprofileAnnualVar(lind.df, tower.name="Lindenberg", fname)
+  fname = paste0(outdir, "Fino1HErZERA20C_selectedMonths_", time.ext,"_",
+                 res.switch, '_', fname_ext, ".pdf")
+  PlotTowerERAprofileAnnualVar(fino1.df, tower.name="Fino1", fname)
+  fname = paste0(outdir, "Fino2HErZERA20C_selectedMonths_", time.ext,"_",
+                 res.switch, '_', fname_ext, ".pdf")
+  PlotTowerERAprofileAnnualVar(fino2.df, tower.name="Fino2", fname)
+
+
+  fname = paste0(outdir, "LindenbergHErZERA20C_annualCycle_", time.ext,"_",
+                 res.switch, '_', fname_ext, ".pdf")
+  PlotTowerERAprofileAnnualCycle(lind.df, tower.name="Lindenberg", fname)
+  fname = paste0(outdir, "Fino1HErZERA20C_annualCycle_", time.ext,"_",
+                 res.switch, '_', fname_ext, ".pdf")
+  PlotTowerERAprofileAnnualCycle(fino1.df, tower.name="Fino1", fname)
+  fname = paste0(outdir, "Fino2HErZERA20C_annualCycle_", time.ext,"_",
+                 res.switch, '_', fname_ext, ".pdf")
+  PlotTowerERAprofileAnnualCycle(fino2.df, tower.name="Fino2", fname)
+
 }

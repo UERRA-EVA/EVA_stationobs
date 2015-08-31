@@ -942,7 +942,7 @@ PlotPDFScore <- function(era.xts, station.xts, outdir, fname, titname,
 #' @title
 #' @description
 #' @param
-PlotTowerERAprofile <- function(tower.df, tower.name, fname, era.mon) {
+PlotTowerERAprofileBP <- function(tower.df, tower.name, fname, era.mon) {
 
   dummy = numeric(length=length(tower.df$herz10)) * NA
   x.labs = "windspeed [m/s]"
@@ -1010,373 +1010,397 @@ PlotTowerERAprofile <- function(tower.df, tower.name, fname, era.mon) {
 #' @title
 #' @description
 #' @param
-PlotTowerERAprofileTS <- function(tower.df, tower.name, fname) {
+PlotTowerERAprofileRelDiff <- function(tower.df, tower.name, fname) {
 
-  relDiff = T
-  annualCycle = T
+  legend.cex = 0.9
+  tower.date <- as.POSIXlt(tower.df$date)
 
-  if (relDiff) {
-    yliml=-0.75
-    ylimh=0.75
-    color = list(tower="blue", herz="red", era20="green", black="black")
+  yliml=-0.75
+  ylimh=0.75
+  color = list(tower="blue", herz="red", era20="green", black="black")
 
-    if (tower.name == "Lindenberg") {
+  if (tower.name == "Lindenberg") {
 
-      pdf(fname, width=a4height, height=a4width, onefile=TRUE, pointsize=13)
-      par(mfrow=c(3,1), mar=c(0,4,0,0), oma=c(4,0,3,0.5), cex=1.1)
+    pdf(fname, width=a4height, height=a4width, onefile=TRUE, pointsize=13)
+    par(mfrow=c(3,1), mar=c(0,4,0,0), oma=c(4,0,3,0.5), cex=1.1)
 
-      # == relative TS in 100m height ==
-      tower.date <- as.POSIXlt(tower.df$date)
-      dummy = numeric(length=length(tower.date)) * NA
-      dummy = xts(dummy, order.by=tower.date)
+    # == relative TS in 100m height ==
+    dummy = numeric(length=length(tower.date)) * NA
+    dummy = xts(dummy, order.by=tower.date)
 
-      h.xts = xts(tower.df$herz116, order.by=tower.date)
-      l.xts = xts(tower.df$Lind98, order.by=tower.date)
-      plot(dummy, main=NULL, xaxt="n", ylim=c(yliml, ylimh), las=1)
-      title(ylab="relative difference", line=2.5)
-      lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col=color$herz)
-      lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$tower)
-      corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
-      legend("topleft", legend=c("HErZ at 116m", "Lindenberg at 98m",
-                                 paste0("correlation = ", round(corr$estimate, 2))),
-             text.col=c(color$herz, color$tower, color$black))
+    h.xts = xts(tower.df$herz116, order.by=tower.date)
+    l.xts = xts(tower.df$Lind98, order.by=tower.date)
+    plot(dummy, main=NULL, xaxt="n", ylim=c(yliml, ylimh), las=1)
+    title(ylab="relative difference", line=2.5)
+    lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col=color$herz)
+    lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$tower)
+    corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
+    legend("topleft", legend=c("HErZ at 116m", "Lindenberg at 98m",
+                               paste0("correlation = ", round(corr$estimate, 2))),
+           text.col=c(color$herz, color$tower, color$black))
 
 
-      h.xts = xts(tower.df$era20c100, order.by=tower.date)
-      l.xts = xts(tower.df$Lind98, order.by=tower.date)
-      plot(dummy, main=NULL, xaxt="n", ylim=c(yliml, ylimh), las=1)
-      title(ylab="relative difference", line=2.5)
-      lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col=color$era20)
-      lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$tower)
-      corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
-      legend("topleft", legend=c("ER20C at 100m", "Lindenberg at 98m",
-                                 paste0("correlation = ", round(corr$estimate, 2))),
-             text.col=c(color$era20, color$tower, color$black))
+    h.xts = xts(tower.df$era20c100, order.by=tower.date)
+    l.xts = xts(tower.df$Lind98, order.by=tower.date)
+    plot(dummy, main=NULL, xaxt="n", ylim=c(yliml, ylimh), las=1)
+    title(ylab="relative difference", line=2.5)
+    lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col=color$era20)
+    lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$tower)
+    corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
+    legend("topleft", legend=c("ER20C at 100m", "Lindenberg at 98m",
+                               paste0("correlation = ", round(corr$estimate, 2))),
+           text.col=c(color$era20, color$tower, color$black))
 
-      h.xts = xts(tower.df$herz10, order.by=tower.date)
-      l.xts = xts(tower.df$Lind10, order.by=tower.date)
-      plot(dummy, main=NULL, ylim=c(yliml, ylimh), las=1)
-      title(ylab="relative difference", line=2.5)
-      lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col=color$herz)
-      lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$tower)
-      corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
-      legend("topleft", legend=c("HErZ at 10m", "Lindenberg at 10m",
-                                 paste0("correlation = ", round(corr$estimate, 2))),
-             text.col=c(color$herz, color$tower, color$black))
+    h.xts = xts(tower.df$herz10, order.by=tower.date)
+    l.xts = xts(tower.df$Lind10, order.by=tower.date)
+    plot(dummy, main=NULL, ylim=c(yliml, ylimh), las=1)
+    title(ylab="relative difference", line=2.5)
+    lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col=color$herz)
+    lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$tower)
+    corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
+    legend("topleft", legend=c("HErZ at 10m", "Lindenberg at 10m",
+                               paste0("correlation = ", round(corr$estimate, 2))),
+           text.col=c(color$herz, color$tower, color$black))
 
-      mtext("Monthly relative differences of Lindenberg against HErZ and ERA20C",
-            outer=TRUE, line=1, cex=1.2)
+    mtext("Monthly relative differences of Lindenberg against HErZ and ERA20C",
+          outer=TRUE, line=1, cex=1.2)
 
-      dev.off()
+    dev.off()
 
-    } else if (tower.name == "Fino1") {
+  } else if (tower.name == "Fino1" | tower.name == "Fino2") {
 
-      pdf(fname, width=a4height, height=a4width, onefile=TRUE, pointsize=13)
-      par(mfrow=c(3,1), mar=c(0,4,0,0), oma=c(4,0,3,0.5), cex=1.1)
+    if (tower.name == "Fino1") plot.ext = "Fino1 at 100m "
+    if (tower.name == "Fino2") plot.ext = "Fino2 at 102m "
 
-      # == absolute, relative and normalized TS of each height ==
-      tower.date <- as.POSIXlt(tower.df$date)
-      dummy = numeric(length=length(tower.date)) * NA
-      dummy = xts(dummy, order.by=tower.date)
+    pdf(fname, width=a4height, height=a4width, onefile=TRUE, pointsize=13)
+    par(mfrow=c(3,1), mar=c(0,4,0,0), oma=c(4,0,3,0.5), cex=1.1)
 
-      h.xts = xts(tower.df$herz116, order.by=tower.date)
-      l.xts = xts(tower.df$Fino1, order.by=tower.date)
-      plot(dummy, main=NULL, xaxt="n", ylim=c(yliml, ylimh), las=1)
-      title(ylab="relative difference", line=2.5)
-      lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col=color$herz)
-      lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$tower)
-      corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
-      legend("topleft", legend=c("HErZ at 116m", "Fino1 at 100m",
-                                 paste0("correlation = ", round(corr$estimate, 2))),
-             text.col=c(color$herz, color$tower, color$black))
+    # == absolute, relative and normalized TS of each height ==
+    dummy = numeric(length=length(tower.date)) * NA
+    dummy = xts(dummy, order.by=tower.date)
+
+    h.xts = xts(tower.df$herz116, order.by=tower.date)
+    if (tower.name == "Fino1") l.xts = xts(tower.df$Fino1, order.by=tower.date)
+    if (tower.name == "Fino2") l.xts = xts(tower.df$Fino2, order.by=tower.date)
+    plot(dummy, main=NULL, xaxt="n", ylim=c(yliml, ylimh), las=1)
+    title(ylab="relative difference", line=2.5)
+    lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col=color$herz)
+    lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$tower)
+    corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
+    legend("topleft", legend=c("HErZ at 116m", plot.ext,
+                               paste0("correlation = ", round(corr$estimate, 2))),
+           text.col=c(color$herz, color$tower, color$black))
 
 
-      h.xts = xts(tower.df$era20c100, order.by=tower.date)
-      l.xts = xts(tower.df$Fino1, order.by=tower.date)
-      plot(dummy, main=NULL, ylim=c(yliml, ylimh), las=1)
-      title(ylab="relative difference", line=2.5)
-      lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col=color$era20)
-      lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$tower)
-      corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
-      legend("topleft", legend=c("ER20C at 100m", "Fino1 at 100m",
-                                 paste0("correlation = ", round(corr$estimate, 2))),
-             text.col=c(color$era20, color$tower, color$black))
+    h.xts = xts(tower.df$era20c100, order.by=tower.date)
+    if (tower.name == "Fino1") l.xts = xts(tower.df$Fino1, order.by=tower.date)
+    if (tower.name == "Fino2") l.xts = xts(tower.df$Fino2, order.by=tower.date)
+    plot(dummy, main=NULL, ylim=c(yliml, ylimh), las=1)
+    title(ylab="relative difference", line=2.5)
+    lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col=color$era20)
+    lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$tower)
+    corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
+    legend("topleft", legend=c("ER20C at 100m", plot.ext,
+                               paste0("correlation = ", round(corr$estimate, 2))),
+           text.col=c(color$era20, color$tower, color$black))
 
-      mtext("Monthly time series of Fino1 at 100m against HErZ and ERA20C",
-            outer=TRUE, line=1, cex=1.2)
+    mtext(paste0("Monthly relative differences of ", tower.name,
+          " at 100m against HErZ and ERA20C"), outer=TRUE, line=1, cex=1.2)
 
-      dev.off()
+    dev.off()
 
-    } else if (tower.name == "Fino2") {
+  } else {
+    CallStopp(paste0("Unexpected tower.name: ", tower.name, " "))
+  }
+}
 
-      pdf(fname, width=a4height, height=a4width, onefile=TRUE, pointsize=13)
-      par(mfrow=c(3,1), mar=c(0,4,0,0), oma=c(4,0,3,0.5), cex=1.1)
+#-----------------------------------------------------------------------------------
 
-      # == absolute, relative and normalized TS of each height ==
-      tower.date <- as.POSIXlt(tower.df$date)
-      dummy = numeric(length=length(tower.date)) * NA
-      dummy = xts(dummy, order.by=tower.date)
+PlotTowerERAprofileAnnualVar <- function(tower.df, tower.name, fname) {
 
-      h.xts = xts(tower.df$herz116, order.by=tower.date)
-      l.xts = xts(tower.df$Fino2, order.by=tower.date)
-      plot(dummy, main=NULL, xaxt="n", ylim=c(yliml, ylimh), las=1)
-      title(ylab="relative difference", line=2.5)
-      lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col=color$herz)
-      lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$tower)
-      corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
-      legend("topleft", legend=c("HErZ at 116m", "Fino2 at 102m",
-                                 paste0("correlation = ", round(corr$estimate, 2))),
-             text.col=c(color$herz, color$tower, color$black))
+  legend.cex = 0.9
+  tower.date <- as.POSIXlt(tower.df$date)
 
-      h.xts = xts(tower.df$era20c100, order.by=tower.date)
-      l.xts = xts(tower.df$Fino2, order.by=tower.date)
-      plot(dummy, main=NULL, ylim=c(yliml, ylimh), las=1)
-      title(ylab="relative difference", line=2.5)
-      lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col=color$era20)
-      lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$tower)
-      corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
-      legend("topleft", legend=c("ER20C at 100m", "Fino2 at 102m",
-                                 paste0("correlation = ", round(corr$estimate, 2))),
-             text.col=c(color$era20, color$tower, color$black))
+  months=list(1,8)
+  all.months = c("January","February","March","April","May","June","July",
+                 "August","September","October","November","December")
 
-      mtext("Monthly time series of Fino2 at 102m against HErZ and ERA20C",
-            outer=TRUE, line=1, cex=1.2)
+  colorH = c("red", "black")
+  colorE = c("green", "black")
+  colorT = c("blue", "black")
 
-      dev.off()
-    } else {
-      CallStopp(paste0("Unexpected tower.name: ", tower.name, " "))
-    }
+  mon.Era20c100 = list()
+  mon.Herz116 = list()
+  mon.Herz10 = list()
 
+  Era20c100Xts = xts(tower.df$era20c100, order.by=tower.date)
+  Herz116Xts = xts(tower.df$herz116, order.by=tower.date)
+  Herz10Xts = xts(tower.df$herz10, order.by=tower.date)
+
+  for (cnt in seq(12)) {
+    mon.Era20c100[[cnt]] = Era20c100Xts[which( tower.date$mon==cnt-1 )]
+    mon.Herz116[[cnt]] = Herz116Xts[which( tower.date$mon==cnt-1 )]
+    mon.Herz10[[cnt]] = Herz10Xts[which( tower.date$mon==cnt-1 )]
   }
 
+  if (tower.name == "Lindenberg") {
 
-  if (annualCycle) {
-    months=list(1,8)
-    all.months = c("January","February","March","April","May","June","July",
-                   "August","September","October","November","December")
-    colorH = c("red", "black")
-    colorE = c("green", "black")
-    colorT = c("blue", "black")
+    mon.Lind98 = list()
+    mon.Lind10 = list()
+    Lind98Xts = xts(tower.df$Lind98, order.by=tower.date)
+    Lind10Xts = xts(tower.df$Lind10, order.by=tower.date)
+    for (cnt in seq(12)) {
+      mon.Lind98[[cnt]] = Lind98Xts[which( tower.date$mon==cnt-1 )]
+      mon.Lind10[[cnt]] = Lind10Xts[which( tower.date$mon==cnt-1 )]
+    }
 
-    legend.cex = 0.9
+    yliml = vector(mode="numeric", length=length(months))
+    ylimh = vector(mode="numeric", length=length(months))
+    for (cnt in seq(months)) {
+      Ylims = GetYlims(mon.Era20c100[[months[[cnt]]]], mon.Herz116[[months[[cnt]]]],
+                       mon.Lind10[[months[[cnt]]]], mon.Herz10[[months[[cnt]]]])
+      yliml[cnt] = Ylims$yll
+      ylimh[cnt] = Ylims$ylh
+    }
+    yliml = 0 #min(yliml)
+    ylimh = max(ylimh)
 
-    mon.Era20c100 = list()
-    mon.Herz116 = list()
-    mon.Herz10 = list()
+    pdf(fname, width=a4width, height=a4height, onefile=TRUE, pointsize=13)
+    par(mfrow=c(5,1), mar=c(0,2,0,0), oma=c(4,1,3,0.5), cex=1.1)
 
-    tower.date <- as.POSIXlt(tower.df$date)
+    dummy = numeric(length=length(Era20c100Xts)) * NA
+    dummy = xts(dummy, order.by = index(Era20c100Xts))
 
-    Era20c100Xts = xts(tower.df$era20c100, order.by=tower.date)
-    Herz116Xts = xts(tower.df$herz116, order.by=tower.date)
-    Herz10Xts = xts(tower.df$herz10, order.by=tower.date)
+    plot(dummy, main=NULL, xaxt="n", ylim=c(yliml, ylimh), las=1)
+    for (cnt in seq(months)) {
+      lines(mon.Lind98[[months[[cnt]]]], type="b", pch=21, col=colorT[cnt],
+            bg=rgb(0,0,0,1./cnt), lw=2)
+    }
+    legend("bottomleft", legend=c(paste0("Lind at 98m ", all.months[months[[1]]]),
+                                  paste0("Lind at 98m ", all.months[months[[2]]])),
+           text.col=colorT, cex=legend.cex)
+
+    plot(dummy, main=NULL, xaxt="n", ylim=c(yliml, ylimh), las=1)
+    for (cnt in seq(months)) {
+      lines(mon.Herz116[[months[[cnt]]]], type="b", pch=21, col=colorH[cnt],
+            bg=rgb(0,0,0,1./cnt), lw=2)
+    }
+    legend("bottomleft", legend=c(paste0("HErZ at 116m ", all.months[months[[1]]]),
+                                  paste0("HErZ at 116m ", all.months[months[[2]]])),
+           text.col=colorH, cex=legend.cex)
+
+    plot(dummy, main=NULL, xaxt="n", ylim=c(yliml, ylimh), las=1)
+    for (cnt in seq(months)) {
+      lines(mon.Era20c100[[months[[cnt]]]], type="b", pch=21, col=colorE[cnt],
+            bg=rgb(0,0,0,1./cnt), lw=2)
+    }
+    legend("bottomleft", legend=c(paste0("Era20C at 100m ", all.months[months[[1]]]),
+                                  paste0("Era20C at 100m ", all.months[months[[2]]])),
+           text.col=colorE, cex=legend.cex)
+
+    plot(dummy, main=NULL, xaxt="n", ylim=c(yliml, ylimh), las=1)
+    for (cnt in seq(months)) {
+      lines(mon.Lind10[[months[[cnt]]]], type="b", pch=21, col=colorT[cnt],
+            bg=rgb(0,0,0,1./cnt), lw=2)
+    }
+    legend("topleft", legend=c(paste0("Lind at 10m ", all.months[months[[1]]]),
+                               paste0("Lind at 10m ", all.months[months[[2]]])),
+           text.col=colorT, cex=legend.cex)
+
+    plot(dummy, main=NULL, ylim=c(yliml, ylimh), las=1)
+    for (cnt in seq(months)) {
+      lines(mon.Herz10[[months[[cnt]]]], type="b", pch=21, col=colorH[cnt],
+            bg=rgb(0,0,0,1./cnt), lw=2)
+    }
+    legend("topleft", legend=c(paste0("HErZ at 10m ", all.months[months[[1]]]),
+                               paste0("HErZ at 10m ", all.months[months[[2]]])),
+           text.col=colorH, cex=legend.cex)
+
+    mtext("Windspeed at Lindenberg for different months",
+          outer=TRUE, line=1, cex=1.2)
+    mtext("windspeed [m/s]", line=0, side=2, outer=T)
+
+    dev.off()
+
+  } else if (tower.name == "Fino1" | tower.name == "Fino2") {
+
+    if (tower.name == "Fino1") plot.ext = "Fino1 at 100m "
+    if (tower.name == "Fino2") plot.ext = "Fino2 at 102m "
+
+    mon.tower = list()
+    if (tower.name == "Fino1") {
+      towerXts = xts(tower.df$Fino1, order.by=tower.date)
+    } else {
+      towerXts = xts(tower.df$Fino2, order.by=tower.date)
+    }
 
     for (cnt in seq(12)) {
-      mon.Era20c100[[cnt]] = Era20c100Xts[which( tower.date$mon==cnt-1 )]
-      mon.Herz116[[cnt]] = Herz116Xts[which( tower.date$mon==cnt-1 )]
-      mon.Herz10[[cnt]] = Herz10Xts[which( tower.date$mon==cnt-1 )]
+      mon.tower[[cnt]] = towerXts[which( tower.date$mon==cnt-1 )]
     }
 
-    if (tower.name == "Lindenberg") {
+    yliml = vector(mode="numeric", length=length(months))
+    ylimh = vector(mode="numeric", length=length(months))
+    for (cnt in seq(months)) {
+      Ylims = GetYlims(mon.Era20c100[[months[[cnt]]]], mon.tower[[months[[cnt]]]],
+                       mon.Herz116[[months[[cnt]]]], mon.Herz10[[months[[cnt]]]])
+      yliml[cnt] = Ylims$yll
+      ylimh[cnt] = Ylims$ylh
+    }
+    yliml = min(yliml)
+    ylimh = max(ylimh)
 
-      mon.Lind98 = list()
-      mon.Lind10 = list()
-      Lind98Xts = xts(tower.df$Lind98, order.by=tower.date)
-      Lind10Xts = xts(tower.df$Lind10, order.by=tower.date)
-      for (cnt in seq(12)) {
-        mon.Lind98[[cnt]] = Lind98Xts[which( tower.date$mon==cnt-1 )]
-        mon.Lind10[[cnt]] = Lind10Xts[which( tower.date$mon==cnt-1 )]
-      }
+    pdf(fname, width=a4width, height=a4height, onefile=TRUE, pointsize=13)
+    par(mfrow=c(3,1), mar=c(0,4,0,0), oma=c(4,1,3,0.5), cex=1.1)
 
-      yliml = vector(mode="numeric", length=length(months))
-      ylimh = vector(mode="numeric", length=length(months))
-      for (cnt in seq(months)) {
-        Ylims = GetYlims(mon.Era20c100[[months[[cnt]]]], mon.Herz116[[months[[cnt]]]],
-                         mon.Lind10[[months[[cnt]]]], mon.Herz10[[months[[cnt]]]])
-        yliml[cnt] = Ylims$yll
-        ylimh[cnt] = Ylims$ylh
-      }
-      yliml = 0 #min(yliml)
-      ylimh = max(ylimh)
+    dummy = numeric(length=length(Era20c100Xts)) * NA
+    dummy = xts(dummy, order.by = index(Era20c100Xts))
 
-      fname = gsub("profileTS", "selectedMonths", fname)
-      pdf(fname, width=a4width, height=a4height, onefile=TRUE, pointsize=13)
-      par(mfrow=c(5,1), mar=c(0,2,0,0), oma=c(4,1,3,0.5), cex=1.1)
+    plot(dummy, main=NULL, xaxt="n", ylim=c(yliml, ylimh), las=1)
+    for (cnt in seq(months)) {
+      lines(mon.tower[[months[[cnt]]]], type="b", pch=21, col=colorT[cnt],
+            bg=rgb(0,0,0,1./cnt), lw=2)
+    }
+    legend("bottomleft", legend=c(paste0(plot.ext, all.months[months[[1]]]),
+                                  paste0(plot.ext, all.months[months[[2]]])),
+           text.col=colorT, cex=legend.cex)
 
-      dummy = numeric(length=length(Era20c100Xts)) * NA
-      dummy = xts(dummy, order.by = index(Era20c100Xts))
+    plot(dummy, main=NULL, xaxt="n", ylim=c(yliml, ylimh), las=1)
+    for (cnt in seq(months)) {
+      lines(mon.Herz116[[months[[cnt]]]], type="b", pch=21, col=colorH[cnt],
+            bg=rgb(0,0,0,1./cnt), lw=2)
+    }
+    legend("bottomleft", legend=c(paste0("HErZ at 116m ", all.months[months[[1]]]),
+                                  paste0("HErZ at 116m ", all.months[months[[2]]])),
+           text.col=colorH, cex=legend.cex)
 
-      plot(dummy, main=NULL, xaxt="n", ylim=c(yliml, ylimh), las=1)
-      for (cnt in seq(months)) {
-        lines(mon.Lind98[[months[[cnt]]]], type="b", pch=21, col=colorT[cnt],
-              bg=rgb(0,0,0,1./cnt), lw=2)
-      }
-      legend("bottomleft", legend=c(paste0("Lind at 98m ", all.months[months[[1]]]),
-                                 paste0("Lind at 98m ", all.months[months[[2]]])),
-             text.col=colorT, cex=legend.cex)
+    plot(dummy, main=NULL, ylim=c(yliml, ylimh), las=1)
+    for (cnt in seq(months)) {
+      lines(mon.Era20c100[[months[[cnt]]]], type="b", pch=21, col=colorE[cnt],
+            bg=rgb(0,0,0,1./cnt), lw=2)
+    }
+    legend("bottomleft", legend=c(paste0("Era20C at 100m ", all.months[months[[1]]]),
+                                  paste0("Era20C at 100m ", all.months[months[[2]]])),
+           text.col=colorE, cex=legend.cex)
 
-      plot(dummy, main=NULL, xaxt="n", ylim=c(yliml, ylimh), las=1)
-      for (cnt in seq(months)) {
-        lines(mon.Herz116[[months[[cnt]]]], type="b", pch=21, col=colorH[cnt],
-              bg=rgb(0,0,0,1./cnt), lw=2)
-      }
-      legend("bottomleft", legend=c(paste0("HErZ at 116m ", all.months[months[[1]]]),
-                                 paste0("HErZ at 116m ", all.months[months[[2]]])),
-             text.col=colorH, cex=legend.cex)
+    mtext(paste0("Windspeed at ", tower.name, " at 100m for different months"),
+          outer=TRUE, line=1, cex=1.2)
+    mtext("windspeed [m/s]", line=0, side=2, outer=TRUE)
 
-      plot(dummy, main=NULL, xaxt="n", ylim=c(yliml, ylimh), las=1)
-      for (cnt in seq(months)) {
-        lines(mon.Era20c100[[months[[cnt]]]], type="b", pch=21, col=colorE[cnt],
-              bg=rgb(0,0,0,1./cnt), lw=2)
-      }
-      legend("bottomleft", legend=c(paste0("Era20C at 100m ", all.months[months[[1]]]),
-                                 paste0("Era20C at 100m ", all.months[months[[2]]])),
-             text.col=colorE, cex=legend.cex)
+    dev.off()
 
-      plot(dummy, main=NULL, xaxt="n", ylim=c(yliml, ylimh), las=1)
-      for (cnt in seq(months)) {
-        lines(mon.Lind10[[months[[cnt]]]], type="b", pch=21, col=colorT[cnt],
-              bg=rgb(0,0,0,1./cnt), lw=2)
-      }
-      legend("topleft", legend=c(paste0("Lind at 10m ", all.months[months[[1]]]),
-                                 paste0("Lind at 10m ", all.months[months[[2]]])),
-             text.col=colorT, cex=legend.cex)
+  } else {
+    CallStopp(paste0("Unexpected tower.name: ", tower.name, " "))
+  }
+}
 
-      plot(dummy, main=NULL, ylim=c(yliml, ylimh), las=1)
-      for (cnt in seq(months)) {
-        lines(mon.Herz10[[months[[cnt]]]], type="b", pch=21, col=colorH[cnt],
-              bg=rgb(0,0,0,1./cnt), lw=2)
-      }
-      legend("topleft", legend=c(paste0("HErZ at 10m ", all.months[months[[1]]]),
-                                 paste0("HErZ at 10m ", all.months[months[[2]]])),
-             text.col=colorH, cex=legend.cex)
 
-      mtext("Windspeed at Lindenberg for different months",
-            outer=TRUE, line=1, cex=1.2)
-      mtext("windspeed [m/s]", line=0, side=2, outer=T)
+#-----------------------------------------------------------------------------------
 
-      dev.off()
+PlotTowerERAprofileAnnualCycle <- function(tower.df, tower.name, fname) {
 
-    } else if (tower.name == "Fino1") {
+  legend.cex = 0.9
+  tower.date <- as.POSIXlt(tower.df$date)
 
-      mon.Fino1 = list()
-      Fino1Xts = xts(tower.df$Fino1, order.by=tower.date)
-      for (cnt in seq(12)) {
-        mon.Fino1[[cnt]] = Fino1Xts[which( tower.date$mon==cnt-1 )]
-      }
+  all.months = c("Jan","Feb","Mar","Apr","May","Jun","Jul",
+                 "Aug","Sep","Oct","Nov","Dec")
 
-      yliml = vector(mode="numeric", length=length(months))
-      ylimh = vector(mode="numeric", length=length(months))
-      for (cnt in seq(months)) {
-        Ylims = GetYlims(mon.Era20c100[[months[[cnt]]]], mon.Fino1[[months[[cnt]]]],
-                         mon.Herz116[[months[[cnt]]]], mon.Herz10[[months[[cnt]]]])
-        yliml[cnt] = Ylims$yll
-        ylimh[cnt] = Ylims$ylh
-      }
-      yliml = min(yliml)
-      ylimh = max(ylimh)
+  mon.Era20c100 = vector(mode="numeric", length=12)
+  mon.Herz116 = vector(mode="numeric", length=12)
+  mon.Herz10 = vector(mode="numeric", length=12)
 
-      fname = gsub("profileTS", "selectedMonths", fname)
-      pdf(fname, width=a4width, height=a4height, onefile=TRUE, pointsize=13)
-      par(mfrow=c(3,1), mar=c(0,4,0,0), oma=c(4,1,3,0.5), cex=1.1)
+  date.ancycle = as.yearmon(2000 + seq(0, 11)/12)
 
-      dummy = numeric(length=length(Era20c100Xts)) * NA
-      dummy = xts(dummy, order.by = index(Era20c100Xts))
+  Era20c100Xts = xts(tower.df$era20c100, order.by=tower.date)
+  Herz116Xts = xts(tower.df$herz116, order.by=tower.date)
+  Herz10Xts = xts(tower.df$herz10, order.by=tower.date)
 
-      plot(dummy, main=NULL, xaxt="n", ylim=c(yliml, ylimh), las=1)
-      for (cnt in seq(months)) {
-        lines(mon.Fino1[[months[[cnt]]]], type="b", pch=21, col=colorT[cnt],
-              bg=rgb(0,0,0,1./cnt), lw=2)
-      }
-      legend("bottomleft", legend=c(paste0("Fino1 at 100m ", all.months[months[[1]]]),
-                                 paste0("Fino1 at 100m ", all.months[months[[2]]])),
-             text.col=colorT, cex=legend.cex)
+  for (cnt in seq(12)) {
+    mon.Era20c100[cnt] = mean(Era20c100Xts[which( tower.date$mon==cnt-1 )])
+    mon.Herz116[cnt] = mean(Herz116Xts[which( tower.date$mon==cnt-1 )])
+    mon.Herz10[cnt] = mean(Herz10Xts[which( tower.date$mon==cnt-1 )])
+  }
 
-      plot(dummy, main=NULL, xaxt="n", ylim=c(yliml, ylimh), las=1)
-      for (cnt in seq(months)) {
-        lines(mon.Herz116[[months[[cnt]]]], type="b", pch=21, col=colorH[cnt],
-              bg=rgb(0,0,0,1./cnt), lw=2)
-      }
-      legend("bottomleft", legend=c(paste0("HErZ at 116m ", all.months[months[[1]]]),
-                                 paste0("HErZ at 116m ", all.months[months[[2]]])),
-             text.col=colorH, cex=legend.cex)
+  if (tower.name == "Lindenberg") {
 
-      plot(dummy, main=NULL, ylim=c(yliml, ylimh), las=1)
-      for (cnt in seq(months)) {
-        lines(mon.Era20c100[[months[[cnt]]]], type="b", pch=21, col=colorE[cnt],
-              bg=rgb(0,0,0,1./cnt), lw=2)
-      }
-      legend("bottomleft", legend=c(paste0("Era20C at 100m ", all.months[months[[1]]]),
-                                 paste0("Era20C at 100m ", all.months[months[[2]]])),
-             text.col=colorE, cex=legend.cex)
+    mon.Lind98 = vector(mode="numeric", length=12)
+    mon.Lind10 = vector(mode="numeric", length=12)
+    Lind98Xts = xts(tower.df$Lind98, order.by=tower.date)
+    Lind10Xts = xts(tower.df$Lind10, order.by=tower.date)
+    for (cnt in seq(12)) {
+      mon.Lind98[cnt] = mean(Lind98Xts[which( tower.date$mon==cnt-1 )])
+      mon.Lind10[cnt] = mean(Lind10Xts[which( tower.date$mon==cnt-1 )])
+    }
 
-      mtext("Windspeed at Fino1 at 100m for different months",
-            outer=TRUE, line=1, cex=1.2)
-      mtext("windspeed [m/s]", line=0, side=2, outer=TRUE)
+    Era20c100Xts = xts(mon.Era20c100, order.by=date.ancycle)
+    Lind98Xts = xts(mon.Lind98, order.by=date.ancycle)
+    Lind10Xts = xts(mon.Lind10, order.by=date.ancycle)
+    Herz116Xts = xts(mon.Herz116, order.by=date.ancycle)
+    Herz10Xts = xts(mon.Herz10, order.by=date.ancycle)
+    Ylims = GetYlims(Era20c100Xts, Lind98Xts, Herz116Xts, Lind10Xts)
+    yliml = Ylims$yll
+    ylimh = Ylims$ylh
 
-      dev.off()
+    pdf(fname, width=a4width, height=a4height, onefile=TRUE, pointsize=13)
+    par(mar=c(3,3,2,0.5), cex=1.1)
 
-    } else if (tower.name == "Fino2")  {
+    dummy = Era20c100Xts * NA
 
-      mon.Fino2 = list()
-      Fino2Xts = xts(tower.df$Fino2, order.by=tower.date)
-      for (cnt in seq(12)) {
-        mon.Fino2[[cnt]] = Fino2Xts[which( tower.date$mon==cnt-1 )]
-      }
+    plot(dummy, main=NULL, ylim=c(yliml, ylimh), las=1, major.format="%b")
+    title(ylab="windspeed [m/s]", line=2)
+    title(main="Annual cycle of windspeed at Lindenberg", line=1)
+    lines(Lind98Xts, type="b", pch=21, col="blue", bg=rgb(0,0,0,1./cnt), lw=2)
+    lines(Era20c100Xts, type="b", pch=21, col="green", bg=rgb(0,0,0,1./cnt), lw=2)
+    lines(Herz116Xts, type="b", pch=21, col="red", bg=rgb(0,0,0,1./cnt), lw=2)
+    lines(Lind10Xts, type="b", pch=21, col="cornflowerblue", bg=rgb(0,0,0,1./cnt), lw=2)
+    lines(Herz10Xts, type="b", pch=21, col="coral1", bg=rgb(0,0,0,1./cnt), lw=2)
+    legend("top", legend=c("Lind at 98m ", "Era20C at 100m ", "Herz at 116m",
+                           "Lind at 10m", "HErZ at 10m"),
+           text.col=c("blue", "green", "red", "cornflowerblue", "coral1"),
+           cex=legend.cex)
 
-      yliml = vector(mode="numeric", length=length(months))
-      ylimh = vector(mode="numeric", length=length(months))
-      for (cnt in seq(months)) {
-        Ylims = GetYlims(mon.Era20c100[[months[[cnt]]]], mon.Fino2[[months[[cnt]]]],
-                         mon.Herz116[[months[[cnt]]]], mon.Herz10[[months[[cnt]]]])
-        yliml[cnt] = Ylims$yll
-        ylimh[cnt] = Ylims$ylh
-      }
-      yliml = min(yliml)
-      ylimh = max(ylimh)
+    dev.off()
 
-      fname = gsub("profileTS", "selectedMonths", fname)
-      pdf(fname, width=a4width, height=a4height, onefile=TRUE, pointsize=13)
-      par(mfrow=c(3,1), mar=c(0,4,0,0), oma=c(4,1,3,0.5), cex=1.1)
+  } else if ( tower.name == "Fino1" | tower.name == "Fino2") {
 
-      dummy = numeric(length=length(Era20c100Xts)) * NA
-      dummy = xts(dummy, order.by = index(Era20c100Xts))
+    if (tower.name == "Fino1") plot.ext = "Fino1 at 100m "
+    if (tower.name == "Fino2") plot.ext = "Fino2 at 102m "
 
-      plot(dummy, main=NULL, xaxt="n", ylim=c(yliml, ylimh), las=1)
-      for (cnt in seq(months)) {
-        lines(mon.Fino2[[months[[cnt]]]], type="b", pch=21, col=colorT[cnt],
-              bg=rgb(0,0,0,1./cnt), lw=2)
-      }
-      legend("bottomleft", legend=c(paste0("Fino2 at 102m ", all.months[months[[1]]]),
-                                 paste0("Fino2 at 102m ", all.months[months[[2]]])),
-             text.col=colorT, cex=legend.cex)
-
-      plot(dummy, main=NULL, xaxt="n", ylim=c(yliml, ylimh), las=1)
-      for (cnt in seq(months)) {
-        lines(mon.Herz116[[months[[cnt]]]], type="b", pch=21, col=colorH[cnt],
-              bg=rgb(0,0,0,1./cnt), lw=2)
-      }
-      legend("bottomleft", legend=c(paste0("HErZ at 116m ", all.months[months[[1]]]),
-                                 paste0("HErZ at 116m ", all.months[months[[2]]])),
-             text.col=colorH, cex=legend.cex)
-
-      plot(dummy, main=NULL, ylim=c(yliml, ylimh), las=1)
-      for (cnt in seq(months)) {
-        lines(mon.Era20c100[[months[[cnt]]]], type="b", pch=21, col=colorE[cnt],
-              bg=rgb(0,0,0,1./cnt), lw=2)
-      }
-      legend("bottomleft", legend=c(paste0("Era20C at 100m ", all.months[months[[1]]]),
-                                 paste0("Era20C at 100m ", all.months[months[[2]]])),
-             text.col=colorE, cex=legend.cex)
-
-      mtext("Windspeed at Fino2 at 102m for different months",
-            outer=TRUE, line=1, cex=1.2)
-      mtext("windspeed [m/s]", line=0, side=2, outer=TRUE)
-
-      dev.off()
-
+    mon.tower = vector(mode="numeric", length=12)
+    if (tower.name == "Fino1") {
+      towerXts = xts(tower.df$Fino1, order.by=tower.date)
     } else {
-      CallStopp(paste0("Unexpected tower.name: ", tower.name, " "))
+      towerXts = xts(tower.df$Fino2, order.by=tower.date)
     }
+    for (cnt in seq(12)) {
+      mon.tower[cnt] = mean(towerXts[which( tower.date$mon==cnt-1 )])
+    }
+
+    Era20c100Xts = xts(mon.Era20c100, order.by=date.ancycle)
+    towerXts = xts(mon.tower, order.by=date.ancycle)
+    Herz116Xts = xts(mon.Herz116, order.by=date.ancycle)
+    Ylims = GetYlims(Era20c100Xts, towerXts, Herz116Xts, Herz116Xts)
+    yliml = Ylims$yll
+    ylimh = Ylims$ylh
+
+    pdf(fname, width=a4width, height=a4height, onefile=TRUE, pointsize=13)
+    par(mar=c(3,3,2,0.5), cex=1.1)
+
+    dummy = Era20c100Xts * NA
+
+    plot(dummy, main=NULL, ylim=c(yliml, ylimh), las=1, major.format="%b")
+    title(ylab="windspeed [m/s]", line=2)
+    title(main=paste0("Annual cycle of windspeed at ", tower.name), line=1)
+    lines(towerXts, type="b", pch=21, col="blue", bg=rgb(0,0,0,1./cnt), lw=2)
+    lines(Era20c100Xts, type="b", pch=21, col="green", bg=rgb(0,0,0,1./cnt), lw=2)
+    lines(Herz116Xts, type="b", pch=21, col="red", bg=rgb(0,0,0,1./cnt), lw=2)
+    legend("top", legend=c(plot.ext, "Era20C at 100m ", "Herz at 116m"),
+           text.col=c("blue", "green", "red"),
+           cex=legend.cex)
+
+    dev.off()
+
+  } else {
+    CallStopp(paste0("Unexpected tower.name: ", tower.name, " "))
   }
 }
 
