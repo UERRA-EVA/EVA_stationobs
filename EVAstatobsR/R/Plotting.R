@@ -1010,8 +1010,8 @@ PlotTowerERAprofileRelDiff <- function(tower.df, tower.name, fname) {
   legend.cex = 0.9
   tower.date <- as.POSIXlt(tower.df$date)
 
-  yliml=-0.75
-  ylimh=0.75
+  yliml.rel = -0.75
+  ylimh.rel = 0.75
   color = list(tower="blue", herz="red", era20="green", black="black")
 
   if (tower.name == "Lindenberg") {
@@ -1025,7 +1025,7 @@ PlotTowerERAprofileRelDiff <- function(tower.df, tower.name, fname) {
 
     h.xts = xts(tower.df$herz116, order.by=tower.date)
     l.xts = xts(tower.df$Lind98, order.by=tower.date)
-    plot(dummy, main=NULL, xaxt="n", ylim=c(yliml, ylimh), las=1)
+    plot(dummy, main=NULL, xaxt="n", ylim=c(yliml.rel, ylimh.rel), las=1)
     title(ylab="relative difference", line=2.5)
     lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col=color$herz)
     lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$tower)
@@ -1037,7 +1037,7 @@ PlotTowerERAprofileRelDiff <- function(tower.df, tower.name, fname) {
 
     h.xts = xts(tower.df$era20c100, order.by=tower.date)
     l.xts = xts(tower.df$Lind98, order.by=tower.date)
-    plot(dummy, main=NULL, xaxt="n", ylim=c(yliml, ylimh), las=1)
+    plot(dummy, main=NULL, xaxt="n", ylim=c(yliml.rel, ylimh.rel), las=1)
     title(ylab="relative difference", line=2.5)
     lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col=color$era20)
     lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$tower)
@@ -1048,7 +1048,7 @@ PlotTowerERAprofileRelDiff <- function(tower.df, tower.name, fname) {
 
     h.xts = xts(tower.df$herz10, order.by=tower.date)
     l.xts = xts(tower.df$Lind10, order.by=tower.date)
-    plot(dummy, main=NULL, ylim=c(yliml, ylimh), las=1)
+    plot(dummy, main=NULL, ylim=c(yliml.rel, ylimh.rel), las=1)
     title(ylab="relative difference", line=2.5)
     lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col=color$herz)
     lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$tower)
@@ -1077,7 +1077,7 @@ PlotTowerERAprofileRelDiff <- function(tower.df, tower.name, fname) {
     h.xts = xts(tower.df$herz116, order.by=tower.date)
     if (tower.name == "Fino1") l.xts = xts(tower.df$Fino1, order.by=tower.date)
     if (tower.name == "Fino2") l.xts = xts(tower.df$Fino2, order.by=tower.date)
-    plot(dummy, main=NULL, xaxt="n", ylim=c(yliml, ylimh), las=1)
+    plot(dummy, main=NULL, xaxt="n", ylim=c(yliml.rel, ylimh.rel), las=1)
     title(ylab="relative difference", line=2.5)
     lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col=color$herz)
     lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$tower)
@@ -1090,7 +1090,7 @@ PlotTowerERAprofileRelDiff <- function(tower.df, tower.name, fname) {
     h.xts = xts(tower.df$era20c100, order.by=tower.date)
     if (tower.name == "Fino1") l.xts = xts(tower.df$Fino1, order.by=tower.date)
     if (tower.name == "Fino2") l.xts = xts(tower.df$Fino2, order.by=tower.date)
-    plot(dummy, main=NULL, ylim=c(yliml, ylimh), las=1)
+    plot(dummy, main=NULL, ylim=c(yliml.rel, ylimh.rel), las=1)
     title(ylab="relative difference", line=2.5)
     lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col=color$era20)
     lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$tower)
@@ -1295,18 +1295,19 @@ PlotTowerERAprofileAnnualCycle <- function(tower.df, tower.name, fname) {
 
   legend.cex = 0.9
   tower.date <- as.POSIXlt(tower.df$date)
+  yliml.rel = -0.2
+  ylimh.rel = 0.2
 
   all.months = c("Jan","Feb","Mar","Apr","May","Jun","Jul",
                  "Aug","Sep","Oct","Nov","Dec")
+
+  date.ancycle = as.yearmon(2000 + seq(0, 11)/12)
 
   mon.Era20c100 = vector(mode="numeric", length=12)
   mon.Herz116 = vector(mode="numeric", length=12)
   mon.Herz69 = vector(mode="numeric", length=12)
   mon.Herz35 = vector(mode="numeric", length=12)
   mon.Herz10 = vector(mode="numeric", length=12)
-
-  date.ancycle = as.yearmon(2000 + seq(0, 11)/12)
-
   Era20c100Xts = xts(tower.df$era20c100, order.by=tower.date)
   Herz116Xts = xts(tower.df$herz116, order.by=tower.date)
   Herz69Xts = xts(tower.df$herz69, order.by=tower.date)
@@ -1338,30 +1339,28 @@ PlotTowerERAprofileAnnualCycle <- function(tower.df, tower.name, fname) {
       mon.Lind10[cnt] = mean(Lind10Xts[which( tower.date$mon==cnt-1 )])
     }
 
-    Era20c100Xts = xts(mon.Era20c100, order.by=date.ancycle)
-    Lind98Xts = xts(mon.Lind98, order.by=date.ancycle)
-    Lind60Xts = xts(mon.Lind60, order.by=date.ancycle)
-    Lind40Xts = xts(mon.Lind40, order.by=date.ancycle)
-    Lind10Xts = xts(mon.Lind10, order.by=date.ancycle)
-    Herz116Xts = xts(mon.Herz116, order.by=date.ancycle)
-    Herz69Xts = xts(mon.Herz69, order.by=date.ancycle)
-    Herz35Xts = xts(mon.Herz35, order.by=date.ancycle)
-    Herz10Xts = xts(mon.Herz10, order.by=date.ancycle)
-    Ylims = GetYlims(Era20c100Xts, Lind98Xts, Herz116Xts, Lind10Xts)
+    Ylims = GetYlims(xts(mon.Era20c100, order.by=date.ancycle),
+                     xts(mon.Lind98, order.by=date.ancycle),
+                     xts(mon.Herz116, order.by=date.ancycle),
+                     xts(mon.Herz10, order.by=date.ancycle))
     yliml = Ylims$yll
     ylimh = Ylims$ylh
 
+    dummy = numeric(length=length(mon.Herz116)) * NA
+
     pdf(fname, width=a4width, height=a4height, onefile=TRUE, pointsize=13)
-    par(mfrow=c(4,1), oma=c(4,2,2,0.5), mar=c(0,0,0,0), cex=1.1)
+    par(mfrow=c(4,1), oma=c(3,3,3,0.5), mar=c(0,0,0,0), cex=1.1)
 
-    dummy = Era20c100Xts * NA
-
-    plot(dummy, main=NULL, ylim=c(yliml, ylimh), las=1, xaxt="n")
-    # title(ylab="windspeed [m/s]", line=2)
-    # title(main="Annual cycle of windspeed at Lindenberg", line=1)
-    lines(Lind98Xts, type="b", pch=16, col="blue", lw=2)
-    lines(Era20c100Xts, type="b", pch=16, col="green", lw=2)
-    lines(Herz116Xts, type="b", pch=16, col="red", lw=2)
+    # !!! col.axis = "white" is a hack to suppress the tick labels
+    # !!! in order to set them manually
+    plot(dummy, xlim=c(1,12), ylim=c(yliml, ylimh), col.axis = "white",
+         xlab="", xaxt="n", ylab="", main="")
+    title("Annual cycle of windspeed at Lindenberg", outer=TRUE, line=1, cex=1.1)
+    title(ylab="windspeed [m/s]", outer=TRUE, line=2)
+    axis(2, labels=yliml:(ylimh-1), at=yliml:(ylimh-1), las=1)
+    lines(mon.Lind98, type="b", pch=16, col="blue", lw=2)
+    lines(mon.Era20c100, type="b", pch=16, col="green", lw=2)
+    lines(mon.Herz116, type="b", pch=16, col="red", lw=2)
     # corr1 = cor.test(as.numeric(Era20c100Xts), as.numeric(Lind98Xts))
     # corr2 = cor.test(as.numeric(Herz116Xts), as.numeric(Lind98Xts))
     # legend("top", legend=c("Lind at 98m ", paste0("Era20C at 100m with corr = ",
@@ -1371,46 +1370,52 @@ PlotTowerERAprofileAnnualCycle <- function(tower.df, tower.name, fname) {
     legend("top", legend=c("Lind at 98m ", "Era20C at 100m", "Herz at 116m"),
            text.col=c("blue", "green", "red"), cex=legend.cex)
 
-    plot(dummy, main=NULL, ylim=c(yliml, ylimh), las=1, xaxt="n")
-    lines(Lind60Xts, type="b", pch=16, col="blue", lw=2)
-    lines(Herz69Xts, type="b", pch=16, col="red", lw=2)
+    plot(dummy, xlim=c(1,12), ylim=c(yliml, ylimh), col.axis = "white",
+         las=1, xlab="", xaxt="n", ylab="", main="")
+    axis(2, labels=yliml:(ylimh-1), at=yliml:(ylimh-1), las=1)
+    lines(mon.Lind60, type="b", pch=16, col="blue", lw=2)
+    lines(mon.Herz69, type="b", pch=16, col="red", lw=2)
     legend("top", legend=c("Lind at 60m", "Herz at 69m"),
            text.col=c("blue", "red"), cex=legend.cex)
 
-    plot(dummy, main=NULL, ylim=c(yliml, ylimh), las=1, xaxt="n")
-    lines(Lind40Xts, type="b", pch=16, col="blue", lw=2)
-    lines(Herz35Xts, type="b", pch=16, col="red", lw=2)
+    plot(dummy, xlim=c(1,12), ylim=c(yliml, ylimh), col.axis = "white",
+         las=1, xlab="", xaxt="n", ylab="", main="")
+    axis(2, labels=yliml:(ylimh-1), at=yliml:(ylimh-1), las=1)
+    lines(mon.Lind40, type="b", pch=16, col="blue", lw=2)
+    lines(mon.Herz35, type="b", pch=16, col="red", lw=2)
     legend("top", legend=c("Lind at 40m", "Herz at 35m"),
            text.col=c("blue", "red"), cex=legend.cex)
 
-    plot(dummy, main=NULL, ylim=c(yliml, ylimh), las=1, major.format="%b")
-    lines(Lind10Xts, type="b", pch=16, col="cornflowerblue", lw=2)
-    lines(Herz10Xts, type="b", pch=16, col="coral1", lw=2)
+    plot(dummy, xlim=c(1,12), ylim=c(yliml, ylimh), col.axis = "white",
+         las=1, xlab="", xaxt="n", ylab="", main="")
+    axis(2, labels=yliml:(ylimh-1), at=yliml:(ylimh-1), las=1)
+    lines(mon.Lind10, type="b", pch=16, col="cornflowerblue", lw=2)
+    lines(mon.Herz10, type="b", pch=16, col="coral1", lw=2)
     legend("top", legend=c("Lind at 10m", "Herz at 10m"),
            text.col=c("blue", "red"), cex=legend.cex)
 
-    mtext("Annual cycle of windspeed at Lindenberg", outer=TRUE, line=0.5, cex=1.2)
-    mtext("windspeed [m/s]", line=2, side=2, outer=TRUE)
+    axis(1, labels=all.months, at = 1:12)
 
     dev.off()
 
-
     fname = gsub("annualCycle", "annualCycleSingle", fname)
     pdf(fname, width=a4width, height=a4height, onefile=TRUE, pointsize=13)
-    par(mar=c(4,4,3,0.5), cex=1.1)
-
-    plot(dummy, main=NULL, ylim=c(yliml, ylimh), las=1, major.format="%b")
+    par(mar=c(3,3,3,0.5), cex=1.1)
+    plot(dummy, xlim=c(1,12), ylim=c(yliml.rel,ylimh.rel), col.axis = "white",
+         las=1, xlab="", ylab="", main="")
+    title(main="Annual cycle of relative windspeed at Lindenberg", line=1, cex=1.1)
     title(ylab="windspeed [m/s]", line=2)
-    title(main="Annual cycle of relative windspeed at Lindenberg", line=1)
-    lines(Herz116Xts, type="b", pch=16, col="violetred",lw=2)
-    lines(Lind98Xts, type="b", pch=16, col="purple2",lw=2)
-    lines(Era20c100Xts, type="b", pch=16, col="green",lw=2)
-    lines(Herz69Xts, type="b", pch=16, col="chocolate",lw=2)
-    lines(Lind60Xts, type="b", pch=16, col="deepskyblue",lw=2)
-    lines(Lind40Xts, type="b", pch=16, col="blue",lw=2)
-    lines(Herz35Xts, type="b", pch=16, col="red",lw=2)
-    lines(Lind10Xts, type="b", pch=16, col="darkturquoise",lw=2)
-    lines(Herz10Xts, type="b", pch=16, col="orange",lw=2)
+    axis(1, labels=all.months, at = 1:12)
+    axis(2, labels=c(yliml.rel,0,ylimh.rel), at=c(yliml.rel,0,ylimh.rel))
+    lines(RelDiff(mon.Herz116, mean(mon.Herz116)), type="b", pch=16, col="violetred",lw=2)
+    lines(RelDiff(mon.Lind98, mean(mon.Lind98)), type="b", pch=16, col="purple2",lw=2)
+    lines(RelDiff(mon.Era20c100, mean(mon.Era20c100)), type="b", pch=16, col="green",lw=2)
+    lines(RelDiff(mon.Herz69, mean(mon.Herz69)), type="b", pch=16, col="chocolate",lw=2)
+    lines(RelDiff(mon.Lind60, mean(mon.Lind60)), type="b", pch=16, col="deepskyblue",lw=2)
+    lines(RelDiff(mon.Lind40, mean(mon.Lind40)), type="b", pch=16, col="blue",lw=2)
+    lines(RelDiff(mon.Herz35, mean(mon.Herz35)), type="b", pch=16, col="red",lw=2)
+    lines(RelDiff(mon.Lind10, mean(mon.Lind10)), type="b", pch=16, col="darkturquoise",lw=2)
+    lines(RelDiff(mon.Herz10, mean(mon.Herz10)), type="b", pch=16, col="orange",lw=2)
     legend("top", legend=c("Herz at 116m", "Lind at 98m ", "Era20C at 100m",
                            "Herz at 69m", "Lind at 60m", "Lind at 40m", "Herz at 35m",
                            "Lind at 10m", "Herz at 10m"),
@@ -1420,30 +1425,82 @@ PlotTowerERAprofileAnnualCycle <- function(tower.df, tower.name, fname) {
     dev.off()
 
 
-    fname = gsub("annualCycleSingle", "annualCycleRelDiffSingle", fname)
+    fname = gsub("annualCycleSingle", "annualCycleSingleArrow", fname)
     pdf(fname, width=a4width, height=a4height, onefile=TRUE, pointsize=13)
     par(mar=c(3,3,3,0.5), cex=1.1)
-
-    plot(dummy, main=NULL, ylim=c(-0.25,0.25), las=1, major.format="%b")
+    ylimh = ylimh + 1
+    plot(dummy, xlim=c(1,12), ylim=c(yliml, ylimh), col.axis = "white",
+         las=1, xlab="", ylab="", main="")
+    title(main="Annual Cycle of windspeed at Lindenberg", line=1, cex=1.1)
     title(ylab="windspeed [m/s]", line=2)
-    title(main="Annual cycle of relative windspeed at Lindenberg", line=1)
-    lines(RelDiff(Herz116Xts, mean(Herz116Xts)), type="b", pch=16,
-                  col="violetred",lw=2)
-    lines(RelDiff(Lind98Xts, mean(Lind98Xts)), type="b", pch=16,
+    axis(1, labels=all.months, at = 1:12)
+    axis(2, labels=yliml:ylimh, at=yliml:ylimh)
+
+    lines(mon.Herz116, type="b", pch=16, col="violetred",lw=2)
+    arrows(1:12, mon.Herz116-sd(mon.Herz116), 1:12, mon.Herz116+sd(mon.Herz116),
+           length=0.05, angle=90, code=3, col="violetred")
+    lines(mon.Lind98, type="b", pch=16, col="purple2",lw=2)
+    arrows(1:12, mon.Lind98-sd(mon.Lind98), 1:12, mon.Lind98+sd(mon.Lind98),
+           length=0.05, angle=90, code=3, col="purple2")
+    lines(mon.Era20c100, type="b", pch=16, col="green",lw=2)
+    arrows(1:12, mon.Era20c100-sd(mon.Era20c100), 1:12, mon.Era20c100+sd(mon.Era20c100),
+           length=0.05, angle=90, code=3, col="green")
+    lines(mon.Herz69, type="b", pch=16, col="chocolate",lw=2)
+    #     arrows(1:12, as.numeric(Herz69Xts)-sd(Herz69Xts), 1:12,
+    #            as.numeric(Herz69Xts)+sd(Herz69Xts), length=0.05, angle=90,
+    #            code=3, col="chocolate")
+    lines(mon.Lind60, type="b", pch=16, col="deepskyblue",lw=2)
+    #     arrows(1:12, as.numeric(Lind60Xts)-sd(Lind60Xts), 1:12,
+    #            as.numeric(Lind60Xts)+sd(Lind60Xts), length=0.05, angle=90,
+    #            code=3, col="deepskyblue")
+    lines(mon.Lind40, type="b", pch=16, col="blue",lw=2)
+    #     arrows(1:12, as.numeric(Lind40Xts)-sd(Lind40Xts), 1:12,
+    #            as.numeric(Lind40Xts)+sd(Lind40Xts), length=0.05, angle=90,
+    #            code=3, col="blue")
+    lines(mon.Herz35, type="b", pch=16, col="red",lw=2)
+    #     arrows(1:12, as.numeric(Herz35Xts)-sd(Herz35Xts), 1:12,
+    #            as.numeric(Herz35Xts)+sd(Herz35Xts), length=0.05, angle=90,
+    #            code=3, col="red")
+    lines(mon.Lind10, type="b", pch=16, col="darkturquoise",lw=2)
+    arrows(1:12, mon.Lind10-sd(mon.Lind10), 1:12, mon.Lind10+sd(mon.Lind10),
+           length=0.05, angle=90, code=3, col="darkturquoise")
+    lines(mon.Herz10, type="b", pch=16, col="orange",lw=2)
+    arrows(1:12, mon.Herz10-sd(mon.Herz10), 1:12, mon.Herz10+sd(mon.Herz10),
+           length=0.05, angle=90, code=3, col="orange")
+    legend("top", legend=c("Herz at 116m", "Lind at 98m ", "Era20C at 100m",
+                           "Herz at 69m", "Lind at 60m", "Lind at 40m", "Herz at 35m",
+                           "Lind at 10m", "Herz at 10m"),
+           text.col=c("violetred", "purple2", "green", "chocolate", "deepskyblue",
+                      "blue", "red", "darkturquoise", "orange"), cex=0.9)
+
+    dev.off()
+
+    fname = gsub("annualCycleSingleArrow", "annualCycleRelDiffSingle", fname)
+    pdf(fname, width=a4width, height=a4height, onefile=TRUE, pointsize=13)
+    par(mar=c(3,3,3,0.5), cex=1.1)
+    plot(dummy, xlim=c(1,12), ylim=c(yliml.rel, ylimh.rel), col.axis = "white",
+         las=1, xlab="", ylab="", main="")
+    title(main="Annual cycle of relative windspeed at Lindenberg", line=1, cex=1.1)
+    title(ylab="windspeed [m/s]", line=2)
+    axis(1, labels=all.months, at = 1:12)
+    axis(2, labels=c(yliml.rel,0,ylimh.rel), at=c(yliml.rel,0,ylimh.rel))
+    lines(RelDiff(mon.Herz116, mean(mon.Herz116)), type="b", pch=16,
+          col="violetred",lw=2)
+    lines(RelDiff(mon.Lind98, mean(mon.Lind98)), type="b", pch=16,
           col="purple2",lw=2)
-    lines(RelDiff(Era20c100Xts, mean(Era20c100Xts)), type="b", pch=16,
+    lines(RelDiff(mon.Era20c100, mean(mon.Era20c100)), type="b", pch=16,
           col="green",lw=2)
-    lines(RelDiff(Herz69Xts, mean(Herz69Xts)), type="b", pch=16,
+    lines(RelDiff(mon.Herz69, mean(mon.Herz69)), type="b", pch=16,
           col="chocolate",lw=2)
-    lines(RelDiff(Lind60Xts, mean(Lind60Xts)), type="b", pch=16,
+    lines(RelDiff(mon.Lind60, mean(mon.Lind60)), type="b", pch=16,
           col="deepskyblue",lw=2)
-    lines(RelDiff(Lind40Xts, mean(Lind40Xts)), type="b", pch=16,
+    lines(RelDiff(mon.Lind40, mean(mon.Lind40)), type="b", pch=16,
           col="blue",lw=2)
-    lines(RelDiff(Herz35Xts, mean(Herz35Xts)), type="b", pch=16,
+    lines(RelDiff(mon.Herz35, mean(mon.Herz35)), type="b", pch=16,
           col="red",lw=2)
-    lines(RelDiff(Lind10Xts, mean(Lind10Xts)), type="b", pch=16,
+    lines(RelDiff(mon.Lind10, mean(mon.Lind10)), type="b", pch=16,
           col="darkturquoise",lw=2)
-    lines(RelDiff(Herz10Xts, mean(Herz10Xts)), type="b", pch=16,
+    lines(RelDiff(mon.Herz10, mean(mon.Herz10)), type="b", pch=16,
           col="orange",lw=2)
     legend("top", legend=c("Herz at 116m", "Lind at 98m ", "Era20C at 100m",
                            "Herz at 69m", "Lind at 60m", "Lind at 40m", "Herz at 35m",
