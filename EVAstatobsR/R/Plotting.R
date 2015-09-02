@@ -1190,8 +1190,8 @@ PlotTowerERAprofileRelDiff <- function(tower.df, tower.name, fname) {
     if (tower.name == "Fino1") plot.ext = "Fino1 at 100m "
     if (tower.name == "Fino2") plot.ext = "Fino2 at 102m "
 
-    pdf(fname, width=a4height, height=a4width, onefile=TRUE, pointsize=13)
-    par(mfrow=c(3,1), mar=c(0,4,0,0), oma=c(4,0,3,0.5), cex=1.1)
+    pdf(fname, width=a4height/0.67, height=a4width, onefile=TRUE, pointsize=13)
+    par(mfrow=c(2,1), mar=c(0,4,0,0), oma=c(4,0,3,0.5), cex=1.3)
 
     # == absolute, relative and normalized TS of each height ==
     dummy = numeric(length=length(tower.date)) * NA
@@ -1222,8 +1222,8 @@ PlotTowerERAprofileRelDiff <- function(tower.df, tower.name, fname) {
                                paste0("correlation = ", round(corr$estimate, 2))),
            text.col=c(color$era20, color$tower, color$black))
 
-    mtext(paste0("Monthly relative differences of ", tower.name,
-                 " at 100m against HErZ and ERA20C"), outer=TRUE, line=1, cex=1.2)
+    mtext(paste0("Monthly relative differences of ", plot.ext,
+                 " against HErZ and ERA20C"), outer=TRUE, line=1, cex=1.6)
 
     dev.off()
 
@@ -1501,7 +1501,7 @@ PlotTowerERAprofileAnnualCycle <- function(tower.df, tower.name, fname) {
            text.col=c("blue", "green", "red"), cex=legend.cex)
 
     plot(dummy, xlim=c(1,12), ylim=c(yliml, ylimh), col.axis = "white",
-         las=1, xlab="", xaxt="n", ylab="", main="")
+         xlab="", xaxt="n", ylab="", main="")
     axis(2, labels=yliml:(ylimh-1), at=yliml:(ylimh-1), las=1)
     lines(mon.Lind60, type="b", pch=16, col="blue", lw=2)
     lines(mon.Herz69, type="b", pch=16, col="red", lw=2)
@@ -1513,7 +1513,7 @@ PlotTowerERAprofileAnnualCycle <- function(tower.df, tower.name, fname) {
            text.col=c("blue", "red"), cex=legend.cex)
 
     plot(dummy, xlim=c(1,12), ylim=c(yliml, ylimh), col.axis = "white",
-         las=1, xlab="", xaxt="n", ylab="", main="")
+         xlab="", xaxt="n", ylab="", main="")
     axis(2, labels=yliml:(ylimh-1), at=yliml:(ylimh-1), las=1)
     lines(mon.Lind40, type="b", pch=16, col="blue", lw=2)
     lines(mon.Herz35, type="b", pch=16, col="red", lw=2)
@@ -1525,7 +1525,7 @@ PlotTowerERAprofileAnnualCycle <- function(tower.df, tower.name, fname) {
            text.col=c("blue", "red"), cex=legend.cex)
 
     plot(dummy, xlim=c(1,12), ylim=c(yliml, ylimh), col.axis = "white",
-         las=1, xlab="", xaxt="n", ylab="", main="")
+         xlab="", xaxt="n", ylab="", main="")
     axis(2, labels=yliml:(ylimh-1), at=yliml:(ylimh-1), las=1)
     lines(mon.Lind10, type="b", pch=16, col="blue", lw=2)
     lines(mon.Herz10, type="b", pch=16, col="red", lw=2)
@@ -1547,11 +1547,11 @@ PlotTowerERAprofileAnnualCycle <- function(tower.df, tower.name, fname) {
     par(mar=c(3,3,3,0.5), cex=1.1)
     ylimh = ylimh + 1
     plot(dummy, xlim=c(1,12), ylim=c(yliml, ylimh), col.axis = "white",
-         las=1, xlab="", ylab="", main="")
+         xlab="", ylab="", main="")
     title(main="Annual cycle of windspeed at Lindenberg", line=1, cex=1.1)
     title(ylab="windspeed [m/s]", line=2)
-    axis(1, labels=all.months, at = 1:12)
-    axis(2, labels=yliml:ylimh, at=yliml:ylimh)
+    axis(1, labels=all.months, at = 1:12, las=1)
+    axis(2, labels=yliml:ylimh, at=yliml:ylimh, las=1)
 
     lines(mon.Herz116, type="b", pch=16, col="violetred",lw=2)
     arrows(1:12, mon.Herz116-sd(mon.Herz116), 1:12, mon.Herz116+sd(mon.Herz116),
@@ -1597,11 +1597,11 @@ PlotTowerERAprofileAnnualCycle <- function(tower.df, tower.name, fname) {
     pdf(fname, width=a4width, height=a4height, onefile=TRUE, pointsize=13)
     par(mar=c(3,3,3,0.5), cex=1.1)
     plot(dummy, xlim=c(1,12), ylim=c(yliml.rel, ylimh.rel), col.axis = "white",
-         las=1, xlab="", ylab="", main="")
+         xlab="", ylab="", main="")
     title(main="Annual cycle of relative windspeed at Lindenberg", line=1, cex=1.1)
-    title(ylab="windspeed [m/s]", line=2)
-    axis(1, labels=all.months, at = 1:12)
-    axis(2, labels=c(yliml.rel,0,ylimh.rel), at=c(yliml.rel,0,ylimh.rel))
+    title(ylab="relative difference", line=2)
+    axis(1, labels=all.months, at = 1:12, las=1)
+    axis(2, labels=c(yliml.rel,0,ylimh.rel), at=c(yliml.rel,0,ylimh.rel), las=1)
     lines(RelDiff(mon.Herz116, mean(mon.Herz116)), type="b", pch=16,
           col="violetred",lw=2)
     lines(RelDiff(mon.Lind98, mean(mon.Lind98)), type="b", pch=16,
@@ -1660,12 +1660,12 @@ PlotTowerERAprofileAnnualCycle <- function(tower.df, tower.name, fname) {
 
 
     plot(dummy, xlim=c(1,12), ylim=c(yliml, ylimh), col.axis = "white",
-         las=1, xlab="", ylab="", main="")
+         xlab="", ylab="", main="")
     yliml = yliml - 2
     title(main=paste0("Annual cycle of windspeed at ", tower.name), line=1, cex=1.1)
     title(ylab="windspeed [m/s]", line=2)
-    axis(1, labels=all.months, at = 1:12)
-    axis(2, labels=yliml:ylimh, at=yliml:ylimh)
+    axis(1, labels=all.months, at = 1:12, las=1)
+    axis(2, labels=yliml:ylimh, at=yliml:ylimh, las=1)
     lines(mon.tower, type="b", pch=16, col="blue",lw=2)
     lines(mon.Era20c100, type="b", pch=16, col="green",lw=2)
     lines(mon.Herz116, type="b", pch=16, col="red",lw=2)
@@ -1681,11 +1681,11 @@ PlotTowerERAprofileAnnualCycle <- function(tower.df, tower.name, fname) {
     par(mar=c(3,3,3,0.5), cex=1.1)
     ylimh = ylimh + 1
     plot(dummy, xlim=c(1,12), ylim=c(yliml, ylimh), col.axis = "white",
-         las=1, xlab="", ylab="", main="")
+         xlab="", ylab="", main="")
     title(main=paste0("Annual cycle of windspeed at ", tower.name), line=1, cex=1.1)
     title(ylab="windspeed [m/s]", line=2)
-    axis(1, labels=all.months, at = 1:12)
-    axis(2, labels=yliml:ylimh, at=yliml:ylimh)
+    axis(1, labels=all.months, at = 1:12, las=1)
+    axis(2, labels=yliml:ylimh, at=yliml:ylimh, las=1)
 
     lines(mon.Herz116, type="b", pch=16, col="violetred",lw=2)
     arrows(1:12, mon.Herz116-sd(mon.Herz116), 1:12, mon.Herz116+sd(mon.Herz116),
@@ -1713,12 +1713,12 @@ PlotTowerERAprofileAnnualCycle <- function(tower.df, tower.name, fname) {
     pdf(fname, width=a4width, height=a4height, onefile=TRUE, pointsize=13)
     par(mar=c(3,3,3,0.5), cex=1.1)
     plot(dummy, xlim=c(1,12), ylim=c(yliml.rel, ylimh.rel), col.axis = "white",
-         las=1, xlab="", ylab="", main="")
+         xlab="", ylab="", main="")
     title(main=paste0("Annual cycle of relative windspeed at ", tower.name),
           line=1, cex=1.1)
-    title(ylab="windspeed [m/s]", line=2)
-    axis(1, labels=all.months, at = 1:12)
-    axis(2, labels=c(yliml.rel,0,ylimh.rel), at=c(yliml.rel,0,ylimh.rel))
+    title(ylab="relative difference", line=2)
+    axis(1, labels=all.months, at = 1:12, las=1)
+    axis(2, labels=c(yliml.rel,0,ylimh.rel), at=c(yliml.rel,0,ylimh.rel), las=1)
     lines(RelDiff(mon.Herz116, mean(mon.Herz116)), type="b", pch=16,
           col="violetred",lw=2)
     lines(RelDiff(mon.tower, mean(mon.tower)), type="b", pch=16,
