@@ -660,7 +660,7 @@ PlotHistograms <- function(outdir, fname, station.name, era.monthly, width, heig
   if (!era.monthly) monthly.ext = 'daily'
 
   xlabname.empty = ""
-  xlabname.full = "10m windspeed [m/s]"
+  xlabname.full = "windspeed [m/s]"
   ylabname = "Density"
 
   if (plot.10m) {
@@ -879,7 +879,7 @@ PlotHistogramsTower <- function(outdir, fname, era.monthly,
   if (!era.monthly) monthly.ext = 'daily'
 
   xlabname.empty = ""
-  xlabname.full = "10m windspeed [m/s]"
+  xlabname.full = "windspeed [m/s]"
   ylabname.full = "Density"
   ylabname.empty = ""
 
@@ -890,8 +890,11 @@ PlotHistogramsTower <- function(outdir, fname, era.monthly,
                         min(tower.df$Lind10, na.rm=TRUE)))
     max.val = ceiling(max(max(tower.df$era20c100, na.rm=TRUE),
                           max(tower.df$Lind98, na.rm=TRUE),
-                          max(tower.df$herz116, na.rm=TRUE)))
-    breaks = seq(min.val, max.val, 0.25)
+                          max(tower.df$herz116, na.rm=TRUE))) + 1
+
+    if (era.monthly) breaks = seq(min.val, max.val, 0.5)
+    if (!era.monthly) breaks = seq(min.val, max.val, 0.75)
+
     dummy = numeric(length=length(tower.df$era20c10)) * NA
 
     fname = gsub('Histogram', 'Histogram_100m', fname)
@@ -903,16 +906,19 @@ PlotHistogramsTower <- function(outdir, fname, era.monthly,
                      "Lindenberg at 98m")
     histoPlot(tower.df$Lind98, dummy, breaks, xlims=c(min.val, max.val),
               titname, xlabname.full, ylabname.full)
+    plotLegendStats(xlims=c(min.val, max.val), as.numeric(tower.df$Lind98))
 
     titname = paste0("Frequency distribution of ", monthly.ext, "\n windspeed of ",
                      "HErZ at 116m")
     histoPlot(tower.df$herz116, dummy, breaks, xlims=c(min.val, max.val),
               titname, xlabname.full, ylabname.empty)
+    plotLegendStats(xlims=c(min.val, max.val), as.numeric(tower.df$herz116))
 
     titname = paste0("Frequency distribution of ", monthly.ext, "\n windspeed of ",
                      "ERA20C at 100m")
     histoPlot(tower.df$era20c100, dummy, breaks, xlims=c(min.val, max.val),
               titname, xlabname.full, ylabname.empty)
+    plotLegendStats(xlims=c(min.val, max.val), as.numeric(tower.df$era20c100))
     dev.off()
 
 
@@ -925,16 +931,19 @@ PlotHistogramsTower <- function(outdir, fname, era.monthly,
                      "Lindenberg at 10m")
     histoPlot(tower.df$Lind10, dummy, breaks, xlims=c(min.val, max.val),
               titname, xlabname.full, ylabname.full)
+    plotLegendStats(xlims=c(min.val, max.val), as.numeric(tower.df$Lind10))
 
     titname = paste0("Frequency distribution of ", monthly.ext, "\n windspeed of ",
                      "HErZ at 10m")
     histoPlot(tower.df$herz10, dummy, breaks, xlims=c(min.val, max.val),
               titname, xlabname.full, ylabname.empty)
+    plotLegendStats(xlims=c(min.val, max.val), as.numeric(tower.df$herz10))
 
     titname = paste0("Frequency distribution of ", monthly.ext, "\n windspeed of ",
                      "ERA20C at 10m")
     histoPlot(tower.df$era20c10, dummy, breaks, xlims=c(min.val, max.val),
               titname, xlabname.full, ylabname.empty)
+    plotLegendStats(xlims=c(min.val, max.val), as.numeric(tower.df$era20c10))
     dev.off()
 
 
@@ -1234,6 +1243,9 @@ PlotTowerERAprofileRelDiff <- function(tower.df, tower.name, fname) {
 
 #-----------------------------------------------------------------------------------
 
+#' @title
+#' @description
+#' @param
 PlotTowerERAprofileAnnualVar <- function(tower.df, tower.name, fname) {
 
   legend.cex = 0.75
@@ -1414,6 +1426,9 @@ PlotTowerERAprofileAnnualVar <- function(tower.df, tower.name, fname) {
 
 #-----------------------------------------------------------------------------------
 
+#' @title
+#' @description
+#' @param
 PlotTowerERAprofileAnnualCycle <- function(tower.df, tower.name, fname) {
 
   legend.cex = 0.75
@@ -1819,7 +1834,7 @@ histoPlot <- function(X, Y, breaks, xlims, titname, xlabname, ylabname,
   } else {
     hist(X, freq=F, breaks=breaks, xlim=xlims, col="green", border="blue",
          main="", xlab="", ylab="", xaxt=xaxis, yaxt=yaxis)
-    lines(density(X, na.rm=TRUE), col="red", lw=1.5)
+#     lines(density(X, na.rm=TRUE), col="red", lw=1.5)
   }
   if (xaxis == 's') {
     mtext(xlabname, side=1, line=2, cex=0.9)
@@ -1831,7 +1846,7 @@ histoPlot <- function(X, Y, breaks, xlims, titname, xlabname, ylabname,
   } else {
     mtext(ylabname, side=2, line=0, cex=0.9)
   }
-  mtext(titname, side=3, line=0, font=2, cex=1.)
+  mtext(titname, side=3, line=0, font=2, cex=0.8)
 }
 
 #-----------------------------------------------------------------------------------
@@ -1870,4 +1885,48 @@ qqPlot <- function(X, Y, yliml, ylimh,
     text(ceiling(0.1*(ylimh-yliml)), floor(0.9*(ylimh-yliml)),
          paste(text.str), adj=c(0, 0.5))
   }
+}
+
+#-----------------------------------------------------------------------------------
+
+#' @title
+#' @description
+#' @param
+plotLegendStats <- function(xlims, vals) {
+
+  weibull = TRUE
+  if (any(!is.finite(vals))) weibull = FALSE
+  if (weibull) {
+    daily.weibull <- fitdist(vals, distr="weibull")
+    SshapeCI <- daily.weibull$estimate[1] + c(-1.96, 1.96) *
+      sqrt(vcov(daily.weibull)["shape", "shape"])
+    SscaleCI <- daily.weibull$estimate[2] + c(-1.96, 1.96) *
+      sqrt(vcov(daily.weibull)["scale", "scale"])
+    x <- seq(xlims[1], xlims[2], by = 0.01)
+    y <- dweibull(x, shape = daily.weibull$estimate[1], scale = daily.weibull$estimate[2])
+    lines(y ~ x, lwd = 1, col = "red", type = "l")
+  }
+
+  if (weibull) {
+    legend("topright", bty = "n",
+           legend = c(paste0("n = ", length(vals), "d",
+                             "\nmean = ", round(mean(vals, na.rm = TRUE), 2),
+                             "\nmedian = ", round(median(vals, na.rm = TRUE), 2),
+                             "\n1% = ", round(quantile(vals, 0.01, na.rm = TRUE), 2),
+                             "\n99% = ", round(quantile(vals, 0.99, na.rm = TRUE), 2)),
+                      paste0("Weibull fit with", "\n  k =",
+                             format(round(daily.weibull$estimate[1], 2)),
+                             "(", round(SshapeCI[1],2), "-", round(SshapeCI[2], 2), ")",
+                             "\n  c =", format(round(daily.weibull$estimate[2],2)),
+                             "(", round(SscaleCI[1], 2), "-", round(SscaleCI[2],2), ")")),
+           cex = 1)
+  } else {
+    legend("topright", bty = "n",
+           legend = c(paste0("n = ", length(vals), "d"),
+                      paste0("mean = ", round(mean(vals, na.rm = TRUE), 2)),
+                      paste0("median = ", round(median(vals, na.rm = TRUE), 2)),
+                      paste0("1% = ", round(quantile(vals, 0.01, na.rm = TRUE), 2)),
+                      paste0("99% = ", round(quantile(vals, 0.99, na.rm = TRUE), 2))),
+           cex = 1)
+      }
 }
