@@ -92,9 +92,11 @@ herz.grid = "./data/COSMO_REA6_CONST_withOUTsponge.grb"
 CheckFile(herz.grid)
 # filename(s) of the COSMO HErZ reanalysis file(s)
 if (era.monthly) {
-  herz.fname = "./data/WindSpeed_HErZ_MonMean_1997to2014.nc"
+  herz.fname = "./data/WindSpeed_HErZ_MonMean_1995to2014.nc"
 } else {
-  herz.fname = c("./data/WindSpeed_1997_DayMean.nc",
+  herz.fname = c("./data/WindSpeed_1995_DayMean.nc",
+                 "./data/WindSpeed_1996_DayMean.nc",
+                 "./data/WindSpeed_1997_DayMean.nc",
                  "./data/WindSpeed_1998_DayMean.nc",
                  "./data/WindSpeed_1999_DayMean.nc",
                  "./data/WindSpeed_2000_DayMean.nc",
@@ -136,13 +138,13 @@ CheckFile(c(station.daily.fname, station.hourly.fname))
 #- era20c: 1900 to 2010
 #- eraI: 1979 to 2014
 #- herz: 1995 to 2014
-era20c.tsstart = c(1997,1)
+era20c.tsstart = c(1995,1)
 era20c.tsend = c(2010,12)
-eraI.tsstart = c(1997,1)
+eraI.tsstart = c(1995,1)
 eraI.tsend = c(2010,12)
-herz.tsstart = c(1997,1)
+herz.tsstart = c(1995,1)
 herz.tsend = c(2010,12)
-fname_ext = "1997to2010"
+fname_ext = "1995to2010"
 
 #=== plotting ===
 # The following switches decided on which plots to generate
