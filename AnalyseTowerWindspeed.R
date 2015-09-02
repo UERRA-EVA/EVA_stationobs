@@ -174,22 +174,7 @@ lind.df = GetTowerProfileTS(tower.xts=lind.10.xts, tower2.xts=lind.20.xts,
 #-----------------------------------------------------------------------------
 
 if (plot.TowerEraProfile) {
-  cat("  **  Plotting tower-ERA profile\n")
-  fname = paste0(outdir, "Fino1HErZERA20Cprofile_", time.ext,"_", res.switch, '_',
-                 fname_ext, ".pdf")
-  PlotTowerERAprofile(fino1.df, tower.name="Fino1", fname, era.monthly)
-  fname = paste0(outdir, "Fino2HErZERA20Cprofile_", time.ext,"_", res.switch, '_',
-                 fname_ext, ".pdf")
-  PlotTowerERAprofile(fino2.df, tower.name="Fino2", fname, era.monthly)
-  fname = paste0(outdir, "LindenbergHErZERA20Cprofile_", time.ext,"_", res.switch, '_',
-                 fname_ext, ".pdf")
-  PlotTowerERAprofile(lind.df, tower.name="Lindenberg", fname, era.monthly)
-}
-
-#-----------------------------------------------------------------------------
-
-if (plot.ProfileTS & era.monthly) {
-  cat("  **  Plotting tower-ERA profile TS\n")
+  cat("  **  Plotting tower-ERA profile box plots\n")
   fname = paste0(outdir, "LindenbergHErZERA20C_boxPlots_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
   PlotTowerERAprofileBP(lind.df, tower.name="Lindenberg", fname, era.monthly)
@@ -202,7 +187,12 @@ if (plot.ProfileTS & era.monthly) {
                  res.switch, '_', fname_ext, ".pdf")
   PlotTowerERAprofileBP(fino2.df, tower.name="Fino2", fname, era.monthly)
 
+}
 
+#-----------------------------------------------------------------------------
+
+if (plot.ProfileTS & era.monthly) {
+  cat("  **  Plotting tower-ERA profile TS\n")
   fname = paste0(outdir, "LindenbergHErZERA20C_relativeDifferences_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
   PlotTowerERAprofileRelDiff(lind.df, tower.name="Lindenberg", fname)
