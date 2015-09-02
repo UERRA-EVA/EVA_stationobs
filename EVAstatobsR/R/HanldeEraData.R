@@ -214,7 +214,7 @@ ReadEraNetcdf2Xts <- function(era.param, era.fname,
 GetTowerProfileTS <- function(tower.xts, tower2.xts=NULL, tower3.xts=NULL,
                               tower4.xts=NULL, tower5.xts=NULL, tower6.xts=NULL,
                               herz10.xts, herz35.xts, herz69.xts, herz116.xts,
-                              herz178.xts, herz258.xts, era20c100.xts,
+                              herz178.xts, herz258.xts, era20c10.xts, era20c100.xts,
                               tower.tsstart, tower.tsend, herz.tsend, era20c.tsend,
                               tower.name=NULL) {
 
@@ -246,6 +246,7 @@ GetTowerProfileTS <- function(tower.xts, tower2.xts=NULL, tower3.xts=NULL,
   herz116.xts = herz116.xts[timestr]
   herz178.xts = herz178.xts[timestr]
   herz258.xts = herz258.xts[timestr]
+  era20c10.xts = era20c10.xts[timestr]
   era20c100.xts = era20c100.xts[timestr]
 
   if (tower.name == "Fino1") {
@@ -266,6 +267,7 @@ GetTowerProfileTS <- function(tower.xts, tower2.xts=NULL, tower3.xts=NULL,
   df$herz116 = coredata(herz116.xts)
   df$herz178 = coredata(herz178.xts)
   df$herz258 = coredata(herz258.xts)
+  df$era20c10 = coredata(era20c10.xts)
   df$era20c100 = coredata(era20c100.xts)
 
   return(df)

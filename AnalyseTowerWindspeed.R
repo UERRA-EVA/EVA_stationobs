@@ -53,6 +53,7 @@ era20c.data = ReadEraNetcdf2Xts(era20c.param, era20c.fname,
                                 era20c.tsstart, era20c.tsend,
                                 lonidx, latidx, era.monthly,
                                 era20c=TRUE, verb.dat=verb.era.dat)
+era20c10.fino1.xts = era20c.data$era10
 era20c100.fino1.xts = era20c.data$era20c100
 
 # for FINO2
@@ -63,6 +64,7 @@ era20c.data = ReadEraNetcdf2Xts(era20c.param, era20c.fname,
                                 era20c.tsstart, era20c.tsend,
                                 lonidx, latidx, era.monthly,
                                 era20c=TRUE, verb.dat=verb.era.dat)
+era20c10.fino2.xts = era20c.data$era10
 era20c100.fino2.xts = era20c.data$era20c100
 
 # for Lindenberg
@@ -73,6 +75,7 @@ era20c.data = ReadEraNetcdf2Xts(era20c.param, era20c.fname,
                                 era20c.tsstart, era20c.tsend,
                                 lonidx, latidx, era.monthly,
                                 era20c=TRUE, verb.dat=verb.era.dat)
+era20c10.lind.xts = era20c.data$era10
 era20c100.lind.xts = era20c.data$era20c100
 
 # == read HErZ data ==
@@ -140,6 +143,7 @@ fino1.df = GetTowerProfileTS(tower.xts=fino1.100.xts,
                              herz116.xts=herz116.fino1.xts,
                              herz178.xts=herz178.fino1.xts,
                              herz258.xts=herz258.fino1.xts,
+                             era20c10.xts=era20c10.fino1.xts,
                              era20c100.xts=era20c100.fino1.xts,
                              tower.tsstart=fino1.tsstart, tower.tsend=fino1.tsend,
                              herz.tsend=herz.tsend, era20c.tsend=era20c.tsend,
@@ -152,6 +156,7 @@ fino2.df = GetTowerProfileTS(tower.xts=fino2.102.xts,
                              herz116.xts=herz116.fino2.xts,
                              herz178.xts=herz178.fino2.xts,
                              herz258.xts=herz258.fino2.xts,
+                             era20c10.xts=era20c10.fino2.xts,
                              era20c100.xts=era20c100.fino2.xts,
                              tower.tsstart=fino2.tsstart, tower.tsend=fino2.tsend,
                              herz.tsend=herz.tsend, era20c.tsend=era20c.tsend,
@@ -166,6 +171,7 @@ lind.df = GetTowerProfileTS(tower.xts=lind.10.xts, tower2.xts=lind.20.xts,
                             herz116.xts=herz116.lind.xts,
                             herz178.xts=herz178.lind.xts,
                             herz258.xts=herz258.lind.xts,
+                            era20c10.xts=era20c10.lind.xts,
                             era20c100.xts=era20c100.lind.xts,
                             tower.tsstart=lind.tsstart, tower.tsend=lind.tsend,
                             herz.tsend=herz.tsend, era20c.tsend=era20c.tsend,
