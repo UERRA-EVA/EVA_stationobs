@@ -14,6 +14,7 @@ Depends:
     ncdf.tools,
     xts,
     vioplot,
-    RCurl
+    RCurl,
+    fitdistrplus
 License: GPL (>=3)
 LazyData: false
