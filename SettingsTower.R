@@ -55,4 +55,5 @@ era20c.tsend = c(2010,12)
 herz.tsend = c(2014,12)
 
 plot.TowerEraProfile = FALSE
-plot.ProfileTS = TRUE
+plot.histogram = TRUE
+plot.ProfileTS = FALSE

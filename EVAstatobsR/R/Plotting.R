@@ -858,6 +858,123 @@ PlotHistograms <- function(outdir, fname, station.name, era.monthly, width, heig
 
 #-----------------------------------------------------------------------------------
 
+#' @title
+#' @description
+#' @param
+PlotHistogramsTower <- function(outdir, fname, era.monthly,
+                                width, height, tower.df, tower.name) {
+
+  tower.date <- as.POSIXlt(tower.df$date)
+
+  Ylims = GetYlims(xts(tower.df$era20c100, order.by=tower.df$date),
+                   xts(tower.df$Lind98, order.by=tower.df$date),
+                   xts(tower.df$herz100, order.by=tower.df$date),
+                   xts(tower.df$hez10, order.by=tower.df$date))
+  yliml = Ylims$yll
+  ylimh = Ylims$ylh
+
+  axis.n = 'n'
+  axis.y = 's'
+  if (era.monthly) monthly.ext = 'monthly'
+  if (!era.monthly) monthly.ext = 'daily'
+
+  xlabname.empty = ""
+  xlabname.full = "10m windspeed [m/s]"
+  ylabname.full = "Density"
+  ylabname.empty = ""
+
+  if (tower.name == "Lindenberg") {
+
+    min.val = floor(min(min(tower.df$era20c10, na.rm=TRUE),
+                        min(tower.df$herz10, na.rm=TRUE),
+                        min(tower.df$Lind10, na.rm=TRUE)))
+    max.val = ceiling(max(max(tower.df$era20c100, na.rm=TRUE),
+                          max(tower.df$Lind98, na.rm=TRUE),
+                          max(tower.df$herz116, na.rm=TRUE)))
+    breaks = seq(min.val, max.val, 0.25)
+    dummy = numeric(length=length(tower.df$era20c10)) * NA
+
+    fname = gsub('Histogram', 'Histogram_100m', fname)
+    pdf(paste0(outdir, fname), width=width, height=height/2.,
+        onefile=TRUE, pointsize=13)
+    par(mfrow=c(1,3), mar=c(3,3,3,1))
+
+    titname = paste0("Frequency distribution of ", monthly.ext, "\n windspeed in ",
+                     "Lindenberg at 98m")
+    histoPlot(tower.df$Lind98, dummy, breaks, xlims=c(min.val, max.val),
+              titname, xlabname.full, ylabname.full)
+
+    titname = paste0("Frequency distribution of ", monthly.ext, "\n windspeed of ",
+                     "HErZ at 116m")
+    histoPlot(tower.df$herz116, dummy, breaks, xlims=c(min.val, max.val),
+              titname, xlabname.full, ylabname.empty)
+
+    titname = paste0("Frequency distribution of ", monthly.ext, "\n windspeed of ",
+                     "ERA20C at 100m")
+    histoPlot(tower.df$era20c100, dummy, breaks, xlims=c(min.val, max.val),
+              titname, xlabname.full, ylabname.empty)
+    dev.off()
+
+
+    fname = gsub('Histogram', 'Histogram_10m', fname)
+    pdf(paste0(outdir, fname), width=width, height=height/2.,
+        onefile=TRUE, pointsize=13)
+    par(mfrow=c(1,3), mar=c(3,3,3,1))
+
+    titname = paste0("Frequency distribution of ", monthly.ext, "\n windspeed in ",
+                     "Lindenberg at 10m")
+    histoPlot(tower.df$Lind10, dummy, breaks, xlims=c(min.val, max.val),
+              titname, xlabname.full, ylabname.full)
+
+    titname = paste0("Frequency distribution of ", monthly.ext, "\n windspeed of ",
+                     "HErZ at 10m")
+    histoPlot(tower.df$herz10, dummy, breaks, xlims=c(min.val, max.val),
+              titname, xlabname.full, ylabname.empty)
+
+    titname = paste0("Frequency distribution of ", monthly.ext, "\n windspeed of ",
+                     "ERA20C at 10m")
+    histoPlot(tower.df$era20c10, dummy, breaks, xlims=c(min.val, max.val),
+              titname, xlabname.full, ylabname.empty)
+    dev.off()
+
+
+    fname = gsub('Histogram', 'HistogramComp_10m', fname)
+    pdf(paste0(outdir, fname), width=width/0.75, height=height,
+        onefile=TRUE, pointsize=13)
+    par(mfrow=c(1,2), mar=c(3,3,3,1))
+
+    titname = paste0("Frequency distribution of ", monthly.ext, " 10m windspeed\n",
+                     "at Lindenberg in green and ERA20C shaded")
+    histoPlot(tower.df$Lind10, tower.df$era20c10, breaks, xlims=c(min.val, max.val),
+              titname, xlabname.full, ylabname.full, xaxis=axis.y, addPlot=TRUE)
+
+    titname = paste0("Frequency distribution of ", monthly.ext, " 10m windspeed\n",
+                     "at Lindenberg in green and COSMO HErZ shaded")
+    histoPlot(tower.df$Lind10, tower.df$herz10, breaks, xlims=c(min.val, max.val),
+              titname, xlabname.full, ylabname.empty, xaxis=axis.y, addPlot=TRUE)
+    dev.off()
+
+
+    fname = gsub('Histogram', 'HistogramComp_100m', fname)
+    pdf(paste0(outdir, fname), width=width/0.75, height=height,
+        onefile=TRUE, pointsize=13)
+    par(mfrow=c(1,2), mar=c(3,3,3,1))
+
+    titname = paste0("Frequency distribution of ", monthly.ext, " 100m windspeed\n",
+                     "at Lindenberg in green and ERA20C shaded")
+    histoPlot(tower.df$Lind98, tower.df$era20c100, breaks, xlims=c(min.val, max.val),
+              titname, xlabname.full, ylabname.full, xaxis=axis.y, addPlot=TRUE)
+
+    titname = paste0("Frequency distribution of ", monthly.ext, " 100m windspeed\n",
+                     "Lindenberg in green and COSMO HErZ shaded")
+    histoPlot(tower.df$Lind98, tower.df$herz116, breaks, xlims=c(min.val, max.val),
+              titname, xlabname.full, ylabname.empty, xaxis=axis.y, addPlot=TRUE)
+    dev.off()
+  }
+}
+
+#-----------------------------------------------------------------------------------
+
 #' @title Calculate the S_score as described in Mayer et al., 2015.
 #' @description Mayer et al., 2015: "Identifying added value in high-resolution
 #'   climate simulations over Scandinavia" describe the S_score based on the
@@ -1597,7 +1714,8 @@ PlotTowerERAprofileAnnualCycle <- function(tower.df, tower.name, fname) {
     par(mar=c(3,3,3,0.5), cex=1.1)
     plot(dummy, xlim=c(1,12), ylim=c(yliml.rel, ylimh.rel), col.axis = "white",
          las=1, xlab="", ylab="", main="")
-    title(main=paste0("Annual cycle of relative windspeed at ", tower.name), line=1, cex=1.1)
+    title(main=paste0("Annual cycle of relative windspeed at ", tower.name),
+          line=1, cex=1.1)
     title(ylab="windspeed [m/s]", line=2)
     axis(1, labels=all.months, at = 1:12)
     axis(2, labels=c(yliml.rel,0,ylimh.rel), at=c(yliml.rel,0,ylimh.rel))
@@ -1616,7 +1734,8 @@ PlotTowerERAprofileAnnualCycle <- function(tower.df, tower.name, fname) {
     legend("top", legend=c("Herz at 116m", plot.ext, "Era20C at 100m",
                            "Herz at 69m", "Herz at 35m",
                            "Herz at 10m"),
-           text.col=c("violetred", "purple2", "green", "chocolate", "red", "orange"), cex=0.9)
+           text.col=c("violetred", "purple2", "green", "chocolate", "red", "orange"),
+           cex=0.9)
 
     dev.off()
 

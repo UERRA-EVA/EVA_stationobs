@@ -197,6 +197,27 @@ if (plot.TowerEraProfile) {
 
 #-----------------------------------------------------------------------------
 
+if(plot.histograms) {
+
+  cat("  **  Plotting Histograms\n")
+  fname = paste0("Histogram_Lindenberg_", res.switch, '_', time.ext, "_",
+                 fname_ext, ".pdf")
+  PlotHistogramsTower(outdir, fname, era.monthly, a4width, a4height, lind.df,
+                      tower.name="Lindenberg")
+
+  fname = paste0("Histogram_Fino1_", res.switch, '_', time.ext, "_",
+                 fname_ext, ".pdf")
+  PlotHistogramsTower(outdir, fname, era.monthly, a4width, a4height, fino1.df,
+                      tower.name="Fino1")
+
+  fname = paste0("Histogram_Fino2_", res.switch, '_', time.ext, "_",
+                 fname_ext, ".pdf")
+  PlotHistogramsTower(outdir, fname, era.monthly, a4width, a4height, fino2.df,
+                      tower.name="Fino2")
+}
+
+#-----------------------------------------------------------------------------
+
 if (plot.ProfileTS & era.monthly) {
   cat("  **  Plotting tower-ERA profile TS\n")
   fname = paste0(outdir, "LindenbergHErZERA20C_relativeDifferences_", time.ext,"_",
