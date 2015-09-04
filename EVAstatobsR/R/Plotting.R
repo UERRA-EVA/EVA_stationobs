@@ -922,7 +922,7 @@ PlotHistogramsTower <- function(outdir, fname, era.monthly,
     dev.off()
 
 
-    fname = gsub('Histogram', 'Histogram_10m', fname)
+    fname = gsub('Histogram_100m', 'Histogram_10m', fname)
     pdf(paste0(outdir, fname), width=width, height=height/2.,
         onefile=TRUE, pointsize=13)
     par(mfrow=c(1,3), mar=c(3,3,3,1))
@@ -947,7 +947,7 @@ PlotHistogramsTower <- function(outdir, fname, era.monthly,
     dev.off()
 
 
-    fname = gsub('Histogram', 'HistogramComp_10m', fname)
+    fname = gsub('Histogram_10m', 'HistogramComp_10m', fname)
     pdf(paste0(outdir, fname), width=width/0.75, height=height,
         onefile=TRUE, pointsize=13)
     par(mfrow=c(1,2), mar=c(3,3,3,1))
@@ -964,7 +964,7 @@ PlotHistogramsTower <- function(outdir, fname, era.monthly,
     dev.off()
 
 
-    fname = gsub('Histogram', 'HistogramComp_100m', fname)
+    fname = gsub('HistogramComp_10m', 'HistogramComp_100m', fname)
     pdf(paste0(outdir, fname), width=width/0.75, height=height,
         onefile=TRUE, pointsize=13)
     par(mfrow=c(1,2), mar=c(3,3,3,1))
@@ -975,10 +975,75 @@ PlotHistogramsTower <- function(outdir, fname, era.monthly,
               titname, xlabname.full, ylabname.full, xaxis=axis.y, addPlot=TRUE)
 
     titname = paste0("Frequency distribution of ", monthly.ext, " 100m windspeed\n",
-                     "Lindenberg in green and COSMO HErZ shaded")
+                     "at Lindenberg in green and COSMO HErZ shaded")
     histoPlot(tower.df$Lind98, tower.df$herz116, breaks, xlims=c(min.val, max.val),
               titname, xlabname.full, ylabname.empty, xaxis=axis.y, addPlot=TRUE)
     dev.off()
+
+  } else if (tower.name == "Fino1" | tower.name == "Fino2") {
+
+    if (tower.name == "Fino1") {
+      tit.ext = "Fino1 at 100m"
+      data.vals = tower.df$Fino1
+    }
+    if (tower.name == "Fino2") {
+      tit.ext = "Fino2 at 102m"
+      data.vals = tower.df$Fino2
+    }
+
+    min.val = floor(min(min(tower.df$era20c10, na.rm=TRUE),
+                        min(tower.df$herz10, na.rm=TRUE)))
+    max.val = ceiling(max(max(tower.df$era20c100, na.rm=TRUE),
+                          max(data.vals, na.rm=TRUE),
+                          max(tower.df$herz116, na.rm=TRUE))) + 1
+
+    if (era.monthly) breaks = seq(min.val, max.val, 0.5)
+    if (!era.monthly) breaks = seq(min.val, max.val, 0.75)
+
+    dummy = numeric(length=length(tower.df$era20c10)) * NA
+
+    fname = gsub('Histogram', 'Histogram_100m', fname)
+    pdf(paste0(outdir, fname), width=width, height=height/2.,
+        onefile=TRUE, pointsize=13)
+    par(mfrow=c(1,3), mar=c(3,3,3,1))
+    titname = paste0("Frequency distribution of ", monthly.ext, "\n windspeed in ",
+                     tit.ext)
+    histoPlot(data.vals, dummy, breaks, xlims=c(min.val, max.val),
+              titname, xlabname.full, ylabname.full)
+    plotLegendStats(xlims=c(min.val, max.val), as.numeric(data.vals))
+
+    titname = paste0("Frequency distribution of ", monthly.ext, "\n windspeed of ",
+                     "HErZ at 116m")
+    histoPlot(tower.df$herz116, dummy, breaks, xlims=c(min.val, max.val),
+              titname, xlabname.full, ylabname.empty)
+    plotLegendStats(xlims=c(min.val, max.val), as.numeric(tower.df$herz116))
+
+    titname = paste0("Frequency distribution of ", monthly.ext, "\n windspeed of ",
+                     "ERA20C at 100m")
+    histoPlot(tower.df$era20c100, dummy, breaks, xlims=c(min.val, max.val),
+              titname, xlabname.full, ylabname.empty)
+    plotLegendStats(xlims=c(min.val, max.val), as.numeric(tower.df$era20c100))
+    dev.off()
+
+    if (tower.name == "Fino1") tit.ext = "100m windspeed\nat Fino1 "
+    if (tower.name == "Fino2") tit.ext = "102m windspeed\nat Fino2 "
+
+    fname = gsub('Histogram_100m', 'HistogramComp_100m', fname)
+    pdf(paste0(outdir, fname), width=width/0.75, height=height,
+        onefile=TRUE, pointsize=13)
+    par(mfrow=c(1,2), mar=c(3,3,3,1))
+
+    titname = paste0("Frequency distribution of ", monthly.ext, tit.ext,
+                     "in green and ERA20C shaded")
+    histoPlot(data.vals, tower.df$era20c100, breaks, xlims=c(min.val, max.val),
+              titname, xlabname.full, ylabname.full, xaxis=axis.y, addPlot=TRUE)
+
+    titname = paste0("Frequency distribution of ", monthly.ext, tit.ext,
+                     "in green and COSMO HErZ shaded")
+    histoPlot(data.vals, tower.df$herz116, breaks, xlims=c(min.val, max.val),
+              titname, xlabname.full, ylabname.empty, xaxis=axis.y, addPlot=TRUE)
+    dev.off()
+
   }
 }
 
@@ -1082,8 +1147,8 @@ PlotTowerERAprofileBP <- function(tower.df, tower.name, fname, era.mon) {
   }
 
   if (tower.name == "Lindenberg") {
-    pdf(fname, width=a4height, height=a4width, onefile=TRUE, pointsize=13)
-    par(mar=c(4,7,2,0.5))
+    pdf(fname, width=a4height, height=a4width/0.8, onefile=TRUE, pointsize=13)
+    par(mar=c(4,7,2,0.5), cex=1.2)
     boxplot.default(tower.df$Lind10, tower.df$herz10, tower.df$Lind20, tower.df$herz35,
                     tower.df$Lind40, tower.df$Lind60, tower.df$herz69, tower.df$Lind80,
                     tower.df$Lind98, tower.df$era20c100, tower.df$herz116,
@@ -1095,11 +1160,11 @@ PlotTowerERAprofileBP <- function(tower.df, tower.name, fname, era.mon) {
                     main=paste0(plot.ext, " windspeed profile at Lindenberg with HErZ"),
                     col=c("red", "blue", "red", "blue", "red", "red",
                           "blue", "red", "red", "green", "blue"))
-    mtext(x.labs, side=1, line=2)
+    mtext(x.labs, side=1, line=2, cex=1.4)
     dev.off()
   } else if (tower.name == "Fino1") {
-    pdf(fname, width=a4height, height=a4width, onefile=TRUE, pointsize=13)
-    par(mar=c(4,7,2,0.5))
+    pdf(fname, width=a4height, height=a4width/0.8, onefile=TRUE, pointsize=13)
+    par(mar=c(4,7,2,0.5), cex=1.2)
     boxplot.default(dummy, tower.df$herz10, dummy, tower.df$herz35, dummy, dummy,
                     tower.df$herz69, dummy, tower.df$era20c100, tower.df$Fino1,
                     tower.df$herz116,
@@ -1107,14 +1172,14 @@ PlotTowerERAprofileBP <- function(tower.df, tower.name, fname, era.mon) {
                     boxwex=bwex, staplewex=swex, las=1, ylim=wind.range,
                     names=c("", "HErZ 10m", "", "HErZ 35m", "", "", "HErZ 69m",
                             "", "ERA20C 100m", "Fino1 100m", "HErZ 116m"),
-                    main=paste0(plot.ext, " 100m windspeed at Fino1 with the HErZ profile"),
+                    main=paste0(plot.ext, " windspeed profile at Fino1 with HErZ"),
                     col=c("", "blue", "", "blue", "", "", "blue", "", "green",
                           "red", "blue"))
-    mtext(x.labs, side=1, line=2)
+    mtext(x.labs, side=1, line=2, cex=1.4)
     dev.off()
   } else if (tower.name == "Fino2") {
-    pdf(fname, width=a4height, height=a4width, onefile=TRUE, pointsize=13)
-    par(mar=c(4,7,2,0.5))
+    pdf(fname, width=a4height, height=a4width/0.8, onefile=TRUE, pointsize=13)
+    par(mar=c(4,7,2,0.5), cex=1.2)
     boxplot.default(dummy, tower.df$herz10, dummy, tower.df$herz35, dummy, dummy,
                     tower.df$herz69, dummy, tower.df$era20c100, tower.df$Fino2,
                     tower.df$herz116,
@@ -1122,10 +1187,10 @@ PlotTowerERAprofileBP <- function(tower.df, tower.name, fname, era.mon) {
                     boxwex=bwex, staplewex=swex, las=1, ylim=wind.range,
                     names=c("", "HErZ 10m", "", "HErZ 35m", "", "", "HErZ 69m",
                             "", "ERA20C 100m", "Fino2 102m", "HErZ 116m"),
-                    main=paste0(plot.ext, " 102m windspeed at Fino2 with the HErZ profile"),
+                    main=paste0(plot.ext, " windspeed profile at Fino2 with HErZ"),
                     col=c("", "blue", "", "blue", "", "", "blue", "", "green",
                           "red", "blue"))
-    mtext(x.labs, side=1, line=2)
+    mtext(x.labs, side=1, line=2, cex=1.4)
     dev.off()
   } else {
     CallStop(paste0("Unexpected tower name: ", tower.name, " "))
@@ -1139,7 +1204,7 @@ PlotTowerERAprofileBP <- function(tower.df, tower.name, fname, era.mon) {
 #' @param
 PlotTowerERAprofileRelDiff <- function(tower.df, tower.name, fname) {
 
-  legend.cex = 0.9
+  legend.cex = 0.8
   tower.date <- as.POSIXlt(tower.df$date)
 
   yliml.rel = -0.75
@@ -1148,8 +1213,8 @@ PlotTowerERAprofileRelDiff <- function(tower.df, tower.name, fname) {
 
   if (tower.name == "Lindenberg") {
 
-    pdf(fname, width=a4height, height=a4width, onefile=TRUE, pointsize=13)
-    par(mfrow=c(3,1), mar=c(0,4,0,0), oma=c(4,0,3,0.5), cex=1.1)
+    pdf(fname, width=a4height/0.67, height=a4width, onefile=TRUE, pointsize=13)
+    par(mfrow=c(3,1), mar=c(0,4,0,0), oma=c(4,0,3,0.5), cex=1.3)
 
     # == relative TS in 100m height ==
     dummy = numeric(length=length(tower.date)) * NA
@@ -1162,7 +1227,7 @@ PlotTowerERAprofileRelDiff <- function(tower.df, tower.name, fname) {
     lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col=color$herz)
     lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$tower)
     corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
-    legend("topleft", legend=c("HErZ at 116m", "Lindenberg at 98m",
+    legend("bottomleft", legend=c("HErZ at 116m", "Lindenberg at 98m",
                                paste0("correlation = ", round(corr$estimate, 2))),
            text.col=c(color$herz, color$tower, color$black))
 
@@ -1174,7 +1239,7 @@ PlotTowerERAprofileRelDiff <- function(tower.df, tower.name, fname) {
     lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col=color$era20)
     lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$tower)
     corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
-    legend("topleft", legend=c("ER20C at 100m", "Lindenberg at 98m",
+    legend("bottomleft", legend=c("ER20C at 100m", "Lindenberg at 98m",
                                paste0("correlation = ", round(corr$estimate, 2))),
            text.col=c(color$era20, color$tower, color$black))
 
@@ -1185,12 +1250,12 @@ PlotTowerERAprofileRelDiff <- function(tower.df, tower.name, fname) {
     lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col=color$herz)
     lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$tower)
     corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
-    legend("topleft", legend=c("HErZ at 10m", "Lindenberg at 10m",
+    legend("bottomleft", legend=c("HErZ at 10m", "Lindenberg at 10m",
                                paste0("correlation = ", round(corr$estimate, 2))),
            text.col=c(color$herz, color$tower, color$black))
 
-    mtext("Monthly relative differences of Lindenberg against HErZ and ERA20C",
-          outer=TRUE, line=1, cex=1.2)
+    mtext("Monthly relative windspeed differences at Lindenberg against HErZ and ERA20C",
+          outer=TRUE, line=1, cex=1.6)
 
     dev.off()
 
@@ -1200,7 +1265,7 @@ PlotTowerERAprofileRelDiff <- function(tower.df, tower.name, fname) {
     if (tower.name == "Fino2") plot.ext = "Fino2 at 102m "
 
     pdf(fname, width=a4height/0.67, height=a4width, onefile=TRUE, pointsize=13)
-    par(mfrow=c(2,1), mar=c(0,4,0,0), oma=c(4,0,3,0.5), cex=1.3)
+    par(mfrow=c(3,1), mar=c(0,4,0,0), oma=c(4,0,3,0.5), cex=1.3)
 
     # == absolute, relative and normalized TS of each height ==
     dummy = numeric(length=length(tower.date)) * NA
@@ -1214,7 +1279,7 @@ PlotTowerERAprofileRelDiff <- function(tower.df, tower.name, fname) {
     lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col=color$herz)
     lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$tower)
     corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
-    legend("topleft", legend=c("HErZ at 116m", plot.ext,
+    legend("bottomleft", legend=c("HErZ at 116m", plot.ext,
                                paste0("correlation = ", round(corr$estimate, 2))),
            text.col=c(color$herz, color$tower, color$black))
 
@@ -1227,11 +1292,11 @@ PlotTowerERAprofileRelDiff <- function(tower.df, tower.name, fname) {
     lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col=color$era20)
     lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$tower)
     corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
-    legend("topleft", legend=c("ER20C at 100m", plot.ext,
+    legend("bottomleft", legend=c("ER20C at 100m", plot.ext,
                                paste0("correlation = ", round(corr$estimate, 2))),
            text.col=c(color$era20, color$tower, color$black))
 
-    mtext(paste0("Monthly relative differences of ", plot.ext,
+    mtext(paste0("Monthly relative windspeed differences at ", plot.ext,
                  " against HErZ and ERA20C"), outer=TRUE, line=1, cex=1.6)
 
     dev.off()
@@ -1610,12 +1675,12 @@ PlotTowerERAprofileAnnualCycle <- function(tower.df, tower.name, fname) {
 
     fname = gsub("annualCycleSingleArrow", "annualCycleRelDiffSingle", fname)
     pdf(fname, width=a4width, height=a4height, onefile=TRUE, pointsize=13)
-    par(mar=c(3,3,3,0.5), cex=1.1)
+    par(mar=c(3,3,3,0.5), cex=1.8)
     plot(dummy, xlim=c(1,12), ylim=c(yliml.rel, ylimh.rel), col.axis = "white",
          xlab="", ylab="", main="")
-    title(main="Annual cycle of relative windspeed at Lindenberg", line=1, cex=1.1)
-    title(ylab="relative difference", line=2)
-    axis(1, labels=all.months, at = 1:12, las=1)
+    title(main="Annual cycle of relative windspeed at Lindenberg", line=1, cex=3)
+    title(ylab="relative difference", line=2, cex=1.8)
+    axis(1, labels=all.months, at = 1:12, las=1, cex=1.8)
     axis(2, labels=c(yliml.rel,0,ylimh.rel), at=c(yliml.rel,0,ylimh.rel), las=1)
     lines(RelDiff(mon.Herz116, mean(mon.Herz116)), type="b", pch=16,
           col="violetred",lw=2)
@@ -1726,13 +1791,13 @@ PlotTowerERAprofileAnnualCycle <- function(tower.df, tower.name, fname) {
 
     fname = gsub("annualCycleSingleArrow", "annualCycleRelDiffSingle", fname)
     pdf(fname, width=a4width, height=a4height, onefile=TRUE, pointsize=13)
-    par(mar=c(3,3,3,0.5), cex=1.1)
+    par(mar=c(3,3,3,0.5), cex=1.8)
     plot(dummy, xlim=c(1,12), ylim=c(yliml.rel, ylimh.rel), col.axis = "white",
          xlab="", ylab="", main="")
     title(main=paste0("Annual cycle of relative windspeed at ", tower.name),
-          line=1, cex=1.1)
-    title(ylab="relative difference", line=2)
-    axis(1, labels=all.months, at = 1:12, las=1)
+          line=1, cex=1.1, cex=3)
+    title(ylab="relative difference", line=2, cex=1.8)
+    axis(1, labels=all.months, at = 1:12, las=1, cex=1.8)
     axis(2, labels=c(yliml.rel,0,ylimh.rel), at=c(yliml.rel,0,ylimh.rel), las=1)
     lines(RelDiff(mon.Herz116, mean(mon.Herz116)), type="b", pch=16,
           col="violetred",lw=2)
