@@ -219,7 +219,7 @@ GetTowerProfileTS <- function(tower.xts, tower2.xts=NULL, tower3.xts=NULL,
                               tower.name=NULL) {
 
   if (!is.null(tower.name) & tower.name != "Fino1" & tower.name != "Fino2" &
-        tower.name != "Lindenberg") {
+        tower.name != "Lindenberg" & tower.name != "Cabauw") {
     CallStop(paste0("Unexpected tower.name: ", tower.name, " "))
   }
 
@@ -233,7 +233,7 @@ GetTowerProfileTS <- function(tower.xts, tower2.xts=NULL, tower3.xts=NULL,
                    toString(tsend[1]), toString(tsend[2]))
 
   tower.xts = tower.xts[timestr]
-  if (tower.name == "Lindenberg") {
+  if (tower.name == "Lindenberg" | tower.name == "Cabauw") {
     tower2.xts = tower2.xts[timestr]
     tower3.xts = tower3.xts[timestr]
     tower4.xts = tower4.xts[timestr]
@@ -260,6 +260,13 @@ GetTowerProfileTS <- function(tower.xts, tower2.xts=NULL, tower3.xts=NULL,
     df$Lind60 = coredata(tower4.xts)
     df$Lind80 = coredata(tower5.xts)
     df$Lind98 = coredata(tower6.xts)
+  } else if (tower.name == "Cabauw") {
+    df = data.frame(date=index(tower.xts), Cabauw10=coredata(tower.xts))
+    df$Cabauw20 = coredata(tower2.xts)
+    df$Cabauw40 = coredata(tower3.xts)
+    df$Cabauw80 = coredata(tower4.xts)
+    df$Cabauw140 = coredata(tower5.xts)
+    df$Cabauw200 = coredata(tower6.xts)
   }
   df$herz10 = coredata(herz10.xts)
   df$herz35 = coredata(herz35.xts)
