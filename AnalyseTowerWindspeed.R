@@ -43,6 +43,15 @@ lind.60.xts = dat[[lind.param[4]]]
 lind.80.xts = dat[[lind.param[5]]]
 lind.98.xts = dat[[lind.param[6]]]
 
+# for Cabauw
+dat = ExtractTowerData(cabauw.file, cabauw.param, era.monthly)
+cabauw.200.xts = dat[[cabauw.param[[1]]]]
+cabauw.140.xts = dat[[cabauw.param[[2]]]]
+cabauw.80.xts = dat[[cabauw.param[[3]]]]
+cabauw.40.xts = dat[[cabauw.param[[4]]]]
+cabauw.20.xts = dat[[cabauw.param[[5]]]]
+cabauw.10.xts = dat[[cabauw.param[[6]]]]
+
 # == read ERA20C data ==
 cat(paste0("  **  Reading ERA20C reanalysis data\n"))
 # for FINO1
@@ -77,6 +86,18 @@ era20c.data = ReadEraNetcdf2Xts(era20c.param, era20c.fname,
                                 era20c=TRUE, verb.dat=verb.era.dat)
 era20c10.lind.xts = era20c.data$era10
 era20c100.lind.xts = era20c.data$era20c100
+
+# for Cabauw
+idx = GetLonLatIdx(era20c.fname, cabauw.lon, cabauw.lat)
+lonidx = idx$lonidx
+latidx = idx$latidx
+era20c.data = ReadEraNetcdf2Xts(era20c.param, era20c.fname,
+                                era20c.tsstart, era20c.tsend,
+                                lonidx, latidx, era.monthly,
+                                era20c=TRUE, verb.dat=verb.era.dat)
+era20c10.cabauw.xts = era20c.data$era10
+era20c100.cabauw.xts = era20c.data$era20c100
+
 
 # == read HErZ data ==
 cat(paste0("  **  Reading HErZ reanalysis data\n"))
@@ -135,6 +156,22 @@ herz116.lind.xts = herz.data$herz116
 herz178.lind.xts = herz.data$herz178
 herz258.lind.xts = herz.data$herz258
 
+# for Cabauw
+idx = GetLonLatIdx(herz.fname[1], cabauw.lon, cabauw.lat, herz.lon, herz.lat)
+lonidx = idx$lonidx
+latidx = idx$latidx
+herz.data = ReadHerzNetcdfMonthlyDaily2Xts(herz.param, herz.fname,
+                                           herz.tsstart, herz.tsend,
+                                           lonidx, latidx,
+                                           era.monthly, herz.profile,
+                                           verb.era.dat)
+herz10.cabauw.xts = herz.data$herz10
+herz35.cabauw.xts = herz.data$herz35
+herz69.cabauw.xts = herz.data$herz69
+herz116.cabauw.xts = herz.data$herz116
+herz178.cabauw.xts = herz.data$herz178
+herz258.cabauw.xts = herz.data$herz258
+
 # == get time series of same length ==
 fino1.df = GetTowerProfileTS(tower.xts=fino1.100.xts,
                              herz10.xts=herz10.fino1.xts,
@@ -177,6 +214,22 @@ lind.df = GetTowerProfileTS(tower.xts=lind.10.xts, tower2.xts=lind.20.xts,
                             herz.tsend=herz.tsend, era20c.tsend=era20c.tsend,
                             tower.name="Lindenberg")
 
+
+cabauw.df = GetTowerProfileTS(tower.xts=cabauw.10.xts, tower2.xts=cabauw.20.xts,
+                              tower3.xts=cabauw.40.xts, tower4.xts=cabauw.80.xts,
+                              tower5.xts=cabauw.140.xts, tower6.xts=cabauw.200.xts,
+                              herz10.xts=herz10.cabauw.xts,
+                              herz35.xts=herz35.cabauw.xts,
+                              herz69.xts=herz69.cabauw.xts,
+                              herz116.xts=herz116.cabauw.xts,
+                              herz178.xts=herz178.cabauw.xts,
+                              herz258.xts=herz258.cabauw.xts,
+                              era20c10.xts=era20c10.cabauw.xts,
+                              era20c100.xts=era20c100.cabauw.xts,
+                              tower.tsstart=cabauw.tsstart, tower.tsend=cabauw.tsend,
+                              herz.tsend=herz.tsend, era20c.tsend=era20c.tsend,
+                              tower.name="Cabauw")
+
 #-----------------------------------------------------------------------------
 
 if (plot.TowerEraProfile) {
@@ -193,12 +246,14 @@ if (plot.TowerEraProfile) {
                  res.switch, '_', fname_ext, ".pdf")
   PlotTowerERAprofileBP(fino2.df, tower.name="Fino2", fname, era.monthly)
 
+  fname = paste0(outdir, "CabauwHErZERA20C_boxPlots_", time.ext,"_",
+                 res.switch, '_', fname_ext, ".pdf")
+  PlotTowerERAprofileBP(cabauw.df, tower.name="Cabauw", fname, era.monthly)
 }
 
 #-----------------------------------------------------------------------------
 
 if(plot.histograms) {
-
   cat("  **  Plotting Histograms\n")
   fname = paste0("Histogram_Lindenberg_", res.switch, '_', time.ext, "_",
                  fname_ext, ".pdf")
@@ -214,6 +269,11 @@ if(plot.histograms) {
                  fname_ext, ".pdf")
   PlotHistogramsTower(outdir, fname, era.monthly, a4width, a4height, fino2.df,
                       tower.name="Fino2")
+
+  fname = paste0("Histogram_Cabauw_", res.switch, '_', time.ext, "_",
+                 fname_ext, ".pdf")
+  PlotHistogramsTower(outdir, fname, era.monthly, a4width, a4height, cabauw.df,
+                      tower.name="Cabauw")
 }
 
 #-----------------------------------------------------------------------------
@@ -229,6 +289,9 @@ if (plot.ProfileTS & era.monthly) {
   fname = paste0(outdir, "Fino2HErZERA20C_relativeDifferences_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
   PlotTowerERAprofileRelDiff(fino2.df, tower.name="Fino2", fname)
+  fname = paste0(outdir, "CabauwHErZERA20C_relativeDifferences_", time.ext,"_",
+                 res.switch, '_', fname_ext, ".pdf")
+  PlotTowerERAprofileRelDiff(cabauw.df, tower.name="Cabauw", fname)
 
 
   fname = paste0(outdir, "LindenbergHErZERA20C_selectedMonths_", time.ext,"_",
@@ -240,6 +303,9 @@ if (plot.ProfileTS & era.monthly) {
   fname = paste0(outdir, "Fino2HErZERA20C_selectedMonths_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
   PlotTowerERAprofileAnnualVar(fino2.df, tower.name="Fino2", fname)
+  fname = paste0(outdir, "CabauwHErZERA20C_selectedMonths_", time.ext,"_",
+                 res.switch, '_', fname_ext, ".pdf")
+  PlotTowerERAprofileAnnualVar(cabauw.df, tower.name="Cabauw", fname)
 
 
   fname = paste0(outdir, "LindenbergHErZERA20C_annualCycle_", time.ext,"_",
@@ -251,5 +317,7 @@ if (plot.ProfileTS & era.monthly) {
   fname = paste0(outdir, "Fino2HErZERA20C_annualCycle_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
   PlotTowerERAprofileAnnualCycle(fino2.df, tower.name="Fino2", fname)
-
+  fname = paste0(outdir, "CabauwHErZERA20C_annualCycle_", time.ext,"_",
+                 res.switch, '_', fname_ext, ".pdf")
+  PlotTowerERAprofileAnnualCycle(cabauw.df, tower.name="Cabauw", fname)
 }
