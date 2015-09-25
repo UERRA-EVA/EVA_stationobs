@@ -28,7 +28,7 @@ North-South direction. Default is not to revert the data (FALSE)}
 is happening (T) or not (F); the default is to suppress output (verb.dat=FALSE).}
 }
 \value{
-Return a named list (data=,lon=,lat=,time.vals=) holding the read data,
+Return a named list (data=,lon=,lat=,time=) holding the read data,
   longitude, latitude, and time values.
 }
 \description{

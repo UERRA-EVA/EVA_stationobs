@@ -3,8 +3,8 @@
 \alias{Plot100mEraHerz}
 \title{Compare 100m wind speed of ERA20C and HErZ pixel by pixel.}
 \usage{
-Plot100mEraHerz(Era20cXts, HerzXts, titname, statname, outdir, fname, width,
-  height)
+Plot100mEraHerz(Era20cXts, HerzXts, titname, statname, outdir, fname,
+  era.monthly, width, height)
 }
 \arguments{
 \item{Era20cXts}{extended time series of an ERA20C pixel}
