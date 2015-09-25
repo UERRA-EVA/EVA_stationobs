@@ -196,21 +196,30 @@ ReadEraNetcdf2Xts <- function(era.param, era.fname,
 
 #-----------------------------------------------------------------------------------
 
-#' @title
-#' @description
-#' @param
-#' @param
-#' @param
-#' @param
-#' @param
-#' @param
-#' @param
-#' @param
-#' @param
-#' @param
-#' @param
-#' @param
-#' @return
+#' @title Produce a data frame holding the wind speed profiles of the tower
+#'   measurements, from the HErZ reanalysis, and the available values of the
+#'   global reanalyses.
+#' @description First the end point to the time series is set to the shortest
+#'   available time period. The beginning is set by the tower measurements because
+#'   they are always shorter than the available reanalysis data.
+#'   A data frame is created holding the available reanalysis and tower measurement
+#'   data. The columns are named by the data source and height. One data frame is
+#'   returned.
+#' @param tower.xts extended time series of available tower data; for FINO1,2 there
+#'   is only one height level of data available
+#' @param tower2.xts,tower3.xts,tower4.xts,tower5.xts,tower6.xts optional extended
+#'   time series holding more available height levels of tower measurement data
+#' @param herz10.xts,herz35.xts,herz69.xts,herz116.xts,herz178.xts,herz258.xts all
+#'   available height levels of HErZ data as extended time series
+#' @param era20c10.xts,era20c100.xts the two available height levels of 10m and 100m
+#'   data of ERA20C as extended time series
+#' @param tower.tsstart,tower.tsend,herz.tsend,era20c.tsend start and end time in
+#'   the format c(yyyy,mm) of the tower measurements, HErZ and ERA20C reanalyses
+#' @param tower.name string holding the tower name; if an unexpected name is passed
+#'   the function will terminate execution
+#' @return The return value is a data frame which holds the available data of the
+#'   wind speed profile at different height levels which are named columns of
+#'   tower measurements and reanalysis data
 GetTowerProfileTS <- function(tower.xts, tower2.xts=NULL, tower3.xts=NULL,
                               tower4.xts=NULL, tower5.xts=NULL, tower6.xts=NULL,
                               herz10.xts, herz35.xts, herz69.xts, herz116.xts,

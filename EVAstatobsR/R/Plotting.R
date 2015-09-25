@@ -605,9 +605,26 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
 
 #-----------------------------------------------------------------------------------
 
-#' @title
-#' @description
-#' @param
+#' @title Plot the wind speed histograms of station data and reanalyses at different
+#'   heights.
+#' @description The distributions of monthly and daily wind speed station data and
+#'   reanalysis data, optionally at differnet heights are plotted into histograms.
+#' @param outdir is a string containing the output path of the plot
+#' @param fname is a string of the file name of the plot file
+#' @param station.name is a string holding the station name at which location the
+#'   distribution data was extraced
+#' @param era.monthly is an optional boolean which determines whether data passed
+#'   is monthly (T) or daily (F) data. The default value is to use daily data
+#'   (era.monthly=FALSE).
+#' @param width,height of the plot in inches
+#' @param Era20cXts10,Era20cXts100,EraIXts extended time series of ERA20C and ERA-I
+#'   10m and 100m height
+#' @param HerzXts10,HerzXts35,HerzXts69,HerzXts116,HerzXts178,HerzXts258 extended
+#'   time series of available HErZ data at different heights
+#' @param StatXts extended time series of station data
+#' @param plot.10m,plot.10m100m,plot.HerzProfile optional parameters setting whether
+#'   to plot only 10m values, 10m and 100m values together, or the herz profile,
+#'   respectively. The default value is FALSE for all three settings.
 PlotHistograms <- function(outdir, fname, station.name, era.monthly, width, height,
                            Era20cXts10=NULL, Era20cXts100=NULL, EraIXts=NULL,
                            HerzXts10=NULL, HerzXts35=NULL, HerzXts69=NULL,
@@ -671,9 +688,9 @@ PlotHistograms <- function(outdir, fname, station.name, era.monthly, width, heig
                       ", and plot.HerzProfile: ", plot.HerzProfile))
     }
 
-    mtext.titname = "Daily wind speed at 10m height"
+    mtext.titname = paste0("Daily wind speed at 10m height at ", station.name)
     if (era.monthly) {
-      mtext.titname = "Monthly wind speed at 10m height"
+      mtext.titname = paste0("Monthly wind speed at 10m height at ", station.name)
     }
 
     fname = gsub('Histogram', 'Histogram_ERA-Station-10m', fname)
@@ -752,9 +769,9 @@ PlotHistograms <- function(outdir, fname, station.name, era.monthly, width, heig
                       ", and plot.HerzProfile: ", plot.HerzProfile))
     }
 
-    mtext.titname = "Daily wind speed at 100m height"
+    mtext.titname = paste0("Daily wind speed at 10m height at ", station.name)
     if (era.monthly) {
-      mtext.titname = "Monthly wind speed at 100m height"
+      mtext.titname = paste0("Monthly wind speed at 10m height at ", station.name)
     }
 
     fname = gsub('Histogram', 'Histogram_ERA20C-HErZ-100m', fname)
@@ -799,9 +816,9 @@ PlotHistograms <- function(outdir, fname, station.name, era.monthly, width, heig
                       ", and plot.HerzProfile: ", plot.HerzProfile))
     }
 
-    mtext.titname = "Daily wind speed of HErZ profile"
+    mtext.titname = paste0("Daily wind speed of HErZ profile at ", station.name)
     if (era.monthly) {
-      mtext.titname = "Monthly wind speed of HErZ profile"
+      mtext.titname = paste0("Monthly wind speed of HErZ profile at ", station.name)
     }
 
     fname = gsub('Histogram', 'Histogram_HErZ-Profile', fname)
@@ -858,9 +875,19 @@ PlotHistograms <- function(outdir, fname, station.name, era.monthly, width, heig
 
 #-----------------------------------------------------------------------------------
 
-#' @title
-#' @description
-#' @param
+#' @title Plot histrograms for tower measurements.
+#' @description Plot histograms for the Lindenberg, Cabauw, Fino1 and Fino2 tower
+#'   tower measurements. Histograms are plotted for 10m and 100m heights; seperately
+#'   and in comparison with reanalysis data.
+#' @param outdir is a string containing the output path of the plot
+#' @param fname is a string of the file name of the plot file
+#' @param era.monthly is an optional boolean which determines whether data passed
+#'   is monthly (T) or daily (F) data. The default value is to use daily data
+#'   (era.monthly=FALSE).
+#' @param width,height of the plot in inches
+#' @param tower.df is a data frame holding the data of tower measurements and
+#'   corresponding reanalysis data
+#' @param tower.name is a string holding the tower name
 PlotHistogramsTower <- function(outdir, fname, era.monthly,
                                 width, height, tower.df, tower.name) {
 
@@ -1150,10 +1177,18 @@ PlotPDFScore <- function(era.xts, station.xts, outdir, fname, titname,
 
 #-----------------------------------------------------------------------------------
 
-#' @title
-#' @description
-#' @param
-PlotTowerERAprofileBP <- function(tower.df, tower.name, fname, era.mon) {
+#' @title Plot wind speed profile as box plots of tower measurements and ERA.
+#' @description This function plots the wind speed profile of tower measurements and
+#'   data from reanalyses as box plots. Tower measurements of Lindenberg, Cabauw,
+#'   Fino1, and Fino2 are supported.
+#' @param tower.df is a data frame holding the data of tower measurements and
+#'   corresponding reanalysis data
+#' @param tower.name is a string holding the tower name
+#' @param fname string of the file name of the plot
+#' @param era.monthly is an optional boolean which determines whether data passed
+#'   is monthly (T) or daily (F) data. The default value is to use daily data
+#'   (era.monthly=FALSE).
+PlotTowerERAprofileBP <- function(tower.df, tower.name, fname, era.monthly) {
 
   dummy = numeric(length=length(tower.df$herz10)) * NA
   x.labs = "wind speed [m/s]"
@@ -1241,9 +1276,14 @@ PlotTowerERAprofileBP <- function(tower.df, tower.name, fname, era.mon) {
 
 #-----------------------------------------------------------------------------------
 
-#' @title
-#' @description
-#' @param
+#' @title Plot relative difference between tower measurements and reanalysis data.
+#' @description Plot the relative difference between tower measurements at 10m and
+#'   100m compared to reanalysis data. Tower measurements of Lindenberg, Cabauw,
+#'   Fino1, and Fino2 are supported.
+#' @param tower.df is a data frame holding the data of tower measurements and
+#'   corresponding reanalysis data
+#' @param tower.name is a string holding the tower name
+#' @param fname string of the file name of the plot
 PlotTowerERAprofileRelDiff <- function(tower.df, tower.name, fname) {
 
   legend.cex = 0.8
@@ -1368,9 +1408,16 @@ PlotTowerERAprofileRelDiff <- function(tower.df, tower.name, fname) {
 
 #-----------------------------------------------------------------------------------
 
-#' @title
-#' @description
-#' @param
+#' @title Plot annual variability between tower measurements and reanalysis data.
+#' @description Plot the annual variability between tower measurements and reanalysis
+#'   data at the heights of 10m and 100m where applicable. Two months are selected
+#'   to visualize the annual variability; January and August are predifined and may
+#'   be changed but only locally so far. Tower measurements of Lindenberg, Cabauw,
+#'   Fino1, and Fino2 are supported.
+#' @param tower.df is a data frame holding the data of tower measurements and
+#'   corresponding reanalysis data
+#' @param tower.name is a string holding the tower name
+#' @param fname string of the file name of the plot
 PlotTowerERAprofileAnnualVar <- function(tower.df, tower.name, fname) {
 
   legend.cex = 0.75
@@ -1589,9 +1636,14 @@ PlotTowerERAprofileAnnualVar <- function(tower.df, tower.name, fname) {
 
 #-----------------------------------------------------------------------------------
 
-#' @title
-#' @description
-#' @param
+#' @title Plot annual cycle between tower measurements and reanalysis data.
+#' @description Plot the annual cycle between tower measurements and reanalysis data
+#'   at all available heights for absolute and relative values.  Tower measurements
+#'   of Lindenberg, Cabauw, Fino1, and Fino2 are supported.
+#' @param tower.df is a data frame holding the data of tower measurements and
+#'   corresponding reanalysis data
+#' @param tower.name is a string holding the tower name
+#' @param fname string of the file name of the plot
 PlotTowerERAprofileAnnualCycle <- function(tower.df, tower.name, fname) {
 
   legend.cex = 0.75
@@ -2220,9 +2272,11 @@ qqPlot <- function(X, Y, yliml, ylimh,
 
 #-----------------------------------------------------------------------------------
 
-#' @title
-#' @description
-#' @param
+#' @title Plot legend with statistics for histogram plot.
+#' @description Plot the legend for histogram plots with statistics (mean, median,
+#'   etc) and weibull parameters which are calculated.
+#' @param xlims the limits of the x-axis in the form c(low,high)
+#' @param vals vector of the plotted values of which the statistics are calculated
 plotLegendStats <- function(xlims, vals) {
 
   weibull = TRUE

@@ -181,7 +181,8 @@ SetToDate <- function(tsstart, tsend) {
 #' @param vals.xts is the input extended time series which is divided into seasonal
 #'   (quarterly) xts.
 #' @return A named list returning a winter, spring, summer, and autumn extended
-#'  time series which was split off the input xts.
+#'  time series, (winter.xts=,spring.xts=,summer.xts=,autumn.xts=),  which was split
+#'  off the input xts.
 #' @note could be enhanced by manually splitting into meteorol. seasons DJF, MAM,
 #'   JJA, SON instead of using the generic split 'f="quarters"'.
 GetSeasonalXts <- function(vals.xts) {
@@ -208,42 +209,28 @@ GetSeasonalXts <- function(vals.xts) {
 }
 
 #-----------------------------------------------------------------------------------
-#' @title
-#' @description
-#' @param
+
+#' @title Calculate the relative difference between two values.
+#' @description Provided is a value and the mean value to which the relative
+#'   difference is to be computed.
+#' @param value is the value of which the relvative difference is to be calcualted
+#'   compated to mean.value
+#' @param mean.value is the mean value from above
+#' @return is the relative difference
 RelDiff <- function(value, mean.value) {
   return((value - mean.value) / mean.value)
 }
 
 #-----------------------------------------------------------------------------------
 
-#' @title
-#' @description
-#' @param
+#' @title Calculate the norm of a value given the the upper and lower bound.
+#' @description Given the upper and lower bound calculate the norm value.
+#' @param value is the value of which the norm is to be calcualted. Needs to satisfay:
+#'   min.value =< value =< max.val.
+#' @param min.val,max.val are both the lower and upper bound
+#' @return is the norm value.
 NormVals <- function(value, min.val, max.val) {
   return((value-min.val)/(max.val-min.val))
-}
-
-#-----------------------------------------------------------------------------------
-
-#' @title
-#' @description
-#' @param
-#' @note http://stackoverflow.com/questions/15102254/how-do-i-add-different-trend-lines-in-r
-TrendLines <- function() {
-  # basic straight line of fit
-  fit <- glm(y~x)
-  co <- coef(fit)
-  abline(fit, col="blue", lwd=2)
-
-  # polynomial
-  f <- function(x,a,b,d) {(a*x^2) + (b*x) + d}
-  fit <- nls(y ~ f(x,a,b,d), start = c(a=1, b=1, d=1))
-  co <- coef(fit)
-  curve(f(x, a=co[1], b=co[2], d=co[3]), add = TRUE, col="pink", lwd=2)
-
-  smooth.spline
-
 }
 
 #-----------------------------------------------------------------------------------

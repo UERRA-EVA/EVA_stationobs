@@ -119,7 +119,7 @@ readGrib <- function(filename, nlon, nlat, nlev, var='undef', out='Rfile.dat',
 #'   North-South direction. Default is not to revert the data (FALSE)
 #' @param verb.dat optional boolean to determine whether to verbosely write out what
 #'   is happening (T) or not (F); the default is to suppress output (verb.dat=FALSE).
-#' @return Return a named list (data=,lon=,lat=,time.vals=) holding the read data,
+#' @return Return a named list (data=,lon=,lat=,time=) holding the read data,
 #'   longitude, latitude, and time values.
 ReadNetcdf <- function(variable, infile, start=NULL,
                        count=NULL, revert=FALSE, verb.dat=FALSE) {
