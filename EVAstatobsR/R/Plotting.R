@@ -518,6 +518,9 @@ PlotStationEraSQ <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 #' @param statname string of the station name whose pixel is plotted
 #' @param outdir string of the output directory into which the plot is saved
 #' @param fname string of the file name of the plot
+#' @param era.monthly is an optional boolean which determines whether data passed
+#'   is monthly (T) or daily (F) data. The default value is to use daily data
+#'   (era.monthly=FALSE).
 #' @param width,height of the plot in inches
 Plot100mEraHerz <- function(Era20cXts, HerzXts,
                             titname, statname, outdir, fname,
@@ -1188,7 +1191,9 @@ PlotPDFScore <- function(era.xts, station.xts, outdir, fname, titname,
 #' @param era.monthly is an optional boolean which determines whether data passed
 #'   is monthly (T) or daily (F) data. The default value is to use daily data
 #'   (era.monthly=FALSE).
-PlotTowerERAprofileBP <- function(tower.df, tower.name, fname, era.monthly) {
+#' @param width,height of the plot in inches
+PlotTowerERAprofileBP <- function(tower.df, tower.name, fname, era.monthly,
+                                  width, height) {
 
   dummy = numeric(length=length(tower.df$herz10)) * NA
   x.labs = "wind speed [m/s]"
@@ -1197,7 +1202,7 @@ PlotTowerERAprofileBP <- function(tower.df, tower.name, fname, era.monthly) {
   hori=TRUE
   nch = TRUE
   oline = FALSE
-  if (era.mon) {
+  if (era.monthly) {
     wind.range = c(0,15)
     plot.ext = " Monthly "
   }
@@ -1207,7 +1212,7 @@ PlotTowerERAprofileBP <- function(tower.df, tower.name, fname, era.monthly) {
   }
 
   if (tower.name == "Lindenberg") {
-    pdf(fname, width=a4height, height=a4width/0.8, onefile=TRUE, pointsize=13)
+    pdf(fname, width=height, height=width/0.8, onefile=TRUE, pointsize=13)
     par(mar=c(4,7,3,0.5), cex=1.5)
     boxplot.default(tower.df$Lind10, tower.df$herz10, tower.df$Lind20, tower.df$herz35,
                     tower.df$Lind40, tower.df$Lind60, tower.df$herz69, tower.df$Lind80,
@@ -1223,7 +1228,7 @@ PlotTowerERAprofileBP <- function(tower.df, tower.name, fname, era.monthly) {
     mtext(x.labs, side=1, line=2, cex=1.5)
     dev.off()
   } else if (tower.name == "Cabauw") {
-    pdf(fname, width=a4height, height=a4width/0.8, onefile=TRUE, pointsize=13)
+    pdf(fname, width=height, height=width/0.8, onefile=TRUE, pointsize=13)
     par(mar=c(4,7,3,0.5), cex=1.5)
     boxplot.default(tower.df$Cabauw10, tower.df$herz10, tower.df$Cabauw20,
                     tower.df$herz35, tower.df$Cabauw40, tower.df$herz69,
@@ -1240,7 +1245,7 @@ PlotTowerERAprofileBP <- function(tower.df, tower.name, fname, era.monthly) {
     mtext(x.labs, side=1, line=2, cex=1.5)
     dev.off()
   } else if (tower.name == "Fino1") {
-    pdf(fname, width=a4height, height=a4width/0.8, onefile=TRUE, pointsize=13)
+    pdf(fname, width=height, height=width/0.8, onefile=TRUE, pointsize=13)
     par(mar=c(4,7,3,0.5), cex=1.5)
     boxplot.default(dummy, tower.df$herz10, dummy, tower.df$herz35, dummy, dummy,
                     tower.df$herz69, dummy, tower.df$era20c100, tower.df$Fino1,
@@ -1255,7 +1260,7 @@ PlotTowerERAprofileBP <- function(tower.df, tower.name, fname, era.monthly) {
     mtext(x.labs, side=1, line=2, cex=1.5)
     dev.off()
   } else if (tower.name == "Fino2") {
-    pdf(fname, width=a4height, height=a4width/0.8, onefile=TRUE, pointsize=13)
+    pdf(fname, width=height, height=width/0.8, onefile=TRUE, pointsize=13)
     par(mar=c(4,7,3,0.5), cex=1.5)
     boxplot.default(dummy, tower.df$herz10, dummy, tower.df$herz35, dummy, dummy,
                     tower.df$herz69, dummy, tower.df$era20c100, tower.df$Fino2,
@@ -1284,7 +1289,9 @@ PlotTowerERAprofileBP <- function(tower.df, tower.name, fname, era.monthly) {
 #'   corresponding reanalysis data
 #' @param tower.name is a string holding the tower name
 #' @param fname string of the file name of the plot
-PlotTowerERAprofileRelDiff <- function(tower.df, tower.name, fname) {
+#' @param width,height of the plot in inches
+PlotTowerERAprofileRelDiff <- function(tower.df, tower.name, fname,
+                                       width, height) {
 
   legend.cex = 0.8
   tower.date <- as.POSIXlt(tower.df$date)
@@ -1301,7 +1308,7 @@ PlotTowerERAprofileRelDiff <- function(tower.df, tower.name, fname) {
       plot2.ext = "Cabauw at 140m "
     }
 
-    pdf(fname, width=a4height/0.67, height=a4width, onefile=TRUE, pointsize=13)
+    pdf(fname, width=height/0.67, height=width, onefile=TRUE, pointsize=13)
     par(mfrow=c(3,1), mar=c(0,4,0,0), oma=c(4,0,3,0.5), cex=1.3)
 
     # == relative TS in 100m height ==
@@ -1364,7 +1371,7 @@ PlotTowerERAprofileRelDiff <- function(tower.df, tower.name, fname) {
     if (tower.name == "Fino1") plot.ext = "Fino1 at 100m "
     if (tower.name == "Fino2") plot.ext = "Fino2 at 102m "
 
-    pdf(fname, width=a4height/0.67, height=a4width, onefile=TRUE, pointsize=13)
+    pdf(fname, width=height/0.67, height=width, onefile=TRUE, pointsize=13)
     par(mfrow=c(3,1), mar=c(0,4,0,0), oma=c(4,0,3,0.5), cex=1.3)
 
     # == absolute, relative and normalized TS of each height ==
@@ -1402,7 +1409,7 @@ PlotTowerERAprofileRelDiff <- function(tower.df, tower.name, fname) {
     dev.off()
 
   } else {
-    CallStopp(paste0("Unexpected tower.name: ", tower.name, " "))
+    CallStop(paste0("Unexpected tower.name: ", tower.name, " "))
   }
 }
 
@@ -1418,7 +1425,9 @@ PlotTowerERAprofileRelDiff <- function(tower.df, tower.name, fname) {
 #'   corresponding reanalysis data
 #' @param tower.name is a string holding the tower name
 #' @param fname string of the file name of the plot
-PlotTowerERAprofileAnnualVar <- function(tower.df, tower.name, fname) {
+#' @param width,height of the plot in inches
+PlotTowerERAprofileAnnualVar <- function(tower.df, tower.name, fname,
+                                         width, height) {
 
   legend.cex = 0.75
   tower.date <- as.POSIXlt(tower.df$date)
@@ -1486,7 +1495,7 @@ PlotTowerERAprofileAnnualVar <- function(tower.df, tower.name, fname) {
     yliml = 0 #min(yliml)
     ylimh = max(ylimh)
 
-    pdf(fname, width=a4width/2., height=a4height, onefile=TRUE, pointsize=13)
+    pdf(fname, width=width/2., height=height, onefile=TRUE, pointsize=13)
     if (tower.name == "Lindenberg") {
       par(mfrow=c(5,1), mar=c(0,2,0,0), oma=c(4,1,3,0.5), cex=0.9)
     } else if (tower.name == "Cabauw") {
@@ -1589,7 +1598,7 @@ PlotTowerERAprofileAnnualVar <- function(tower.df, tower.name, fname) {
     yliml = min(yliml)
     ylimh = max(ylimh)
 
-    pdf(fname, width=a4width/2., height=a4height, onefile=TRUE, pointsize=13)
+    pdf(fname, width=width/2., height=height, onefile=TRUE, pointsize=13)
     par(mfrow=c(3,1), mar=c(0,2,0,0), oma=c(4,1,3,0.5), cex=0.9)
 
     dummy = numeric(length=length(Era20c100Xts)) * NA
@@ -1629,7 +1638,7 @@ PlotTowerERAprofileAnnualVar <- function(tower.df, tower.name, fname) {
     dev.off()
 
   } else {
-    CallStopp(paste0("Unexpected tower.name: ", tower.name, " "))
+    CallStop(paste0("Unexpected tower.name: ", tower.name, " "))
   }
 }
 
@@ -1644,7 +1653,9 @@ PlotTowerERAprofileAnnualVar <- function(tower.df, tower.name, fname) {
 #'   corresponding reanalysis data
 #' @param tower.name is a string holding the tower name
 #' @param fname string of the file name of the plot
-PlotTowerERAprofileAnnualCycle <- function(tower.df, tower.name, fname) {
+#' @param width,height of the plot in inches
+PlotTowerERAprofileAnnualCycle <- function(tower.df, tower.name, fname,
+                                           width, height) {
 
   legend.cex = 0.75
   tower.date <- as.POSIXlt(tower.df$date)
@@ -1702,7 +1713,7 @@ PlotTowerERAprofileAnnualCycle <- function(tower.df, tower.name, fname) {
 
     dummy = numeric(length=length(mon.Herz116)) * NA
 
-    pdf(fname, width=a4width/2., height=a4height, onefile=TRUE, pointsize=13)
+    pdf(fname, width=width/2., height=height, onefile=TRUE, pointsize=13)
     par(mfrow=c(4,1), oma=c(3,3,3,0.5), mar=c(0,0,0,0), cex=1.1)
     # !!! col.axis = "white" is a hack to suppress the tick labels
     # !!! in order to set them manually
@@ -1773,7 +1784,7 @@ PlotTowerERAprofileAnnualCycle <- function(tower.df, tower.name, fname) {
 
 
     fname = gsub("annualCycle", "annualCycleSingleArrow", fname)
-    pdf(fname, width=a4width, height=a4height, onefile=TRUE, pointsize=13)
+    pdf(fname, width=width, height=height, onefile=TRUE, pointsize=13)
     par(mar=c(3,3,3,0.5), cex=1.1)
     ylimh = ylimh + 1
     plot(dummy, xlim=c(1,12), ylim=c(yliml, ylimh), col.axis = "white",
@@ -1824,7 +1835,7 @@ PlotTowerERAprofileAnnualCycle <- function(tower.df, tower.name, fname) {
 
 
     fname = gsub("annualCycleSingleArrow", "annualCycleRelDiffSingle", fname)
-    pdf(fname, width=a4width, height=a4height, onefile=TRUE, pointsize=13)
+    pdf(fname, width=width, height=height, onefile=TRUE, pointsize=13)
     par(mar=c(3,3,3,0.5), cex=1.8)
     plot(dummy, xlim=c(1,12), ylim=c(yliml.rel, ylimh.rel), col.axis = "white",
          xlab="", ylab="", main="")
@@ -1890,7 +1901,7 @@ PlotTowerERAprofileAnnualCycle <- function(tower.df, tower.name, fname) {
 
     dummy = numeric(length=length(mon.Herz116)) * NA
 
-    pdf(fname, width=a4width/2., height=a4height, onefile=TRUE, pointsize=13)
+    pdf(fname, width=width/2., height=height, onefile=TRUE, pointsize=13)
     par(mfrow=c(3,1), oma=c(3,3,3,0.5), mar=c(0,0,0,0), cex=1.1)
     ylimh = ylimh + 1
     plot(dummy, xlim=c(1,12), ylim=c(yliml, ylimh), col.axis = "white",
@@ -1948,7 +1959,7 @@ PlotTowerERAprofileAnnualCycle <- function(tower.df, tower.name, fname) {
 
 
     fname = gsub("annualCycle", "annualCycleSingleArrow", fname)
-    pdf(fname, width=a4width, height=a4height, onefile=TRUE, pointsize=13)
+    pdf(fname, width=width, height=height, onefile=TRUE, pointsize=13)
     par(mar=c(3,3,3,0.5), cex=1.1)
     ylimh = ylimh + 1
     plot(dummy, xlim=c(1,12), ylim=c(yliml, ylimh), col.axis = "white",
@@ -1989,7 +2000,7 @@ PlotTowerERAprofileAnnualCycle <- function(tower.df, tower.name, fname) {
 
 
     fname = gsub("annualCycleSingleArrow", "annualCycleRelDiffSingle", fname)
-    pdf(fname, width=a4width, height=a4height, onefile=TRUE, pointsize=13)
+    pdf(fname, width=width, height=height, onefile=TRUE, pointsize=13)
     par(mar=c(3,3,3,0.5), cex=1.8)
     plot(dummy, xlim=c(1,12), ylim=c(yliml.rel, ylimh.rel), col.axis = "white",
          xlab="", ylab="", main="")
@@ -2053,7 +2064,7 @@ PlotTowerERAprofileAnnualCycle <- function(tower.df, tower.name, fname) {
 
     dummy = numeric(length=length(mon.Herz116)) * NA
 
-    pdf(fname, width=a4width, height=a4height, onefile=TRUE, pointsize=13)
+    pdf(fname, width=width, height=height, onefile=TRUE, pointsize=13)
     par(mar=c(3,3,3,0.5), cex=1.1)
 
 
@@ -2075,7 +2086,7 @@ PlotTowerERAprofileAnnualCycle <- function(tower.df, tower.name, fname) {
 
 
     fname = gsub("annualCycle", "annualCycleSingleArrow", fname)
-    pdf(fname, width=a4width, height=a4height, onefile=TRUE, pointsize=13)
+    pdf(fname, width=width, height=height, onefile=TRUE, pointsize=13)
     par(mar=c(3,3,3,0.5), cex=1.1)
     ylimh = ylimh + 1
     plot(dummy, xlim=c(1,12), ylim=c(yliml, ylimh), col.axis = "white",
@@ -2108,7 +2119,7 @@ PlotTowerERAprofileAnnualCycle <- function(tower.df, tower.name, fname) {
 
 
     fname = gsub("annualCycleSingleArrow", "annualCycleRelDiffSingle", fname)
-    pdf(fname, width=a4width, height=a4height, onefile=TRUE, pointsize=13)
+    pdf(fname, width=width, height=height, onefile=TRUE, pointsize=13)
     par(mar=c(3,3,3,0.5), cex=1.8)
     plot(dummy, xlim=c(1,12), ylim=c(yliml.rel, ylimh.rel), col.axis = "white",
          xlab="", ylab="", main="")
@@ -2138,7 +2149,7 @@ PlotTowerERAprofileAnnualCycle <- function(tower.df, tower.name, fname) {
     dev.off()
 
   } else {
-    CallStopp(paste0("Unexpected tower.name: ", tower.name, " "))
+    CallStop(paste0("Unexpected tower.name: ", tower.name, " "))
   }
 }
 

@@ -19,6 +19,10 @@ Plot100mEraHerz(Era20cXts, HerzXts, titname, statname, outdir, fname,
 
 \item{fname}{string of the file name of the plot}
 
+\item{era.monthly}{is an optional boolean which determines whether data passed
+is monthly (T) or daily (F) data. The default value is to use daily data
+(era.monthly=FALSE).}
+
 \item{width,height}{of the plot in inches}
 }
 \description{

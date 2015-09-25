@@ -3,7 +3,7 @@
 \alias{PlotTowerERAprofileRelDiff}
 \title{Plot relative difference between tower measurements and reanalysis data.}
 \usage{
-PlotTowerERAprofileRelDiff(tower.df, tower.name, fname)
+PlotTowerERAprofileRelDiff(tower.df, tower.name, fname, width, height)
 }
 \arguments{
 \item{tower.df}{is a data frame holding the data of tower measurements and
@@ -12,6 +12,8 @@ corresponding reanalysis data}
 \item{tower.name}{is a string holding the tower name}
 
 \item{fname}{string of the file name of the plot}
+
+\item{width,height}{of the plot in inches}
 }
 \description{
 Plot the relative difference between tower measurements at 10m and

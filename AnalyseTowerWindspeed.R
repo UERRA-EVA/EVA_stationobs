@@ -310,14 +310,18 @@ if (plot.ProfileTS & era.monthly) {
 
   fname = paste0(outdir, "LindenbergHErZERA20C_annualCycle_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
-  PlotTowerERAprofileAnnualCycle(lind.df, tower.name="Lindenberg", fname)
+  PlotTowerERAprofileAnnualCycle(lind.df, tower.name="Lindenberg", fname,
+                                 a4width, a4height)
   fname = paste0(outdir, "Fino1HErZERA20C_annualCycle_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
-  PlotTowerERAprofileAnnualCycle(fino1.df, tower.name="Fino1", fname)
+  PlotTowerERAprofileAnnualCycle(fino1.df, tower.name="Fino1", fname,
+                                 a4width, a4height)
   fname = paste0(outdir, "Fino2HErZERA20C_annualCycle_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
-  PlotTowerERAprofileAnnualCycle(fino2.df, tower.name="Fino2", fname)
+  PlotTowerERAprofileAnnualCycle(fino2.df, tower.name="Fino2", fname,
+                                 a4width, a4height)
   fname = paste0(outdir, "CabauwHErZERA20C_annualCycle_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
-  PlotTowerERAprofileAnnualCycle(cabauw.df, tower.name="Cabauw", fname)
+  PlotTowerERAprofileAnnualCycle(cabauw.df, tower.name="Cabauw", fname,
+                                 a4width, a4height)
 }
