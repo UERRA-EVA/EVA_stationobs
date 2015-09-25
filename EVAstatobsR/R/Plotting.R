@@ -1311,11 +1311,11 @@ PlotTowerERAprofileRelDiff <- function(tower.df, tower.name, fname) {
     lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$tower)
     corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
     legend("bottomleft", legend=c("HErZ at 10m", plot.ext,
-                               paste0("correlation = ", round(corr$estimate, 2))),
+                                  paste0("correlation = ", round(corr$estimate, 2))),
            text.col=c(color$herz, color$tower, color$black))
 
-    mtext("Monthly relative wind speed differences of ", plot.ext,
-          " against HErZ and ERA20C", outer=TRUE, line=1, cex=1.6)
+    mtext(paste0("Monthly relative wind speed differences of ", plot.ext,
+          " against HErZ and ERA20C"), outer=TRUE, line=1, cex=1.6)
 
     dev.off()
 
@@ -1340,7 +1340,7 @@ PlotTowerERAprofileRelDiff <- function(tower.df, tower.name, fname) {
     lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$tower)
     corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
     legend("bottomleft", legend=c("HErZ at 116m", plot.ext,
-                               paste0("correlation = ", round(corr$estimate, 2))),
+                                  paste0("correlation = ", round(corr$estimate, 2))),
            text.col=c(color$herz, color$tower, color$black))
 
 
@@ -1353,7 +1353,7 @@ PlotTowerERAprofileRelDiff <- function(tower.df, tower.name, fname) {
     lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$tower)
     corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
     legend("bottomleft", legend=c("ER20C at 100m", plot.ext,
-                               paste0("correlation = ", round(corr$estimate, 2))),
+                                  paste0("correlation = ", round(corr$estimate, 2))),
            text.col=c(color$era20, color$tower, color$black))
 
     mtext(paste0("Monthly relative wind speed differences of ", plot.ext,
@@ -1398,22 +1398,41 @@ PlotTowerERAprofileAnnualVar <- function(tower.df, tower.name, fname) {
     mon.Herz10[[cnt]] = Herz10Xts[which( tower.date$mon==cnt-1 )]
   }
 
-  if (tower.name == "Lindenberg") {
+  if (tower.name == "Lindenberg" | tower.name == "Cabauw") {
 
-    mon.Lind98 = list()
-    mon.Lind10 = list()
-    Lind98Xts = xts(tower.df$Lind98, order.by=tower.date)
-    Lind10Xts = xts(tower.df$Lind10, order.by=tower.date)
-    for (cnt in seq(12)) {
-      mon.Lind98[[cnt]] = Lind98Xts[which( tower.date$mon==cnt-1 )]
-      mon.Lind10[[cnt]] = Lind10Xts[which( tower.date$mon==cnt-1 )]
+    if (tower.name == "Lindenberg") {
+      plot.ext.10 = "Lindenberg at 10m"
+      plot.ext.100 = "Lindenberg at 98m"
+      mon.tower.100 = list()
+      mon.tower.10 = list()
+      Lind98Xts = xts(tower.df$Lind98, order.by=tower.date)
+      Lind10Xts = xts(tower.df$Lind10, order.by=tower.date)
+      for (cnt in seq(12)) {
+        mon.tower.100[[cnt]] = Lind98Xts[which( tower.date$mon==cnt-1 )]
+        mon.tower.10[[cnt]] = Lind10Xts[which( tower.date$mon==cnt-1 )]
+      }
+    } else if (tower.name == "Cabauw") {
+      plot.ext.100 = "Cabauw at 80m"
+      plot.ext2.100 = "Cabauw at 140m"
+      plot.ext.10 = "Cabauw at 10m"
+      mon.tower.100 = list()
+      mon.tower2.100 = list()
+      mon.tower.10 = list()
+      Cabauw10Xts = xts(tower.df$Cabauw10, order.by=tower.date)
+      Cabauw80Xts = xts(tower.df$Cabauw80, order.by=tower.date)
+      Cabauw140Xts = xts(tower.df$Cabauw140, order.by=tower.date)
+      for (cnt in seq(12)) {
+        mon.tower.100[[cnt]] = Cabauw80Xts[which( tower.date$mon==cnt-1 )]
+        mon.tower2.100[[cnt]] = Cabauw140Xts[which( tower.date$mon==cnt-1 )]
+        mon.tower.10[[cnt]] = Cabauw10Xts[which( tower.date$mon==cnt-1 )]
+      }
     }
 
     yliml = vector(mode="numeric", length=length(months))
     ylimh = vector(mode="numeric", length=length(months))
     for (cnt in seq(months)) {
-      Ylims = GetYlims(mon.Era20c100[[months[[cnt]]]], mon.Herz116[[months[[cnt]]]],
-                       mon.Lind10[[months[[cnt]]]], mon.Herz10[[months[[cnt]]]])
+      Ylims = GetYlims(mon.tower.100[[months[[cnt]]]], mon.Herz116[[months[[cnt]]]],
+                       mon.tower.10[[months[[cnt]]]], mon.Herz10[[months[[cnt]]]])
       yliml[cnt] = Ylims$yll
       ylimh[cnt] = Ylims$ylh
     }
@@ -1421,19 +1440,24 @@ PlotTowerERAprofileAnnualVar <- function(tower.df, tower.name, fname) {
     ylimh = max(ylimh)
 
     pdf(fname, width=a4width/2., height=a4height, onefile=TRUE, pointsize=13)
-    par(mfrow=c(5,1), mar=c(0,2,0,0), oma=c(4,1,3,0.5), cex=0.9)
-
+    if (tower.name == "Lindenberg") {
+      par(mfrow=c(5,1), mar=c(0,2,0,0), oma=c(4,1,3,0.5), cex=0.9)
+    } else if (tower.name == "Cabauw") {
+      par(mfrow=c(6,1), mar=c(0,2,0,0), oma=c(4,1,3,0.5), cex=0.9)
+    }
     dummy = numeric(length=length(Era20c100Xts)) * NA
     dummy = xts(dummy, order.by = index(Era20c100Xts))
 
-    plot(dummy, main=NULL, xaxt="n", ylim=c(yliml, ylimh), las=1)
-    for (cnt in seq(months)) {
-      lines(mon.Lind98[[months[[cnt]]]], type="b", pch=16, col=colorT[cnt],
-            bg=rgb(0,0,0,1./cnt), lw=2)
+    if (tower.name == "Cabauw") {
+      plot(dummy, main=NULL, xaxt="n", ylim=c(yliml, ylimh), las=1)
+      for (cnt in seq(months)) {
+        lines(mon.tower2.100[[months[[cnt]]]], type="b", pch=16, col=colorT[cnt],
+              bg=rgb(0,0,0,1./cnt), lw=2)
+      }
+      legend("bottomleft", legend=c(paste0(plot.ext2.100, " ", all.months[months[[1]]]),
+                                    paste0(plot.ext2.100, " ", all.months[months[[2]]])),
+             text.col=colorT, cex=legend.cex)
     }
-    legend("bottomleft", legend=c(paste0("Lind at 98m ", all.months[months[[1]]]),
-                                  paste0("Lind at 98m ", all.months[months[[2]]])),
-           text.col=colorT, cex=legend.cex)
 
     plot(dummy, main=NULL, xaxt="n", ylim=c(yliml, ylimh), las=1)
     for (cnt in seq(months)) {
@@ -1455,11 +1479,20 @@ PlotTowerERAprofileAnnualVar <- function(tower.df, tower.name, fname) {
 
     plot(dummy, main=NULL, xaxt="n", ylim=c(yliml, ylimh), las=1)
     for (cnt in seq(months)) {
-      lines(mon.Lind10[[months[[cnt]]]], type="b", pch=16, col=colorT[cnt],
+      lines(mon.tower.100[[months[[cnt]]]], type="b", pch=16, col=colorT[cnt],
             bg=rgb(0,0,0,1./cnt), lw=2)
     }
-    legend("topleft", legend=c(paste0("Lind at 10m ", all.months[months[[1]]]),
-                               paste0("Lind at 10m ", all.months[months[[2]]])),
+    legend("bottomleft", legend=c(paste0(plot.ext.100, " ", all.months[months[[1]]]),
+                                  paste0(plot.ext.100, " ", all.months[months[[2]]])),
+           text.col=colorT, cex=legend.cex)
+
+    plot(dummy, main=NULL, xaxt="n", ylim=c(yliml, ylimh), las=1)
+    for (cnt in seq(months)) {
+      lines(mon.tower.10[[months[[cnt]]]], type="b", pch=16, col=colorT[cnt],
+            bg=rgb(0,0,0,1./cnt), lw=2)
+    }
+    legend("topleft", legend=c(paste0(plot.ext.10 ," ", all.months[months[[1]]]),
+                               paste0(plot.ext.10 ," ", all.months[months[[2]]])),
            text.col=colorT, cex=legend.cex)
 
     plot(dummy, main=NULL, ylim=c(yliml, ylimh), las=1)
@@ -1471,8 +1504,13 @@ PlotTowerERAprofileAnnualVar <- function(tower.df, tower.name, fname) {
                                paste0("HErZ at 10m ", all.months[months[[2]]])),
            text.col=colorH, cex=legend.cex)
 
-    mtext("wind speed at Lindenberg for different months",
-          outer=TRUE, line=1, cex=1.0)
+    if (tower.name == "Lindenberg") {
+      mtext("Wind speed at Lindenberg for different months",
+            outer=TRUE, line=1, cex=1.0)
+    } else if (tower.name == "Cabauw") {
+      mtext("Wind speed at Cabauw for different months",
+            outer=TRUE, line=1, cex=1.0)
+    }
     mtext("wind speed [m/s]", line=0, side=2, outer=T)
 
     dev.off()
@@ -1768,6 +1806,174 @@ PlotTowerERAprofileAnnualCycle <- function(tower.df, tower.name, fname) {
 
     dev.off()
 
+  } else   if (tower.name == "Cabauw") {
+
+    yliml.rel = -0.2
+    ylimh.rel = 0.2
+
+    mon.Cabauw140 = vector(mode="numeric", length=12)
+    mon.Cabauw80 = vector(mode="numeric", length=12)
+    mon.Cabauw40 = vector(mode="numeric", length=12)
+    mon.Cabauw20 = vector(mode="numeric", length=12)
+    mon.Cabauw10 = vector(mode="numeric", length=12)
+    Cabauw140Xts = xts(tower.df$Cabauw140, order.by=tower.date)
+    Cabauw80Xts = xts(tower.df$Cabauw80, order.by=tower.date)
+    Cabauw40Xts = xts(tower.df$Cabauw40, order.by=tower.date)
+    Cabauw20Xts = xts(tower.df$Cabauw20, order.by=tower.date)
+    Cabauw10Xts = xts(tower.df$Cabauw10, order.by=tower.date)
+    for (cnt in seq(12)) {
+      mon.Cabauw140[cnt] = mean(Cabauw140Xts[which( tower.date$mon==cnt-1 )])
+      mon.Cabauw80[cnt] = mean(Cabauw80Xts[which( tower.date$mon==cnt-1 )])
+      mon.Cabauw40[cnt] = mean(Cabauw40Xts[which( tower.date$mon==cnt-1 )])
+      mon.Cabauw20[cnt] = mean(Cabauw20Xts[which( tower.date$mon==cnt-1 )])
+      mon.Cabauw10[cnt] = mean(Cabauw10Xts[which( tower.date$mon==cnt-1 )])
+    }
+
+    Ylims = GetYlims(xts(mon.Cabauw10, order.by=date.ancycle),
+                     xts(mon.Cabauw140, order.by=date.ancycle),
+                     xts(mon.Herz116, order.by=date.ancycle),
+                     xts(mon.Herz10, order.by=date.ancycle))
+    yliml = Ylims$yll
+    ylimh = Ylims$ylh
+
+    dummy = numeric(length=length(mon.Herz116)) * NA
+
+    pdf(fname, width=a4width/2., height=a4height, onefile=TRUE, pointsize=13)
+    par(mfrow=c(3,1), oma=c(3,3,3,0.5), mar=c(0,0,0,0), cex=1.1)
+    ylimh = ylimh + 1
+    plot(dummy, xlim=c(1,12), ylim=c(yliml, ylimh), col.axis = "white",
+         xlab="", xaxt="n", ylab="", main="")
+    title("Annual cycle of wind speed at Lindenberg", outer=TRUE, line=1, cex=0.9)
+    title(ylab="wind speed [m/s]", outer=TRUE, line=2)
+    axis(2, labels=yliml:(ylimh-1), at=yliml:(ylimh-1), las=1)
+    lines(mon.Cabauw140, type="b", pch=16, col="blue", lw=2)
+    lines(mon.Cabauw80, type="b", pch=16, col="lightblue", lw=2)
+    lines(mon.Era20c100, type="b", pch=16, col="green", lw=2)
+    lines(mon.Herz116, type="b", pch=16, col="red", lw=2)
+    arrows(1:12, mon.Cabauw140-sd(mon.Cabauw140), 1:12, mon.Cabauw140+sd(mon.Cabauw140),
+           length=0.05, angle=90, code=3, col="blue")
+    arrows(1:12, mon.Cabauw80-sd(mon.Cabauw80), 1:12, mon.Cabauw80+sd(mon.Cabauw80),
+           length=0.05, angle=90, code=3, col="lightblue")
+    arrows(1:12, mon.Era20c100-sd(mon.Era20c100), 1:12, mon.Era20c100+sd(mon.Era20c100),
+           length=0.05, angle=90, code=3, col="green")
+    arrows(1:12, mon.Herz116-sd(mon.Herz116), 1:12, mon.Herz116+sd(mon.Herz116),
+           length=0.05, angle=90, code=3, col="red")
+    legend("top", legend=c("Cabauw at 140m ", "Cabauw at 80m", "Era20C at 100m",
+                           "Herz at 116m"),
+           text.col=c("blue", "lightblue", "green", "red"), cex=legend.cex)
+
+    plot(dummy, xlim=c(1,12), ylim=c(yliml, ylimh), col.axis = "white",
+         xlab="", xaxt="n", ylab="", main="")
+    axis(2, labels=yliml:(ylimh-1), at=yliml:(ylimh-1), las=1)
+    lines(mon.Cabauw40, type="b", pch=16, col="blue", lw=2)
+    lines(mon.Herz35, type="b", pch=16, col="red", lw=2)
+    lines(mon.Cabauw20, type="b", pch=16, col="lightblue", lw=2)
+    arrows(1:12, mon.Cabauw40-sd(mon.Cabauw40), 1:12, mon.Cabauw40+sd(mon.Cabauw40),
+           length=0.05, angle=90, code=3, col="blue")
+    arrows(1:12, mon.Herz35-sd(mon.Herz35), 1:12, mon.Herz35+sd(mon.Herz35),
+           length=0.05, angle=90, code=3, col="red")
+    arrows(1:12, mon.Cabauw20-sd(mon.Cabauw20), 1:12, mon.Cabauw20+sd(mon.Cabauw20),
+           length=0.05, angle=90, code=3, col="lightblue")
+    legend("top", legend=c("Cabauw at 40m", "Herz at 35m", "Cabauw at 20m"),
+           text.col=c("blue", "red", "lightblue"), cex=legend.cex)
+
+    plot(dummy, xlim=c(1,12), ylim=c(yliml, ylimh), col.axis = "white",
+         xlab="", xaxt="n", ylab="", main="")
+    axis(2, labels=yliml:(ylimh-1), at=yliml:(ylimh-1), las=1)
+    lines(mon.Cabauw10, type="b", pch=16, col="blue", lw=2)
+    lines(mon.Herz10, type="b", pch=16, col="red", lw=2)
+    arrows(1:12, mon.Cabauw10-sd(mon.Cabauw10), 1:12, mon.Cabauw10+sd(mon.Cabauw10),
+           length=0.05, angle=90, code=3, col="blue")
+    arrows(1:12, mon.Herz10-sd(mon.Herz10), 1:12, mon.Herz10+sd(mon.Herz10),
+           length=0.05, angle=90, code=3, col="red")
+    legend("top", legend=c("Cabauw at 10m", "Herz at 10m"),
+           text.col=c("blue", "red"), cex=legend.cex)
+
+    axis(1, labels=all.months, at = 1:12)
+
+    dev.off()
+    ylimh = ylimh - 1
+
+
+    fname = gsub("annualCycle", "annualCycleSingleArrow", fname)
+    pdf(fname, width=a4width, height=a4height, onefile=TRUE, pointsize=13)
+    par(mar=c(3,3,3,0.5), cex=1.1)
+    ylimh = ylimh + 1
+    plot(dummy, xlim=c(1,12), ylim=c(yliml, ylimh), col.axis = "white",
+         xlab="", ylab="", main="")
+    title(main="Annual cycle of wind speed at Cabauw", line=1, cex=1.1)
+    title(ylab="wind speed [m/s]", line=2)
+    axis(1, labels=all.months, at = 1:12, las=1)
+    axis(2, labels=yliml:ylimh, at=yliml:ylimh, las=1)
+
+    lines(mon.Cabauw140, type="b", pch=16, col="black",lw=2)
+    lines(mon.Herz116, type="b", pch=16, col="violetred",lw=2)
+    arrows(1:12, mon.Herz116-sd(mon.Herz116), 1:12, mon.Herz116+sd(mon.Herz116),
+           length=0.05, angle=90, code=3, col="violetred")
+    lines(mon.Era20c100, type="b", pch=16, col="green",lw=2)
+    arrows(1:12, mon.Era20c100-sd(mon.Era20c100), 1:12, mon.Era20c100+sd(mon.Era20c100),
+           length=0.05, angle=90, code=3, col="green")
+    lines(mon.Cabauw80, type="b", pch=16, col="purple2",lw=2)
+    arrows(1:12, mon.Cabauw80-sd(mon.Cabauw80), 1:12, mon.Cabauw80+sd(mon.Cabauw80),
+           length=0.05, angle=90, code=3, col="purple2")
+    lines(mon.Herz69, type="b", pch=16, col="chocolate",lw=2)
+    lines(mon.Cabauw40, type="b", pch=16, col="deepskyblue",lw=2)
+    lines(mon.Herz35, type="b", pch=16, col="red",lw=2)
+    lines(mon.Cabauw20, type="b", pch=16, col="blue",lw=2)
+    lines(mon.Cabauw10, type="b", pch=16, col="darkturquoise",lw=2)
+    arrows(1:12, mon.Cabauw10-sd(mon.Cabauw10), 1:12, mon.Cabauw10+sd(mon.Cabauw10),
+           length=0.05, angle=90, code=3, col="darkturquoise")
+    lines(mon.Herz10, type="b", pch=16, col="orange",lw=2)
+    arrows(1:12, mon.Herz10-sd(mon.Herz10), 1:12, mon.Herz10+sd(mon.Herz10),
+           length=0.05, angle=90, code=3, col="orange")
+    legend("top", legend=c("Cabauw at 140m", "Herz at 116m", "Era20C at 100m",
+                           "Cabauw at 80m ", "Herz at 69m", "Cabauw at 40m",
+                           "Herz at 35m", "Cabauw at 20m", "Cabauw at 10m",
+                           "Herz at 10m"),
+           text.col=c("black", "violetred", "green", "purple2", "chocolate",
+                      "deepskyblue", "red", "blue", "darkturquoise", "orange"), cex=0.9)
+
+    dev.off()
+
+
+    fname = gsub("annualCycleSingleArrow", "annualCycleRelDiffSingle", fname)
+    pdf(fname, width=a4width, height=a4height, onefile=TRUE, pointsize=13)
+    par(mar=c(3,3,3,0.5), cex=1.8)
+    plot(dummy, xlim=c(1,12), ylim=c(yliml.rel, ylimh.rel), col.axis = "white",
+         xlab="", ylab="", main="")
+    title(main="Annual cycle of relative wind speed at Cabauw", line=1, cex=3)
+    title(ylab="relative difference", line=2, cex=1.8)
+    axis(1, labels=all.months, at = 1:12, las=1, cex=1.8)
+    axis(2, labels=c(yliml.rel,0,ylimh.rel), at=c(yliml.rel,0,ylimh.rel), las=1)
+    lines(RelDiff(mon.Cabauw140, mean(mon.Cabauw140)), type="b", pch=16,
+          col="black",lw=2)
+    lines(RelDiff(mon.Herz116, mean(mon.Herz116)), type="b", pch=16,
+          col="violetred",lw=2)
+    lines(RelDiff(mon.Era20c100, mean(mon.Era20c100)), type="b", pch=16,
+          col="green",lw=2)
+    lines(RelDiff(mon.Cabauw80, mean(mon.Cabauw80)), type="b", pch=16,
+          col="purple2",lw=2)
+    lines(RelDiff(mon.Herz69, mean(mon.Herz69)), type="b", pch=16,
+          col="chocolate",lw=2)
+    lines(RelDiff(mon.Cabauw40, mean(mon.Cabauw40)), type="b", pch=16,
+          col="deepskyblue",lw=2)
+    lines(RelDiff(mon.Herz35, mean(mon.Herz35)), type="b", pch=16,
+          col="red",lw=2)
+    lines(RelDiff(mon.Cabauw20, mean(mon.Cabauw20)), type="b", pch=16,
+          col="blue",lw=2)
+    lines(RelDiff(mon.Cabauw10, mean(mon.Cabauw10)), type="b", pch=16,
+          col="darkturquoise",lw=2)
+    lines(RelDiff(mon.Herz10, mean(mon.Herz10)), type="b", pch=16,
+          col="orange",lw=2)
+    legend("top", legend=c("Cabauw at 140m", "Herz at 116m", "Era20C at 100m",
+                           "Cabauw at 80m ", "Herz at 69m", "Cabauw at 40m",
+                           "Herz at 35m", "Cabauw at 20m", "Cabauw at 10m",
+                           "Herz at 10m"),
+           text.col=c("black", "violetred", "green", "purple2", "chocolate",
+                      "deepskyblue", "red", "blue", "darkturquoise", "orange"), cex=0.9)
+
+    dev.off()
+
   } else if ( tower.name == "Fino1" | tower.name == "Fino2") {
 
     yliml.rel = -0.3
@@ -1959,7 +2165,7 @@ histoPlot <- function(X, Y, breaks, xlims, titname, xlabname, ylabname,
   } else {
     hist(X, freq=F, breaks=breaks, xlim=xlims, col="green", border="blue",
          main="", xlab="", ylab="", xaxt=xaxis, yaxt=yaxis)
-#     lines(density(X, na.rm=TRUE), col="red", lw=1.5)
+    #     lines(density(X, na.rm=TRUE), col="red", lw=1.5)
   }
   if (xaxis == 's') {
     mtext(xlabname, side=1, line=2, cex=1.2)
@@ -2053,5 +2259,5 @@ plotLegendStats <- function(xlims, vals) {
                       paste0("1% = ", round(quantile(vals, 0.01, na.rm = TRUE), 2)),
                       paste0("99% = ", round(quantile(vals, 0.99, na.rm = TRUE), 2))),
            cex = 0.8)
-      }
+  }
 }

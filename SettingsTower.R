@@ -67,5 +67,5 @@ cabauw.tsstart = c(2000,04)
 cabauw.tsend = c(2015,07)
 
 plot.TowerEraProfile = F
-plot.histograms = T
-plot.ProfileTS = F
+plot.histograms = F
+plot.ProfileTS = T
