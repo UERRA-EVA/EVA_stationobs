@@ -1190,9 +1190,10 @@ PlotPDFScore <- function(era.xts, station.xts, outdir, fname, titname,
 #' @param era.monthly is an optional boolean which determines whether data passed
 #'   is monthly (T) or daily (F) data. The default value is to use daily data
 #'   (era.monthly=FALSE).
-PlotTowerERAprofileBP <- function(tower.df, tower.name, fname, era.monthly) {
+PlotTowerERAprofileBP <- function(tower.obj, fname, era.monthly) {
 
-  dummy = numeric(length=length(tower.df$herz10)) * NA
+  t.obj = tower.obj$climate_data_objects
+  dummy = numeric(length=length(t.obj$herz10$data$wind_speed)) * NA
   x.labs = "wind speed [m/s]"
   swex = 0.4
   bwex = 0.3
@@ -1208,72 +1209,94 @@ PlotTowerERAprofileBP <- function(tower.df, tower.name, fname, era.monthly) {
     plot.ext = " Daily "
   }
 
-  if (tower.name == "Lindenberg") {
-    pdf(fname, width=port.a4width, height=port.a4height/0.8, onefile=TRUE, pointsize=13)
-    par(mar=c(4,7,3,0.5), cex=1.5)
-    boxplot.default(tower.df$Lind10, tower.df$herz10, tower.df$Lind20, tower.df$herz35,
-                    tower.df$Lind40, tower.df$Lind60, tower.df$herz69, tower.df$Lind80,
-                    tower.df$Lind98, tower.df$era20c100, tower.df$herz116,
+  pdf(fname, width=port.a4width, height=port.a4height/0.8, onefile=TRUE, pointsize=13)
+  par(mar=c(4,7,3,0.5), cex=1.5)
+
+  if (t.obj$tower$data$StationName[1] == "Lindenberg") {
+    boxplot.default(t.obj$tower$data$wind_speed,
+                    t.obj$herz10$data$wind_speed,
+                    t.obj$era20c10$data$wind_speed,
+                    t.obj$tower2$data$wind_speed,
+                    t.obj$herz35$data$wind_speed,
+                    t.obj$tower3$data$wind_speed,
+                    t.obj$tower4$data$wind_speed,
+                    t.obj$herz69$data$wind_speed,
+                    t.obj$tower5$data$wind_speed,
+                    t.obj$tower6$data$wind_speed,
+                    t.obj$era20c100$data$wind_speed,
+                    t.obj$herz116$data$wind_speed,
                     horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
                     boxwex=bwex, staplewex=swex, las=1, ylim=wind.range,
-                    names=c("Lind 10m", "HErZ 10m", "Lind 20m", "HErZ 35m",
-                            "Lind 40m", "Lind 60m", "HErZ 69m", "Lind 80m",
-                            "Lind 98m", "ERA20C 100m", "HErZ 116m"),
-                    col=c("red", "blue", "red", "blue", "red", "red",
+                    names=c("Lind 10m", "HErZ 10m", "ERA20C 10m", "Lind 20m",
+                            "HErZ 35m", "Lind 40m", "Lind 60m", "HErZ 69m",
+                            "Lind 80m", "Lind 98m", "ERA20C 100m", "HErZ 116m"),
+                    col=c("red", "blue", "green", "red", "blue", "red", "red",
                           "blue", "red", "red", "green", "blue"))
-    title(main="Monthly wind speed profile at Lindenberg", line=1, cex=1.5)
-    mtext(x.labs, side=1, line=2, cex=1.5)
-    dev.off()
-  } else if (tower.name == "Cabauw") {
-    pdf(fname, width=port.a4width, height=port.a4height/0.8, onefile=TRUE, pointsize=13)
-    par(mar=c(4,7,3,0.5), cex=1.5)
-    boxplot.default(tower.df$Cabauw10, tower.df$herz10, tower.df$Cabauw20,
-                    tower.df$herz35, tower.df$Cabauw40, tower.df$herz69,
-                    tower.df$Cabauw80, tower.df$era20c100, tower.df$herz116,
-                    tower.df$Cabauw140,
+  } else if (t.obj$tower$data$StationName[1] == "Cabauw") {
+    boxplot.default(t.obj$tower$data$wind_speed,
+                    t.obj$herz10$data$wind_speed,
+                    t.obj$era20c10$data$wind_speed,
+                    t.obj$tower2$data$wind_speed,
+                    t.obj$herz35$data$wind_speed,
+                    t.obj$tower3$data$wind_speed,
+                    t.obj$herz69$data$wind_speed,
+                    t.obj$tower4$data$wind_speed,
+                    t.obj$era20c100$data$wind_speed,
+                    t.obj$herz116$data$wind_speed,
+                    t.obj$tower5$data$wind_speed,
                     horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
                     boxwex=bwex, staplewex=swex, las=1, ylim=wind.range,
-                    names=c("Cabauw 10m", "HErZ 10m", "Cabauw 20m", "HErZ 35m",
-                            "Cabauw 40m", "HErZ 69m", "Cabauw 80m",
+                    names=c("Cabauw 10m", "HErZ 10m", "ERA20C 10m", "Cabauw 20m",
+                            "HErZ 35m", "Cabauw 40m", "HErZ 69m", "Cabauw 80m",
                             "ERA20C 100m", "HErZ 116m", "Cabauw 140m"),
-                    col=c("red", "blue", "red", "blue", "red",
+                    col=c("red", "blue", "green", "red", "blue", "red",
                           "blue", "red", "green", "blue", "red"))
-    title(main="Monthly wind speed profile at Cabauw", line=1, cex=1.5)
-    mtext(x.labs, side=1, line=2, cex=1.5)
-    dev.off()
-  } else if (tower.name == "Fino1") {
-    pdf(fname, width=port.a4width, height=port.a4height/0.8, onefile=TRUE, pointsize=13)
-    par(mar=c(4,7,3,0.5), cex=1.5)
-    boxplot.default(dummy, tower.df$herz10, dummy, tower.df$herz35, dummy, dummy,
-                    tower.df$herz69, dummy, tower.df$era20c100, tower.df$Fino1,
-                    tower.df$herz116,
+  } else if (t.obj$tower$data$StationName[1] == "Fino1") {
+    boxplot.default(dummy,
+                    t.obj$herz10$data$wind_speed,
+                    t.obj$era20c10$data$wind_speed,
+                    dummy,
+                    t.obj$herz35$data$wind_speed,
+                    dummy,
+                    dummy,
+                    t.obj$herz69$data$wind_speed,
+                    dummy,
+                    t.obj$era20c100$data$wind_speed,
+                    t.obj$tower$data$wind_speed,
+                    t.obj$herz116$data$wind_speed,
                     horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
                     boxwex=bwex, staplewex=swex, las=1, ylim=wind.range,
-                    names=c("", "HErZ 10m", "", "HErZ 35m", "", "", "HErZ 69m",
-                            "", "ERA20C 100m", "Fino1 100m", "HErZ 116m"),
-                    col=c("", "blue", "", "blue", "", "", "blue", "", "green",
-                          "red", "blue"))
-    title(main=paste0(plot.ext, " wind speed profile at Fino1"), line=1, cex=1.5)
-    mtext(x.labs, side=1, line=2, cex=1.5)
-    dev.off()
-  } else if (tower.name == "Fino2") {
-    pdf(fname, width=port.a4width, height=port.a4height/0.8, onefile=TRUE, pointsize=13)
-    par(mar=c(4,7,3,0.5), cex=1.5)
-    boxplot.default(dummy, tower.df$herz10, dummy, tower.df$herz35, dummy, dummy,
-                    tower.df$herz69, dummy, tower.df$era20c100, tower.df$Fino2,
-                    tower.df$herz116,
+                    names=c("", "HErZ 10m", "ERA20C 10m", "", "HErZ 35m", "", "",
+                            "HErZ 69m", "", "ERA20C 100m", "Fino1 100m", "HErZ 116m"),
+                    col=c("", "blue", "green", "", "blue", "", "", "blue", "",
+                          "green", "red", "blue"))
+  } else if (t.obj$tower$data$StationName[1] == "Fino2") {
+    boxplot.default(dummy,
+                    t.obj$herz10$data$wind_speed,
+                    t.obj$era20c10$data$wind_speed,
+                    dummy,
+                    t.obj$herz35$data$wind_speed,
+                    dummy,
+                    dummy,
+                    t.obj$herz69$data$wind_speed,
+                    dummy,
+                    t.obj$era20c100$data$wind_speed,
+                    t.obj$tower$data$wind_speed,
+                    t.obj$herz116$data$wind_speed,
                     horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
                     boxwex=bwex, staplewex=swex, las=1, ylim=wind.range,
-                    names=c("", "HErZ 10m", "", "HErZ 35m", "", "", "HErZ 69m",
-                            "", "ERA20C 100m", "Fino2 102m", "HErZ 116m"),
-                    col=c("", "blue", "", "blue", "", "", "blue", "", "green",
-                          "red", "blue"))
-    title(main=paste0(plot.ext, " wind speed profile at Fino2"), line=1, cex=1.5)
-    mtext(x.labs, side=1, line=2, cex=1.5)
-    dev.off()
+                    names=c("", "HErZ 10m", "ERA20C 10m", "", "HErZ 35m", "", "",
+                            "HErZ 69m", "", "ERA20C 100m", "Fino2 102m", "HErZ 116m"),
+                    col=c("", "blue", "green", "", "blue", "", "", "blue", "",
+                          "green", "red", "blue"))
   } else {
-    CallStop(paste0("Unexpected tower name: ", tower.name, " "))
+    CallStop(paste0("Unexpected tower name: ",
+                    tower.obj$climate_data_objects$tower$data$StationName[1], " "))
   }
+  title(main=paste0("Monthly wind speed profile at ",
+                    t.obj$tower$data$StationName[1]), line=1, cex=1.5)
+  mtext(x.labs, side=1, line=2, cex=1.5)
+  dev.off()
 }
 
 #-----------------------------------------------------------------------------------

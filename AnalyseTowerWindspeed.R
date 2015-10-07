@@ -174,62 +174,73 @@ herz178.cabauw.xts = herz.data$herz178
 herz258.cabauw.xts = herz.data$herz258
 
 # == get time series of same length ==
-fino1.df = GetTowerProfileTS(tower.xts=fino1.100.xts,
-                             herz10.xts=herz10.fino1.xts,
-                             herz35.xts=herz35.fino1.xts,
-                             herz69.xts=herz69.fino1.xts,
-                             herz116.xts=herz116.fino1.xts,
-                             herz178.xts=herz178.fino1.xts,
-                             herz258.xts=herz258.fino1.xts,
-                             era20c10.xts=era20c10.fino1.xts,
-                             era20c100.xts=era20c100.fino1.xts,
-                             tower.tsstart=fino1.tsstart, tower.tsend=fino1.tsend,
-                             herz.tsend=herz.tsend, era20c.tsend=era20c.tsend,
-                             tower.name="Fino1")
+climobj = GetTowerObject(tower.xts=fino1.100.xts,
+                         herz10.xts=herz10.fino1.xts,
+                         herz35.xts=herz35.fino1.xts,
+                         herz69.xts=herz69.fino1.xts,
+                         herz116.xts=herz116.fino1.xts,
+                         herz178.xts=herz178.fino1.xts,
+                         herz258.xts=herz258.fino1.xts,
+                         era20c10.xts=era20c10.fino1.xts,
+                         era20c100.xts=era20c100.fino1.xts,
+                         tower.tsstart=fino1.tsstart, tower.tsend=fino1.tsend,
+                         herz.tsend=herz.tsend, era20c.tsend=era20c.tsend,
+                         tower.name="Fino1", tower.lon=fino1.lon,
+                         tower.lat=fino1.lat, tower.param=fino1.param,
+                         herz.param=herz.param, era20c.param=era20c.param)
+fino1.climobj = climobj$tower.object
 
-fino2.df = GetTowerProfileTS(tower.xts=fino2.102.xts,
-                             herz10.xts=herz10.fino2.xts,
-                             herz35.xts=herz35.fino2.xts,
-                             herz69.xts=herz69.fino2.xts,
-                             herz116.xts=herz116.fino2.xts,
-                             herz178.xts=herz178.fino2.xts,
-                             herz258.xts=herz258.fino2.xts,
-                             era20c10.xts=era20c10.fino2.xts,
-                             era20c100.xts=era20c100.fino2.xts,
-                             tower.tsstart=fino2.tsstart, tower.tsend=fino2.tsend,
-                             herz.tsend=herz.tsend, era20c.tsend=era20c.tsend,
-                             tower.name="Fino2")
+climobj = GetTowerObject(tower.xts=fino2.102.xts,
+                         herz10.xts=herz10.fino2.xts,
+                         herz35.xts=herz35.fino2.xts,
+                         herz69.xts=herz69.fino2.xts,
+                         herz116.xts=herz116.fino2.xts,
+                         herz178.xts=herz178.fino2.xts,
+                         herz258.xts=herz258.fino2.xts,
+                         era20c10.xts=era20c10.fino2.xts,
+                         era20c100.xts=era20c100.fino2.xts,
+                         tower.tsstart=fino2.tsstart, tower.tsend=fino2.tsend,
+                         herz.tsend=herz.tsend, era20c.tsend=era20c.tsend,
+                         tower.name="Fino2", tower.lon=fino2.lon,
+                         tower.lat=fino2.lat, tower.param=fino2.param,
+                         herz.param=herz.param, era20c.param=era20c.param)
+fino2.climobj = climobj$tower.object
 
-lind.df = GetTowerProfileTS(tower.xts=lind.10.xts, tower2.xts=lind.20.xts,
-                            tower3.xts=lind.40.xts, tower4.xts=lind.60.xts,
-                            tower5.xts=lind.80.xts, tower6.xts=lind.98.xts,
-                            herz10.xts=herz10.lind.xts,
-                            herz35.xts=herz35.lind.xts,
-                            herz69.xts=herz69.lind.xts,
-                            herz116.xts=herz116.lind.xts,
-                            herz178.xts=herz178.lind.xts,
-                            herz258.xts=herz258.lind.xts,
-                            era20c10.xts=era20c10.lind.xts,
-                            era20c100.xts=era20c100.lind.xts,
-                            tower.tsstart=lind.tsstart, tower.tsend=lind.tsend,
-                            herz.tsend=herz.tsend, era20c.tsend=era20c.tsend,
-                            tower.name="Lindenberg")
+climobj = GetTowerObject(tower.xts=lind.10.xts, tower2.xts=lind.20.xts,
+                         tower3.xts=lind.40.xts, tower4.xts=lind.60.xts,
+                         tower5.xts=lind.80.xts, tower6.xts=lind.98.xts,
+                         herz10.xts=herz10.lind.xts,
+                         herz35.xts=herz35.lind.xts,
+                         herz69.xts=herz69.lind.xts,
+                         herz116.xts=herz116.lind.xts,
+                         herz178.xts=herz178.lind.xts,
+                         herz258.xts=herz258.lind.xts,
+                         era20c10.xts=era20c10.lind.xts,
+                         era20c100.xts=era20c100.lind.xts,
+                         tower.tsstart=lind.tsstart, tower.tsend=lind.tsend,
+                         herz.tsend=herz.tsend, era20c.tsend=era20c.tsend,
+                         tower.name="Lindenberg", tower.lon=lind.lon,
+                         tower.lat=lind.lat, tower.param=lind.param,
+                         herz.param=herz.param, era20c.param=era20c.param)
+lind.climobj = climobj$tower.object
 
-
-cabauw.df = GetTowerProfileTS(tower.xts=cabauw.10.xts, tower2.xts=cabauw.20.xts,
-                              tower3.xts=cabauw.40.xts, tower4.xts=cabauw.80.xts,
-                              tower5.xts=cabauw.140.xts, tower6.xts=cabauw.200.xts,
-                              herz10.xts=herz10.cabauw.xts,
-                              herz35.xts=herz35.cabauw.xts,
-                              herz69.xts=herz69.cabauw.xts,
-                              herz116.xts=herz116.cabauw.xts,
-                              herz178.xts=herz178.cabauw.xts,
-                              herz258.xts=herz258.cabauw.xts,
-                              era20c10.xts=era20c10.cabauw.xts,
-                              era20c100.xts=era20c100.cabauw.xts,
-                              tower.tsstart=cabauw.tsstart, tower.tsend=cabauw.tsend,
-                              herz.tsend=herz.tsend, era20c.tsend=era20c.tsend,
-                              tower.name="Cabauw")
+climobj = GetTowerObject(tower.xts=cabauw.10.xts, tower2.xts=cabauw.20.xts,
+                         tower3.xts=cabauw.40.xts, tower4.xts=cabauw.80.xts,
+                         tower5.xts=cabauw.140.xts, tower6.xts=cabauw.200.xts,
+                         herz10.xts=herz10.cabauw.xts,
+                         herz35.xts=herz35.cabauw.xts,
+                         herz69.xts=herz69.cabauw.xts,
+                         herz116.xts=herz116.cabauw.xts,
+                         herz178.xts=herz178.cabauw.xts,
+                         herz258.xts=herz258.cabauw.xts,
+                         era20c10.xts=era20c10.cabauw.xts,
+                         era20c100.xts=era20c100.cabauw.xts,
+                         tower.tsstart=cabauw.tsstart, tower.tsend=cabauw.tsend,
+                         herz.tsend=herz.tsend, era20c.tsend=era20c.tsend,
+                         tower.name="Cabauw", tower.lon=cabauw.lon,
+                         tower.lat=cabauw.lat, tower.param=cabauw.param,
+                         herz.param=herz.param, era20c.param=era20c.param)
+cabauw.climobj = climobj$tower.object
 
 #-----------------------------------------------------------------------------
 
@@ -237,19 +248,19 @@ if (plot.TowerEraProfile) {
   cat("  **  Plotting tower-ERA profile box plots\n")
   fname = paste0(outdir, "LindenbergHErZERA20C_boxPlots_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
-  PlotTowerERAprofileBP(lind.df, tower.name="Lindenberg", fname, era.monthly)
+  PlotTowerERAprofileBP(lind.climobj, fname, era.monthly)
 
   fname = paste0(outdir, "Fino1HErZERA20C_boxPlots_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
-  PlotTowerERAprofileBP(fino1.df, tower.name="Fino1", fname, era.monthly)
+  PlotTowerERAprofileBP(fino1.climobj, fname, era.monthly)
 
   fname = paste0(outdir, "Fino2HErZERA20C_boxPlots_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
-  PlotTowerERAprofileBP(fino2.df, tower.name="Fino2", fname, era.monthly)
+  PlotTowerERAprofileBP(fino2.climobj, fname, era.monthly)
 
   fname = paste0(outdir, "CabauwHErZERA20C_boxPlots_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
-  PlotTowerERAprofileBP(cabauw.df, tower.name="Cabauw", fname, era.monthly)
+  PlotTowerERAprofileBP(cabauw.climobj, fname, era.monthly)
 }
 
 #-----------------------------------------------------------------------------
@@ -258,19 +269,19 @@ if(plot.histograms) {
   cat("  **  Plotting Histograms\n")
   fname = paste0("Histogram_Lindenberg_", res.switch, '_', time.ext, "_",
                  fname_ext, ".pdf")
-  PlotHistogramsTower(outdir, fname, era.monthly, lind.df, tower.name="Lindenberg")
+  PlotHistogramsTower(outdir, fname, era.monthly, lind.climobj)
 
   fname = paste0("Histogram_Fino1_", res.switch, '_', time.ext, "_",
                  fname_ext, ".pdf")
-  PlotHistogramsTower(outdir, fname, era.monthly, fino1.df, tower.name="Fino1")
+  PlotHistogramsTower(outdir, fname, era.monthly, fino1.climobj)
 
   fname = paste0("Histogram_Fino2_", res.switch, '_', time.ext, "_",
                  fname_ext, ".pdf")
-  PlotHistogramsTower(outdir, fname, era.monthly, fino2.df, tower.name="Fino2")
+  PlotHistogramsTower(outdir, fname, era.monthly, fino2.climobj)
 
   fname = paste0("Histogram_Cabauw_", res.switch, '_', time.ext, "_",
                  fname_ext, ".pdf")
-  PlotHistogramsTower(outdir, fname, era.monthly, cabauw.df, tower.name="Cabauw")
+  PlotHistogramsTower(outdir, fname, era.monthly, cabauw.climobj)
 }
 
 #-----------------------------------------------------------------------------
@@ -279,42 +290,42 @@ if (plot.ProfileTS & era.monthly) {
   cat("  **  Plotting tower-ERA profile TS\n")
   fname = paste0(outdir, "LindenbergHErZERA20C_relativeDifferences_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
-  PlotTowerERAprofileRelDiff(lind.df, tower.name="Lindenberg", fname)
+  PlotTowerERAprofileRelDiff(lind.climobj, fname)
   fname = paste0(outdir, "Fino1HErZERA20C_relativeDifferences_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
-  PlotTowerERAprofileRelDiff(fino1.df, tower.name="Fino1", fname)
+  PlotTowerERAprofileRelDiff(fino1.climobj, fname)
   fname = paste0(outdir, "Fino2HErZERA20C_relativeDifferences_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
-  PlotTowerERAprofileRelDiff(fino2.df, tower.name="Fino2", fname)
+  PlotTowerERAprofileRelDiff(fino2.climobj, fname)
   fname = paste0(outdir, "CabauwHErZERA20C_relativeDifferences_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
-  PlotTowerERAprofileRelDiff(cabauw.df, tower.name="Cabauw", fname)
+  PlotTowerERAprofileRelDiff(cabauw.climobj, fname)
 
 
   fname = paste0(outdir, "LindenbergHErZERA20C_selectedMonths_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
-  PlotTowerERAprofileAnnualVar(lind.df, tower.name="Lindenberg", fname)
+  PlotTowerERAprofileAnnualVar(lind.climobj, fname)
   fname = paste0(outdir, "Fino1HErZERA20C_selectedMonths_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
-  PlotTowerERAprofileAnnualVar(fino1.df, tower.name="Fino1", fname)
+  PlotTowerERAprofileAnnualVar(fino1.climobj, fname)
   fname = paste0(outdir, "Fino2HErZERA20C_selectedMonths_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
-  PlotTowerERAprofileAnnualVar(fino2.df, tower.name="Fino2", fname)
+  PlotTowerERAprofileAnnualVar(fino2.climobj, fname)
   fname = paste0(outdir, "CabauwHErZERA20C_selectedMonths_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
-  PlotTowerERAprofileAnnualVar(cabauw.df, tower.name="Cabauw", fname)
+  PlotTowerERAprofileAnnualVar(cabauw.climobj, fname)
 
 
   fname = paste0(outdir, "LindenbergHErZERA20C_annualCycle_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
-  PlotTowerERAprofileAnnualCycle(lind.df, tower.name="Lindenberg", fname)
+  PlotTowerERAprofileAnnualCycle(lind.climobj, fname)
   fname = paste0(outdir, "Fino1HErZERA20C_annualCycle_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
-  PlotTowerERAprofileAnnualCycle(fino1.df, tower.name="Fino1", fname)
+  PlotTowerERAprofileAnnualCycle(fino1.climobj, fname)
   fname = paste0(outdir, "Fino2HErZERA20C_annualCycle_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
-  PlotTowerERAprofileAnnualCycle(fino2.df, tower.name="Fino2", fname)
+  PlotTowerERAprofileAnnualCycle(fino2.climobj, fname)
   fname = paste0(outdir, "CabauwHErZERA20C_annualCycle_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
-  PlotTowerERAprofileAnnualCycle(cabauw.df, tower.name="Cabauw", fname)
+  PlotTowerERAprofileAnnualCycle(cabauw.climobj, fname)
 }
