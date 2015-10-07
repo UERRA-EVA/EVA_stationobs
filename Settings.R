@@ -1,11 +1,13 @@
-a4width = 29.7/2.54
-a4height = 21./2.54
+land.a4width = 29.7/2.54
+land.a4height = 21./2.54
+port.a4width = 21./2.54
+port.a4height = 29.7/2.54
 
 # this switch concerns the resolution of the ERA20C and ERA-Interim reanalyses
 # (HR is the version interpolated to 0.125°)
 res.switch = "HighRes"   # HighRes, OrigRes
 # set whether to use monthly (T) or daily (F) reanalysis data for analysis
-era.monthly = TRUE
+era.monthly = T
 if (era.monthly) {
   time.ext = "Monthly"
 } else {
@@ -14,7 +16,7 @@ if (era.monthly) {
 
 # choose whether to analyse the profile of six model levels of HErZ data or only
 # 10m and 116m
-herz.profile = TRUE
+herz.profile = T
 
 #=== diagnostics ===
 verb.era.dat = FALSE
