@@ -78,36 +78,68 @@ CheckHerzParams <- function(herz.param, herz.profile) {
 
 #-----------------------------------------------------------------------------------
 
-#' @title Check parameter names of Lindenberg tower measurements.
-#' @description Lindenberg parameter names are checked. Within the package the names
+#' @title Check parameter names of specific tower measurements.
+#' @description Parameter names are checked. Within the package the names
 #'   are expected to follow a certain structure: "windspeed_xxxm", whereas xxx
-#'   equals the height of the measurement level and is expected to be increasing,
-#'   i.e., 10m, 20m, 40m, 80m, 98m. This function does not have a return value.
-#' @param lind.param a string of length n which holds n parameter names.
-CheckLindParams <- function(lind.param) {
-  if (!lind.param[1] == "windspeed_10m") {
-    CallStop(paste0("Unexpected Lindenberg parameter: ", lind.param[1],
-                    "\n    Should be: windspeed_10m"))
-  }
-  if (!lind.param[2] == "windspeed_20m") {
-    CallStop(paste0("Unexpected Lindenberg parameter: ", lind.param[2],
-                    "\n    Should be: windspeed_20m"))
-  }
-  if (!lind.param[3] == "windspeed_40m") {
-    CallStop(paste0("Unexpected Lindenberg parameter: ", lind.param[3],
-                    "\n    Should be: windspeed_40m"))
-  }
-  if (!lind.param[4] == "windspeed_60m") {
-    CallStop(paste0("Unexpected Lindenberg parameter: ", lind.param[4],
-                    "\n    Should be: windspeed_60m"))
-  }
-  if (!lind.param[5] == "windspeed_80m") {
-    CallStop(paste0("Unexpected Lindenberg parameter: ", lind.param[5],
-                    "\n    Should be: windspeed_80m"))
-  }
-  if (!lind.param[6] == "windspeed_98m") {
-    CallStop(paste0("Unexpected Lindenberg parameter: ", lind.param[6],
-                    "\n    Should be: windspeed_98m"))
+#'   equals the height of the measurement level and is expected to be monotonically
+#'   increasing or decreasing, depending on measurement site. This function does not
+#'   have a return value.
+#' @param tower.param a string of length n which holds n parameter names.
+#' @param tower.name a string which holds the name of the tower.
+CheckTowerParams <- function(tower.param, tower.name) {
+  if (tower.name == "Lindenberg") {
+    if (!tower.param[1] == "windspeed_10m") {
+      CallStop(paste0("Unexpected Lindenberg parameter: ", tower.param[1],
+                      "\n   Should be: windspeed_10m"))
+    }
+    if (!tower.param[2] == "windspeed_20m") {
+      CallStop(paste0("Unexpected Lindenberg parameter: ", tower.param[2],
+                      "\n  Should be: windspeed_20m"))
+    }
+    if (!tower.param[3] == "windspeed_40m") {
+      CallStop(paste0("Unexpected Lindenberg parameter: ", tower.param[3],
+                      "\n   Should be: windspeed_40m"))
+    }
+    if (!tower.param[4] == "windspeed_60m") {
+      CallStop(paste0("Unexpected Lindenberg parameter: ", tower.param[4],
+                      "\n   Should be: windspeed_60m"))
+    }
+    if (!tower.param[5] == "windspeed_80m") {
+      CallStop(paste0("Unexpected Lindenberg parameter: ", tower.param[5],
+                      "\n  Should be: windspeed_80m"))
+    }
+    if (!tower.param[6] == "windspeed_98m") {
+      CallStop(paste0("Unexpected Lindenberg parameter: ", tower.param[6],
+                      "\n   Should be: windspeed_98m"))
+    }
+  } else if (tower.name == "Cabauw") {
+    if (!tower.param[1] == "windspeed_200m") {
+      CallStop(paste0("Unexpected Cabauw parameter: ", tower.param[1],
+                      "\n   Should be: windspeed_200m"))
+    }
+    if (!tower.param[2] == "windspeed_140m") {
+      CallStop(paste0("Unexpected Cabauw parameter: ", tower.param[2],
+                      "\n   Should be: windspeed_140m"))
+    }
+    if (!tower.param[3] == "windspeed_80m") {
+      CallStop(paste0("Unexpected Cabauw parameter: ", tower.param[3],
+                      "\n   Should be: windspeed_80m"))
+    }
+    if (!tower.param[4] == "windspeed_40m") {
+      CallStop(paste0("Unexpected Cabauw parameter: ", tower.param[4],
+                      "\n   Should be: windspeed_40m"))
+    }
+    if (!tower.param[5] == "windspeed_20m") {
+      CallStop(paste0("Unexpected Cabauw parameter: ", tower.param[5],
+                      "\n   Should be: windspeed_20m"))
+    }
+    if (!tower.param[6] == "windspeed_10m") {
+      CallStop(paste0("Unexpected Cabauw parameter: ", tower.param[6],
+                      "\n   Should be: windspeed_10m"))
+    }
+  } else {
+    CallStop(paste0("\n   ***   Unexpected tower name: ", tower.name, "\n         ",
+                    "Only Lindenberg and Cabauw are supported; ABORTING\n"))
   }
 }
 

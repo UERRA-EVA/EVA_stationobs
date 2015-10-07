@@ -22,7 +22,8 @@ if (interactive) {
 # == Checks on parameters ==
 CheckHerzParams(herz.param, herz.profile)
 if (!herz.profile) CallStop("HErZ profile is needed!")
-CheckLindParams(lind.param)
+CheckTowerParams(lind.param, tower.name="Lindenberg")
+CheckTowerParams(cabauw.param, tower.name="Cabauw")
 
 # == read tower measurements ==
 cat(paste0("  **  Reading tower measurements\n"))
