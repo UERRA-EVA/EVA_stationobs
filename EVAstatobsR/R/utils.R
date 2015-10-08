@@ -113,27 +113,27 @@ CheckTowerParams <- function(tower.param, tower.name) {
                       "\n   Should be: windspeed_98m"))
     }
   } else if (tower.name == "Cabauw") {
-    if (!tower.param[1] == "windspeed_200m") {
+    if (!tower.param[1] == "windspeed_10m") {
       CallStop(paste0("Unexpected Cabauw parameter: ", tower.param[1],
                       "\n   Should be: windspeed_200m"))
     }
-    if (!tower.param[2] == "windspeed_140m") {
+    if (!tower.param[2] == "windspeed_20m") {
       CallStop(paste0("Unexpected Cabauw parameter: ", tower.param[2],
                       "\n   Should be: windspeed_140m"))
     }
-    if (!tower.param[3] == "windspeed_80m") {
+    if (!tower.param[3] == "windspeed_40m") {
       CallStop(paste0("Unexpected Cabauw parameter: ", tower.param[3],
                       "\n   Should be: windspeed_80m"))
     }
-    if (!tower.param[4] == "windspeed_40m") {
+    if (!tower.param[4] == "windspeed_80m") {
       CallStop(paste0("Unexpected Cabauw parameter: ", tower.param[4],
                       "\n   Should be: windspeed_40m"))
     }
-    if (!tower.param[5] == "windspeed_20m") {
+    if (!tower.param[5] == "windspeed_140m") {
       CallStop(paste0("Unexpected Cabauw parameter: ", tower.param[5],
                       "\n   Should be: windspeed_20m"))
     }
-    if (!tower.param[6] == "windspeed_10m") {
+    if (!tower.param[6] == "windspeed_200m") {
       CallStop(paste0("Unexpected Cabauw parameter: ", tower.param[6],
                       "\n   Should be: windspeed_10m"))
     }

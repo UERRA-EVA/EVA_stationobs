@@ -46,12 +46,12 @@ lind.98.xts = dat[[lind.param[6]]]
 
 # for Cabauw
 dat = ExtractTowerData(cabauw.file, cabauw.param, era.monthly)
-cabauw.200.xts = dat[[cabauw.param[[1]]]]
-cabauw.140.xts = dat[[cabauw.param[[2]]]]
-cabauw.80.xts = dat[[cabauw.param[[3]]]]
-cabauw.40.xts = dat[[cabauw.param[[4]]]]
-cabauw.20.xts = dat[[cabauw.param[[5]]]]
-cabauw.10.xts = dat[[cabauw.param[[6]]]]
+cabauw.10.xts = dat[[cabauw.param[[1]]]]
+cabauw.20.xts = dat[[cabauw.param[[2]]]]
+cabauw.40.xts = dat[[cabauw.param[[3]]]]
+cabauw.80.xts = dat[[cabauw.param[[4]]]]
+cabauw.140.xts = dat[[cabauw.param[[5]]]]
+cabauw.200.xts = dat[[cabauw.param[[6]]]]
 
 # == read ERA20C data ==
 cat(paste0("  **  Reading ERA20C reanalysis data\n"))
@@ -314,7 +314,6 @@ if (plot.ProfileTS & era.monthly) {
   fname = paste0(outdir, "CabauwHErZERA20C_selectedMonths_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
   PlotTowerERAprofileAnnualVar(cabauw.climobj, fname)
-
 
   fname = paste0(outdir, "LindenbergHErZERA20C_annualCycle_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
