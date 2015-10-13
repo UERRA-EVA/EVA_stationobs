@@ -878,7 +878,6 @@ PlotHistograms <- function(outdir, fname, station.name, era.monthly,
 #'   (era.monthly=FALSE).
 #' @param tower.df is a data frame holding the data of tower measurements and
 #'   corresponding reanalysis data
-#' @param tower.name is a string holding the tower name
 PlotHistogramsTower <- function(outdir, fname, era.monthly, tower.obj) {
 
   t.obj = tower.obj$climate_data_objects
@@ -1174,7 +1173,6 @@ PlotPDFScore <- function(era.xts, station.xts, outdir, fname, titname,
 #'   Fino1, and Fino2 are supported.
 #' @param tower.df is a data frame holding the data of tower measurements and
 #'   corresponding reanalysis data
-#' @param tower.name is a string holding the tower name
 #' @param fname string of the file name of the plot
 #' @param era.monthly is an optional boolean which determines whether data passed
 #'   is monthly (T) or daily (F) data. The default value is to use daily data
@@ -1296,7 +1294,6 @@ PlotTowerERAprofileBP <- function(tower.obj, fname, era.monthly) {
 #'   Fino1, and Fino2 are supported.
 #' @param tower.df is a data frame holding the data of tower measurements and
 #'   corresponding reanalysis data
-#' @param tower.name is a string holding the tower name
 #' @param fname string of the file name of the plot
 PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
 
@@ -1393,7 +1390,6 @@ PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
 #'   Fino1, and Fino2 are supported.
 #' @param tower.df is a data frame holding the data of tower measurements and
 #'   corresponding reanalysis data
-#' @param tower.name is a string holding the tower name
 #' @param fname string of the file name of the plot
 PlotTowerERAprofileAnnualVar <- function(tower.obj, fname) {
 
@@ -1618,7 +1614,6 @@ PlotTowerERAprofileAnnualVar <- function(tower.obj, fname) {
 #'   of Lindenberg, Cabauw, Fino1, and Fino2 are supported.
 #' @param tower.df is a data frame holding the data of tower measurements and
 #'   corresponding reanalysis data
-#' @param tower.name is a string holding the tower name
 #' @param fname string of the file name of the plot
 PlotTowerERAprofileAnnualCycle <- function(tower.obj, fname) {
 
