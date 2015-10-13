@@ -35,18 +35,16 @@ GetYlims <- function(xts1, xts2, xts3, xts4) {
 #' @param titname string of the plot title name
 #' @param outdir string of the output directory into which the plot is saved
 #' @param fname string of the file name of the plot
-#' @param width,height of the plot in inches
 #' @param monthly is an optional parameter which determines to plot the monthly
 #'   values of the above time series
 #' @param anomaly is an optional parameter which determines whether to plot anomalies
 PlotStationEra <- function(Era20cXts, EraIXts, HerzXts, StatXts,
-                           titname, outdir, fname, width, height,
-                           monthly=TRUE, anomaly=FALSE) {
+                           titname, outdir, fname, monthly=TRUE, anomaly=FALSE) {
 
   roll.mean = TRUE
   roll.time = 12
 
-  pdf(paste(outdir, fname, sep=""), width=width, height=height,
+  pdf(paste(outdir, fname, sep=""), width=land.a4width, height=land.a4height,
       onefile=TRUE, pointsize=13)
 
   if (anomaly) {
@@ -123,7 +121,6 @@ PlotStationEra <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 #' @param EraI extended time series of momthly or seasonal ERA-Interim data
 #' @param Herz extended time series of monthly or seasonal HErZ data
 #' @param Stat extended time series of monthly or seasonal station data
-#' @param width,height of the plot in inches
 #' @param length.plot a list holding integers for the months or seasons to plot.
 #'   It holds 1, .., 12 specifying the months, or 1,..,4 specifying the seasons.
 #' @param era.months boolean which specifies whether monthly or seasonal data
@@ -134,8 +131,7 @@ PlotStationEra <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 #'   default value is to plot the absolute values of each time series
 #'   (plot.diff=FALSE).
 PlotMultiPanel <- function(outdir, fname, titname, Era20c, EraI, Herz, Stat,
-                           width, height, length.plot,
-                           era.months, plot.diff=FALSE) {
+                           length.plot, era.months, plot.diff=FALSE) {
 
   if (era.months) { # months will be plotted
     all.months = c("January","February","March","April","May","June","July",
@@ -144,7 +140,7 @@ PlotMultiPanel <- function(outdir, fname, titname, Era20c, EraI, Herz, Stat,
     all.seasons = c("Winter", "Spring", "Summer", "Autumn")
   }
 
-  pdf(paste(outdir, fname, sep=""), width=width, height=height,
+  pdf(paste(outdir, fname, sep=""), width=land.a4width, height=land.a4height,
       onefile=TRUE, pointsize=13)
 
   yliml = vector(mode="numeric", length=length(length.plot))
@@ -250,12 +246,11 @@ PlotMultiPanel <- function(outdir, fname, titname, Era20c, EraI, Herz, Stat,
 #' @param titname string of the plot title name
 #' @param outdir string of the output directory into which the plot is saved
 #' @param fname string of the file name of the plot
-#' @param width,height of the plot in inches
 #' @param seasons is an optional parameter which determines whetther to plot the
 #'   monthly (F) or seasonal (T) values of the above time series
 #' @param anomaly is an optional parameter which determines whether to plot anomalies
 PlotStationEraSelSeasons <- function(Era20cXts, EraIXts, HerzXts, StatXts,
-                                     titname, outdir, fname, width, height,
+                                     titname, outdir, fname,
                                      anomaly=FALSE, seasons=FALSE) {
 
   # specify seasons to plot with 1 for winter, 2 spring, 3 summer, and 4 for autumn
@@ -302,7 +297,7 @@ PlotStationEraSelSeasons <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 
   PlotMultiPanel(outdir, fname, titname,
                  seas.Era20c, seas.EraI, seas.Herz, seas.Stat,
-                 width, height, seasons, era.months=FALSE)
+                 seasons, era.months=FALSE)
 
   station.diff = TRUE
   if (station.diff & !anomaly) {
@@ -316,7 +311,7 @@ PlotStationEraSelSeasons <- function(Era20cXts, EraIXts, HerzXts, StatXts,
     titname = gsub("Seasonal", "Seasonal difference in", titname)
     PlotMultiPanel(outdir, fname, titname,
                    seas.Era20c, seas.EraI, seas.Herz, seas.Stat,
-                   width, height, seasons, era.months=FALSE, station.diff)
+                   seasons, era.months=FALSE, station.diff)
   }
 }
 
@@ -338,12 +333,10 @@ PlotStationEraSelSeasons <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 #' @param titname string of the plot title name
 #' @param outdir string of the output directory into which the plot is saved
 #' @param fname string of the output file name
-#' @param width,height of the plot in inches
 #' @param anomaly is an optional parameter which determines whether to plot anomalies
 #' @note need to adopt titname to months; need to plot into four different panals
 PlotStationEraSelMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
-                                    titname, outdir, fname, width, height,
-                                    anomaly=FALSE) {
+                                    titname, outdir, fname, anomaly=FALSE) {
 
   # specify months to plot starting from 1 for January to 12 for December
   # within the list below; the list must exactly hold two entries!
@@ -375,7 +368,7 @@ PlotStationEraSelMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 
   PlotMultiPanel(outdir, fname, titname,
                  mon.Era20c, mon.EraI, mon.Herz, mon.Stat,
-                 width, height, months, era.months=TRUE)
+                 months, era.months=TRUE)
 
   station.diff = TRUE
   if (station.diff & !anomaly) {
@@ -389,7 +382,7 @@ PlotStationEraSelMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
     titname = gsub("wind speed", "Monthly difference in wind speed", titname)
     PlotMultiPanel(outdir, fname, titname,
                    mon.Era20c, mon.EraI, mon.Herz, mon.Stat,
-                   width, height, months, era.months=TRUE, station.diff)
+                   months, era.months=TRUE, station.diff)
   }
 }
 
@@ -407,13 +400,11 @@ PlotStationEraSelMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 #' @param titname string of the plot title name
 #' @param outdir string of the output directory into which the plot/s is/are saved
 #' @param fname string of the output file name
-#' @param width,height of the plot in inches
 #' @param era.monthly is an optional boolean which determines whether data passed
 #'   is monthly (T) or daily (F) data. The default value is to use daily data
 #'   (era.monthly=FALSE).
 PlotStationEraSQ <- function(Era20cXts, EraIXts, HerzXts, StatXts,
-                             titname, outdir, fname, width, height,
-                             era.monthly=FALSE) {
+                             titname, outdir, fname, era.monthly=FALSE) {
 
   Era20  = as.numeric(Era20cXts)
   EraI = as.numeric(EraIXts)
@@ -432,7 +423,7 @@ PlotStationEraSQ <- function(Era20cXts, EraIXts, HerzXts, StatXts,
   }
 
   fname.scatter = gsub(".pdf", "_scatterQQ-Plots.pdf", fname)
-  pdf(paste0(outdir, fname.scatter), width=height, height=width,
+  pdf(paste0(outdir, fname.scatter), width=port.a4width, height=port.a4height,
       onefile=TRUE, pointsize=13)
 
   par(mfrow=c(3,2), mar=c(0,0,0,0), oma=c(5,5,4,0.5))
@@ -521,10 +512,9 @@ PlotStationEraSQ <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 #' @param era.monthly is an optional boolean which determines whether data passed
 #'   is monthly (T) or daily (F) data. The default value is to use daily data
 #'   (era.monthly=FALSE).
-#' @param width,height of the plot in inches
 Plot100mEraHerz <- function(Era20cXts, HerzXts,
                             titname, statname, outdir, fname,
-                            era.monthly, width, height) {
+                            era.monthly) {
 
   same.length = F
   if (length(Era20cXts) == length(HerzXts)) {same.length = T}
@@ -539,7 +529,7 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
     titname.ext = "daily"
   }
 
-  pdf(paste0(outdir, fname), width=width, height=height,
+  pdf(paste0(outdir, fname), width=land.a4width, height=land.a4height,
       onefile=TRUE, pointsize=13)
 
   dummy = numeric(length=length(Era20cXts)) * NA
@@ -619,7 +609,6 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
 #' @param era.monthly is an optional boolean which determines whether data passed
 #'   is monthly (T) or daily (F) data. The default value is to use daily data
 #'   (era.monthly=FALSE).
-#' @param width,height of the plot in inches
 #' @param Era20cXts10,Era20cXts100,EraIXts extended time series of ERA20C and ERA-I
 #'   10m and 100m height
 #' @param HerzXts10,HerzXts35,HerzXts69,HerzXts116,HerzXts178,HerzXts258 extended
@@ -628,7 +617,7 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
 #' @param plot.10m,plot.10m100m,plot.HerzProfile optional parameters setting whether
 #'   to plot only 10m values, 10m and 100m values together, or the herz profile,
 #'   respectively. The default value is FALSE for all three settings.
-PlotHistograms <- function(outdir, fname, station.name, era.monthly, width, height,
+PlotHistograms <- function(outdir, fname, station.name, era.monthly,
                            Era20cXts10=NULL, Era20cXts100=NULL, EraIXts=NULL,
                            HerzXts10=NULL, HerzXts35=NULL, HerzXts69=NULL,
                            HerzXts116=NULL, HerzXts178=NULL, HerzXts258=NULL,
@@ -697,7 +686,7 @@ PlotHistograms <- function(outdir, fname, station.name, era.monthly, width, heig
     }
 
     fname = gsub('Histogram', 'Histogram_ERA-Station-10m', fname)
-    pdf(paste0(outdir, fname), width=width, height=height,
+    pdf(paste0(outdir, fname), width=land.a4width, height=land.a4height,
         onefile=TRUE, pointsize=13)
 
     par(mfrow=c(2,2), mar=c(1,1,2,0.5), oma=c(2.5,3,3,0.5))
@@ -778,7 +767,7 @@ PlotHistograms <- function(outdir, fname, station.name, era.monthly, width, heig
     }
 
     fname = gsub('Histogram', 'Histogram_ERA20C-HErZ-100m', fname)
-    pdf(paste0(outdir, fname), width=width, height=height,
+    pdf(paste0(outdir, fname), width=land.a4width, height=land.a4height,
         onefile=TRUE, pointsize=13)
 
     par(mfrow=c(2,2), mar=c(1,1,2,0.5), oma=c(2.5,3,3,0.5))
@@ -825,7 +814,7 @@ PlotHistograms <- function(outdir, fname, station.name, era.monthly, width, heig
     }
 
     fname = gsub('Histogram', 'Histogram_HErZ-Profile', fname)
-    pdf(paste0(outdir, fname), width=width, height=height,
+    pdf(paste0(outdir, fname), width=land.a4width, height=land.a4height,
         onefile=TRUE, pointsize=13)
 
     par(mfrow=c(2,2), mar=c(1,1,2,0.5), oma=c(2.5,3,3,0.5))
@@ -887,7 +876,6 @@ PlotHistograms <- function(outdir, fname, station.name, era.monthly, width, heig
 #' @param era.monthly is an optional boolean which determines whether data passed
 #'   is monthly (T) or daily (F) data. The default value is to use daily data
 #'   (era.monthly=FALSE).
-#' @param width,height of the plot in inches
 #' @param tower.df is a data frame holding the data of tower measurements and
 #'   corresponding reanalysis data
 #' @param tower.name is a string holding the tower name
@@ -1118,14 +1106,13 @@ PlotHistogramsTower <- function(outdir, fname, era.monthly, tower.obj) {
 #' @param outdir is a string containing the output path of the plot
 #' @param fname is a string of the file name of the plot file
 #' @param titname is a string containig the title name of the plot
-#' @param width,height of the plot in inches
 #' @param era.monthly is an optional boolean which determines whether data passed
 #'   is monthly (T) or daily (F) data. The default value is to use daily data
 #'   (era.monthly=FALSE).
 PlotPDFScore <- function(era.xts, station.xts, outdir, fname, titname,
-                         width, height, era.monthly=FALSE) {
+                         era.monthly=FALSE) {
 
-  pdf(paste(outdir, fname, sep=""), width=width, height=height,
+  pdf(paste(outdir, fname, sep=""), width=land.a4width, height=land.a4height,
       onefile=TRUE, pointsize=13)
 
   date.era  <- as.POSIXlt(index(era.xts))
@@ -1311,7 +1298,6 @@ PlotTowerERAprofileBP <- function(tower.obj, fname, era.monthly) {
 #'   corresponding reanalysis data
 #' @param tower.name is a string holding the tower name
 #' @param fname string of the file name of the plot
-#' @param width,height of the plot in inches
 PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
 
   t.obj = tower.obj$climate_data_objects
@@ -1409,7 +1395,6 @@ PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
 #'   corresponding reanalysis data
 #' @param tower.name is a string holding the tower name
 #' @param fname string of the file name of the plot
-#' @param width,height of the plot in inches
 PlotTowerERAprofileAnnualVar <- function(tower.obj, fname) {
 
   t.obj = tower.obj$climate_data_objects
@@ -1635,7 +1620,6 @@ PlotTowerERAprofileAnnualVar <- function(tower.obj, fname) {
 #'   corresponding reanalysis data
 #' @param tower.name is a string holding the tower name
 #' @param fname string of the file name of the plot
-#' @param width,height of the plot in inches
 PlotTowerERAprofileAnnualCycle <- function(tower.obj, fname) {
 
   t.obj = tower.obj$climate_data_objects

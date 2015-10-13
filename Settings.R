@@ -149,7 +149,7 @@ herz.tsend = c(2010,12)
 fname_ext = "1995to2010"
 
 #=== plotting ===
-# The following switches decided on which plots to generate
+# The following switches decide on which plots to generate
 
 # time series between reanalyses and station data at 10m height
 plot.EraStatComp = F

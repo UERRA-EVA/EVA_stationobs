@@ -25,7 +25,6 @@ CheckHerzParams(herz.param, herz.profile)
 #============================================================
 
 # read station data
-path = "~/datensicherung/transfer/"
 if (station.daily) {
   station.fname = station.daily.fname
 } else {
@@ -142,32 +141,28 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
     titname = paste0('Windspeed [m/s] for station ',
                      as.character(station.data$STATIONS_NAME[1]))
     PlotStationEra(era20c.data.xts, eraI.data.xts, herz10.data.xts, MM.station,
-                   titname, outdir, fname, width=a4width, height=a4height,
-                   monthly=TRUE, anomaly=FALSE)
+                   titname, outdir, fname, monthly=TRUE, anomaly=FALSE)
 
     fname = paste0("ERA-Station_", gsub("/", "-", station.data$STATIONS_NAME[1]),
                    "_TimeSeriesAnnual_", res.switch, '_', fname_ext, ".pdf")
     titname = paste0('Windspeed [m/s] for station ',
                      as.character(station.data$STATIONS_NAME[1]))
     PlotStationEra(era20c.data.xts, eraI.data.xts, herz10.data.xts, MM.station,
-                   titname, outdir, fname, width=a4width, height=a4height,
-                   monthly=FALSE, anomaly=FALSE)
+                   titname, outdir, fname, monthly=FALSE, anomaly=FALSE)
 
     fname = paste0("ERA-Station_Anomlay_", gsub("/", "-", station.data$STATIONS_NAME[1]),
                    "_TimeSeries", time.ext, "_", res.switch, '_', fname_ext, ".pdf")
     titname = paste0('Windspeed anomaly [m/s] for station ',
                      as.character(station.data$STATIONS_NAME[1]))
     PlotStationEra(era20c.data.xts, eraI.data.xts, herz10.data.xts, MM.station,
-                   titname, outdir, fname, width=a4width, height=a4height,
-                   monthly=TRUE, anomaly=TRUE)
+                   titname, outdir, fname, monthly=TRUE, anomaly=TRUE)
 
     fname = paste0("ERA-Station_Anomlay_", gsub("/", "-", station.data$STATIONS_NAME[1]),
                    "_TimeSeriesAnnual_", res.switch, '_', fname_ext, ".pdf")
     titname = paste0('Windspeed anomaly [m/s] for station ',
                      as.character(station.data$STATIONS_NAME[1]))
     PlotStationEra(era20c.data.xts, eraI.data.xts, herz10.data.xts, MM.station,
-                   titname, outdir, fname, width=a4width, height=a4height,
-                   monthly=FALSE, anomaly=TRUE)
+                   titname, outdir, fname, monthly=FALSE, anomaly=TRUE)
   }
 
   #------------------------------------------------------------------------------
@@ -182,11 +177,11 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
     fname = paste0("100m-Era20cHerz_", gsub("/", "-", statname),
                    "_TimeSeries-", time.ext, "_", res.switch, '_', fname_ext, ".pdf")
     Plot100mEraHerz(era20c100.data.xts, herz116.data.xts, titname, statname,
-                    outdir, fname, era.monthly, width=a4width, height=a4height)
+                    outdir, fname, era.monthly)
     fname = paste0("PDFScore_100mEraHerz_", statname, "_TimeSeries-", time.ext,
                    "_", res.switch, '_', fname_ext, ".pdf")
-    PlotPDFScore(era20c100.data.xts, herz116.data.xts,
-                 outdir, fname, titname, width=a4width, height=a4height, era.monthly)
+    PlotPDFScore(era20c100.data.xts, herz116.data.xts, outdir, fname, titname,
+                 era.monthly)
   }
 
   #-----------------------------------------------------------------------------
@@ -200,7 +195,6 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
                      as.character(station.data$STATIONS_NAME[1]))
     PlotStationEraSelSeasons(era20c.data.xts, eraI.data.xts, herz10.data.xts,
                              MM.station, titname, outdir, fname,
-                             width=a4width, height=a4height,
                              anomaly=FALSE, seasons=FALSE)
 
     fname = paste0("ERA-Station_SeasonsAnomlay_",
@@ -210,7 +204,6 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
                      as.character(station.data$STATIONS_NAME[1]))
     PlotStationEraSelSeasons(era20c.data.xts, eraI.data.xts, herz10.data.xts,
                              MM.station, titname, outdir, fname,
-                             width=a4width, height=a4height,
                              anomaly=TRUE, seasons=TRUE)
   }
 
@@ -224,8 +217,7 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
     titname = paste0('Monthly windspeed [m/s] at station location ',
                      as.character(station.data$STATIONS_NAME[1]))
     PlotStationEraSelMonths(era20c.data.xts, eraI.data.xts, herz10.data.xts,
-                            MM.station, titname, outdir, fname,
-                            width=a4width, height=a4height, anomaly=FALSE)
+                            MM.station, titname, outdir, fname, anomaly=FALSE)
 
     fname = paste0("ERA-Station_", time.ext, "Anomlay_",
                    gsub("/", "-", station.data$STATIONS_NAME[1]),
@@ -233,8 +225,7 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
     titname = paste0('Monthly windspeed anomaly [m/s] at station location ',
                      as.character(station.data$STATIONS_NAME[1]))
     PlotStationEraSelMonths(era20c.data.xts, eraI.data.xts, herz10.data.xts,
-                            MM.station, titname, outdir, fname,
-                            width=a4width, height=a4height, anomaly=TRUE)
+                            MM.station, titname, outdir, fname, anomaly=TRUE)
   }
 
   #-----------------------------------------------------------------------------
@@ -247,8 +238,7 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
     titname = paste0('windspeed [m/s] at station location ',
                      as.character(station.data$STATIONS_NAME[1]))
     PlotStationEraSQ(era20c.data.xts, eraI.data.xts, herz10.data.xts, MM.station,
-                      titname, outdir, fname, width=a4width, height=a4height,
-                      era.monthly)
+                      titname, outdir, fname, era.monthly)
 
   }
 
@@ -267,19 +257,19 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
                    '_', res.switch, '_', time.ext, "_", fname_ext, ".pdf")
     titname = c('ERA20C ', as.character(station.data$STATIONS_NAME[1]))
     PlotPDFScore(era20c.data.xts, MM.station, outdir, fname, titname,
-                 width=a4width, height=a4height, era.monthly)
+                 era.monthly)
 
     fname = paste0("PDFscore_ERAI_", gsub("/", "-", station.data$STATIONS_NAME[1]),
                    '_', res.switch, '_', time.ext, "_", fname_ext, ".pdf")
     titname = c('ERA-I ', as.character(station.data$STATIONS_NAME[1]))
     PlotPDFScore(eraI.data.xts, MM.station, outdir, fname, titname,
-                 width=a4width, height=a4height, era.monthly)
+                 era.monthly)
 
     fname = paste0("PDFscore_HErZ_", gsub("/", "-", station.data$STATIONS_NAME[1]),
                    '_', res.switch, '_', time.ext, "_", fname_ext, ".pdf")
     titname = c('HErZ ', as.character(station.data$STATIONS_NAME[1]))
     PlotPDFScore(herz10.data.xts, MM.station, outdir, fname, titname,
-                 width=a4width, height=a4height, era.monthly)
+                 era.monthly)
   }
 
   #-----------------------------------------------------------------------------
@@ -291,7 +281,7 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
                    '_', res.switch, '_', time.ext, "_", fname_ext, ".pdf")
     statname = gsub("/", "-", station.data$STATIONS_NAME[1])
     if (herz.profile) {
-      PlotHistograms(outdir, fname, statname, era.monthly, a4width, a4height,
+      PlotHistograms(outdir, fname, statname, era.monthly,
                      era20c.data.xts, era20c100.data.xts, eraI.data.xts,
                      herz10.data.xts, herz35.data.xts, herz69.data.xts,
                      herz116.data.xts, herz178.data.xts, herz258.data.xts,
@@ -299,7 +289,7 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
                      plot.10m=TRUE, plot.10m100m=TRUE, plot.HerzProfile=TRUE)
 
     } else {
-      PlotHistograms(outdir, fname, statname, era.monthly, a4width, a4height,
+      PlotHistograms(outdir, fname, statname, era.monthly,
                      era20c.data.xts, era20c100.data.xts, eraI.data.xts,
                      herz10.data.xts, HerzXts35=NULL, HerzXts69=NULL,
                      herz116.data.xts, HerzXts178=NULL, HerzXts258=NULL,
