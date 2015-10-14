@@ -266,3 +266,106 @@ NormVals <- function(value, min.val, max.val) {
 }
 
 #-----------------------------------------------------------------------------------
+
+#' @title Calculate the 2x2 contingency table of the distribution between
+#'   observations and forecasts (here: reanalysis)
+#' @description This function calculates the 2x2 contigency table  of the
+#'   distribution between observations and forecasts (here: reanalysis). The input
+#'   are two numeric vectors of observations and forecasts (reanalysis) and a
+#'   benchmark for which the table shall be calculated. The output is a names list
+#'   holding the distribution in the variables a, b, c, d.
+#' @param obs a numeric vector holding the observations. It is sorted in chronological
+#'   order (it consists of the data values of an extended time series) and needs to
+#'   have the same length as frcst.
+#' @param frcst same as above but the the forecast (here: reanalysis) data.
+#' @param benchmark
+#' @return is a names list holding the distribution in the variables a, b, c, d.
+CalcContTable <- function(obs, frcst, benchmark) {
+
+  # check for NA values and set to NA at same time steps to both time series
+  idx = which(!is.finite(obs))
+  frcst[idx] = NA
+  idx = which(!is.finite(frcst))
+  obs[idx] = NA
+  abs.bench.obs = quantile(obs, benchmark, na.rm=T)
+  abs.bench.frcst = quantile(frcst, benchmark, na.rm=T)
+
+  cnt_a = 0
+  cnt_b = 0
+  cnt_c = 0
+  cnt_d = 0
+
+  if (length(obs) != length(frcst))
+    CallStop(paste0("Length of observation and forecast vector should match; ",
+                    "length(obs) = ", length(obs), "   length(frcst) = ", length(frcst)))
+
+  for (steps in seq(obs)) {
+    if (is.finite(obs[steps]) & is.finite(frcst[steps])) {
+      if (obs[steps] >= abs.bench.obs) {
+        if (frcst[steps] >= abs.bench.frcst) {
+          cnt_a = cnt_a + 1
+        } else {
+          cnt_c = cnt_c + 1
+        }
+      } else {
+        if (frcst[steps] >= abs.bench.obs) {
+          cnt_b = cnt_b + 1
+        } else {
+          cnt_d = cnt_d + 1
+        }
+      }
+    }
+  }
+  return(list(a=cnt_a, b=cnt_b, c=cnt_c, d=cnt_d))
+}
+
+#-----------------------------------------------------------------------------------
+
+#' @title Calcualte scores and skill scores based on the contigency table.
+#' @description Input are only the for distribution values of the contingency table
+#'   a, b, c, d. In this function twelve scores and skill scores are calculated,
+#'   including: hit rate (probability of detection (POD)), false alarm rate
+#'   (probability of false detection), false alarm ratio, Hanssen-Kuipers score
+#'   (True Statistic, Pierce Kill Score), threat score (critical success index),
+#'   equitable threat score (Gilbert skill score), frequency bias index, Heidke
+#'   skill score, accuracy (percent correct), odds ratio, extremal dependence index,
+#'   symmetric extremal dependence index (both from Ferro and Stephenson, 2011, doi:
+#'   \url{10.1175/WAF-D-10-05030.1}).
+#' @param a,b,c,d the four parameters of the contigency table (calculated by
+#'   \code{\link{CalcContTable}}).
+ContTableScores <- function(a, b, c, d) {
+
+  n = a + b + c + d
+  r = (a + b) * (a + c) / n
+
+  # checks
+  if (a == 0) cat(paste0("\n *** WARNING: Contigency table: a = 0"))
+  if (b == 0) cat(paste0("\n *** WARNING: Contigency table: b = 0"))
+  if (c == 0) cat(paste0("\n *** WARNING: Contigency table: c = 0"))
+  if (d == 0) cat(paste0("\n *** WARNING: Contigency table: d = 0"))
+  if (n == 0) cat(paste0("\n *** WARNING: Contigency table: n = 0"))
+  if (r == 0) cat(paste0("\n *** WARNING: Contigency table: r = 0"))
+
+  # calculate (skill) scores based on the contingency table
+  POD = a / (a+c) # aka hit rate (probability of detection)
+  POFD = b / (b+d) # aka false alarm rate (probability of false detection)
+  FAR = b / (a+b) # false alarm ratio
+  # Hanssen-Kuipers/True Skill Statistic/Pierce Skill Score (POD - POFD)
+  HK = (a*d - b*c) / ( (a+c)*(b+d))
+  TS = a / (a+b+c) # threat score or critical success index
+  ETS = (a - r) / (a+b+c - r) # aka Gilbert Skill Score
+  BIAS = (a+b) / (a+c) # aka frequency bias index
+  HSS = 2*(a*d - b*c)/( (a+c)*(c+d) + (a+b)*(b+d)) # Heidke Skill Score
+  PC = (a+d) / n # aka proportion/percent correct or accuracy
+  OR = a*d / (b*c) # odds ratio
+  EDI = (log(POFD) - log(POD)) / (log(POFD) + log(POD)) # aka
+  SEDI = (log(POFD) - log(POD) - log(1-POFD) + log(1-POD)) /
+    (log(POFD) + log(POD) + log(1-POFD) + log(1-POD))
+
+  return(list(hit.rate=POD, false.alarm.rate=POFD, false.alarm.ratio=FAR,
+              true_skill_stats=HK, threat_score=TS, equi_threat_score=ETS,
+              bias_index=BIAS, heidke_sksc=HSS, accuracy=PC, odds_ratio=OR,
+              edi=EDI, sedi=SEDI))
+}
+
+#-----------------------------------------------------------------------------------

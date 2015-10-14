@@ -2117,6 +2117,26 @@ PlotTowerERAprofileAnnualCycle <- function(tower.obj, fname) {
 
 #-----------------------------------------------------------------------------------
 
+#' @title
+#' @description
+#' @param tower.df is a data frame holding the data of tower measurements and
+#'   corresponding reanalysis data
+#' @param fname string of the file name of the plot
+#' @param benchmark numeric between 0 and 1 as a percentile
+#'   as percentile ???
+PlotTowerExtremes <- function(tower.obj, fname, benchmark) {
+
+  t.obj = tower.obj$climate_data_objects
+  obs = t.obj$tower$data$wind_speed
+  forec = t.obj$herz10$data$wind_speed
+
+  Cont.Table.cnt = CalcContTable(obs, forec, benchmark)
+  scores = ContTableScores(Cont.Table.cnt$a, Cont.Table.cnt$b,
+                           Cont.Table.cnt$c, Cont.Table.cnt$d)
+}
+
+#-----------------------------------------------------------------------------------
+
 #' @title Produce a scatter plot
 #' @description Prodcue a scatter plot of two data set samples.
 #' @param X first data sample for the scatter plot of class numeric

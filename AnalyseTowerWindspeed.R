@@ -328,3 +328,19 @@ if (plot.ProfileTS & era.monthly) {
                  res.switch, '_', fname_ext, ".pdf")
   PlotTowerERAprofileAnnualCycle(cabauw.climobj, fname)
 }
+
+#-----------------------------------------------------------------------------
+
+if(plot.Extremes) {
+  if (era.monthly) {
+    fname = paste0(outdir, "Cabauw_MM-extremes_", time.ext,"_",
+                   res.switch, '_', fname_ext, ".pdf")
+    extremes.bench = 0.95
+    PlotTowerExtremes(cabauw.climobj, fname, extremes.bench)
+  } else {
+    fname = paste0(outdir, "Cabauw_DM-extremes_", time.ext,"_",
+                   res.switch, '_', fname_ext, ".pdf")
+    extremes.bench = 0.95
+    PlotTowerExtremes(cabauw.climobj, fname, extremes.bench)
+  }
+}
