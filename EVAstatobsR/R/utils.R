@@ -1,3 +1,24 @@
+#' @title Various settings for plotting.
+#' @description This function provides a named list which holds settings for
+#'   plotting. Default values are set and will be adjusted depending on input data.
+#'   As of now it is divided only into station and tower data.
+#' @param data.vals is a data input object. It is either of class xts (which is still
+#'   the case for station data) or a ClimObject which is the new normal and already
+#'   works for tower data. It will be checked for the tower names and if it is not
+#'   equal to one of the used towers it is decided that it must be station data.
+#' @return is a named list holding all the parameters.
+PlottingSettings <- function(data.vals) {
+  land.a4width = 29.7/2.54
+  land.a4height = 21./2.54
+  port.a4width = 21./2.54
+  port.a4height = 29.7/2.54
+
+  return(list(land.a4width=land.a4width, land.a4height=land.a4height,
+              port.a4width=port.a4width, port.a4height=port.a4height))
+
+}
+#-----------------------------------------------------------------------------------
+
 #' @title Stop on error and print error message.
 #' @description This function stops and prints an error message which has been
 #'   passed to it. It does not have a return value.

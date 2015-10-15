@@ -1,8 +1,3 @@
-land.a4width = 29.7/2.54
-land.a4height = 21./2.54
-port.a4width = 21./2.54
-port.a4height = 29.7/2.54
-
 # this switch concerns the resolution of the ERA20C and ERA-Interim reanalyses
 # (HR is the version interpolated to 0.125°)
 res.switch = "HighRes"   # HighRes, OrigRes
