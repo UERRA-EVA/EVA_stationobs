@@ -901,7 +901,7 @@ PlotHistogramsTower <- function(outdir, fname, era.monthly, tower.obj) {
   ylabname.empty = ""
 
   if (t.obj$tower$data$StationName[1] == "Lindenberg" |
-        t.obj$tower$data$StationName[1] == "Cabauw") {
+      t.obj$tower$data$StationName[1] == "Cabauw") {
 
     data.10.vals = t.obj$tower$data$wind_speed
     if (t.obj$tower$data$StationName[1] == "Lindenberg") {
@@ -1031,7 +1031,7 @@ PlotHistogramsTower <- function(outdir, fname, era.monthly, tower.obj) {
     dev.off()
 
   } else if (t.obj$tower$data$StationName[1] == "Fino1" |
-               t.obj$tower$data$StationName[1] == "Fino2") {
+             t.obj$tower$data$StationName[1] == "Fino2") {
 
     tit.ext = paste0(t.obj$tower$data$StationName[1], " at ",
                      t.obj$tower$data$height[1], "m ")
@@ -1316,7 +1316,7 @@ PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
     plot.100.ext = paste0(t.obj$tower4$data$StationName[1], " at ",
                           t.obj$tower4$data$height[1], "m ")
   } else if (t.obj$tower$data$StationName[1] == "Fino1" |
-               t.obj$tower$data$StationName[1] == "Fino2") {
+             t.obj$tower$data$StationName[1] == "Fino2") {
     plot.100.ext = paste0(t.obj$tower$data$StationName[1], " at ",
                           t.obj$tower$data$height[1], "m ")
   } else {
@@ -1336,7 +1336,7 @@ PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
   if (t.obj$tower$data$StationName[1] == "Cabauw")
     l.xts = xts(t.obj$tower4$data$wind_speed, order.by=tower.date)
   if (t.obj$tower$data$StationName[1] == "Fino1" |
-        t.obj$tower$data$StationName[1] == "Fino2")
+      t.obj$tower$data$StationName[1] == "Fino2")
     l.xts = xts(t.obj$tower$data$wind_speed, order.by=tower.date)
 
   plot(dummy, main=NULL, xaxt="n", ylim=c(yliml.rel, ylimh.rel), las=1)
@@ -1362,7 +1362,7 @@ PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
 
   h.xts = xts(t.obj$herz10$data$wind_speed, order.by=tower.date)
   if (t.obj$tower$data$StationName[1] == "Lindenberg" |
-        t.obj$tower$data$StationName[1] == "Cabauw") {
+      t.obj$tower$data$StationName[1] == "Cabauw") {
     l.xts = xts(t.obj$tower$data$wind_speed, order.by=tower.date)
     plot(dummy, main=NULL, ylim=c(yliml.rel, ylimh.rel), las=1)
     title(ylab="relative difference", line=2.5)
@@ -1420,7 +1420,7 @@ PlotTowerERAprofileAnnualVar <- function(tower.obj, fname) {
   }
 
   if (t.obj$tower$data$StationName[1] == "Lindenberg" |
-        t.obj$tower$data$StationName[1] == "Cabauw") {
+      t.obj$tower$data$StationName[1] == "Cabauw") {
 
     if (t.obj$tower$data$StationName[1] == "Lindenberg") {
       plot.ext.10 = "Lindenberg at 10m"
@@ -1538,7 +1538,7 @@ PlotTowerERAprofileAnnualVar <- function(tower.obj, fname) {
     dev.off()
 
   } else if (t.obj$tower$data$StationName[1] == "Fino1" |
-               t.obj$tower$data$StationName[1] == "Fino2") {
+             t.obj$tower$data$StationName[1] == "Fino2") {
 
     plot.ext = paste0(t.obj$tower$data$StationName[1], " at ",
                       t.obj$tower$data$height[1], "m ")
@@ -1999,7 +1999,7 @@ PlotTowerERAprofileAnnualCycle <- function(tower.obj, fname) {
     dev.off()
 
   } else if ( t.obj$tower$data$StationName[1] == "Fino1" |
-                t.obj$tower$data$StationName[1] == "Fino2") {
+              t.obj$tower$data$StationName[1] == "Fino2") {
 
     yliml.rel = -0.3
     ylimh.rel = 0.3
@@ -2117,8 +2117,16 @@ PlotTowerERAprofileAnnualCycle <- function(tower.obj, fname) {
 
 #-----------------------------------------------------------------------------------
 
-#' @title
-#' @description
+#' @title Plot extreme value analysis
+#' @description Plot different scores and skill scores of extreme value analysis.
+#'   TODO: Not yet clear which plots of which scores and skill scores.
+#'   The input to this function are a ClimObject holding measurements at one
+#'   location (if tower also at different heights) and the corresponding reanalysis
+#'   data (at different heights), the file name of the resulting plot, and a
+#'   benchmark value against which is tested.
+#'   TODO: the benchmark may be a vector holding a sequence of benchmarks in order
+#'   to plot the dependence on its value.
+#'   This function does not have a return value.
 #' @param tower.df is a data frame holding the data of tower measurements and
 #'   corresponding reanalysis data
 #' @param fname string of the file name of the plot
@@ -2133,6 +2141,8 @@ PlotTowerExtremes <- function(tower.obj, fname, benchmark) {
   Cont.Table.cnt = CalcContTable(obs, forec, benchmark)
   scores = ContTableScores(Cont.Table.cnt$a, Cont.Table.cnt$b,
                            Cont.Table.cnt$c, Cont.Table.cnt$d)
+
+  CallStop("and thanks for all the fish")
 }
 
 #-----------------------------------------------------------------------------------

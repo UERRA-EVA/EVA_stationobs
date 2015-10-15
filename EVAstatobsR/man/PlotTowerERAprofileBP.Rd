@@ -3,21 +3,17 @@
 \alias{PlotTowerERAprofileBP}
 \title{Plot wind speed profile as box plots of tower measurements and ERA.}
 \usage{
-PlotTowerERAprofileBP(tower.df, tower.name, fname, era.monthly, width, height)
+PlotTowerERAprofileBP(tower.obj, fname, era.monthly)
 }
 \arguments{
-\item{tower.df}{is a data frame holding the data of tower measurements and
-corresponding reanalysis data}
-
-\item{tower.name}{is a string holding the tower name}
-
 \item{fname}{string of the file name of the plot}
 
 \item{era.monthly}{is an optional boolean which determines whether data passed
 is monthly (T) or daily (F) data. The default value is to use daily data
 (era.monthly=FALSE).}
 
-\item{width,height}{of the plot in inches}
+\item{tower.df}{is a data frame holding the data of tower measurements and
+corresponding reanalysis data}
 }
 \description{
 This function plots the wind speed profile of tower measurements and

@@ -335,7 +335,7 @@ if(plot.Extremes) {
   if (era.monthly) {
     fname = paste0(outdir, "Cabauw_MM-extremes_", time.ext,"_",
                    res.switch, '_', fname_ext, ".pdf")
-    extremes.bench = 0.95
+    extremes.bench = 0.5
     PlotTowerExtremes(cabauw.climobj, fname, extremes.bench)
   } else {
     fname = paste0(outdir, "Cabauw_DM-extremes_", time.ext,"_",

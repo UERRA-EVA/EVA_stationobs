@@ -3,7 +3,7 @@
 \alias{PlotPDFScore}
 \title{Calculate the S_score as described in Mayer et al., 2015.}
 \usage{
-PlotPDFScore(era.xts, station.xts, outdir, fname, titname, width, height,
+PlotPDFScore(era.xts, station.xts, outdir, fname, titname,
   era.monthly = FALSE)
 }
 \arguments{
@@ -16,8 +16,6 @@ PlotPDFScore(era.xts, station.xts, outdir, fname, titname, width, height,
 \item{fname}{is a string of the file name of the plot file}
 
 \item{titname}{is a string containig the title name of the plot}
-
-\item{width,height}{of the plot in inches}
 
 \item{era.monthly}{is an optional boolean which determines whether data passed
 is monthly (T) or daily (F) data. The default value is to use daily data

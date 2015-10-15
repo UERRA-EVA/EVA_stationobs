@@ -3,8 +3,8 @@
 \alias{PlotMultiPanel}
 \title{Plot a 2-by-2 multi panel plot.}
 \usage{
-PlotMultiPanel(outdir, fname, titname, Era20c, EraI, Herz, Stat, width, height,
-  length.plot, era.months, plot.diff = FALSE)
+PlotMultiPanel(outdir, fname, titname, Era20c, EraI, Herz, Stat, length.plot,
+  era.months, plot.diff = FALSE)
 }
 \arguments{
 \item{outdir}{string of the output directory into which the plot is saved}
@@ -20,8 +20,6 @@ PlotMultiPanel(outdir, fname, titname, Era20c, EraI, Herz, Stat, width, height,
 \item{Herz}{extended time series of monthly or seasonal HErZ data}
 
 \item{Stat}{extended time series of monthly or seasonal station data}
-
-\item{width,height}{of the plot in inches}
 
 \item{length.plot}{a list holding integers for the months or seasons to plot.
 It holds 1, .., 12 specifying the months, or 1,..,4 specifying the seasons.}

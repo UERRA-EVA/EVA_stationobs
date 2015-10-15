@@ -4,7 +4,7 @@
 \title{Plot station measurements together with ERA20C, ERA-I, and HErZ.}
 \usage{
 PlotStationEra(Era20cXts, EraIXts, HerzXts, StatXts, titname, outdir, fname,
-  width, height, monthly = TRUE, anomaly = FALSE)
+  monthly = TRUE, anomaly = FALSE)
 }
 \arguments{
 \item{Era20cXts}{monthly mean extended time series of the ERA20C pixel
@@ -21,8 +21,6 @@ corresponding to the station location}
 \item{outdir}{string of the output directory into which the plot is saved}
 
 \item{fname}{string of the file name of the plot}
-
-\item{width,height}{of the plot in inches}
 
 \item{monthly}{is an optional parameter which determines to plot the monthly
 values of the above time series}

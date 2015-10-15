@@ -4,7 +4,7 @@
 \title{Compare 100m wind speed of ERA20C and HErZ pixel by pixel.}
 \usage{
 Plot100mEraHerz(Era20cXts, HerzXts, titname, statname, outdir, fname,
-  era.monthly, width, height)
+  era.monthly)
 }
 \arguments{
 \item{Era20cXts}{extended time series of an ERA20C pixel}
@@ -22,8 +22,6 @@ Plot100mEraHerz(Era20cXts, HerzXts, titname, statname, outdir, fname,
 \item{era.monthly}{is an optional boolean which determines whether data passed
 is monthly (T) or daily (F) data. The default value is to use daily data
 (era.monthly=FALSE).}
-
-\item{width,height}{of the plot in inches}
 }
 \description{
 \code{Plot100mEraHerz} compares the 100m wind speed of the ERA20C

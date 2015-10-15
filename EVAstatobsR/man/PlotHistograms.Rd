@@ -4,12 +4,11 @@
 \title{Plot the wind speed histograms of station data and reanalyses at different
   heights.}
 \usage{
-PlotHistograms(outdir, fname, station.name, era.monthly, width, height,
-  Era20cXts10 = NULL, Era20cXts100 = NULL, EraIXts = NULL,
-  HerzXts10 = NULL, HerzXts35 = NULL, HerzXts69 = NULL,
-  HerzXts116 = NULL, HerzXts178 = NULL, HerzXts258 = NULL,
-  StatXts = NULL, plot.10m = FALSE, plot.10m100m = FALSE,
-  plot.HerzProfile = FALSE)
+PlotHistograms(outdir, fname, station.name, era.monthly, Era20cXts10 = NULL,
+  Era20cXts100 = NULL, EraIXts = NULL, HerzXts10 = NULL,
+  HerzXts35 = NULL, HerzXts69 = NULL, HerzXts116 = NULL,
+  HerzXts178 = NULL, HerzXts258 = NULL, StatXts = NULL,
+  plot.10m = FALSE, plot.10m100m = FALSE, plot.HerzProfile = FALSE)
 }
 \arguments{
 \item{outdir}{is a string containing the output path of the plot}
@@ -22,8 +21,6 @@ distribution data was extraced}
 \item{era.monthly}{is an optional boolean which determines whether data passed
 is monthly (T) or daily (F) data. The default value is to use daily data
 (era.monthly=FALSE).}
-
-\item{width,height}{of the plot in inches}
 
 \item{Era20cXts10,Era20cXts100,EraIXts}{extended time series of ERA20C and ERA-I
 10m and 100m height}

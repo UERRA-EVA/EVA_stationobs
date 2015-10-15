@@ -4,12 +4,12 @@ Version: 0.1
 Authors@R: person("Michael", "Borsche", email = "michael.borsche@dwd.de",
     role = c("aut", "cre"))
 Description: A verification package of global (ERA20C and ERA_Interim) and
-    regional (COSMO-REA6 HErZ) reanalyses against German station data and mast tower
-    measurements. Right now, the tower data of Lindenberg, Cabauw, Fino1, and Fino2
-    are supported.
-    In this first installation, only windspeed data is analysed. Monthly and daily
-    time series are compared; correlations, historgrams, scatter plots, PDF-score,
-    and many more metrics are calcualted and plotted.
+    regional (COSMO-REA6 HErZ) reanalyses against German station data and mast
+    tower measurements. Right now, the tower data of Lindenberg, Cabauw, Fino1,
+    and Fino2 are supported. In this first installation, only windspeed data is
+    analysed. Monthly and daily time series are compared; correlations,
+    historgrams, scatter plots, PDF-score, and many more metrics are calcualted
+    and plotted.
 Depends:
     R (>= 3.0.2),
     ncdf,

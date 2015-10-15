@@ -332,7 +332,8 @@ CalcContTable <- function(obs, frcst, benchmark) {
 #'   symmetric extremal dependence index (both from Ferro and Stephenson, 2011, doi:
 #'   \url{10.1175/WAF-D-10-05030.1}).
 #' @param a,b,c,d the four parameters of the contigency table (calculated by
-#'   \code{\link{CalcContTable}}).
+#'   \code{\link{CalcContTable}}) which are also called hits, flase alarms, misses,
+#'   and correct rejects, respectively.
 ContTableScores <- function(a, b, c, d) {
 
   n = a + b + c + d
