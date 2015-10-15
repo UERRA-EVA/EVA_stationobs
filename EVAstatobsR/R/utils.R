@@ -278,7 +278,8 @@ NormVals <- function(value, min.val, max.val) {
 #'   order (it consists of the data values of an extended time series) and needs to
 #'   have the same length as frcst.
 #' @param frcst same as above but the the forecast (here: reanalysis) data.
-#' @param benchmark
+#' @param benchmark value as percentile for which the contingency table values shall
+#'   be calculated
 #' @return is a names list holding the distribution in the variables a, b, c, d.
 CalcContTable <- function(obs, frcst, benchmark) {
 

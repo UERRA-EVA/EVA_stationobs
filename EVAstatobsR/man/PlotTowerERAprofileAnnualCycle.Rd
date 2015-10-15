@@ -6,10 +6,10 @@
 PlotTowerERAprofileAnnualCycle(tower.obj, fname)
 }
 \arguments{
-\item{fname}{string of the file name of the plot}
-
-\item{tower.df}{is a data frame holding the data of tower measurements and
+\item{tower.obj}{is a ClimObject holding the data of tower measurements and
 corresponding reanalysis data}
+
+\item{fname}{string of the file name of the plot}
 }
 \description{
 Plot the annual cycle between tower measurements and reanalysis data

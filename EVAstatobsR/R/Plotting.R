@@ -876,7 +876,7 @@ PlotHistograms <- function(outdir, fname, station.name, era.monthly,
 #' @param era.monthly is an optional boolean which determines whether data passed
 #'   is monthly (T) or daily (F) data. The default value is to use daily data
 #'   (era.monthly=FALSE).
-#' @param tower.df is a data frame holding the data of tower measurements and
+#' @param tower.obj is a ClimObject holding the data of tower measurements and
 #'   corresponding reanalysis data
 PlotHistogramsTower <- function(outdir, fname, era.monthly, tower.obj) {
 
@@ -1171,7 +1171,7 @@ PlotPDFScore <- function(era.xts, station.xts, outdir, fname, titname,
 #' @description This function plots the wind speed profile of tower measurements and
 #'   data from reanalyses as box plots. Tower measurements of Lindenberg, Cabauw,
 #'   Fino1, and Fino2 are supported.
-#' @param tower.df is a data frame holding the data of tower measurements and
+#' @param tower.obj is a ClimObject holding the data of tower measurements and
 #'   corresponding reanalysis data
 #' @param fname string of the file name of the plot
 #' @param era.monthly is an optional boolean which determines whether data passed
@@ -1292,7 +1292,7 @@ PlotTowerERAprofileBP <- function(tower.obj, fname, era.monthly) {
 #' @description Plot the relative difference between tower measurements at 10m and
 #'   100m compared to reanalysis data. Tower measurements of Lindenberg, Cabauw,
 #'   Fino1, and Fino2 are supported.
-#' @param tower.df is a data frame holding the data of tower measurements and
+#' @param tower.obj is a ClimObject holding the data of tower measurements and
 #'   corresponding reanalysis data
 #' @param fname string of the file name of the plot
 PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
@@ -1388,7 +1388,7 @@ PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
 #'   to visualize the annual variability; January and August are predifined and may
 #'   be changed but only locally so far. Tower measurements of Lindenberg, Cabauw,
 #'   Fino1, and Fino2 are supported.
-#' @param tower.df is a data frame holding the data of tower measurements and
+#' @param tower.obj is a ClimObject holding the data of tower measurements and
 #'   corresponding reanalysis data
 #' @param fname string of the file name of the plot
 PlotTowerERAprofileAnnualVar <- function(tower.obj, fname) {
@@ -1612,7 +1612,7 @@ PlotTowerERAprofileAnnualVar <- function(tower.obj, fname) {
 #' @description Plot the annual cycle between tower measurements and reanalysis data
 #'   at all available heights for absolute and relative values.  Tower measurements
 #'   of Lindenberg, Cabauw, Fino1, and Fino2 are supported.
-#' @param tower.df is a data frame holding the data of tower measurements and
+#' @param tower.obj is a ClimObject holding the data of tower measurements and
 #'   corresponding reanalysis data
 #' @param fname string of the file name of the plot
 PlotTowerERAprofileAnnualCycle <- function(tower.obj, fname) {
@@ -2127,7 +2127,7 @@ PlotTowerERAprofileAnnualCycle <- function(tower.obj, fname) {
 #'   TODO: the benchmark may be a vector holding a sequence of benchmarks in order
 #'   to plot the dependence on its value.
 #'   This function does not have a return value.
-#' @param tower.df is a data frame holding the data of tower measurements and
+#' @param tower.obj is a ClimObject holding the data of tower measurements and
 #'   corresponding reanalysis data
 #' @param fname string of the file name of the plot
 #' @param benchmark numeric between 0 and 1 as a percentile

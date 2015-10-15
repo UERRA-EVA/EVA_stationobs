@@ -14,7 +14,7 @@ PlotHistogramsTower(outdir, fname, era.monthly, tower.obj)
 is monthly (T) or daily (F) data. The default value is to use daily data
 (era.monthly=FALSE).}
 
-\item{tower.df}{is a data frame holding the data of tower measurements and
+\item{tower.obj}{is a ClimObject holding the data of tower measurements and
 corresponding reanalysis data}
 }
 \description{

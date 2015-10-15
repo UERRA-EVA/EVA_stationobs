@@ -6,14 +6,14 @@
 PlotTowerERAprofileBP(tower.obj, fname, era.monthly)
 }
 \arguments{
+\item{tower.obj}{is a ClimObject holding the data of tower measurements and
+corresponding reanalysis data}
+
 \item{fname}{string of the file name of the plot}
 
 \item{era.monthly}{is an optional boolean which determines whether data passed
 is monthly (T) or daily (F) data. The default value is to use daily data
 (era.monthly=FALSE).}
-
-\item{tower.df}{is a data frame holding the data of tower measurements and
-corresponding reanalysis data}
 }
 \description{
 This function plots the wind speed profile of tower measurements and
