@@ -1,32 +1,20 @@
-TowerHour = FALSE
+TowerHour = F
 if (era.monthly) {
-  fino1.file = paste0("/data/mborsche/tower_measurements/FINO1/completeTS/",
-                      "FINO1_Windgeschwindigkeit_100m_20040101_20131231_MonMean.nc")
-  fino2.file = paste0("/data/mborsche/tower_measurements/FINO2/completeTS/",
-                      "FINO2_Windgeschwindigkeit_102m_20070101_20131231_MonMean.nc")
-  lind.file = paste0("/data/mborsche/tower_measurements/Lindenberg/completeTS/",
-                     "20010101to20141231_MonMean.nc")
-  cabauw.file = paste0("/data/mborsche/tower_measurements/Cabauw/",
-                       "cesar_tower_meteo_lb1_t10_v1.1_2000TO2015_MonMean.nc")
+  fino1.file = paste0("./data/FINO1_Windgeschwindigkeit_100m_20040101_20131231_MonMean.nc")
+  fino2.file = paste0("./data/FINO2_Windgeschwindigkeit_102m_20070101_20131231_MonMean.nc")
+  lind.file = paste0("./data/Lindenberg_Windgeschwindigkeit_20010101_20141231_MonMean.nc")
+  cabauw.file = paste0("./data/Cabauw_20000401_20150731_MonMean.nc")
 } else {
   if (TowerHour) {
-    fino1.file = paste0("/data/mborsche/tower_measurements/FINO1/completeTS/",
-                        "FINO1_Windgeschwindigkeit_100m_20040101_20131231_HourMean.nc")
-    fino2.file = paste0("/data/mborsche/tower_measurements/FINO2/completeTS/",
-                        "FINO2_Windgeschwindigkeit_102m_20070101_20131231_HourMean.nc")
-    lind.file = paste0("/data/mborsche/tower_measurements/Lindenberg/completeTS/",
-                       "20010101to20141231_HourMean.nc")
-    cabauw.file = paste0("/data/mborsche/tower_measurements/Cabauw/",
-                         "cesar_tower_meteo_lb1_t10_v1.1_2000TO2015_HourMean.nc")
+    fino1.file = paste0("./data/FINO1_Windgeschwindigkeit_100m_20040101_20131231_HourMean.nc")
+    fino2.file = paste0("./data/FINO2_Windgeschwindigkeit_102m_20070101_20131231_HourMean.nc")
+    lind.file = paste0("./data/Lindenberg_Windgeschwindigkeit_20010101_20141231_HourMean.nc")
+    cabauw.file = paste0("./data/Cabauw_20000401_20150731_HourMean.nc")
     } else {
-    fino1.file = paste0("/data/mborsche/tower_measurements/FINO1/completeTS/",
-                        "FINO1_Windgeschwindigkeit_100m_20040101_20131231_DayMean.nc")
-    fino2.file = paste0("/data/mborsche/tower_measurements/FINO2/completeTS/",
-                        "FINO2_Windgeschwindigkeit_102m_20070101_20131231_DayMean.nc")
-    lind.file = paste0("/data/mborsche/tower_measurements/Lindenberg/completeTS/",
-                       "20010101to20141231_DayMean.nc")
-    cabauw.file = paste0("/data/mborsche/tower_measurements/Cabauw/",
-                         "cesar_tower_meteo_lb1_t10_v1.1_2000TO2015_DayMean.nc")
+    fino1.file = paste0("./data/FINO1_Windgeschwindigkeit_100m_20040101_20131231_DayMean.nc")
+    fino2.file = paste0("./data/FINO2_Windgeschwindigkeit_102m_20070101_20131231_DayMean.nc")
+    lind.file = paste0("./data/Lindenberg_Windgeschwindigkeit_20010101_20141231_DayMean.nc")
+    cabauw.file = paste0("./data/Cabauw_20000401_20150731_DayMean.nc")
     }
 }
 
