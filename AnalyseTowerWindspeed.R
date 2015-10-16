@@ -332,15 +332,36 @@ if (plot.ProfileTS & era.monthly) {
 #-----------------------------------------------------------------------------
 
 if(plot.Extremes) {
+
+  extremes.thresh = seq(0.5,0.99,0.01)
   if (era.monthly) {
-    fname = paste0(outdir, "Cabauw_MM-extremes_", time.ext,"_",
-                   res.switch, '_', fname_ext, ".pdf")
-    extremes.bench = 0.5
-    PlotTowerExtremes(cabauw.climobj, fname, extremes.bench)
+    fname = paste0(outdir, "Fino1_MM-extremes_", res.switch, '_', fname_ext, ".pdf")
+    PlotTowerExtremesContr(fino1.climobj, fname, extremes.thresh)
+    fname = paste0(outdir, "Fino2_MM-extremes_", res.switch, '_', fname_ext, ".pdf")
+    PlotTowerExtremesContr(fino2.climobj, fname, extremes.thresh)
+    fname = paste0(outdir, "Cabauw_MM-extremes_", res.switch, '_', fname_ext, ".pdf")
+    PlotTowerExtremesContr(cabauw.climobj, fname, extremes.thresh)
+    fname = paste0(outdir, "Lindenberg_MM-extremes_", res.switch, '_', fname_ext, ".pdf")
+    PlotTowerExtremesContr(lind.climobj, fname, extremes.thresh)
   } else {
-    fname = paste0(outdir, "Cabauw_DM-extremes_", time.ext,"_",
-                   res.switch, '_', fname_ext, ".pdf")
-    extremes.bench = 0.95
-    PlotTowerExtremes(cabauw.climobj, fname, extremes.bench)
+    if (TouerHour) {
+      fname = paste0(outdir, "Fino1_HH-extremes_", res.switch, '_', fname_ext, ".pdf")
+      PlotTowerExtremesContr(fino1.climobj, fname, extremes.thresh)
+      fname = paste0(outdir, "Fino2_HH-extremes_", res.switch, '_', fname_ext, ".pdf")
+      PlotTowerExtremesContr(fino2.climobj, fname, extremes.thresh)
+      fname = paste0(outdir, "Cabauw_HH-extremes_", res.switch, '_', fname_ext, ".pdf")
+      PlotTowerExtremesContr(cabauw.climobj, fname, extremes.thresh)
+      fname = paste0(outdir, "Lindenberg_HH-extremes_", res.switch, '_', fname_ext, ".pdf")
+      PlotTowerExtremesContr(lind.climobj, fname, extremes.thresh)
+    } else {
+      fname = paste0(outdir, "Fino1_DD-extremes_", res.switch, '_', fname_ext, ".pdf")
+      PlotTowerExtremesContr(fino1.climobj, fname, extremes.thresh)
+      fname = paste0(outdir, "Fino2_DD-extremes_", res.switch, '_', fname_ext, ".pdf")
+      PlotTowerExtremesContr(fino2.climobj, fname, extremes.thresh)
+      fname = paste0(outdir, "Cabauw_DD-extremes_", res.switch, '_', fname_ext, ".pdf")
+      PlotTowerExtremesContr(cabauw.climobj, fname, extremes.thresh)
+      fname = paste0(outdir, "Lindenberg_DD-extremes_", res.switch, '_', fname_ext, ".pdf")
+      PlotTowerExtremesContr(lind.climobj, fname, extremes.thresh)
+    }
   }
 }

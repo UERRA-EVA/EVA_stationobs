@@ -2151,28 +2151,165 @@ PlotTowerERAprofileAnnualCycle <- function(tower.obj, fname) {
 #'   The input to this function are a ClimObject holding measurements at one
 #'   location (if tower also at different heights) and the corresponding reanalysis
 #'   data (at different heights), the file name of the resulting plot, and a
-#'   benchmark value against which is tested.
-#'   TODO: the benchmark may be a vector holding a sequence of benchmarks in order
+#'   threshold value against which is tested.
+#'   TODO: the threshold may be a vector holding a sequence of thresholds in order
 #'   to plot the dependence on its value.
 #'   This function does not have a return value.
 #' @param tower.obj is a ClimObject holding the data of tower measurements and
 #'   corresponding reanalysis data
 #' @param fname string of the file name of the plot
-#' @param benchmark numeric between 0 and 1 as a percentile
+#' @param threshold numeric between 0 and 1 as a percentile
 #'   as percentile ???
-PlotTowerExtremes <- function(tower.obj, fname, benchmark) {
+PlotTowerExtremesContr <- function(tower.obj, fname, threshold) {
 
   t.obj = tower.obj$climate_data_objects
-  obs = t.obj$tower$data$wind_speed
-  forec = t.obj$herz10$data$wind_speed
 
-  Cont.Table.cnt = CalcContTable(obs, forec, benchmark)
-  scores = ContTableScores(Cont.Table.cnt$a, Cont.Table.cnt$b,
-                           Cont.Table.cnt$c, Cont.Table.cnt$d)
+  if (t.obj$tower$data$StationName[1] == "Fino1" |
+      t.obj$tower$data$StationName[1] == "Fino2") {
 
-  CallStop("and thanks for all the fish")
+    # against HErZ at 116m
+    obs = t.obj$tower$data$wind_speed
+    forec = t.obj$herz116$data$wind_speed
+    scores.df = GetScoresDF(threshold, obs, forec)
+    fname.new = gsub("-extremes_", "_HErZ116m-extremes_", fname)
+    PlotTowerExtremes(t.obj, fname.new, scores.df, threshold)
+
+    # against ERA20C at 100m
+    obs = t.obj$tower$data$wind_speed
+    forec = t.obj$era20c100$data$wind_speed
+    scores.df = GetScoresDF(threshold, obs, forec)
+    fname.new = gsub("-extremes_", "_ERA20C100m-extremes_", fname)
+    PlotTowerExtremes(t.obj, fname.new, scores.df, threshold)
+
+  } else if (t.obj$tower$data$StationName[1] == "Lindenberg") {
+
+    # against HErZ at 10m
+    obs = t.obj$tower$data$wind_speed
+    forec = t.obj$herz10$data$wind_speed
+    scores.df = GetScoresDF(threshold, obs, forec)
+    fname.new = gsub("-extremes_", "_HErZ10m-L10m-extremes_", fname)
+    PlotTowerExtremes(t.obj, fname.new, scores.df, threshold)
+
+    # against ERA20C at 10m
+    obs = t.obj$tower$data$wind_speed
+    forec = t.obj$era20c10$data$wind_speed
+    scores.df = GetScoresDF(threshold, obs, forec)
+    fname.new = gsub("-extremes_", "_ERA20C10m-L10m-extremes_", fname)
+    PlotTowerExtremes(t.obj, fname.new, scores.df, threshold)
+
+    # against HErZ at 35m
+    obs = t.obj$tower3$data$wind_speed
+    forec = t.obj$herz35$data$wind_speed
+    scores.df = GetScoresDF(threshold, obs, forec)
+    fname.new = gsub("-extremes_", "_HErZ35m-L40-extremes_", fname)
+    PlotTowerExtremes(t.obj, fname.new, scores.df, threshold)
+
+    # against HErZ at 69m
+    obs = t.obj$tower4$data$wind_speed
+    forec = t.obj$herz69$data$wind_speed
+    scores.df = GetScoresDF(threshold, obs, forec)
+    fname.new = gsub("-extremes_", "_HErZ69m-L60-extremes_", fname)
+    PlotTowerExtremes(t.obj, fname.new, scores.df, threshold)
+
+    # against HErZ at 69m
+    obs = t.obj$tower5$data$wind_speed
+    forec = t.obj$herz69$data$wind_speed
+    scores.df = GetScoresDF(threshold, obs, forec)
+    fname.new = gsub("-extremes_", "_HErZ69m-L80-extremes_", fname)
+    PlotTowerExtremes(t.obj, fname.new, scores.df, threshold)
+
+    # against HErZ at 116m
+    obs = t.obj$tower6$data$wind_speed
+    forec = t.obj$herz116$data$wind_speed
+    scores.df = GetScoresDF(threshold, obs, forec)
+    fname.new = gsub("-extremes_", "_HErZ116m-L98m-extremes_", fname)
+    PlotTowerExtremes(t.obj, fname.new, scores.df, threshold)
+
+    # against ERA20C at 100m
+    obs = t.obj$tower6$data$wind_speed
+    forec = t.obj$era20c100$data$wind_speed
+    scores.df = GetScoresDF(threshold, obs, forec)
+    fname.new = gsub("-extremes_", "_ERA20C100m-L98m-extremes_", fname)
+    PlotTowerExtremes(t.obj, fname.new, scores.df, threshold)
+
+  } else if (t.obj$tower$data$StationName[1] == "Cabauw") {
+
+    # against HErZ at 10m
+    obs = t.obj$tower$data$wind_speed
+    forec = t.obj$herz10$data$wind_speed
+    scores.df = GetScoresDF(threshold, obs, forec)
+    fname.new = gsub("-extremes_", "_HErZ10m-C10m-extremes_", fname)
+    PlotTowerExtremes(t.obj, fname.new, scores.df, threshold)
+
+    # against HErZ at 35m
+    obs = t.obj$tower3$data$wind_speed
+    forec = t.obj$herz35$data$wind_speed
+    scores.df = GetScoresDF(threshold, obs, forec)
+    fname.new = gsub("-extremes_", "_HErZ35m-C40m-extremes_", fname)
+    PlotTowerExtremes(t.obj, fname.new, scores.df, threshold)
+
+    # against HErZ at 69m
+    obs = t.obj$tower4$data$wind_speed
+    forec = t.obj$herz69$data$wind_speed
+    scores.df = GetScoresDF(threshold, obs, forec)
+    fname.new = gsub("-extremes_", "_HErZ69m-C80m-extremes_", fname)
+    PlotTowerExtremes(t.obj, fname.new, scores.df, threshold)
+
+    # against HErZ at 116m
+    obs = t.obj$tower5$data$wind_speed
+    forec = t.obj$herz116$data$wind_speed
+    scores.df = GetScoresDF(threshold, obs, forec)
+    fname.new = gsub("-extremes_", "_HErZ116m-C120m-extremes_", fname)
+    PlotTowerExtremes(t.obj, fname.new, scores.df, threshold)
+
+    # against ERA20C at 100m
+    obs = t.obj$tower4$data$wind_speed
+    forec = t.obj$era20c100$data$wind_speed
+    scores.df = GetScoresDF(threshold, obs, forec)
+    fname.new = gsub("-extremes_", "_ERA20C100m-C80m-extremes_", fname)
+    PlotTowerExtremes(t.obj, fname.new, scores.df, threshold)
+
+    # against ERA20C at 100m
+    obs = t.obj$tower5$data$wind_speed
+    forec = t.obj$era20c100$data$wind_speed
+    scores.df = GetScoresDF(threshold, obs, forec)
+    fname.new = gsub("-extremes_", "_ERA20C100m-C120m-extremes_", fname)
+    PlotTowerExtremes(t.obj, fname.new, scores.df, threshold)
+
+    # against HErZ at 178m
+    obs = t.obj$tower6$data$wind_speed
+    forec = t.obj$herz178$data$wind_speed
+    scores.df = GetScoresDF(threshold, obs, forec)
+    fname.new = gsub("-extremes_", "_HErZ178m-C200m-extremes_", fname)
+    PlotTowerExtremes(t.obj, fname.new, scores.df, threshold)
+
+  }
 }
 
+#-----------------------------------------------------------------------------------
+
+#' @title
+#' @description
+#' @param
+PlotTowerExtremes <- function(t.obj, fname, scores.df, threshold) {
+
+  score.names = names(scores.df)
+  PS = PlottingSettings(t.obj)
+  pdf(fname, width=PS$land.a4width, height=PS$land.a4height,
+      onefile=TRUE, pointsize=13)
+  par(mfrow=c(2,2), oma=c(0.5,0.5,0.5,0.5), mar=c(2,2,2,0), cex=0.8)
+
+  for (plot.step in seq(score.names)) {
+    if (all(!is.finite(scores.df[[plot.step]]))) next
+    plot(threshold, scores.df[[plot.step]], xlab="percentile",
+         ylab=score.names[plot.step], col = "blue", pch=16, type="b",
+         main=paste0(score.names[plot.step]," of monthly means at ",
+                     t.obj$tower$data$StationName[1], " in ",
+                     t.obj$tower$data$height[1], " height"))
+  }
+
+  dev.off()
+}
 #-----------------------------------------------------------------------------------
 
 #' @title Produce a scatter plot

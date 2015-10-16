@@ -376,7 +376,7 @@ ContTableScores <- function(a, b, c, d) {
   # Hanssen-Kuipers/True Skill Statistic/Pierce Skill Score (POD - POFD)
   HK = (a*d - b*c) / ( (a+c)*(b+d))
   TS = a / (a+b+c) # threat score or critical success index
-  ETS = (a - r) / (a+b+c - r) # aka Gilbert Skill Score
+  ETS = (a-r) / (a+b+c-r) # aka Gilbert Skill Score
   BIAS = (a+b) / (a+c) # aka frequency bias index
   HSS = 2*(a*d - b*c)/( (a+c)*(c+d) + (a+b)*(b+d)) # Heidke Skill Score
   PC = (a+d) / n # aka proportion/percent correct or accuracy
@@ -386,9 +386,35 @@ ContTableScores <- function(a, b, c, d) {
     (log(POFD) + log(POD) + log(1-POFD) + log(1-POD))
 
   return(list(hit.rate=POD, false.alarm.rate=POFD, false.alarm.ratio=FAR,
-              true_skill_stats=HK, threat_score=TS, equi_threat_score=ETS,
-              bias_index=BIAS, heidke_sksc=HSS, accuracy=PC, odds_ratio=OR,
+              true.skill.stats=HK, threat.score=TS, equi.threat.score=ETS,
+              bias.index=BIAS, heidke.sksc=HSS, accuracy=PC, odds.ratio=OR,
               edi=EDI, sedi=SEDI))
+}
+
+#-----------------------------------------------------------------------------------
+
+#' @title
+#' @description
+#' @param
+#' @return
+GetScoresDF <- function(thresh, obs, frcst) {
+
+  Cont.Table.cnt = CalcContTable(obs, frcst, thresh[1])
+  scores = ContTableScores(Cont.Table.cnt$a, Cont.Table.cnt$b,
+                           Cont.Table.cnt$c, Cont.Table.cnt$d)
+  scores.df = as.data.frame(scores)
+
+  if (length(thresh) > 1) {
+    for (thresh.step in seq(length(thresh)-1)+1) {
+      Cont.Table.cnt = CalcContTable(obs, frcst, thresh[thresh.step])
+      scores = ContTableScores(Cont.Table.cnt$a, Cont.Table.cnt$b,
+                               Cont.Table.cnt$c, Cont.Table.cnt$d)
+      scores.df = rbind(scores.df, scores)
+    }
+  }
+
+  return(scores.df)
+
 }
 
 #-----------------------------------------------------------------------------------
