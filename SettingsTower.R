@@ -4,18 +4,21 @@ if (era.monthly) {
   fino2.file = paste0("./data/FINO2_Windgeschwindigkeit_102m_20070101_20131231_MonMean.nc")
   lind.file = paste0("./data/Lindenberg_Windgeschwindigkeit_20010101_20141231_MonMean.nc")
   cabauw.file = paste0("./data/Cabauw_20000401_20150731_MonMean.nc")
+  hamburg.fiel = paste0("./data/Hamburg_19960101_20150930_MonMean.nc")
 } else {
   if (TowerHour) {
     fino1.file = paste0("./data/FINO1_Windgeschwindigkeit_100m_20040101_20131231_HourMean.nc")
     fino2.file = paste0("./data/FINO2_Windgeschwindigkeit_102m_20070101_20131231_HourMean.nc")
     lind.file = paste0("./data/Lindenberg_Windgeschwindigkeit_20010101_20141231_HourMean.nc")
     cabauw.file = paste0("./data/Cabauw_20000401_20150731_HourMean.nc")
-    } else {
+    hamburg.fiel = paste0("./data/Hamburg_19960101_20150930_HourMean.nc")
+  } else {
     fino1.file = paste0("./data/FINO1_Windgeschwindigkeit_100m_20040101_20131231_DayMean.nc")
     fino2.file = paste0("./data/FINO2_Windgeschwindigkeit_102m_20070101_20131231_DayMean.nc")
     lind.file = paste0("./data/Lindenberg_Windgeschwindigkeit_20010101_20141231_DayMean.nc")
     cabauw.file = paste0("./data/Cabauw_20000401_20150731_DayMean.nc")
-    }
+    hamburg.fiel = paste0("./data/Hamburg_19960101_20150930_DayMean.nc")
+  }
 }
 
 fino1.param = "windspeed_100m"
@@ -24,6 +27,8 @@ lind.param = c("windspeed_10m", "windspeed_20m", "windspeed_40m",
                "windspeed_60m", "windspeed_80m", "windspeed_98m")
 cabauw.param = c("windspeed_10m", "windspeed_20m", "windspeed_40m",
                  "windspeed_80m", "windspeed_140m", "windspeed_200m")
+hamburg.param = c("wind_speed_10m", "wind_speed_50m", "wind_speed_110m",
+                  "wind_speed_175m", "wind_speed_250m", "wind_speed_280m")
 
 # following www.fino1.de and www.fino2.de the location of the towers is:
 fino1.lon =  6.58764
