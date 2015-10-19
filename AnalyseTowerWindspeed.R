@@ -344,7 +344,7 @@ if(plot.Extremes) {
     fname = paste0(outdir, "Lindenberg_MM-extremes_", res.switch, '_', fname_ext, ".pdf")
     PlotTowerExtremesContr(lind.climobj, fname, extremes.thresh)
   } else {
-    if (TouerHour) {
+    if (TowerHour) {
       fname = paste0(outdir, "Fino1_HH-extremes_", res.switch, '_', fname_ext, ".pdf")
       PlotTowerExtremesContr(fino1.climobj, fname, extremes.thresh)
       fname = paste0(outdir, "Fino2_HH-extremes_", res.switch, '_', fname_ext, ".pdf")
