@@ -8,13 +8,30 @@
 #'   equal to one of the used towers it is decided that it must be station data.
 #' @return is a named list holding all the parameters.
 PlottingSettings <- function(data.vals) {
+
   land.a4width = 29.7/2.54
   land.a4height = 21./2.54
   port.a4width = 21./2.54
   port.a4height = 29.7/2.54
 
+  if (era.monthly) {
+    time.agg = "monthly"
+    time.Agg = "Monthly"
+  } else {
+    if (TowerHour) {
+      time.agg = "hourly"
+      time.Agg = "Hourly"
+    } else {
+      time.agg = "daily"
+      time.Agg = "Daily"
+    }
+  }
+
+  tower.name = data.vals$tower$data$StationName[1]
+
   return(list(land.a4width=land.a4width, land.a4height=land.a4height,
-              port.a4width=port.a4width, port.a4height=port.a4height))
+              port.a4width=port.a4width, port.a4height=port.a4height,
+              time.agg=time.agg, time.Agg=time.Agg, tower.name=tower.name))
 
 }
 #-----------------------------------------------------------------------------------
