@@ -27,13 +27,18 @@ PlottingSettings <- function(data.vals) {
     }
   }
 
-  tower.name = data.vals$tower$data$StationName[1]
-
-  return(list(land.a4width=land.a4width, land.a4height=land.a4height,
-              port.a4width=port.a4width, port.a4height=port.a4height,
-              time.agg=time.agg, time.Agg=time.Agg, tower.name=tower.name))
-
+  if (!is.xts(data.vals)) {
+    tower.name = data.vals$tower$data$StationName[1]
+    return(list(land.a4width=land.a4width, land.a4height=land.a4height,
+                port.a4width=port.a4width, port.a4height=port.a4height,
+                time.agg=time.agg, time.Agg=time.Agg, tower.name=tower.name))
+  } else {
+    return(list(land.a4width=land.a4width, land.a4height=land.a4height,
+                port.a4width=port.a4width, port.a4height=port.a4height,
+                time.agg=time.agg, time.Agg=time.Agg))
+  }
 }
+
 #-----------------------------------------------------------------------------------
 
 #' @title Stop on error and print error message.
