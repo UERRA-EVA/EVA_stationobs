@@ -11,13 +11,13 @@ Description: A verification package of global (ERA20C and ERA_Interim) and
     historgrams, scatter plots, PDF-score, and many more metrics are calcualted
     and plotted.
 Depends:
-    R (>= 3.0.2)
+    R (>= 3.0.2),
+    vioplot
 Imports:
     ncdf,
     ncdf.tools,
     xts,
     zoo,
-    vioplot,
     fitdistrplus
 License: GPL (>=3)
 LazyData: false
