@@ -402,11 +402,11 @@ PlotStationEraSelMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 #' @param titname string of the plot title name
 #' @param outdir string of the output directory into which the plot/s is/are saved
 #' @param fname string of the output file name
-#' @param era.monthly is an optional boolean which determines whether data passed
-#'   is monthly (T) or daily (F) data. The default value is to use daily data
-#'   (era.monthly=FALSE).
+#' @param ana.time.res named list holding parameters monthly="monthly",
+#'   daily="daily", hourly="hourly", and time.res= to determine the time resolution
+#'   of the data to be read.
 PlotStationEraSQ <- function(Era20cXts, EraIXts, HerzXts, StatXts,
-                             titname, outdir, fname, era.monthly=FALSE) {
+                             titname, outdir, fname, ana.time.res) {
 
   Era20  = as.numeric(Era20cXts)
   EraI = as.numeric(EraIXts)
@@ -420,7 +420,7 @@ PlotStationEraSQ <- function(Era20cXts, EraIXts, HerzXts, StatXts,
   axis.n = 'n'
   axis.y = 's'
   mtext.titname = "Daily wind speed at 10m height"
-  if (era.monthly) {
+  if (ana.time.res$time.res == ana.time.res$monthly) {
     mtext.titname = "Monthly wind speed at 10m height"
   }
 
@@ -434,10 +434,10 @@ PlotStationEraSQ <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 
   xlabname = "10m ERA20C wind speed [m/s]"
   ylabname = "10m ERA-I wind speed [m/s]"
-  if (era.monthly) {
+  if (ana.time.res$time.res == ana.time.res$monthly) {
     titname.scatter = gsub("wind speed", "Scatter and QQ-plot of monthly wind speed",
                            titname)
-  } else {
+  } else if (ana.time.res$time.res == ana.time.res$daily) {
     titname.scatter = gsub("wind speed", "Scatter and QQ-plot of daily wind speed",
                            titname)
   }
@@ -513,22 +513,22 @@ PlotStationEraSQ <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 #' @param statname string of the station name whose pixel is plotted
 #' @param outdir string of the output directory into which the plot is saved
 #' @param fname string of the file name of the plot
-#' @param era.monthly is an optional boolean which determines whether data passed
-#'   is monthly (T) or daily (F) data. The default value is to use daily data
-#'   (era.monthly=FALSE).
+#' @param ana.time.res named list holding parameters monthly="monthly",
+#'   daily="daily", hourly="hourly", and time.res= to determine the time resolution
+#'   of the data to be read.
 Plot100mEraHerz <- function(Era20cXts, HerzXts,
                             titname, statname, outdir, fname,
-                            era.monthly) {
+                            ana.time.res) {
 
   same.length = F
   if (length(Era20cXts) == length(HerzXts)) {same.length = T}
 
   axis.n = 'n'
   axis.y = 's'
-  if (era.monthly) {
+  if (ana.time.res$time.res == ana.time.res$monthly) {
     titname = paste0("Monthly ", titname)
     titname.ext = "monthly"
-  } else {
+  } else if (ana.time.res$time.res == ana.time.res$daily) {
     titname = paste0("Daily ", titname)
     titname.ext = "daily"
   }
@@ -611,9 +611,9 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
 #' @param fname is a string of the file name of the plot file
 #' @param station.name is a string holding the station name at which location the
 #'   distribution data was extraced
-#' @param era.monthly is an optional boolean which determines whether data passed
-#'   is monthly (T) or daily (F) data. The default value is to use daily data
-#'   (era.monthly=FALSE).
+#' @param ana.time.res named list holding parameters monthly="monthly",
+#'   daily="daily", hourly="hourly", and time.res= to determine the time resolution
+#'   of the data to be read.
 #' @param Era20cXts10,Era20cXts100,EraIXts extended time series of ERA20C and ERA-I
 #'   10m and 100m height
 #' @param HerzXts10,HerzXts35,HerzXts69,HerzXts116,HerzXts178,HerzXts258 extended
@@ -622,7 +622,7 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
 #' @param plot.10m,plot.10m100m,plot.HerzProfile optional parameters setting whether
 #'   to plot only 10m values, 10m and 100m values together, or the herz profile,
 #'   respectively. The default value is FALSE for all three settings.
-PlotHistograms <- function(outdir, fname, station.name, era.monthly,
+PlotHistograms <- function(outdir, fname, station.name, ana.time.res,
                            Era20cXts10=NULL, Era20cXts100=NULL, EraIXts=NULL,
                            HerzXts10=NULL, HerzXts35=NULL, HerzXts69=NULL,
                            HerzXts116=NULL, HerzXts178=NULL, HerzXts258=NULL,
@@ -670,8 +670,8 @@ PlotHistograms <- function(outdir, fname, station.name, era.monthly,
 
   axis.n = 'n'
   axis.y = 's'
-  if (era.monthly) monthly.ext = 'monthly'
-  if (!era.monthly) monthly.ext = 'daily'
+  if (ana.time.res$time.res == ana.time.res$monthly) monthly.ext = 'monthly'
+  if (ana.time.res$time.res == ana.time.res$daily) monthly.ext = 'daily'
 
   xlabname.empty = ""
   xlabname.full = "wind speed [m/s]"
@@ -687,7 +687,7 @@ PlotHistograms <- function(outdir, fname, station.name, era.monthly,
     }
 
     mtext.titname = paste0("Daily wind speed at 10m height at ", station.name)
-    if (era.monthly) {
+    if (ana.time.res$time.res == ana.time.res$monthly) {
       mtext.titname = paste0("Monthly wind speed at 10m height at ", station.name)
     }
 
@@ -768,7 +768,7 @@ PlotHistograms <- function(outdir, fname, station.name, era.monthly,
     }
 
     mtext.titname = paste0("Daily wind speed at 10m height at ", station.name)
-    if (era.monthly) {
+    if (ana.time.res$time.res == ana.time.res$monthly) {
       mtext.titname = paste0("Monthly wind speed at 10m height at ", station.name)
     }
 
@@ -815,7 +815,7 @@ PlotHistograms <- function(outdir, fname, station.name, era.monthly,
     }
 
     mtext.titname = paste0("Daily wind speed of HErZ profile at ", station.name)
-    if (era.monthly) {
+    if (ana.time.res$time.res == ana.time.res$monthly) {
       mtext.titname = paste0("Monthly wind speed of HErZ profile at ", station.name)
     }
 
@@ -879,12 +879,12 @@ PlotHistograms <- function(outdir, fname, station.name, era.monthly,
 #'   and in comparison with reanalysis data.
 #' @param outdir is a string containing the output path of the plot
 #' @param fname is a string of the file name of the plot file
-#' @param era.monthly is an optional boolean which determines whether data passed
-#'   is monthly (T) or daily (F) data. The default value is to use daily data
-#'   (era.monthly=FALSE).
+#' @param ana.time.res named list holding parameters monthly="monthly",
+#'   daily="daily", hourly="hourly", and time.res= to determine the time resolution
+#'   of the data to be read.
 #' @param tower.obj is a ClimObject holding the data of tower measurements and
 #'   corresponding reanalysis data
-PlotHistogramsTower <- function(outdir, fname, era.monthly, tower.obj) {
+PlotHistogramsTower <- function(outdir, fname, ana.time.res, tower.obj) {
 
   t.obj = tower.obj$climate_data_objects
   tower.date <- as.POSIXlt(t.obj$tower$data$date)
@@ -898,8 +898,8 @@ PlotHistogramsTower <- function(outdir, fname, era.monthly, tower.obj) {
 
   axis.n = 'n'
   axis.y = 's'
-  if (era.monthly) monthly.ext = 'Monthly'
-  if (!era.monthly) monthly.ext = 'Daily'
+  if (ana.time.res$time.res == ana.time.res$monthly) monthly.ext = 'Monthly'
+  if (ana.time.res$time.res == ana.time.res$daily) monthly.ext = 'Daily'
 
   xlabname.empty = ""
   xlabname.full = "wind speed [m/s]"
@@ -934,8 +934,8 @@ PlotHistogramsTower <- function(outdir, fname, era.monthly, tower.obj) {
                           max(data.100.vals, na.rm=TRUE),
                           max(t.obj$herz116$data$wind_speed, na.rm=TRUE))) + 1
 
-    if (era.monthly) breaks = seq(min.val, max.val, 0.5)
-    if (!era.monthly) breaks = seq(min.val, max.val, 0.75)
+    if (ana.time.res$time.res == ana.time.res$monthly) breaks = seq(min.val, max.val, 0.5)
+    if (ana.time.res$time.res == ana.time.res$daily) breaks = seq(min.val, max.val, 0.75)
 
     dummy = numeric(length=length(t.obj$era20c10$data$wind_speed)) * NA
 
@@ -1051,8 +1051,8 @@ PlotHistogramsTower <- function(outdir, fname, era.monthly, tower.obj) {
                           max(data.vals, na.rm=TRUE),
                           max(t.obj$herz116$data$wind_speed, na.rm=TRUE))) + 1
 
-    if (era.monthly) breaks = seq(min.val, max.val, 0.5)
-    if (!era.monthly) breaks = seq(min.val, max.val, 0.75)
+    if (ana.time.res$time.res == ana.time.res$monthly) breaks = seq(min.val, max.val, 0.5)
+    if (ana.time.res$time.res == ana.time.res$daily) breaks = seq(min.val, max.val, 0.75)
 
     dummy = numeric(length=length(t.obj$era20c10$data$wind_speed)) * NA
 
@@ -1113,11 +1113,11 @@ PlotHistogramsTower <- function(outdir, fname, era.monthly, tower.obj) {
 #' @param outdir is a string containing the output path of the plot
 #' @param fname is a string of the file name of the plot file
 #' @param titname is a string containig the title name of the plot
-#' @param era.monthly is an optional boolean which determines whether data passed
-#'   is monthly (T) or daily (F) data. The default value is to use daily data
-#'   (era.monthly=FALSE).
+#' @param ana.time.res named list holding parameters monthly="monthly",
+#'   daily="daily", hourly="hourly", and time.res= to determine the time resolution
+#'   of the data to be read.
 PlotPDFScore <- function(era.xts, station.xts, outdir, fname, titname,
-                         era.monthly=FALSE) {
+                         ana.time.res) {
 
   PS = PlottingSettings(station.xts)
   pdf(paste(outdir, fname, sep=""), width=PS$land.a4width, height=PS$land.a4height,
@@ -1131,11 +1131,11 @@ PlotPDFScore <- function(era.xts, station.xts, outdir, fname, titname,
              "Okt", "Nov", "Dez")
   max.abs.val = ceiling(max(max(era.xts), max(station.xts)))
 
-  if (era.monthly) {
+  if (ana.time.res$time.res == ana.time.res$monthly) {
     titname.hist = paste0("Monthly ", titname)
     titname.pdfs = paste0("PDF score of monthly ", titname)
     titname.viol = paste0("Violine plot of monthly ", titname)
-  } else {
+  } else if (ana.time.res$time.res == ana.time.res$daily) {
     titname.hist = paste0("Daily ", titname)
     titname.pdfs = paste0("PDF score of daily ", titname)
     titname.viol = paste0("Violine plot of daily ", titname)
@@ -1183,10 +1183,10 @@ PlotPDFScore <- function(era.xts, station.xts, outdir, fname, titname,
 #' @param tower.obj is a ClimObject holding the data of tower measurements and
 #'   corresponding reanalysis data
 #' @param fname string of the file name of the plot
-#' @param era.monthly is an optional boolean which determines whether data passed
-#'   is monthly (T) or daily (F) data. The default value is to use daily data
-#'   (era.monthly=FALSE).
-PlotTowerERAprofileBP <- function(tower.obj, fname, era.monthly) {
+#' @param ana.time.res named list holding parameters monthly="monthly",
+#'   daily="daily", hourly="hourly", and time.res= to determine the time resolution
+#'   of the data to be read.
+PlotTowerERAprofileBP <- function(tower.obj, fname, ana.time.res) {
 
   t.obj = tower.obj$climate_data_objects
   dummy = numeric(length=length(t.obj$herz10$data$wind_speed)) * NA
@@ -1196,11 +1196,10 @@ PlotTowerERAprofileBP <- function(tower.obj, fname, era.monthly) {
   hori=TRUE
   nch = TRUE
   oline = FALSE
-  if (era.monthly) {
+  if (ana.time.res$time.res == ana.time.res$monthly) {
     wind.range = c(0,15)
     plot.ext = " Monthly "
-  }
-  else {
+  } else if (ana.time.res$time.res == ana.time.res$daily) {
     wind.range = c(0,20)
     plot.ext = " Daily "
   }

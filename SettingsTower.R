@@ -1,24 +1,21 @@
-TowerHour = F
-if (era.monthly) {
+if (ana.time.res$time.res == ana.time.res$monthly) {
   fino1.file = paste0("./data/FINO1_Windgeschwindigkeit_100m_20040101_20131231_MonMean.nc")
   fino2.file = paste0("./data/FINO2_Windgeschwindigkeit_102m_20070101_20131231_MonMean.nc")
   lind.file = paste0("./data/Lindenberg_Windgeschwindigkeit_20010101_20141231_MonMean.nc")
   cabauw.file = paste0("./data/Cabauw_20000401_20150731_MonMean.nc")
-  hamburg.fiel = paste0("./data/Hamburg_19960101_20150930_MonMean.nc")
-} else {
-  if (TowerHour) {
-    fino1.file = paste0("./data/FINO1_Windgeschwindigkeit_100m_20040101_20131231_HourMean.nc")
-    fino2.file = paste0("./data/FINO2_Windgeschwindigkeit_102m_20070101_20131231_HourMean.nc")
-    lind.file = paste0("./data/Lindenberg_Windgeschwindigkeit_20010101_20141231_HourMean.nc")
-    cabauw.file = paste0("./data/Cabauw_20000401_20150731_HourMean.nc")
-    hamburg.fiel = paste0("./data/Hamburg_19960101_20150930_HourMean.nc")
-  } else {
-    fino1.file = paste0("./data/FINO1_Windgeschwindigkeit_100m_20040101_20131231_DayMean.nc")
-    fino2.file = paste0("./data/FINO2_Windgeschwindigkeit_102m_20070101_20131231_DayMean.nc")
-    lind.file = paste0("./data/Lindenberg_Windgeschwindigkeit_20010101_20141231_DayMean.nc")
-    cabauw.file = paste0("./data/Cabauw_20000401_20150731_DayMean.nc")
-    hamburg.fiel = paste0("./data/Hamburg_19960101_20150930_DayMean.nc")
-  }
+  hamburg.file = paste0("./data/Hamburg_19960101_20150930_MonMean.nc")
+} else if (ana.time.res$time.res == ana.time.res$hourly) {
+  fino1.file = paste0("./data/FINO1_Windgeschwindigkeit_100m_20040101_20131231_HourMean.nc")
+  fino2.file = paste0("./data/FINO2_Windgeschwindigkeit_102m_20070101_20131231_HourMean.nc")
+  lind.file = paste0("./data/Lindenberg_Windgeschwindigkeit_20010101_20141231_HourMean.nc")
+  cabauw.file = paste0("./data/Cabauw_20000401_20150731_HourMean.nc")
+  hamburg.file = paste0("./data/Hamburg_19960101_20150930_HourMean.nc")
+} else if (ana.time.res$time.res == ana.time.res$daily) {
+  fino1.file = paste0("./data/FINO1_Windgeschwindigkeit_100m_20040101_20131231_DayMean.nc")
+  fino2.file = paste0("./data/FINO2_Windgeschwindigkeit_102m_20070101_20131231_DayMean.nc")
+  lind.file = paste0("./data/Lindenberg_Windgeschwindigkeit_20010101_20141231_DayMean.nc")
+  cabauw.file = paste0("./data/Cabauw_20000401_20150731_DayMean.nc")
+  hamburg.file = paste0("./data/Hamburg_19960101_20150930_DayMean.nc")
 }
 
 fino1.param = "windspeed_100m"
@@ -59,7 +56,7 @@ herz.tsend = c(2014,12)
 cabauw.tsstart = c(2000,04)
 cabauw.tsend = c(2015,07)
 
-plot.TowerEraProfile = F
-plot.histograms = F
-plot.ProfileTS = F
+plot.TowerEraProfile = T
+plot.histograms = T
+plot.ProfileTS = T
 plot.Extremes = T

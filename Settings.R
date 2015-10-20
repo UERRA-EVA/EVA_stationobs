@@ -1,19 +1,29 @@
 # this switch concerns the resolution of the ERA20C and ERA-Interim reanalyses
 # (HR is the version interpolated to 0.125°)
-res.switch = "HighRes"   # HighRes, OrigRes
-# set whether to use monthly (T) or daily (F) reanalysis data for analysis
-era.monthly = T
-if (era.monthly) {
+high.res = "HighRes"
+orig.res = "OrigRes"
+res.switch = high.res
+
+# set time resolution whether to use monthly, daily, or hourly data for analysis
+# by setting parameter ana.time.res$time.res
+hourly="hourly"
+daily="daily"
+monthly="monthly"
+time.res=daily
+ana.time.res = list(hourly=hourly, daily=daily, monthly=monthly, time.res=time.res)
+if (ana.time.res$time.res == ana.time.res$monthly) {
   time.ext = "Monthly"
-} else {
+} else if (ana.time.res$time.res == ana.time.res$daily) {
   time.ext = "Daily"
+} else if (ana.time.res$time.res == ana.time.res$hourly) {
+  time.ext = "Hourly"
 }
 
-# choose whether to analyse the profile of six model levels of HErZ data or only
-# 10m and 116m
+# choose whether to analyse the profile (T) of six model levels of HErZ data or only
+# 10m and 116m (F)
 herz.profile = T
 
-#=== diagnostics ===
+#=== diagnostics (verbose) ===
 verb.era.dat = FALSE
 verb.stat.dat = FALSE
 verb.grib = FALSE
@@ -24,37 +34,22 @@ outdir = "./output/"
 
 #=== ERA20C ===
 # filename to ERA20C reanalysis file
-if (era.monthly) {
-  if (res.switch == "HighRes") {
+if (ana.time.res$time.res == ana.time.res$monthly) {
+  if (res.switch == high.res) {
     era20c.fname =
       "./data/10m100m_WindSpeedDirection_ERA20C_MonMean_highRes_1900to2010.nc"
-  } else if (res.switch == "OrigRes") {
+  } else if (res.switch == orig.res) {
     era20c.fname =
       "./data/10m100m_WindSpeedDirection_ERA20C_MonMean_origRes_1900to2010.nc"
-  } else { # first and only necessary check on res.switch
-    err = simpleError(paste0("\n   ***\n   Unexpected res.switch, ABORTING!\n   ",
-                             "res.switch = ", res.switch,
-                             "\n   should be either HighRes or OrigRes\n   ***\n"))
-    tryCatch(stop(err))
   }
-} else if (!era.monthly) {
-  if (res.switch == "HighRes") {
+} else if (ana.time.res$time.res == ana.time.res$daily) {
+  if (res.switch == high.res) {
     era20c.fname =
       "./data/10m100m_WindSpeedDirection_ERA20C_DayMean_highRes_1900to2010.nc"
-  } else if (res.switch == "OrigRes") {
+  } else if (res.switch == orig.res) {
     era20c.fname =
       "./data/10m100m_WindSpeedDirection_ERA20C_DayMean_origRes_1900to2010.nc"
-  } else {
-    err = simpleError(paste0("\n   ***\n   Unexpected res.switch, ABORTING!\n   ",
-                             "res.switch = ", res.switch,
-                             "\n   should be either HighRes or OrigRes\n   ***\n"))
-    tryCatch(stop(err))
   }
-} else {  # first and only necessary check on era.monthly
-  err = simpleError(paste0("\n   ***\n   Unexpected era.monthly, ABORTING!\n   ",
-                           "era.monthly = ", era.monthly,
-                           "\n   should be either TRUE or FALSE\n   ***\n"))
-  tryCatch(stop(err))
 }
 CheckFile(era20c.fname)
 # variable names to read from above files
@@ -62,19 +57,19 @@ era20c.param = c("windspeed_10m", "windspeed_100m")
 
 #=== ERA-I ===
 # filename to ERA-Interim reanalysis file
-if (era.monthly) {
-  if (res.switch == "HighRes") {
+if (ana.time.res$time.res == ana.time.res$monthly) {
+  if (res.switch == high.res) {
     eraI.fname =
       "./data/10mWindSpeedDirection-2mTemp_ERAInterim_MonMean_highRes_1979to2014.nc"
-  } else {
+  } else if (res.switch == orig.res) {
     eraI.fname =
       "./data/10mWindSpeedDirection-2mTemp_ERAInterim_MonMean_origRes_1979to2014.nc"
   }
-} else {
-  if (res.switch == "HighRes") {
+} else if (ana.time.res$time.res == ana.time.res$daily) {
+  if (res.switch == high.res) {
     eraI.fname =
       "./data/10mWindSpeedDirection-2mTemp_ERAInterim_DayMean_highRes_1979to2014.nc"
-  } else {
+  } else if (res.switch == orig.res) {
     eraI.fname =
       "./data/10mWindSpeedDirection-2mTemp_ERAInterim_DayMean_origRes_1979to2014.nc"
   }
@@ -88,9 +83,9 @@ eraI.param = "windspeed_10m"
 herz.grid = "./data/COSMO_REA6_CONST_withOUTsponge.grb"
 CheckFile(herz.grid)
 # filename(s) of the COSMO HErZ reanalysis file(s)
-if (era.monthly) {
+if (ana.time.res$time.res == ana.time.res$monthly) {
   herz.fname = "./data/WindSpeed_HErZ_MonMean_1995to2014.nc"
-} else {
+} else if (ana.time.res$time.res == ana.time.res$daily) {
   herz.fname = c("./data/WindSpeed_1995_DayMean.nc",
                  "./data/WindSpeed_1996_DayMean.nc",
                  "./data/WindSpeed_1997_DayMean.nc",
@@ -111,23 +106,55 @@ if (era.monthly) {
                  "./data/WindSpeed_2012_DayMean.nc",
                  "./data/WindSpeed_2013_DayMean.nc",
                  "./data/WindSpeed_2014_DayMean.nc")
+} else if (ana.time.res$time.res == ana.time.res$hourly) {
+  herz.fname = list(Fino1=c("./data/WindSpeed_1995TO2014_HErZ-10m_at_Fino1.nc",
+                 "./data/WindSpeed_1995TO2014_HErZ-178m_at_Fino1.nc",
+                 "./data/WindSpeed_1995TO2014_HErZ-116m_at_Fino1.nc",
+                 "./data/WindSpeed_1995TO2014_HErZ-35m_at_Fino1.nc",
+                 "./data/WindSpeed_1995TO2014_HErZ-258m_at_Fino1.nc",
+                 "./data/WindSpeed_1995TO2014_HErZ-69m_at_Fino1.nc"),
+                 Fino2=c("./data/WindSpeed_1995TO2014_HErZ-35m_at_Fino2.nc",
+                 "./data/WindSpeed_1995TO2014_HErZ-10m_at_Fino2.nc",
+                 "./data/WindSpeed_1995TO2014_HErZ-116m_at_Fino2.nc",
+                 "./data/WindSpeed_1995TO2014_HErZ-178m_at_Fino2.nc",
+                 "./data/WindSpeed_1995TO2014_HErZ-258m_at_Fino2.nc",
+                 "./data/WindSpeed_1995TO2014_HErZ-69m_at_Fino2.nc"),
+                 Lindenberg=c("./data/WindSpeed_1995TO2014_HErZ-69m_at_Lindenberg.nc",
+                 "./data/WindSpeed_1995TO2014_HErZ-10m_at_Lindenberg.nc",
+                 "./data/WindSpeed_1995TO2014_HErZ-258m_at_Lindenberg.nc",
+                 "./data/WindSpeed_1995TO2014_HErZ-116m_at_Lindenberg.nc",
+                 "./data/WindSpeed_1995TO2014_HErZ-178m_at_Lindenberg.nc",
+                 "./data/WindSpeed_1995TO2014_HErZ-35m_at_Lindenberg.nc"),
+                 Cabauw=c("./data/WindSpeed_1995TO2014_HErZ-178m_at_Cabauw.nc",
+                 "./data/WindSpeed_1995TO2014_HErZ-10m_at_Cabauw.nc",
+                 "./data/WindSpeed_1995TO2014_HErZ-258m_at_Cabauw.nc",
+                 "./data/WindSpeed_1995TO2014_HErZ-69m_at_Cabauw.nc",
+                 "./data/WindSpeed_1995TO2014_HErZ-35m_at_Cabauw.nc",
+                 "./data/cesar_tower_meteo_lb1_t10_v1.1_2000TO2015.nc",
+                 "./data/WindSpeed_1995TO2014_HErZ-116m_at_Cabauw.nc")
+  )
 }
 CheckFile(herz.fname)
 # variable names to read from above files
-if (herz.profile) {
-  herz.param = c("windspeed_10m", "windspeed_35m", "windspeed_69m",
-                 "windspeed_116m", "windspeed_178m", "windspeed_258m")
-} else {
-  herz.param = c("windspeed_10m", "windspeed_116m")
+if (ana.time.res$time.res == ana.time.res$monthly | ana.time.res$time.res == ana.time.res$daily) {
+  if (herz.profile) {
+    herz.param = c("windspeed_10m", "windspeed_35m", "windspeed_69m",
+                   "windspeed_116m", "windspeed_178m", "windspeed_258m")
+  } else {
+    herz.param = c("windspeed_10m", "windspeed_116m")
+  }
+} else if (ana.time.res$time.res == ana.time.res$hourly) {
+  herz.param = ("windspeed")
 }
 
 #=== Station data ===
-# station data based on daily (T) or hourly (F) measurements
-station.daily = FALSE
+# station data based on daily (T) or hourly (F) measurements; hourly DWD station
+# data might be more reliable
+station.daily = F
 # filename of station name list
 station.daily.fname = "./data/KL_Tageswerte_Beschreibung_Stationen.txt"
 station.hourly.fname =
-  paste0("./data/FF_Stundenwerte_Beschreibung_Stationen_wind_selected4.txt")
+  "./data/FF_Stundenwerte_Beschreibung_Stationen_wind_selected4.txt"
 CheckFile(c(station.daily.fname, station.hourly.fname))
 
 #=== time period ===
@@ -135,11 +162,11 @@ CheckFile(c(station.daily.fname, station.hourly.fname))
 #- era20c: 1900 to 2010
 #- eraI: 1979 to 2014
 #- herz: 1995 to 2014
-era20c.tsstart = c(1995,1)
+era20c.tsstart = c(1997,1)
 era20c.tsend = c(2010,12)
-eraI.tsstart = c(1995,1)
+eraI.tsstart = c(1997,1)
 eraI.tsend = c(2010,12)
-herz.tsstart = c(1995,1)
+herz.tsstart = c(1997,1)
 herz.tsend = c(2010,12)
 fname_ext = "1995to2010"
 
@@ -147,18 +174,18 @@ fname_ext = "1995to2010"
 # The following switches decide on which plots to generate
 
 # time series between reanalyses and station data at 10m height
-plot.EraStatComp = F
+plot.EraStatComp = T
 # time series between ERA20C and COSMO HErZ reanalyses at 100m height
-plot.100mEraHerz = F
+plot.100mEraHerz = T
 # only selected seasons of reanalyses and station data at 10m height
-plot.EraStationSelSeasons = F
+plot.EraStationSelSeasons = T
 # only selected months of reanalyses and station data at 10m height
-plot.EraStationSelMonths = F
+plot.EraStationSelMonths = T
 # daily mean time series analysis of reanalyses and station data fo 10m wind speed
-plot.EraStationSQ = F
+plot.EraStationSQ = T
 # perform analysis of the HErZ profile
-plot.HerzProfile = F
+plot.HerzProfile = T
 # PDF score between station data and each reanalysis at 10m height
-plot.PDFscore = F
+plot.PDFscore = T
 # plot histograms of 10m and 100m Era and HErZ data, and HErZ profiles
 plot.histograms = T

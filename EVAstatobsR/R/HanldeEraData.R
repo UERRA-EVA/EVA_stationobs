@@ -18,9 +18,9 @@
 #' @param lonidx numeric value of the longitude station location which to extract
 #'   off the HErZ grid.
 #' @param latidx numeric value of the latitude station location.
-#' @param era.monthly boolean to determine whether to read daily or mothly HErZ data.
-#' @param herz.profile boolean to determine whether to read HErZ profile (six model
-#'   levels) or only the two specified levels (10m and 116m).
+#' @param ana.time.res named list holding parameters monthly="monthly",
+#'   daily="daily", hourly="hourly", and time.res= to determine the time resolution
+#'   of the data to be read.
 #' @param verb.dat optional boolean to determine whether to print out what's going
 #'   on (T). The default is to suppress printing (verb.dat = FALSE).
 #' @return A named list holding the extended time series of HErZ data at the
@@ -30,11 +30,11 @@
 ReadHerzNetcdfMonthlyDaily2Xts <- function(herz.param, herz.fname,
                                            herz.tsstart, herz.tsend,
                                            lonidx, latidx,
-                                           era.monthly, herz.profile,
+                                           ana.time.res, herz.profile,
                                            verb.dat=FALSE) {
 
   # read HErZ data into a data.frame
-  if (era.monthly) { # monthly
+  if (ana.time.res$time.res == ana.time.res$monthly) {
     if (herz.profile) { # monthly profile
       dat10 = ReadNetcdf(herz.param[1], herz.fname, count=c(1,1,-1),
                          start=c(lonidx, latidx, 1), verb.dat=verb.dat)
@@ -62,7 +62,7 @@ ReadHerzNetcdfMonthlyDaily2Xts <- function(herz.param, herz.fname,
       ndf = data.frame(dat10$time, dat10$data, dat116$data)
     }
 
-  } else { # daily
+  } else if (ana.time.res$time.res == ana.time.res$daily) {
 
     if (herz.profile) { # daily profile
       ndf = data.frame()
@@ -101,9 +101,9 @@ ReadHerzNetcdfMonthlyDaily2Xts <- function(herz.param, herz.fname,
   }
 
   # convert data.frame of HErZ data into an extended time series
-  if (era.monthly) {
+  if (ana.time.res$time.res == ana.time.res$monthly) {
     ndf$dat10.time = as.yearmon(ndf$dat10.time)
-  } else {
+  } else if (ana.time.res$time.res == ana.time.res$daily) {
     ndf$dat10.time = as.POSIXct(strptime(ndf$dat10.time, format="%Y-%m-%d"),
                                 format="%Y-%m-%d", tz = "UTC")
   }
@@ -149,7 +149,9 @@ ReadHerzNetcdfMonthlyDaily2Xts <- function(herz.param, herz.fname,
 #' @param lonidx numeric value of the longitude station location which to extract
 #'   off the ERA grid.
 #' @param latidx same as above for latitude.
-#' @param era.monthly boolean to determine whether to read daily or mothly HErZ data.
+#' @param ana.time.res named list holding parameters monthly="monthly",
+#'   daily="daily", hourly="hourly", and time.res= to determine the time resolution
+#'   of the data to be read.
 #' @param era20c boolean to determine whether the data is ERA20C (T) or
 #'   ERA-Interim (F).
 #' @param verb.dat optional boolean to determine whether to print out what's going
@@ -159,7 +161,7 @@ ReadHerzNetcdfMonthlyDaily2Xts <- function(herz.param, herz.fname,
 #'   ERA-Interim data is read, a NULL value will be returned for era20c100.
 ReadEraNetcdf2Xts <- function(era.param, era.fname,
                               era.tsstart, era.tsend,
-                              lonidx, latidx, era.monthly,
+                              lonidx, latidx, ana.time.res,
                               era20c=TRUE, verb.dat=FALSE) {
 
   # Read ERA-I or ERA20C monthly or daily data
@@ -175,9 +177,9 @@ ReadEraNetcdf2Xts <- function(era.param, era.fname,
 
   # convert ERA data and time values into an extended time series
   # and apply start and end date
-  if (era.monthly) {
+  if (ana.time.res$time.res == ana.time.res$monthly) {
     df$era10m.time = as.yearmon(df$era10m.time)
-  } else {
+  } else if (ana.time.res$time.res == ana.time.res$daily) {
     df$era10m.time = as.POSIXct(strptime(df$era10m.time, format="%Y-%m-%d"),
                                 format="%Y-%m-%d", tz = "UTC")
   }

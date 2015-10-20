@@ -28,15 +28,15 @@ CheckTowerParams(cabauw.param, tower.name="Cabauw")
 # == read tower measurements ==
 cat(paste0("  **  Reading tower measurements\n"))
 # for FINO1
-dat = ExtractTowerData(fino1.file, fino1.param, era.monthly)
+dat = ExtractTowerData(fino1.file, fino1.param, ana.time.res)
 fino1.100.xts = dat[[fino1.param]]
 
 # for FINO2
-dat = ExtractTowerData(fino2.file, fino2.param, era.monthly)
+dat = ExtractTowerData(fino2.file, fino2.param, ana.time.res)
 fino2.102.xts = dat[[fino2.param]]
 
 # for Lindenberg
-dat = ExtractTowerData(lind.file, lind.param, era.monthly)
+dat = ExtractTowerData(lind.file, lind.param, ana.time.res)
 lind.10.xts = dat[[lind.param[1]]]
 lind.20.xts = dat[[lind.param[2]]]
 lind.40.xts = dat[[lind.param[3]]]
@@ -45,7 +45,7 @@ lind.80.xts = dat[[lind.param[5]]]
 lind.98.xts = dat[[lind.param[6]]]
 
 # for Cabauw
-dat = ExtractTowerData(cabauw.file, cabauw.param, era.monthly)
+dat = ExtractTowerData(cabauw.file, cabauw.param, ana.time.res)
 cabauw.10.xts = dat[[cabauw.param[[1]]]]
 cabauw.20.xts = dat[[cabauw.param[[2]]]]
 cabauw.40.xts = dat[[cabauw.param[[3]]]]
@@ -61,7 +61,7 @@ lonidx = idx$lonidx
 latidx = idx$latidx
 era20c.data = ReadEraNetcdf2Xts(era20c.param, era20c.fname,
                                 era20c.tsstart, era20c.tsend,
-                                lonidx, latidx, era.monthly,
+                                lonidx, latidx, ana.time.res,
                                 era20c=TRUE, verb.dat=verb.era.dat)
 era20c10.fino1.xts = era20c.data$era10
 era20c100.fino1.xts = era20c.data$era20c100
@@ -72,7 +72,7 @@ lonidx = idx$lonidx
 latidx = idx$latidx
 era20c.data = ReadEraNetcdf2Xts(era20c.param, era20c.fname,
                                 era20c.tsstart, era20c.tsend,
-                                lonidx, latidx, era.monthly,
+                                lonidx, latidx, ana.time.res,
                                 era20c=TRUE, verb.dat=verb.era.dat)
 era20c10.fino2.xts = era20c.data$era10
 era20c100.fino2.xts = era20c.data$era20c100
@@ -83,7 +83,7 @@ lonidx = idx$lonidx
 latidx = idx$latidx
 era20c.data = ReadEraNetcdf2Xts(era20c.param, era20c.fname,
                                 era20c.tsstart, era20c.tsend,
-                                lonidx, latidx, era.monthly,
+                                lonidx, latidx, ana.time.res,
                                 era20c=TRUE, verb.dat=verb.era.dat)
 era20c10.lind.xts = era20c.data$era10
 era20c100.lind.xts = era20c.data$era20c100
@@ -94,7 +94,7 @@ lonidx = idx$lonidx
 latidx = idx$latidx
 era20c.data = ReadEraNetcdf2Xts(era20c.param, era20c.fname,
                                 era20c.tsstart, era20c.tsend,
-                                lonidx, latidx, era.monthly,
+                                lonidx, latidx, ana.time.res,
                                 era20c=TRUE, verb.dat=verb.era.dat)
 era20c10.cabauw.xts = era20c.data$era10
 era20c100.cabauw.xts = era20c.data$era20c100
@@ -116,7 +116,7 @@ latidx = idx$latidx
 herz.data = ReadHerzNetcdfMonthlyDaily2Xts(herz.param, herz.fname,
                                            herz.tsstart, herz.tsend,
                                            lonidx, latidx,
-                                           era.monthly, herz.profile,
+                                           ana.time.res, herz.profile,
                                            verb.era.dat)
 herz10.fino1.xts = herz.data$herz10
 herz35.fino1.xts = herz.data$herz35
@@ -132,7 +132,7 @@ latidx = idx$latidx
 herz.data = ReadHerzNetcdfMonthlyDaily2Xts(herz.param, herz.fname,
                                            herz.tsstart, herz.tsend,
                                            lonidx, latidx,
-                                           era.monthly, herz.profile,
+                                           ana.time.res, herz.profile,
                                            verb.era.dat)
 herz10.fino2.xts = herz.data$herz10
 herz35.fino2.xts = herz.data$herz35
@@ -148,7 +148,7 @@ latidx = idx$latidx
 herz.data = ReadHerzNetcdfMonthlyDaily2Xts(herz.param, herz.fname,
                                            herz.tsstart, herz.tsend,
                                            lonidx, latidx,
-                                           era.monthly, herz.profile,
+                                           ana.time.res, herz.profile,
                                            verb.era.dat)
 herz10.lind.xts = herz.data$herz10
 herz35.lind.xts = herz.data$herz35
@@ -164,7 +164,7 @@ latidx = idx$latidx
 herz.data = ReadHerzNetcdfMonthlyDaily2Xts(herz.param, herz.fname,
                                            herz.tsstart, herz.tsend,
                                            lonidx, latidx,
-                                           era.monthly, herz.profile,
+                                           ana.time.res, herz.profile,
                                            verb.era.dat)
 herz10.cabauw.xts = herz.data$herz10
 herz35.cabauw.xts = herz.data$herz35
@@ -248,19 +248,19 @@ if (plot.TowerEraProfile) {
   cat("  **  Plotting tower-ERA profile box plots\n")
   fname = paste0(outdir, "LindenbergHErZERA20C_boxPlots_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
-  PlotTowerERAprofileBP(lind.climobj, fname, era.monthly)
+  PlotTowerERAprofileBP(lind.climobj, fname, ana.time.res)
 
   fname = paste0(outdir, "Fino1HErZERA20C_boxPlots_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
-  PlotTowerERAprofileBP(fino1.climobj, fname, era.monthly)
+  PlotTowerERAprofileBP(fino1.climobj, fname, ana.time.res)
 
   fname = paste0(outdir, "Fino2HErZERA20C_boxPlots_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
-  PlotTowerERAprofileBP(fino2.climobj, fname, era.monthly)
+  PlotTowerERAprofileBP(fino2.climobj, fname, ana.time.res)
 
   fname = paste0(outdir, "CabauwHErZERA20C_boxPlots_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
-  PlotTowerERAprofileBP(cabauw.climobj, fname, era.monthly)
+  PlotTowerERAprofileBP(cabauw.climobj, fname, ana.time.res)
 }
 
 #-----------------------------------------------------------------------------
@@ -269,24 +269,24 @@ if(plot.histograms) {
   cat("  **  Plotting Histograms\n")
   fname = paste0("Histogram_Lindenberg_", res.switch, '_', time.ext, "_",
                  fname_ext, ".pdf")
-  PlotHistogramsTower(outdir, fname, era.monthly, lind.climobj)
+  PlotHistogramsTower(outdir, fname, ana.time.res, lind.climobj)
 
   fname = paste0("Histogram_Fino1_", res.switch, '_', time.ext, "_",
                  fname_ext, ".pdf")
-  PlotHistogramsTower(outdir, fname, era.monthly, fino1.climobj)
+  PlotHistogramsTower(outdir, fname, ana.time.res, fino1.climobj)
 
   fname = paste0("Histogram_Fino2_", res.switch, '_', time.ext, "_",
                  fname_ext, ".pdf")
-  PlotHistogramsTower(outdir, fname, era.monthly, fino2.climobj)
+  PlotHistogramsTower(outdir, fname, ana.time.res, fino2.climobj)
 
   fname = paste0("Histogram_Cabauw_", res.switch, '_', time.ext, "_",
                  fname_ext, ".pdf")
-  PlotHistogramsTower(outdir, fname, era.monthly, cabauw.climobj)
+  PlotHistogramsTower(outdir, fname, ana.time.res, cabauw.climobj)
 }
 
 #-----------------------------------------------------------------------------
 
-if (plot.ProfileTS & era.monthly) {
+if (plot.ProfileTS & ana.time.res == monthly) {
   cat("  **  Plotting tower-ERA profile TS\n")
   fname = paste0(outdir, "LindenbergHErZERA20C_relativeDifferences_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
@@ -333,8 +333,8 @@ if (plot.ProfileTS & era.monthly) {
 
 if(plot.Extremes) {
 
-  extremes.thresh = seq(0.5,0.99,0.01)
-  if (era.monthly) {
+  extremes.thresh = seq(0.01,0.99,0.01)
+  if (ana.time.res$time.res == ana.time.res$monthly) {
     fname = paste0(outdir, "Fino1_MM-extremes_", res.switch, '_', fname_ext, ".pdf")
     PlotTowerExtremesContr(fino1.climobj, fname, extremes.thresh)
     fname = paste0(outdir, "Fino2_MM-extremes_", res.switch, '_', fname_ext, ".pdf")
@@ -343,25 +343,23 @@ if(plot.Extremes) {
     PlotTowerExtremesContr(cabauw.climobj, fname, extremes.thresh)
     fname = paste0(outdir, "Lindenberg_MM-extremes_", res.switch, '_', fname_ext, ".pdf")
     PlotTowerExtremesContr(lind.climobj, fname, extremes.thresh)
-  } else {
-    if (TowerHour) {
-      fname = paste0(outdir, "Fino1_HH-extremes_", res.switch, '_', fname_ext, ".pdf")
-      PlotTowerExtremesContr(fino1.climobj, fname, extremes.thresh)
-      fname = paste0(outdir, "Fino2_HH-extremes_", res.switch, '_', fname_ext, ".pdf")
-      PlotTowerExtremesContr(fino2.climobj, fname, extremes.thresh)
-      fname = paste0(outdir, "Cabauw_HH-extremes_", res.switch, '_', fname_ext, ".pdf")
-      PlotTowerExtremesContr(cabauw.climobj, fname, extremes.thresh)
-      fname = paste0(outdir, "Lindenberg_HH-extremes_", res.switch, '_', fname_ext, ".pdf")
-      PlotTowerExtremesContr(lind.climobj, fname, extremes.thresh)
-    } else {
-      fname = paste0(outdir, "Fino1_DD-extremes_", res.switch, '_', fname_ext, ".pdf")
-      PlotTowerExtremesContr(fino1.climobj, fname, extremes.thresh)
-      fname = paste0(outdir, "Fino2_DD-extremes_", res.switch, '_', fname_ext, ".pdf")
-      PlotTowerExtremesContr(fino2.climobj, fname, extremes.thresh)
-      fname = paste0(outdir, "Cabauw_DD-extremes_", res.switch, '_', fname_ext, ".pdf")
-      PlotTowerExtremesContr(cabauw.climobj, fname, extremes.thresh)
-      fname = paste0(outdir, "Lindenberg_DD-extremes_", res.switch, '_', fname_ext, ".pdf")
-      PlotTowerExtremesContr(lind.climobj, fname, extremes.thresh)
-    }
+  } else if (ana.time.res$time.res == ana.time.res$hourly) {
+    fname = paste0(outdir, "Fino1_HH-extremes_", res.switch, '_', fname_ext, ".pdf")
+    PlotTowerExtremesContr(fino1.climobj, fname, extremes.thresh)
+    fname = paste0(outdir, "Fino2_HH-extremes_", res.switch, '_', fname_ext, ".pdf")
+    PlotTowerExtremesContr(fino2.climobj, fname, extremes.thresh)
+    fname = paste0(outdir, "Cabauw_HH-extremes_", res.switch, '_', fname_ext, ".pdf")
+    PlotTowerExtremesContr(cabauw.climobj, fname, extremes.thresh)
+    fname = paste0(outdir, "Lindenberg_HH-extremes_", res.switch, '_', fname_ext, ".pdf")
+    PlotTowerExtremesContr(lind.climobj, fname, extremes.thresh)
+  } else if (ana.time.res$time.res == ana.time.res$daily) {
+    fname = paste0(outdir, "Fino1_DD-extremes_", res.switch, '_', fname_ext, ".pdf")
+    PlotTowerExtremesContr(fino1.climobj, fname, extremes.thresh)
+    fname = paste0(outdir, "Fino2_DD-extremes_", res.switch, '_', fname_ext, ".pdf")
+    PlotTowerExtremesContr(fino2.climobj, fname, extremes.thresh)
+    fname = paste0(outdir, "Cabauw_DD-extremes_", res.switch, '_', fname_ext, ".pdf")
+    PlotTowerExtremesContr(cabauw.climobj, fname, extremes.thresh)
+    fname = paste0(outdir, "Lindenberg_DD-extremes_", res.switch, '_', fname_ext, ".pdf")
+    PlotTowerExtremesContr(lind.climobj, fname, extremes.thresh)
   }
 }

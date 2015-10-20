@@ -51,33 +51,35 @@ getNearest <- function(b1,b2,l1,l2){
 #' @param eraI.tsend is the end date of ERA-Interim data
 #' @param herz.tsstart is the start date of HErZ data
 #' @param herz.tsend is the end date of the HErZ data
-#' @param era.monthly boolean to determine whether to read daily or mothly HErZ data
-#' @param daily optional parameter to specify whether station data is aggregated in
-#'   hourly or daily time steps. Default is hourly (daily=FALSE).
+#' @param ana.time.res named list holding parameters monthly="monthly",
+#'   daily="daily", hourly="hourly", and time.res= to determine the time resolution
+#'   of the data to be read.
+#' @param station.daily boolean parameter to specify whether station data is
+#'   aggregated in hourly (F) or daily (T) time steps.
 #' @return MM.station[timestr] is the potentially gab filled monthly mean station
 #'   data spanning the time period of the longest ranging reanalysis time series.
 ExtractStationData <- function(station.data, era20c.tsstart, era20c.tsend,
                                eraI.tsstart, eraI.tsend, herz.tsstart, herz.tsend,
-                               era.monthly, daily=FALSE) {
+                               ana.time.res, station.daily) {
 
   # extract station values and times
   data.vals = station.data$WINDGESCHWINDIGKEIT
   idx = which(data.vals <= 0.0) #!! exclude all these 0s (and correct missing values)
   data.vals[idx] = NA
-  if (!daily){ # hourly station data
+  if (!station.daily){
     time.vals <- as.POSIXct(strptime(station.data$MESS_DATUM,
                                      format="%Y-%m-%d %H:%M:%S"),
                             format="%Y-%m-%d %H:%M:%S", tz="UTC")
-  } else { # daily station data
+  } else if (station.daily) {
     time.vals <- as.POSIXct(strptime(station.data$MESS_DATUM, format="%Y-%m-%d"),
                             format="%Y-%m-%d %H:%M:%S", tz="UTC")
   }
   time.series.frame = data.frame(time.vals, data.vals)
 
   # create a gap free time series from start to end of station measurements
-  if (!daily){
+  if (!station.daily){
     full <- seq.POSIXt(time.vals[1], time.vals[length(time.vals)], by='hour')
-  } else {
+  } else if (station.daily) {
     full <- seq.POSIXt(time.vals[1], time.vals[length(time.vals)], by='day')
   }
   all.dates.frame <- data.frame(list(time.vals=full))
@@ -89,16 +91,16 @@ ExtractStationData <- function(station.data, era20c.tsstart, era20c.tsend,
   # calculate monmean of the station time series
   stat.tsstart = c(as.numeric(substr(as.character(merged.data$time.vals[1]),1,4)),
                    as.numeric(substr(as.character(merged.data$time.vals[1]),6,7)))
-  if(era.monthly) { # produce a monthly mean xts
+  if(ana.time.res$time.res == ana.time.res$monthly) {
     MM.station = as.xts( ts( as.numeric(lapply(split(StatXTS, "months"), mean,
                                                na.rm=TRUE)), # exclude all NANs
                              start=stat.tsstart, frequency=12 ) )
-  } else if (!era.monthly) { # produce a daily mean xts
+  } else if (ana.time.res$time.res == ana.time.res$daily) {
     daily.xts = period.apply(StatXTS, endpoints(StatXTS, "days"), mean, na.rm=TRUE)
     daily.vals = as.POSIXct(strptime(index(daily.xts), format="%Y-%m-%d"),
                             format="%Y-%m-%d", tz = "UTC")
     MM.station = xts(daily.xts, order.by=daily.vals)
-  } else { # produce an hourly mean xts
+  } else if (ana.time.res$time.res == ana.time.res$hourly) {
     #MM.station = StatXTS
     CallStop("It is not yet implemented to produce an hourly xtended time series.")
   }
@@ -109,8 +111,8 @@ ExtractStationData <- function(station.data, era20c.tsstart, era20c.tsend,
     stat.tsstart = era20c.tsstart
     stat.tsend = era20c.tsend
   } else {
-    year.start.stat = as.numeric(substr(toString(index(MM.station[1])),5,8))
-    year.end.stat = as.numeric(substr(toString(index(tail(MM.station,1))),5,8))
+    year.start.stat = as.numeric(substr(toString(index(MM.station[1])),1,4))
+    year.end.stat = as.numeric(substr(toString(index(tail(MM.station,1))),1,4))
     # set start to January (station data may start in a different month)
     stat.tsstart = c(max(year.start.stat, era20c.tsstart[1]), 1)
     stat.tsend = c(min(year.end.stat, era20c.tsend[1]), 12) # same for December here
@@ -210,18 +212,19 @@ ExtractHErZxts <- function(herz.data, time.vals, herz.lon, herz.lat,
 #'   name specified (or all).
 #' @param file.name character string holding the file name of the file to be read
 #' @param para.name character string holding the parameter name(s) to be read
-#' @param era.mon optional boolean which decides whether to format the time axis
-#'   as daily or monthly.
+#' @param ana.time.res named list holding parameters monthly="monthly",
+#'   daily="daily", hourly="hourly", and time.res= to determine the time resolution
+#'   of the data to be read.
 #' @return The return value is a named list with the names of the parameter names
 #'   holding extended time series of that parameter.
-ExtractTowerData <- function(file.name, para.name, era.mon=FALSE) {
+ExtractTowerData <- function(file.name, para.name, ana.time.res) {
   CheckFile(file.name)
   data.lst = list()
   for (cnt in seq(para.name)) {
     dat = ReadNetcdf(para.name[cnt], file.name)
-    if (era.mon) {
+    if (ana.time.res$time.res == ana.time.res$monthly) {
       time.vals = as.yearmon(dat$time)
-    } else {
+    } else if (ana.time.res$time.res == ana.time.res$daily) {
       time.vals = as.POSIXct(strptime(dat$time, format="%Y-%m-%d"),
                              format="%Y-%m-%d", tz = "UTC")
     }

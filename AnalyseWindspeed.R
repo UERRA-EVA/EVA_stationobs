@@ -61,7 +61,7 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
   MM.station = ExtractStationData(station.data, era20c.tsstart, era20c.tsend,
                                   eraI.tsstart, eraI.tsend,
                                   herz.tsstart, herz.tsend,
-                                  era.monthly, daily=station.daily)
+                                  ana.time.res, station.daily)
   if(length(MM.station) == 0) {
     cat(paste0("\n  ***  ",
                "The length of the station data record ",
@@ -90,7 +90,7 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
   latidx = idx$latidx
   era20c.data = ReadEraNetcdf2Xts(era20c.param, era20c.fname,
                                   era20c.tsstart, era20c.tsend,
-                                  lonidx, latidx, era.monthly,
+                                  lonidx, latidx, ana.time.res,
                                   era20c=TRUE, verb.dat=verb.era.dat)
   era20c.data.xts = era20c.data$era10
   era20c100.data.xts = era20c.data$era20c100
@@ -102,7 +102,7 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
   latidx = idx$latidx
   eraI.data = ReadEraNetcdf2Xts(eraI.param, eraI.fname,
                                 eraI.tsstart, eraI.tsend,
-                                lonidx, latidx, era.monthly,
+                                lonidx, latidx, ana.time.res,
                                 era20c=FALSE, verb.dat=verb.era.dat)
   eraI.data.xts = eraI.data$era10
 
@@ -121,7 +121,7 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
   herz.data = ReadHerzNetcdfMonthlyDaily2Xts(herz.param, herz.fname,
                                              herz.tsstart, herz.tsend,
                                              lonidx, latidx,
-                                             era.monthly, herz.profile,
+                                             ana.time.res, herz.profile,
                                              verb.era.dat)
   herz10.data.xts = herz.data$herz10
   herz116.data.xts = herz.data$herz116
@@ -177,16 +177,16 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
     fname = paste0("100m-Era20cHerz_", gsub("/", "-", statname),
                    "_TimeSeries-", time.ext, "_", res.switch, '_', fname_ext, ".pdf")
     Plot100mEraHerz(era20c100.data.xts, herz116.data.xts, titname, statname,
-                    outdir, fname, era.monthly)
+                    outdir, fname, ana.time.res)
     fname = paste0("PDFScore_100mEraHerz_", statname, "_TimeSeries-", time.ext,
                    "_", res.switch, '_', fname_ext, ".pdf")
     PlotPDFScore(era20c100.data.xts, herz116.data.xts, outdir, fname, titname,
-                 era.monthly)
+                 ana.time.res)
   }
 
   #-----------------------------------------------------------------------------
 
-  if (plot.EraStationSelSeasons & era.monthly) {
+  if (plot.EraStationSelSeasons & ana.time.res$time.res == ana.time.res$monthly) {
     cat("  **  Plotting selected seasonal time series\n")
     fname = paste0("ERA-Station_Seasons_",
                    gsub("/", "-", station.data$STATIONS_NAME[1]),
@@ -209,7 +209,7 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
 
   #-----------------------------------------------------------------------------
 
-  if (plot.EraStationSelMonths & era.monthly) {
+  if (plot.EraStationSelMonths & ana.time.res$time.res == ana.time.res$monthly) {
     cat("  **  Plotting selected monthly time series\n")
     fname = paste0("ERA-Station_", time.ext, "_",
                    gsub("/", "-", station.data$STATIONS_NAME[1]),
@@ -238,7 +238,7 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
     titname = paste0('windspeed [m/s] at station location ',
                      as.character(station.data$STATIONS_NAME[1]))
     PlotStationEraSQ(era20c.data.xts, eraI.data.xts, herz10.data.xts, MM.station,
-                      titname, outdir, fname, era.monthly)
+                      titname, outdir, fname, ana.time.res)
 
   }
 
@@ -257,19 +257,19 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
                    '_', res.switch, '_', time.ext, "_", fname_ext, ".pdf")
     titname = c('ERA20C ', as.character(station.data$STATIONS_NAME[1]))
     PlotPDFScore(era20c.data.xts, MM.station, outdir, fname, titname,
-                 era.monthly)
+                 ana.time.res)
 
     fname = paste0("PDFscore_ERAI_", gsub("/", "-", station.data$STATIONS_NAME[1]),
                    '_', res.switch, '_', time.ext, "_", fname_ext, ".pdf")
     titname = c('ERA-I ', as.character(station.data$STATIONS_NAME[1]))
     PlotPDFScore(eraI.data.xts, MM.station, outdir, fname, titname,
-                 era.monthly)
+                 ana.time.res)
 
     fname = paste0("PDFscore_HErZ_", gsub("/", "-", station.data$STATIONS_NAME[1]),
                    '_', res.switch, '_', time.ext, "_", fname_ext, ".pdf")
     titname = c('HErZ ', as.character(station.data$STATIONS_NAME[1]))
     PlotPDFScore(herz10.data.xts, MM.station, outdir, fname, titname,
-                 era.monthly)
+                 ana.time.res)
   }
 
   #-----------------------------------------------------------------------------
@@ -281,7 +281,7 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
                    '_', res.switch, '_', time.ext, "_", fname_ext, ".pdf")
     statname = gsub("/", "-", station.data$STATIONS_NAME[1])
     if (herz.profile) {
-      PlotHistograms(outdir, fname, statname, era.monthly,
+      PlotHistograms(outdir, fname, statname, ana.time.res,
                      era20c.data.xts, era20c100.data.xts, eraI.data.xts,
                      herz10.data.xts, herz35.data.xts, herz69.data.xts,
                      herz116.data.xts, herz178.data.xts, herz258.data.xts,
@@ -289,7 +289,7 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
                      plot.10m=TRUE, plot.10m100m=TRUE, plot.HerzProfile=TRUE)
 
     } else {
-      PlotHistograms(outdir, fname, statname, era.monthly,
+      PlotHistograms(outdir, fname, statname, ana.time.res,
                      era20c.data.xts, era20c100.data.xts, eraI.data.xts,
                      herz10.data.xts, HerzXts35=NULL, HerzXts69=NULL,
                      herz116.data.xts, HerzXts178=NULL, HerzXts258=NULL,

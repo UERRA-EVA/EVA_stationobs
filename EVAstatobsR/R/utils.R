@@ -14,17 +14,15 @@ PlottingSettings <- function(data.vals) {
   port.a4width = 21./2.54
   port.a4height = 29.7/2.54
 
-  if (era.monthly) {
+  if (ana.time.res$time.res == ana.time.res$monthly) {
     time.agg = "monthly"
     time.Agg = "Monthly"
-  } else {
-    if (TowerHour) {
-      time.agg = "hourly"
-      time.Agg = "Hourly"
-    } else {
-      time.agg = "daily"
-      time.Agg = "Daily"
-    }
+  } else if (ana.time.res$time.res == ana.time.res$daily) {
+    time.agg = "daily"
+    time.Agg = "Daily"
+  } else if (ana.time.res$time.res == ana.time.res$hourly) {
+    time.agg = "hourly"
+    time.Agg = "Hourly"
   }
 
   if (!is.xts(data.vals)) {
