@@ -83,36 +83,36 @@ CheckHerzParams <- function(herz.param, herz.profile) {
   if (herz.profile) {
     if (!herz.param[1] == "windspeed_10m") {
       CallStop(paste0("Unexpected HErZ parameter: ", herz.param[1],
-                      "\n    Should be: windspeed_10m"))
+                      "\n   Should be: windspeed_10m"))
     }
     if (!herz.param[2] == "windspeed_35m") {
       CallStop(paste0("Unexpected HErZ parameter: ", herz.param[2],
-                      "\n    Should be: windspeed_35m"))
+                      "\n   Should be: windspeed_35m"))
     }
     if (!herz.param[3] == "windspeed_69m") {
       CallStop(paste0("Unexpected HErZ parameter: ", herz.param[3],
-                      "\n    Should be: windspeed_69m"))
+                      "\n   Should be: windspeed_69m"))
     }
     if (!herz.param[4] == "windspeed_116m") {
       CallStop(paste0("Unexpected HErZ parameter: ", herz.param[4],
-                      "\n    Should be: windspeed_116m"))
+                      "\n   Should be: windspeed_116m"))
     }
     if (!herz.param[5] == "windspeed_178m") {
       CallStop(paste0("Unexpected HErZ parameter: ", herz.param[5],
-                      "\n    Should be: windspeed_178m"))
+                      "\n   Should be: windspeed_178m"))
     }
     if (!herz.param[6] == "windspeed_258m") {
       CallStop(paste0("Unexpected HErZ parameter: ", herz.param[6],
-                      "\n    Should be: windspeed_258m"))
+                      "\n   Should be: windspeed_258m"))
     }
   } else {
     if (!herz.param[1] == "windspeed_10m") {
       CallStop(paste0("Unexpected HErZ parameter: ", herz.param[1],
-                      "\n    Should be: windspeed_10m"))
+                      "\n   Should be: windspeed_10m"))
     }
     if (!herz.param[2] == "windspeed_116m") {
       CallStop(paste0("Unexpected HErZ parameter: ", herz.param[2],
-                      "\n    Should be: windspeed_116m"))
+                      "\n   Should be: windspeed_116m"))
     }
   }
 }
