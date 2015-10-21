@@ -147,6 +147,8 @@ ReadNetcdf <- function(variable, infile, start=NULL, count=NULL,
   data[data==nc$var[[variable]]$missval] <- NA
 
   # read 1D latitude and longitude values
+  lon = NULL
+  lat = NULL
   if (!is.null(nc$dim$lon)) {
     lon <- nc$dim$lon$vals
     lat <- nc$dim$lat$vals
