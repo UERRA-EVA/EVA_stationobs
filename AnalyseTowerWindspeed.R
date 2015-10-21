@@ -20,7 +20,9 @@ if (interactive) {
 }
 
 # == Checks on parameters ==
-CheckHerzParams(herz.param, herz.profile)
+if (ana.time.res$time.res != ana.time.res$hourly) {
+  CheckHerzParams(herz.param, herz.profile)
+}
 if (!herz.profile) CallStop("HErZ profile is needed!")
 CheckTowerParams(lind.param, tower.name="Lindenberg")
 CheckTowerParams(cabauw.param, tower.name="Cabauw")
@@ -53,130 +55,181 @@ cabauw.80.xts = dat[[cabauw.param[[4]]]]
 cabauw.140.xts = dat[[cabauw.param[[5]]]]
 cabauw.200.xts = dat[[cabauw.param[[6]]]]
 
-# == read ERA20C data ==
-cat(paste0("  **  Reading ERA20C reanalysis data\n"))
-# for FINO1
-idx = GetLonLatIdx(era20c.fname, fino1.lon, fino1.lat)
-lonidx = idx$lonidx
-latidx = idx$latidx
-era20c.data = ReadEraNetcdf2Xts(era20c.param, era20c.fname,
-                                era20c.tsstart, era20c.tsend,
-                                lonidx, latidx, ana.time.res,
-                                era20c=TRUE, verb.dat=verb.era.dat)
-era20c10.fino1.xts = era20c.data$era10
-era20c100.fino1.xts = era20c.data$era20c100
+if (ana.time.res$time.res == monthly | ana.time.res$time.res == daily) {
+  # == read ERA20C data ==
+  cat(paste0("  **  Reading ERA20C reanalysis data\n"))
+  # for FINO1
+  idx = GetLonLatIdx(era20c.fname, fino1.lon, fino1.lat)
+  lonidx = idx$lonidx
+  latidx = idx$latidx
+  era20c.data = ReadEraNetcdf2Xts(era20c.param, era20c.fname,
+                                  era20c.tsstart, era20c.tsend,
+                                  lonidx, latidx, ana.time.res,
+                                  era20c=TRUE, verb.dat=verb.era.dat)
+  era20c10.fino1.xts = era20c.data$era10
+  era20c100.fino1.xts = era20c.data$era20c100
 
-# for FINO2
-idx = GetLonLatIdx(era20c.fname, fino2.lon, fino2.lat)
-lonidx = idx$lonidx
-latidx = idx$latidx
-era20c.data = ReadEraNetcdf2Xts(era20c.param, era20c.fname,
-                                era20c.tsstart, era20c.tsend,
-                                lonidx, latidx, ana.time.res,
-                                era20c=TRUE, verb.dat=verb.era.dat)
-era20c10.fino2.xts = era20c.data$era10
-era20c100.fino2.xts = era20c.data$era20c100
+  # for FINO2
+  idx = GetLonLatIdx(era20c.fname, fino2.lon, fino2.lat)
+  lonidx = idx$lonidx
+  latidx = idx$latidx
+  era20c.data = ReadEraNetcdf2Xts(era20c.param, era20c.fname,
+                                  era20c.tsstart, era20c.tsend,
+                                  lonidx, latidx, ana.time.res,
+                                  era20c=TRUE, verb.dat=verb.era.dat)
+  era20c10.fino2.xts = era20c.data$era10
+  era20c100.fino2.xts = era20c.data$era20c100
 
-# for Lindenberg
-idx = GetLonLatIdx(era20c.fname, lind.lon, lind.lat)
-lonidx = idx$lonidx
-latidx = idx$latidx
-era20c.data = ReadEraNetcdf2Xts(era20c.param, era20c.fname,
-                                era20c.tsstart, era20c.tsend,
-                                lonidx, latidx, ana.time.res,
-                                era20c=TRUE, verb.dat=verb.era.dat)
-era20c10.lind.xts = era20c.data$era10
-era20c100.lind.xts = era20c.data$era20c100
+  # for Lindenberg
+  idx = GetLonLatIdx(era20c.fname, lind.lon, lind.lat)
+  lonidx = idx$lonidx
+  latidx = idx$latidx
+  era20c.data = ReadEraNetcdf2Xts(era20c.param, era20c.fname,
+                                  era20c.tsstart, era20c.tsend,
+                                  lonidx, latidx, ana.time.res,
+                                  era20c=TRUE, verb.dat=verb.era.dat)
+  era20c10.lind.xts = era20c.data$era10
+  era20c100.lind.xts = era20c.data$era20c100
 
-# for Cabauw
-idx = GetLonLatIdx(era20c.fname, cabauw.lon, cabauw.lat)
-lonidx = idx$lonidx
-latidx = idx$latidx
-era20c.data = ReadEraNetcdf2Xts(era20c.param, era20c.fname,
-                                era20c.tsstart, era20c.tsend,
-                                lonidx, latidx, ana.time.res,
-                                era20c=TRUE, verb.dat=verb.era.dat)
-era20c10.cabauw.xts = era20c.data$era10
-era20c100.cabauw.xts = era20c.data$era20c100
+  # for Cabauw
+  idx = GetLonLatIdx(era20c.fname, cabauw.lon, cabauw.lat)
+  lonidx = idx$lonidx
+  latidx = idx$latidx
+  era20c.data = ReadEraNetcdf2Xts(era20c.param, era20c.fname,
+                                  era20c.tsstart, era20c.tsend,
+                                  lonidx, latidx, ana.time.res,
+                                  era20c=TRUE, verb.dat=verb.era.dat)
+  era20c10.cabauw.xts = era20c.data$era10
+  era20c100.cabauw.xts = era20c.data$era20c100
 
 
-# == read HErZ data ==
-cat(paste0("  **  Reading HErZ reanalysis data\n"))
-if (herz.grid.read.grb) {
-  nlon = 848
-  nlat = 824
-  herz.lon = readGrib(herz.grid.grb, nlon, nlat, 1, var="RLON", verb.grib=verb.grib)
-  herz.lat = readGrib(herz.grid.grb, nlon, nlat, 1, var="RLAT", verb.grib=verb.grib)
-} else {
-  herz.lon = ReadNetcdf("longitude", herz.grid.nc, conv.time=F)$data
-  herz.lat = ReadNetcdf("latitude", herz.grid.nc, conv.time=F)$data
+  # == read HErZ data ==
+  cat(paste0("  **  Reading HErZ reanalysis data\n"))
+  if (herz.grid.read.grb) {
+    nlon = 848
+    nlat = 824
+    herz.lon = readGrib(herz.grid.grb, nlon, nlat, 1, var="RLON", verb.grib=verb.grib)
+    herz.lat = readGrib(herz.grid.grb, nlon, nlat, 1, var="RLAT", verb.grib=verb.grib)
+  } else {
+    herz.lon = ReadNetcdf("longitude", herz.grid.nc, conv.time=F)$data
+    herz.lat = ReadNetcdf("latitude", herz.grid.nc, conv.time=F)$data
+  }
+
+  # for FINO1
+  # only read first file name (if there are more than one)
+  # because all daily files have the same grid
+  idx = GetLonLatIdx(herz.fname[1], fino1.lon, fino1.lat, herz.lon, herz.lat)
+  lonidx = idx$lonidx
+  latidx = idx$latidx
+  herz.data = ReadHerzNetcdfMonthlyDaily2Xts(herz.param, herz.fname,
+                                             herz.tsstart, herz.tsend,
+                                             lonidx, latidx,
+                                             ana.time.res, herz.profile,
+                                             verb.era.dat)
+  herz10.fino1.xts = herz.data$herz10
+  herz35.fino1.xts = herz.data$herz35
+  herz69.fino1.xts = herz.data$herz69
+  herz116.fino1.xts = herz.data$herz116
+  herz178.fino1.xts = herz.data$herz178
+  herz258.fino1.xts = herz.data$herz258
+
+  # for FINO2
+  idx = GetLonLatIdx(herz.fname[1], fino2.lon, fino2.lat, herz.lon, herz.lat)
+  lonidx = idx$lonidx
+  latidx = idx$latidx
+  herz.data = ReadHerzNetcdfMonthlyDaily2Xts(herz.param, herz.fname,
+                                             herz.tsstart, herz.tsend,
+                                             lonidx, latidx,
+                                             ana.time.res, herz.profile,
+                                             verb.era.dat)
+  herz10.fino2.xts = herz.data$herz10
+  herz35.fino2.xts = herz.data$herz35
+  herz69.fino2.xts = herz.data$herz69
+  herz116.fino2.xts = herz.data$herz116
+  herz178.fino2.xts = herz.data$herz178
+  herz258.fino2.xts = herz.data$herz258
+
+  # for Lindenberg
+  idx = GetLonLatIdx(herz.fname[1], lind.lon, lind.lat, herz.lon, herz.lat)
+  lonidx = idx$lonidx
+  latidx = idx$latidx
+  herz.data = ReadHerzNetcdfMonthlyDaily2Xts(herz.param, herz.fname,
+                                             herz.tsstart, herz.tsend,
+                                             lonidx, latidx,
+                                             ana.time.res, herz.profile,
+                                             verb.era.dat)
+  herz10.lind.xts = herz.data$herz10
+  herz35.lind.xts = herz.data$herz35
+  herz69.lind.xts = herz.data$herz69
+  herz116.lind.xts = herz.data$herz116
+  herz178.lind.xts = herz.data$herz178
+  herz258.lind.xts = herz.data$herz258
+
+  # for Cabauw
+  idx = GetLonLatIdx(herz.fname[1], cabauw.lon, cabauw.lat, herz.lon, herz.lat)
+  lonidx = idx$lonidx
+  latidx = idx$latidx
+  herz.data = ReadHerzNetcdfMonthlyDaily2Xts(herz.param, herz.fname,
+                                             herz.tsstart, herz.tsend,
+                                             lonidx, latidx,
+                                             ana.time.res, herz.profile,
+                                             verb.era.dat)
+  herz10.cabauw.xts = herz.data$herz10
+  herz35.cabauw.xts = herz.data$herz35
+  herz69.cabauw.xts = herz.data$herz69
+  herz116.cabauw.xts = herz.data$herz116
+  herz178.cabauw.xts = herz.data$herz178
+  herz258.cabauw.xts = herz.data$herz258
+
+} else if (ana.time.res$time.res == ana.time.res$hourly) {
+
+  herz.fname.names = names(herz.fname)
+  for (name.step in seq(herz.fname.names)) {
+    tower.hourly.data = ReadHerzNetcdfHourly2Xts(herz.param, herz.fname[[name.step]],
+                                                 herz.tsstart, herz.tsend,
+                                                 herz.profile)
+    if (herz.fname.names[name.step] == "Fino1") {
+      herz10.fino1.xts = tower.hourly.data$herz10
+      herz35.fino1.xts = tower.hourly.data$herz35
+      herz69.fino1.xts = tower.hourly.data$herz69
+      herz116.fino1.xts = tower.hourly.data$herz116
+      herz178.fino1.xts = tower.hourly.data$herz178
+      herz258.fino1.xts = tower.hourly.data$herz258
+    } else if (herz.fname.names[name.step] == "Fino2") {
+      herz10.fino2.xts = tower.hourly.data$herz10
+      herz35.fino2.xts = tower.hourly.data$herz35
+      herz69.fino2.xts = tower.hourly.data$herz69
+      herz116.fino2.xts = tower.hourly.data$herz116
+      herz178.fino2.xts = tower.hourly.data$herz178
+      herz258.fino2.xts = tower.hourly.data$herz258
+    } else if (herz.fname.names[name.step] == "Lindenberg") {
+      herz10.lind.xts = tower.hourly.data$herz10
+      herz35.lind.xts = tower.hourly.data$herz35
+      herz69.lind.xts = tower.hourly.data$herz69
+      herz116.lind.xts = tower.hourly.data$herz116
+      herz178.lind.xts = tower.hourly.data$herz178
+      herz258.lind.xts = tower.hourly.data$herz258
+    } else if (herz.fname.names[name.step] == "Cabauw") {
+      herz10.cabauw.xts = tower.hourly.data$herz10
+      herz35.cabauw.xts = tower.hourly.data$herz35
+      herz69.cabauw.xts = tower.hourly.data$herz69
+      herz116.cabauw.xts = tower.hourly.data$herz116
+      herz178.cabauw.xts = tower.hourly.data$herz178
+      herz258.cabauw.xts = tower.hourly.data$herz258
+    } else {
+      CallStop(paste0("This tower name was not expected: ",
+                      herz.fname.names[name.step]))
+    }
+  }
+  era20c10.fino1.xts = NULL
+  era20c100.fino1.xts = NULL
+  era20c10.fino2.xts = NULL
+  era20c100.fino2.xts = NULL
+  era20c10.lind.xts = NULL
+  era20c100.lind.xts = NULL
+  era20c10.cabauw.xts = NULL
+  era20c100.cabauw.xts = NULL
 }
-
-# for FINO1
-# only read first file name (if there are more than one)
-# because all daily files have the same grid
-idx = GetLonLatIdx(herz.fname[1], fino1.lon, fino1.lat, herz.lon, herz.lat)
-lonidx = idx$lonidx
-latidx = idx$latidx
-herz.data = ReadHerzNetcdfMonthlyDaily2Xts(herz.param, herz.fname,
-                                           herz.tsstart, herz.tsend,
-                                           lonidx, latidx,
-                                           ana.time.res, herz.profile,
-                                           verb.era.dat)
-herz10.fino1.xts = herz.data$herz10
-herz35.fino1.xts = herz.data$herz35
-herz69.fino1.xts = herz.data$herz69
-herz116.fino1.xts = herz.data$herz116
-herz178.fino1.xts = herz.data$herz178
-herz258.fino1.xts = herz.data$herz258
-
-# for FINO2
-idx = GetLonLatIdx(herz.fname[1], fino2.lon, fino2.lat, herz.lon, herz.lat)
-lonidx = idx$lonidx
-latidx = idx$latidx
-herz.data = ReadHerzNetcdfMonthlyDaily2Xts(herz.param, herz.fname,
-                                           herz.tsstart, herz.tsend,
-                                           lonidx, latidx,
-                                           ana.time.res, herz.profile,
-                                           verb.era.dat)
-herz10.fino2.xts = herz.data$herz10
-herz35.fino2.xts = herz.data$herz35
-herz69.fino2.xts = herz.data$herz69
-herz116.fino2.xts = herz.data$herz116
-herz178.fino2.xts = herz.data$herz178
-herz258.fino2.xts = herz.data$herz258
-
-# for Lindenberg
-idx = GetLonLatIdx(herz.fname[1], lind.lon, lind.lat, herz.lon, herz.lat)
-lonidx = idx$lonidx
-latidx = idx$latidx
-herz.data = ReadHerzNetcdfMonthlyDaily2Xts(herz.param, herz.fname,
-                                           herz.tsstart, herz.tsend,
-                                           lonidx, latidx,
-                                           ana.time.res, herz.profile,
-                                           verb.era.dat)
-herz10.lind.xts = herz.data$herz10
-herz35.lind.xts = herz.data$herz35
-herz69.lind.xts = herz.data$herz69
-herz116.lind.xts = herz.data$herz116
-herz178.lind.xts = herz.data$herz178
-herz258.lind.xts = herz.data$herz258
-
-# for Cabauw
-idx = GetLonLatIdx(herz.fname[1], cabauw.lon, cabauw.lat, herz.lon, herz.lat)
-lonidx = idx$lonidx
-latidx = idx$latidx
-herz.data = ReadHerzNetcdfMonthlyDaily2Xts(herz.param, herz.fname,
-                                           herz.tsstart, herz.tsend,
-                                           lonidx, latidx,
-                                           ana.time.res, herz.profile,
-                                           verb.era.dat)
-herz10.cabauw.xts = herz.data$herz10
-herz35.cabauw.xts = herz.data$herz35
-herz69.cabauw.xts = herz.data$herz69
-herz116.cabauw.xts = herz.data$herz116
-herz178.cabauw.xts = herz.data$herz178
-herz258.cabauw.xts = herz.data$herz258
 
 # == get time series of same length ==
 climobj = GetTowerObject(tower.xts=fino1.100.xts,
@@ -192,7 +245,7 @@ climobj = GetTowerObject(tower.xts=fino1.100.xts,
                          herz.tsend=herz.tsend, era20c.tsend=era20c.tsend,
                          tower.name="Fino1", tower.lon=fino1.lon,
                          tower.lat=fino1.lat, tower.param=fino1.param,
-                         herz.param=herz.param, era20c.param=era20c.param)
+                         era20c.param=era20c.param)
 fino1.climobj = climobj$tower.object
 
 climobj = GetTowerObject(tower.xts=fino2.102.xts,
@@ -208,7 +261,7 @@ climobj = GetTowerObject(tower.xts=fino2.102.xts,
                          herz.tsend=herz.tsend, era20c.tsend=era20c.tsend,
                          tower.name="Fino2", tower.lon=fino2.lon,
                          tower.lat=fino2.lat, tower.param=fino2.param,
-                         herz.param=herz.param, era20c.param=era20c.param)
+                         era20c.param=era20c.param)
 fino2.climobj = climobj$tower.object
 
 climobj = GetTowerObject(tower.xts=lind.10.xts, tower2.xts=lind.20.xts,
@@ -226,7 +279,7 @@ climobj = GetTowerObject(tower.xts=lind.10.xts, tower2.xts=lind.20.xts,
                          herz.tsend=herz.tsend, era20c.tsend=era20c.tsend,
                          tower.name="Lindenberg", tower.lon=lind.lon,
                          tower.lat=lind.lat, tower.param=lind.param,
-                         herz.param=herz.param, era20c.param=era20c.param)
+                         era20c.param=era20c.param)
 lind.climobj = climobj$tower.object
 
 climobj = GetTowerObject(tower.xts=cabauw.10.xts, tower2.xts=cabauw.20.xts,
@@ -244,7 +297,7 @@ climobj = GetTowerObject(tower.xts=cabauw.10.xts, tower2.xts=cabauw.20.xts,
                          herz.tsend=herz.tsend, era20c.tsend=era20c.tsend,
                          tower.name="Cabauw", tower.lon=cabauw.lon,
                          tower.lat=cabauw.lat, tower.param=cabauw.param,
-                         herz.param=herz.param, era20c.param=era20c.param)
+                         era20c.param=era20c.param)
 cabauw.climobj = climobj$tower.object
 
 #-----------------------------------------------------------------------------

@@ -227,6 +227,9 @@ ExtractTowerData <- function(file.name, para.name, ana.time.res) {
     } else if (ana.time.res$time.res == ana.time.res$daily) {
       time.vals = as.POSIXct(strptime(dat$time, format="%Y-%m-%d"),
                              format="%Y-%m-%d", tz = "UTC")
+    } else if (ana.time.res$time.res == ana.time.res$hourly) {
+      time.vals = as.POSIXct(strptime(dat$time, format="%Y-%m-%d %H:%M:%S"),
+                             format="%Y-%m-%d %H:%M:%S", tz = "UTC")
     }
     data.xts = xts(dat$data, order.by=time.vals)
     data.lst[[para.name[cnt]]] = data.xts

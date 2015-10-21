@@ -2,12 +2,12 @@
 #' @description This function reads HErZ reanalysis data at the point of the station
 #'   location of monthly or daily data and for the complete profile consisting of
 #'   six model levels (which are hard coded into variable names here because they
-#'   are assumed to stay the way they are) or only the 10m and 116m model level.
-#'   After reading and temporarily storing into a data frame, the return values of
-#'   this function are extended time series holding the complete time series (time)
-#'   at each model level (windspeed). The time steps of the monthly time series is
-#'   given with precision of months, those of daily time series with precision of
-#'   days.
+#'   are assumed to stay the way they are). After reading and temporarily storing
+#'   into a data frame, the return values of this function are extended time series
+#'   holding the complete time series (time) at each model level (windspeed). Only
+#'   here it is decided whether to return the complete profile ore only 10m and 100m
+#'   data. The time steps of the monthly time series is given with precision of
+#'   months, those of daily time series with precision of days.
 #' @param herz.param string of length n holding the parameters of the n different
 #'   model levels.
 #' @param herz.fname string of length n holding the file names of the n different
@@ -35,68 +35,41 @@ ReadHerzNetcdfMonthlyDaily2Xts <- function(herz.param, herz.fname,
 
   # read HErZ data into a data.frame
   if (ana.time.res$time.res == ana.time.res$monthly) {
-    if (herz.profile) { # monthly profile
-      dat10 = ReadNetcdf(herz.param[1], herz.fname, count=c(1,1,-1),
-                         start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-      dat35 = ReadNetcdf(herz.param[2], herz.fname, count=c(1,1,-1),
-                         start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-      dat69 = ReadNetcdf(herz.param[3], herz.fname, count=c(1,1,-1),
-                         start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-      dat116 = ReadNetcdf(herz.param[4], herz.fname, count=c(1,1,-1),
-                          start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-      dat178 = ReadNetcdf(herz.param[5], herz.fname, count=c(1,1,-1),
-                          start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-      dat258 = ReadNetcdf(herz.param[6], herz.fname, count=c(1,1,-1),
-                          start=c(lonidx, latidx, 1), verb.dat=verb.dat)
+    dat10 = ReadNetcdf(herz.param[1], herz.fname, count=c(1,1,-1),
+                       start=c(lonidx, latidx, 1), verb.dat=verb.dat)
+    dat35 = ReadNetcdf(herz.param[2], herz.fname, count=c(1,1,-1),
+                       start=c(lonidx, latidx, 1), verb.dat=verb.dat)
+    dat69 = ReadNetcdf(herz.param[3], herz.fname, count=c(1,1,-1),
+                       start=c(lonidx, latidx, 1), verb.dat=verb.dat)
+    dat116 = ReadNetcdf(herz.param[4], herz.fname, count=c(1,1,-1),
+                        start=c(lonidx, latidx, 1), verb.dat=verb.dat)
+    dat178 = ReadNetcdf(herz.param[5], herz.fname, count=c(1,1,-1),
+                        start=c(lonidx, latidx, 1), verb.dat=verb.dat)
+    dat258 = ReadNetcdf(herz.param[6], herz.fname, count=c(1,1,-1),
+                        start=c(lonidx, latidx, 1), verb.dat=verb.dat)
 
-      ndf = data.frame(dat10$time, dat10$data, dat35$data, dat69$data,
-                       dat116$data, dat178$data, dat258$data)
-
-    } else { # monthly 10m, 116m
-
-      dat10 = ReadNetcdf(herz.param[1], herz.fname, count=c(1,1,-1),
-                         start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-      dat116 = ReadNetcdf(herz.param[2], herz.fname, count=c(1,1,-1),
-                          start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-
-      ndf = data.frame(dat10$time, dat10$data, dat116$data)
-    }
+    ndf = data.frame(dat10$time, dat10$data, dat35$data, dat69$data,
+                     dat116$data, dat178$data, dat258$data)
 
   } else if (ana.time.res$time.res == ana.time.res$daily) {
 
-    if (herz.profile) { # daily profile
-      ndf = data.frame()
-      for (step in seq(herz.fname)) {
-        dat10 = ReadNetcdf(herz.param[1], herz.fname[step], count=c(1,1,-1),
-                           start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-        dat35 = ReadNetcdf(herz.param[2], herz.fname[step], count=c(1,1,-1),
-                           start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-        dat69 = ReadNetcdf(herz.param[3], herz.fname[step], count=c(1,1,-1),
-                           start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-        dat116 = ReadNetcdf(herz.param[4], herz.fname[step], count=c(1,1,-1),
-                            start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-        dat178 = ReadNetcdf(herz.param[5], herz.fname[step], count=c(1,1,-1),
-                            start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-        dat258 = ReadNetcdf(herz.param[6], herz.fname[step], count=c(1,1,-1),
-                            start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-        df = data.frame(dat10$time, dat10$data, dat35$data, dat69$data,
-                        dat116$data, dat178$data, dat258$data)
-        ndf = rbind(ndf, df)
-      }
-
-    } else { # daily 10m, 116m
-
-      ndf = data.frame()
-      for (step in seq(herz.fname)) {
-        dat10 = ReadNetcdf(herz.param[1], herz.fname[step], count=c(1,1,-1),
-                           start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-
-        dat116 = ReadNetcdf(herz.param[2], herz.fname[step], count=c(1,1,-1),
-                            start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-
-        df = data.frame(dat10$time, dat10$data, dat116$data)
-        ndf = rbind(ndf, df)
-      }
+    ndf = data.frame()
+    for (step in seq(herz.fname)) {
+      dat10 = ReadNetcdf(herz.param[1], herz.fname[step], count=c(1,1,-1),
+                         start=c(lonidx, latidx, 1), verb.dat=verb.dat)
+      dat35 = ReadNetcdf(herz.param[2], herz.fname[step], count=c(1,1,-1),
+                         start=c(lonidx, latidx, 1), verb.dat=verb.dat)
+      dat69 = ReadNetcdf(herz.param[3], herz.fname[step], count=c(1,1,-1),
+                         start=c(lonidx, latidx, 1), verb.dat=verb.dat)
+      dat116 = ReadNetcdf(herz.param[4], herz.fname[step], count=c(1,1,-1),
+                          start=c(lonidx, latidx, 1), verb.dat=verb.dat)
+      dat178 = ReadNetcdf(herz.param[5], herz.fname[step], count=c(1,1,-1),
+                          start=c(lonidx, latidx, 1), verb.dat=verb.dat)
+      dat258 = ReadNetcdf(herz.param[6], herz.fname[step], count=c(1,1,-1),
+                          start=c(lonidx, latidx, 1), verb.dat=verb.dat)
+      df = data.frame(dat10$time, dat10$data, dat35$data, dat69$data,
+                      dat116$data, dat178$data, dat258$data)
+      ndf = rbind(ndf, df)
     }
   }
 
@@ -107,6 +80,54 @@ ReadHerzNetcdfMonthlyDaily2Xts <- function(herz.param, herz.fname,
     ndf$dat10.time = as.POSIXct(strptime(ndf$dat10.time, format="%Y-%m-%d"),
                                 format="%Y-%m-%d", tz = "UTC")
   }
+  timestr = SetToDate(herz.tsstart, herz.tsend)
+  herz10.xts = xts(ndf$dat10.data, order.by=ndf$dat10.time)
+  herz10.xts = herz10.xts[timestr]
+  herz116.xts = xts(ndf$dat116.data, order.by=ndf$dat10.time)
+  herz116.xts = herz116.xts[timestr]
+  if (herz.profile) {
+    herz35.xts = xts(ndf$dat35.data, order.by=ndf$dat10.time)
+    herz35.xts = herz35.xts[timestr]
+    herz69.xts = xts(ndf$dat69.data, order.by=ndf$dat10.time)
+    herz69.xts = herz69.xts[timestr]
+    herz178.xts = xts(ndf$dat178.data, order.by=ndf$dat10.time)
+    herz178.xts = herz178.xts[timestr]
+    herz258.xts = xts(ndf$dat258.data, order.by=ndf$dat10.time)
+    herz258.xts = herz258.xts[timestr]
+  } else {
+    herz35.xts = NULL
+    herz69.xts = NULL
+    herz178.xts = NULL
+    herz258.xts = NULL
+  }
+
+  return(list(herz10=herz10.xts, herz35=herz35.xts, herz69=herz69.xts,
+              herz116=herz116.xts, herz178=herz178.xts, herz258=herz258.xts))
+}
+
+#-----------------------------------------------------------------------------------
+
+#' @title
+#' @description
+#' @param
+#' @return
+ReadHerzNetcdfHourly2Xts <- function(herz.param, herz.fname,
+                                     herz.tsstart, herz.tsend,
+                                     herz.profile) {
+
+  # read HErZ data into a data.frame
+  dat10 = ReadNetcdf(herz.param, herz.fname[1])
+  dat35 = ReadNetcdf(herz.param, herz.fname[2])
+  dat69 = ReadNetcdf(herz.param, herz.fname[3])
+  dat116 = ReadNetcdf(herz.param, herz.fname[4])
+  dat178 = ReadNetcdf(herz.param, herz.fname[5])
+  dat258 = ReadNetcdf(herz.param, herz.fname[6])
+  ndf = data.frame(dat10$time, dat10$data, dat35$data, dat69$data,
+                   dat116$data, dat178$data, dat258$data)
+
+  # convert data.frame of HErZ data into an extended time series
+  ndf$dat10.time = as.POSIXct(strptime(ndf$dat10.time, format="%Y-%m-%d %H:%M:%S"),
+                              format="%Y-%m-%d %H:%M:%S", tz = "UTC")
   timestr = SetToDate(herz.tsstart, herz.tsend)
   herz10.xts = xts(ndf$dat10.data, order.by=ndf$dat10.time)
   herz10.xts = herz10.xts[timestr]
@@ -230,7 +251,7 @@ GetTowerProfileTS <- function(tower.xts, tower2.xts=NULL, tower3.xts=NULL,
                               tower.name=NULL) {
 
   if (!is.null(tower.name) & tower.name != "Fino1" & tower.name != "Fino2" &
-        tower.name != "Lindenberg" & tower.name != "Cabauw") {
+      tower.name != "Lindenberg" & tower.name != "Cabauw") {
     CallStop(paste0("Unexpected tower.name: ", tower.name, " "))
   }
 
@@ -293,16 +314,20 @@ GetTowerProfileTS <- function(tower.xts, tower2.xts=NULL, tower3.xts=NULL,
 
 #-----------------------------------------------------------------------------------
 
+#' @title
+#' @description
+#' @param
+#' @return
 GetTowerObject <- function(tower.xts, tower2.xts=NULL, tower3.xts=NULL,
                            tower4.xts=NULL, tower5.xts=NULL, tower6.xts=NULL,
                            herz10.xts, herz35.xts, herz69.xts, herz116.xts,
                            herz178.xts, herz258.xts, era20c10.xts, era20c100.xts,
                            tower.tsstart, tower.tsend, herz.tsend, era20c.tsend,
                            tower.name="", tower.lon, tower.lat,
-                           tower.param, herz.param, era20c.param) {
+                           tower.param, era20c.param) {
 
   if (nchar(tower.name) == 0 | tower.name != "Fino1" & tower.name != "Fino2" &
-        tower.name != "Lindenberg" & tower.name != "Cabauw") {
+      tower.name != "Lindenberg" & tower.name != "Cabauw") {
     CallStop(paste0("Unexpected tower.name: ", tower.name, " "))
   }
 
@@ -371,60 +396,82 @@ GetTowerObject <- function(tower.xts, tower2.xts=NULL, tower3.xts=NULL,
                          ReanaName="HErZ", StationName=tower.name,
                          latitude=tower.lat, longitude=tower.lon,
                          wind_speed=coredata(herz10.xts),
-                         height=strsplit(herz.param, '_')[[1]][[2]])
+                         height="10m")
   herz35.df = data.frame(date=index(herz35.xts),
                          ReanaName="HErZ", StationName=tower.name,
                          latitude=tower.lat, longitude=tower.lon,
                          wind_speed=coredata(herz35.xts),
-                         height=strsplit(herz.param, '_')[[2]][[2]])
+                         height="35m")
   herz69.df = data.frame(date=index(herz69.xts),
                          ReanaName="HErZ", StationName=tower.name,
                          latitude=tower.lat, longitude=tower.lon,
                          wind_speed=coredata(herz69.xts),
-                         height=strsplit(herz.param, '_')[[3]][[2]])
+                         height="69m")
   herz116.df = data.frame(date=index(herz116.xts),
                           ReanaName="HErZ", StationName=tower.name,
                           latitude=tower.lat, longitude=tower.lon,
                           wind_speed=coredata(herz116.xts),
-                          height=strsplit(herz.param, '_')[[4]][[2]])
+                          height="116m")
   herz178.df = data.frame(date=index(herz178.xts),
                           ReanaName="HErZ", StationName=tower.name,
                           latitude=tower.lat, longitude=tower.lon,
                           wind_speed=coredata(herz178.xts),
-                          height=strsplit(herz.param, '_')[[5]][[2]])
+                          height="178m")
   herz258.df = data.frame(date=index(herz258.xts),
                           ReanaName="HErZ", StationName=tower.name,
                           latitude=tower.lat, longitude=tower.lon,
                           wind_speed=coredata(herz258.xts),
-                          height=strsplit(herz.param, '_')[[6]][[2]])
-  era20c10.df = data.frame(date=index(era20c10.xts),
-                           ReanaName="ERA20C", StationName=tower.name,
-                           latitude=tower.lat, longitude=tower.lon,
-                           wind_speed=coredata(era20c10.xts),
-                           height=strsplit(era20c.param, '_')[[1]][[2]])
-  era20c100.df = data.frame(date=index(era20c100.xts),
-                            ReanaName="ERA20C", StationName=tower.name,
-                            latitude=tower.lat, longitude=tower.lon,
-                            wind_speed=coredata(era20c100.xts),
-                            height=strsplit(era20c.param, '_')[[2]][[2]])
+                          height="258m")
+  if (!is.null(era20c10.xts)) {
+    era20c10.df = data.frame(date=index(era20c10.xts),
+                             ReanaName="ERA20C", StationName=tower.name,
+                             latitude=tower.lat, longitude=tower.lon,
+                             wind_speed=coredata(era20c10.xts),
+                             height=strsplit(era20c.param, '_')[[1]][[2]])
+  }
+  if (!is.null(era20c100.xts)) {
+    era20c100.df = data.frame(date=index(era20c100.xts),
+                              ReanaName="ERA20C", StationName=tower.name,
+                              latitude=tower.lat, longitude=tower.lon,
+                              wind_speed=coredata(era20c100.xts),
+                              height=strsplit(era20c.param, '_')[[2]][[2]])
+  }
 
   if (!is.null(tower6.xts)) {
-    climate.tower.object = climate(data_tables=
-                                     list(tower=tower.df, tower2=tower2.df,
-                                          tower3=tower3.df, tower4=tower4.df,
-                                          tower5=tower5.df, tower6=tower6.df,
-                                          herz10=herz10.df, herz35=herz35.df,
-                                          herz69=herz69.df, herz116=herz116.df,
-                                          herz178=herz178.df, herz258=herz258.df,
-                                          era20c10=era20c10.df,
-                                          era20c100=era20c100.df))
+    if (!is.null(era20c10.xts) & !is.null(era20c100.xts)) {
+      climate.tower.object = climate(data_tables=
+                                       list(tower=tower.df, tower2=tower2.df,
+                                            tower3=tower3.df, tower4=tower4.df,
+                                            tower5=tower5.df, tower6=tower6.df,
+                                            herz10=herz10.df, herz35=herz35.df,
+                                            herz69=herz69.df, herz116=herz116.df,
+                                            herz178=herz178.df, herz258=herz258.df,
+                                            era20c10=era20c10.df,
+                                            era20c100=era20c100.df))
+    }  else {
+      climate.tower.object = climate(data_tables=
+                                       list(tower=tower.df, tower2=tower2.df,
+                                            tower3=tower3.df, tower4=tower4.df,
+                                            tower5=tower5.df, tower6=tower6.df,
+                                            herz10=herz10.df, herz35=herz35.df,
+                                            herz69=herz69.df, herz116=herz116.df,
+                                            herz178=herz178.df, herz258=herz258.df))
+    }
   } else {
-    climate.tower.object = climate(data_tables=
-                                     list(tower=tower.df, herz10=herz10.df,
-                                          herz35=herz35.df, herz69=herz69.df,
-                                          herz116=herz116.df, herz178=herz178.df,
-                                          herz258=herz258.df, era20c10=era20c10.df,
-                                          era20c100=era20c100.df))
+    if (!is.null(era20c10.xts) & !is.null(era20c100.xts)) {
+      climate.tower.object = climate(data_tables=
+                                       list(tower=tower.df, herz10=herz10.df,
+                                            herz35=herz35.df, herz69=herz69.df,
+                                            herz116=herz116.df, herz178=herz178.df,
+                                            herz258=herz258.df, era20c10=era20c10.df,
+                                            era20c100=era20c100.df))
+    } else {
+      climate.tower.object = climate(data_tables=
+                                       list(tower=tower.df, herz10=herz10.df,
+                                            herz35=herz35.df, herz69=herz69.df,
+                                            herz116=herz116.df, herz178=herz178.df,
+                                            herz258=herz258.df))
+    }
   }
 
   return(list(tower.object = climate.tower.object))

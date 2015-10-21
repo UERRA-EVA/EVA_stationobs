@@ -9,7 +9,7 @@ res.switch = high.res
 hourly="hourly"
 daily="daily"
 monthly="monthly"
-time.res=daily
+time.res=hourly
 ana.time.res = list(hourly=hourly, daily=daily, monthly=monthly, time.res=time.res)
 if (ana.time.res$time.res == ana.time.res$monthly) {
   time.ext = "Monthly"
@@ -42,6 +42,7 @@ if (ana.time.res$time.res == ana.time.res$monthly) {
     era20c.fname =
       "./data/10m100m_WindSpeedDirection_ERA20C_MonMean_origRes_1900to2010.nc"
   }
+  CheckFile(era20c.fname)
 } else if (ana.time.res$time.res == ana.time.res$daily) {
   if (res.switch == high.res) {
     era20c.fname =
@@ -50,8 +51,8 @@ if (ana.time.res$time.res == ana.time.res$monthly) {
     era20c.fname =
       "./data/10m100m_WindSpeedDirection_ERA20C_DayMean_origRes_1900to2010.nc"
   }
+  CheckFile(era20c.fname)
 }
-CheckFile(era20c.fname)
 # variable names to read from above files
 era20c.param = c("windspeed_10m", "windspeed_100m")
 
@@ -65,6 +66,7 @@ if (ana.time.res$time.res == ana.time.res$monthly) {
     eraI.fname =
       "./data/10mWindSpeedDirection-2mTemp_ERAInterim_MonMean_origRes_1979to2014.nc"
   }
+  CheckFile(eraI.fname)
 } else if (ana.time.res$time.res == ana.time.res$daily) {
   if (res.switch == high.res) {
     eraI.fname =
@@ -73,8 +75,8 @@ if (ana.time.res$time.res == ana.time.res$monthly) {
     eraI.fname =
       "./data/10mWindSpeedDirection-2mTemp_ERAInterim_DayMean_origRes_1979to2014.nc"
   }
+  CheckFile(eraI.fname)
 }
-CheckFile(eraI.fname)
 # variable names to read from above files
 eraI.param = "windspeed_10m"
 
@@ -115,34 +117,38 @@ if (ana.time.res$time.res == ana.time.res$monthly) {
                  "./data/WindSpeed_2013_DayMean.nc",
                  "./data/WindSpeed_2014_DayMean.nc")
 } else if (ana.time.res$time.res == ana.time.res$hourly) {
+  # file names need to be in increasing height order !!!
   herz.fname = list(Fino1=c("./data/WindSpeed_1995TO2014_HErZ-10m_at_Fino1.nc",
-                 "./data/WindSpeed_1995TO2014_HErZ-178m_at_Fino1.nc",
-                 "./data/WindSpeed_1995TO2014_HErZ-116m_at_Fino1.nc",
-                 "./data/WindSpeed_1995TO2014_HErZ-35m_at_Fino1.nc",
-                 "./data/WindSpeed_1995TO2014_HErZ-258m_at_Fino1.nc",
-                 "./data/WindSpeed_1995TO2014_HErZ-69m_at_Fino1.nc"),
-                 Fino2=c("./data/WindSpeed_1995TO2014_HErZ-35m_at_Fino2.nc",
-                 "./data/WindSpeed_1995TO2014_HErZ-10m_at_Fino2.nc",
-                 "./data/WindSpeed_1995TO2014_HErZ-116m_at_Fino2.nc",
-                 "./data/WindSpeed_1995TO2014_HErZ-178m_at_Fino2.nc",
-                 "./data/WindSpeed_1995TO2014_HErZ-258m_at_Fino2.nc",
-                 "./data/WindSpeed_1995TO2014_HErZ-69m_at_Fino2.nc"),
-                 Lindenberg=c("./data/WindSpeed_1995TO2014_HErZ-69m_at_Lindenberg.nc",
-                 "./data/WindSpeed_1995TO2014_HErZ-10m_at_Lindenberg.nc",
-                 "./data/WindSpeed_1995TO2014_HErZ-258m_at_Lindenberg.nc",
-                 "./data/WindSpeed_1995TO2014_HErZ-116m_at_Lindenberg.nc",
-                 "./data/WindSpeed_1995TO2014_HErZ-178m_at_Lindenberg.nc",
-                 "./data/WindSpeed_1995TO2014_HErZ-35m_at_Lindenberg.nc"),
-                 Cabauw=c("./data/WindSpeed_1995TO2014_HErZ-178m_at_Cabauw.nc",
-                 "./data/WindSpeed_1995TO2014_HErZ-10m_at_Cabauw.nc",
-                 "./data/WindSpeed_1995TO2014_HErZ-258m_at_Cabauw.nc",
-                 "./data/WindSpeed_1995TO2014_HErZ-69m_at_Cabauw.nc",
-                 "./data/WindSpeed_1995TO2014_HErZ-35m_at_Cabauw.nc",
-                 "./data/cesar_tower_meteo_lb1_t10_v1.1_2000TO2015.nc",
-                 "./data/WindSpeed_1995TO2014_HErZ-116m_at_Cabauw.nc")
+                            "./data/WindSpeed_1995TO2014_HErZ-35m_at_Fino1.nc",
+                            "./data/WindSpeed_1995TO2014_HErZ-69m_at_Fino1.nc",
+                            "./data/WindSpeed_1995TO2014_HErZ-116m_at_Fino1.nc",
+                            "./data/WindSpeed_1995TO2014_HErZ-178m_at_Fino1.nc",
+                            "./data/WindSpeed_1995TO2014_HErZ-258m_at_Fino1.nc"),
+                    Fino2=c("./data/WindSpeed_1995TO2014_HErZ-10m_at_Fino2.nc",
+                            "./data/WindSpeed_1995TO2014_HErZ-35m_at_Fino2.nc",
+                            "./data/WindSpeed_1995TO2014_HErZ-69m_at_Fino2.nc",
+                            "./data/WindSpeed_1995TO2014_HErZ-116m_at_Fino2.nc",
+                            "./data/WindSpeed_1995TO2014_HErZ-178m_at_Fino2.nc",
+                            "./data/WindSpeed_1995TO2014_HErZ-258m_at_Fino2.nc"),
+                    Lindenberg=c("./data/WindSpeed_1995TO2014_HErZ-10m_at_Lindenberg.nc",
+                                 "./data/WindSpeed_1995TO2014_HErZ-35m_at_Lindenberg.nc",
+                                 "./data/WindSpeed_1995TO2014_HErZ-69m_at_Lindenberg.nc",
+                                 "./data/WindSpeed_1995TO2014_HErZ-116m_at_Lindenberg.nc",
+                                 "./data/WindSpeed_1995TO2014_HErZ-178m_at_Lindenberg.nc",
+                                 "./data/WindSpeed_1995TO2014_HErZ-258m_at_Lindenberg.nc"),
+                    Cabauw=c("./data/WindSpeed_1995TO2014_HErZ-10m_at_Cabauw.nc",
+                             "./data/WindSpeed_1995TO2014_HErZ-35m_at_Cabauw.nc",
+                             "./data/WindSpeed_1995TO2014_HErZ-69m_at_Cabauw.nc",
+                             "./data/WindSpeed_1995TO2014_HErZ-116m_at_Cabauw.nc",
+                             "./data/WindSpeed_1995TO2014_HErZ-178m_at_Cabauw.nc",
+                             "./data/WindSpeed_1995TO2014_HErZ-258m_at_Cabauw.nc")
   )
 }
-CheckFile(herz.fname)
+CheckFile(herz.fname$Fino1)
+CheckFile(herz.fname$Fino2)
+CheckFile(herz.fname$Lindenberg)
+CheckFile(herz.fname$Cabauw)
+
 # variable names to read from above files
 if (ana.time.res$time.res == ana.time.res$monthly | ana.time.res$time.res == ana.time.res$daily) {
   if (herz.profile) {
