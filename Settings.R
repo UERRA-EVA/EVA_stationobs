@@ -79,9 +79,17 @@ CheckFile(eraI.fname)
 eraI.param = "windspeed_10m"
 
 #=== HErZ ===
+# decide whether to read herz grid file in grb (T) or in nc (F) format
+herz.grid.read.grb = T
 # grid file name of the COSMO HErZ reanalysis
-herz.grid = "./data/COSMO_REA6_CONST_withOUTsponge.grb"
-CheckFile(herz.grid)
+if (herz.grid.read.grb) {
+  herz.grid.grb = "./data/COSMO_REA6_CONST_withOUTsponge.grb"
+  CheckFile(herz.grid.grb)
+} else {
+  herz.grid.nc = "./data/COSMO_REA6_CONST_withOUTsponge.nc"
+  CheckFile(herz.grid.nc)
+}
+
 # filename(s) of the COSMO HErZ reanalysis file(s)
 if (ana.time.res$time.res == ana.time.res$monthly) {
   herz.fname = "./data/WindSpeed_HErZ_MonMean_1995to2014.nc"

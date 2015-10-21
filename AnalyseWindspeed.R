@@ -108,10 +108,15 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
 
   # read HErZ data
   cat(paste0("  **  Reading HErZ reanalysis data\n"))
-  nlon = 848
-  nlat = 824
-  herz.lon = readGrib(herz.grid, nlon, nlat, 1, var='RLON', verb.grib=verb.grib)
-  herz.lat = readGrib(herz.grid, nlon, nlat, 1, var='RLAT', verb.grib=verb.grib)
+  if (herz.grid.read.grb) {
+    nlon = 848
+    nlat = 824
+    herz.lon = readGrib(herz.grid.grb, nlon, nlat, 1, var="RLON", verb.grib=verb.grib)
+    herz.lat = readGrib(herz.grid.grb, nlon, nlat, 1, var="RLAT", verb.grib=verb.grib)
+  } else {
+    herz.lon = ReadNetcdf("longitude", herz.grid.nc, conv.time=F)$data
+    herz.lat = ReadNetcdf("latitude", herz.grid.nc, conv.time=F)$data
+  }
 
   # only read first file name (if there are more than one)
   # because all daily files have the same grid

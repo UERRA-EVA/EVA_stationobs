@@ -115,14 +115,17 @@ readGrib <- function(filename, nlon, nlat, nlev, var='undef', out='Rfile.dat',
 #'   It needs to be of the same size as variable (for further details see the help
 #'   of \code{\link{get.var.ncdf}}). The default is to read the complete variable
 #'   which leaves count unset.
-#' @param revert in an optional boolean to decided whether to revert the data in
-#'   North-South direction. Default is not to revert the data (FALSE)
-#' @param verb.dat optional boolean to determine whether to verbosely write out what
+#' @param revert is an optional boolean to decided whether to revert the data in
+#'   North-South direction. Default is not to revert the data (revert=FALSE)
+#' @param conv.time is an optional boolean to decided whether to read time and
+#'   convert it into R POSIX format; the default is to read and convert time
+#'   (conv.time=TRUE)
+#' @param verb.dat is an optional boolean to determine whether to verbosely write out what
 #'   is happening (T) or not (F); the default is to suppress output (verb.dat=FALSE).
 #' @return Return a named list (data=,lon=,lat=,time=) holding the read data,
 #'   longitude, latitude, and time values.
-ReadNetcdf <- function(variable, infile, start=NULL,
-                       count=NULL, revert=FALSE, verb.dat=FALSE) {
+ReadNetcdf <- function(variable, infile, start=NULL, count=NULL,
+                       revert=FALSE, conv.time=TRUE, verb.dat=FALSE) {
 
   # === read netCDF file depending on start and count of variable index ===
   nc <- open.ncdf(infile)
@@ -143,14 +146,23 @@ ReadNetcdf <- function(variable, infile, start=NULL,
   # set missing value
   data[data==nc$var[[variable]]$missval] <- NA
 
-  # read lat and lon
-  lon <- nc$dim$lon$vals
-  lat <- nc$dim$lat$vals
+  # read 1D latitude and longitude values
+  if (!is.null(nc$dim$lon)) {
+    lon <- nc$dim$lon$vals
+    lat <- nc$dim$lat$vals
+  } else if (!is.null(nc$dim$longitude)) {
+    lon <- nc$dim$lon$vals
+    lat <- nc$dim$lat$vals
+  }
 
   close.ncdf(nc)
 
   # read time
-  time.vals <- convertDateNcdf2R(infile)
+  if (conv.time) {
+    time.vals <- convertDateNcdf2R(infile)
+  } else {
+    time.vals <- NULL
+  }
 
   #=== reverse latitude vector
   if (revert) {
