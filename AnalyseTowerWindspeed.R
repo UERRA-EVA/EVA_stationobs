@@ -344,7 +344,7 @@ if(plot.histograms) {
 
 #-----------------------------------------------------------------------------
 
-if (plot.ProfileTS & ana.time.res == monthly) {
+if (plot.ProfileTS & ana.time.res$time.res == ana.time.res$monthly) {
   cat("  **  Plotting tower-ERA profile TS\n")
   fname = paste0(outdir, "LindenbergHErZERA20C_relativeDifferences_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
