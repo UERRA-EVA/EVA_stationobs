@@ -1246,13 +1246,10 @@ PlotTowerERAprofileBP <- function(tower.obj, fname, ana.time.res) {
   hori=TRUE
   nch = TRUE
   oline = FALSE
-  if (ana.time.res$time.res == ana.time.res$monthly) {
-    wind.range = c(0,15)
-    plot.ext = " Monthly "
-  } else if (ana.time.res$time.res == ana.time.res$daily) {
-    wind.range = c(0,20)
-    plot.ext = " Daily "
-  }
+  wind.range = c(0,20)
+  if (ana.time.res$time.res == ana.time.res$monthly) tit.ext = "Monthly"
+  if (ana.time.res$time.res == ana.time.res$daily) tit.ext = "Daily"
+  if (ana.time.res$time.res == ana.time.res$hourly) tit.ext = "Hourly"
 
   PS = PlottingSettings(t.obj)
   pdf(fname, width=PS$port.a4width, height=PS$port.a4height/0.8,
@@ -1260,87 +1257,172 @@ PlotTowerERAprofileBP <- function(tower.obj, fname, ana.time.res) {
   par(mar=c(4,7,3,0.5), cex=1.5)
 
   if (t.obj$tower$data$StationName[1] == "Lindenberg") {
-    boxplot.default(t.obj$tower$data$wind_speed,
-                    t.obj$herz10$data$wind_speed,
-                    t.obj$era20c10$data$wind_speed,
-                    t.obj$tower2$data$wind_speed,
-                    t.obj$herz35$data$wind_speed,
-                    t.obj$tower3$data$wind_speed,
-                    t.obj$tower4$data$wind_speed,
-                    t.obj$herz69$data$wind_speed,
-                    t.obj$tower5$data$wind_speed,
-                    t.obj$tower6$data$wind_speed,
-                    t.obj$era20c100$data$wind_speed,
-                    t.obj$herz116$data$wind_speed,
-                    horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
-                    boxwex=bwex, staplewex=swex, las=1, ylim=wind.range,
-                    names=c("Lind 10m", "HErZ 10m", "ERA20C 10m", "Lind 20m",
-                            "HErZ 35m", "Lind 40m", "Lind 60m", "HErZ 69m",
-                            "Lind 80m", "Lind 98m", "ERA20C 100m", "HErZ 116m"),
-                    col=c("red", "blue", "green", "red", "blue", "red", "red",
-                          "blue", "red", "red", "green", "blue"))
+    if (ana.time.res$time.res == ana.time.res$hourly) {
+      boxplot.default(t.obj$tower$data$wind_speed,
+                      t.obj$herz10$data$wind_speed,
+                      dummy,
+                      t.obj$tower2$data$wind_speed,
+                      t.obj$herz35$data$wind_speed,
+                      t.obj$tower3$data$wind_speed,
+                      t.obj$tower4$data$wind_speed,
+                      t.obj$herz69$data$wind_speed,
+                      t.obj$tower5$data$wind_speed,
+                      t.obj$tower6$data$wind_speed,
+                      dummy,
+                      t.obj$herz116$data$wind_speed,
+                      horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
+                      boxwex=bwex, staplewex=swex, las=1, ylim=wind.range,
+                      names=c("Lind 10m", "HErZ 10m", "", "Lind 20m",
+                              "HErZ 35m", "Lind 40m", "Lind 60m", "HErZ 69m",
+                              "Lind 80m", "Lind 98m", "", "HErZ 116m"),
+                      col=c("red", "blue", "", "red", "blue", "red", "red",
+                            "blue", "red", "red", "", "blue"))
+    } else {
+      boxplot.default(t.obj$tower$data$wind_speed,
+                      t.obj$herz10$data$wind_speed,
+                      t.obj$era20c10$data$wind_speed,
+                      t.obj$tower2$data$wind_speed,
+                      t.obj$herz35$data$wind_speed,
+                      t.obj$tower3$data$wind_speed,
+                      t.obj$tower4$data$wind_speed,
+                      t.obj$herz69$data$wind_speed,
+                      t.obj$tower5$data$wind_speed,
+                      t.obj$tower6$data$wind_speed,
+                      t.obj$era20c100$data$wind_speed,
+                      t.obj$herz116$data$wind_speed,
+                      horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
+                      boxwex=bwex, staplewex=swex, las=1, ylim=wind.range,
+                      names=c("Lind 10m", "HErZ 10m", "ERA20C 10m", "Lind 20m",
+                              "HErZ 35m", "Lind 40m", "Lind 60m", "HErZ 69m",
+                              "Lind 80m", "Lind 98m", "ERA20C 100m", "HErZ 116m"),
+                      col=c("red", "blue", "green", "red", "blue", "red", "red",
+                            "blue", "red", "red", "green", "blue"))
+    }
   } else if (t.obj$tower$data$StationName[1] == "Cabauw") {
-    boxplot.default(t.obj$tower$data$wind_speed,
-                    t.obj$herz10$data$wind_speed,
-                    t.obj$era20c10$data$wind_speed,
-                    t.obj$tower2$data$wind_speed,
-                    t.obj$herz35$data$wind_speed,
-                    t.obj$tower3$data$wind_speed,
-                    t.obj$herz69$data$wind_speed,
-                    t.obj$tower4$data$wind_speed,
-                    t.obj$era20c100$data$wind_speed,
-                    t.obj$herz116$data$wind_speed,
-                    t.obj$tower5$data$wind_speed,
-                    horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
-                    boxwex=bwex, staplewex=swex, las=1, ylim=wind.range,
-                    names=c("Cabauw 10m", "HErZ 10m", "ERA20C 10m", "Cabauw 20m",
-                            "HErZ 35m", "Cabauw 40m", "HErZ 69m", "Cabauw 80m",
-                            "ERA20C 100m", "HErZ 116m", "Cabauw 140m"),
-                    col=c("red", "blue", "green", "red", "blue", "red",
-                          "blue", "red", "green", "blue", "red"))
+    if (ana.time.res$time.res == ana.time.res$hourly) {
+      boxplot.default(t.obj$tower$data$wind_speed,
+                      t.obj$herz10$data$wind_speed,
+                      dummy,
+                      t.obj$tower2$data$wind_speed,
+                      t.obj$herz35$data$wind_speed,
+                      t.obj$tower3$data$wind_speed,
+                      t.obj$herz69$data$wind_speed,
+                      t.obj$tower4$data$wind_speed,
+                      dummy,
+                      t.obj$herz116$data$wind_speed,
+                      t.obj$tower5$data$wind_speed,
+                      horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
+                      boxwex=bwex, staplewex=swex, las=1, ylim=wind.range,
+                      names=c("Cabauw 10m", "HErZ 10m", "", "Cabauw 20m",
+                              "HErZ 35m", "Cabauw 40m", "HErZ 69m", "Cabauw 80m",
+                              "", "HErZ 116m", "Cabauw 140m"),
+                      col=c("red", "blue", "", "red", "blue", "red",
+                            "blue", "red", "", "blue", "red"))
+    } else {
+      boxplot.default(t.obj$tower$data$wind_speed,
+                      t.obj$herz10$data$wind_speed,
+                      t.obj$era20c10$data$wind_speed,
+                      t.obj$tower2$data$wind_speed,
+                      t.obj$herz35$data$wind_speed,
+                      t.obj$tower3$data$wind_speed,
+                      t.obj$herz69$data$wind_speed,
+                      t.obj$tower4$data$wind_speed,
+                      t.obj$era20c100$data$wind_speed,
+                      t.obj$herz116$data$wind_speed,
+                      t.obj$tower5$data$wind_speed,
+                      horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
+                      boxwex=bwex, staplewex=swex, las=1, ylim=wind.range,
+                      names=c("Cabauw 10m", "HErZ 10m", "ERA20C 10m", "Cabauw 20m",
+                              "HErZ 35m", "Cabauw 40m", "HErZ 69m", "Cabauw 80m",
+                              "ERA20C 100m", "HErZ 116m", "Cabauw 140m"),
+                      col=c("red", "blue", "green", "red", "blue", "red",
+                            "blue", "red", "green", "blue", "red"))
+    }
   } else if (t.obj$tower$data$StationName[1] == "Fino1") {
-    boxplot.default(dummy,
-                    t.obj$herz10$data$wind_speed,
-                    t.obj$era20c10$data$wind_speed,
-                    dummy,
-                    t.obj$herz35$data$wind_speed,
-                    dummy,
-                    dummy,
-                    t.obj$herz69$data$wind_speed,
-                    dummy,
-                    t.obj$era20c100$data$wind_speed,
-                    t.obj$tower$data$wind_speed,
-                    t.obj$herz116$data$wind_speed,
-                    horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
-                    boxwex=bwex, staplewex=swex, las=1, ylim=wind.range,
-                    names=c("", "HErZ 10m", "ERA20C 10m", "", "HErZ 35m", "", "",
-                            "HErZ 69m", "", "ERA20C 100m", "Fino1 100m", "HErZ 116m"),
-                    col=c("", "blue", "green", "", "blue", "", "", "blue", "",
-                          "green", "red", "blue"))
+    if (ana.time.res$time.res == ana.time.res$hourly) {
+      boxplot.default(dummy,
+                      t.obj$herz10$data$wind_speed,
+                      dummy,
+                      dummy,
+                      t.obj$herz35$data$wind_speed,
+                      dummy,
+                      dummy,
+                      t.obj$herz69$data$wind_speed,
+                      dummy,
+                      dummy,
+                      t.obj$tower$data$wind_speed,
+                      t.obj$herz116$data$wind_speed,
+                      horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
+                      boxwex=bwex, staplewex=swex, las=1, ylim=wind.range,
+                      names=c("", "HErZ 10m", "", "", "HErZ 35m", "", "",
+                              "HErZ 69m", "", "", "Fino1 100m", "HErZ 116m"),
+                      col=c("", "blue", "", "", "blue", "", "", "blue", "",
+                            "", "red", "blue"))
+    } else {
+      boxplot.default(dummy,
+                      t.obj$herz10$data$wind_speed,
+                      t.obj$era20c10$data$wind_speed,
+                      dummy,
+                      t.obj$herz35$data$wind_speed,
+                      dummy,
+                      dummy,
+                      t.obj$herz69$data$wind_speed,
+                      dummy,
+                      t.obj$era20c100$data$wind_speed,
+                      t.obj$tower$data$wind_speed,
+                      t.obj$herz116$data$wind_speed,
+                      horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
+                      boxwex=bwex, staplewex=swex, las=1, ylim=wind.range,
+                      names=c("", "HErZ 10m", "ERA20C 10m", "", "HErZ 35m", "", "",
+                              "HErZ 69m", "", "ERA20C 100m", "Fino1 100m", "HErZ 116m"),
+                      col=c("", "blue", "green", "", "blue", "", "", "blue", "",
+                            "green", "red", "blue"))
+    }
   } else if (t.obj$tower$data$StationName[1] == "Fino2") {
-    boxplot.default(dummy,
-                    t.obj$herz10$data$wind_speed,
-                    t.obj$era20c10$data$wind_speed,
-                    dummy,
-                    t.obj$herz35$data$wind_speed,
-                    dummy,
-                    dummy,
-                    t.obj$herz69$data$wind_speed,
-                    dummy,
-                    t.obj$era20c100$data$wind_speed,
-                    t.obj$tower$data$wind_speed,
-                    t.obj$herz116$data$wind_speed,
-                    horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
-                    boxwex=bwex, staplewex=swex, las=1, ylim=wind.range,
-                    names=c("", "HErZ 10m", "ERA20C 10m", "", "HErZ 35m", "", "",
-                            "HErZ 69m", "", "ERA20C 100m", "Fino2 102m", "HErZ 116m"),
-                    col=c("", "blue", "green", "", "blue", "", "", "blue", "",
-                          "green", "red", "blue"))
+    if (ana.time.res$time.res == ana.time.res$hourly) {
+      boxplot.default(dummy,
+                      t.obj$herz10$data$wind_speed,
+                      dummy,
+                      dummy,
+                      t.obj$herz35$data$wind_speed,
+                      dummy,
+                      dummy,
+                      t.obj$herz69$data$wind_speed,
+                      dummy,
+                      dummy,
+                      t.obj$tower$data$wind_speed,
+                      t.obj$herz116$data$wind_speed,
+                      horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
+                      boxwex=bwex, staplewex=swex, las=1, ylim=wind.range,
+                      names=c("", "HErZ 10m", "", "", "HErZ 35m", "", "",
+                              "HErZ 69m", "", "", "Fino2 102m", "HErZ 116m"),
+                      col=c("", "blue", "", "", "blue", "", "", "blue", "",
+                            "", "red", "blue"))
+    } else {
+      boxplot.default(dummy,
+                      t.obj$herz10$data$wind_speed,
+                      t.obj$era20c10$data$wind_speed,
+                      dummy,
+                      t.obj$herz35$data$wind_speed,
+                      dummy,
+                      dummy,
+                      t.obj$herz69$data$wind_speed,
+                      dummy,
+                      t.obj$era20c100$data$wind_speed,
+                      t.obj$tower$data$wind_speed,
+                      t.obj$herz116$data$wind_speed,
+                      horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
+                      boxwex=bwex, staplewex=swex, las=1, ylim=wind.range,
+                      names=c("", "HErZ 10m", "ERA20C 10m", "", "HErZ 35m", "", "",
+                              "HErZ 69m", "", "ERA20C 100m", "Fino2 102m", "HErZ 116m"),
+                      col=c("", "blue", "green", "", "blue", "", "", "blue", "",
+                            "green", "red", "blue"))
+    }
   } else {
     CallStop(paste0("Unexpected tower name: ",
                     tower.obj$climate_data_objects$tower$data$StationName[1], " "))
   }
-  title(main=paste0("Monthly wind speed profile at ",
+  title(main=paste0(tit.ext, " wind speed profile at ",
                     t.obj$tower$data$StationName[1]), line=1, cex=1.5)
   mtext(x.labs, side=1, line=2, cex=1.5)
   dev.off()
