@@ -900,6 +900,7 @@ PlotHistogramsTower <- function(outdir, fname, ana.time.res, tower.obj) {
   axis.y = 's'
   if (ana.time.res$time.res == ana.time.res$monthly) monthly.ext = 'Monthly'
   if (ana.time.res$time.res == ana.time.res$daily) monthly.ext = 'Daily'
+  if (ana.time.res$time.res == ana.time.res$hourly) monthly.ext = 'Hourly'
 
   xlabname.empty = ""
   xlabname.full = "wind speed [m/s]"
@@ -912,12 +913,18 @@ PlotHistogramsTower <- function(outdir, fname, ana.time.res, tower.obj) {
       t.obj$tower$data$StationName[1] == "Cabauw") {
 
     data.10.vals = t.obj$tower$data$wind_speed
+    min.val = floor(min(min(t.obj$era20c10$data$wind_speed, na.rm=TRUE),
+                        min(t.obj$herz10$data$wind_speed, na.rm=TRUE),
+                        min(data.10.vals, na.rm=TRUE)))
     if (t.obj$tower$data$StationName[1] == "Lindenberg") {
       tit.100.ext = "Lindenberg at 98m"
       tit.10.ext = "Lindenberg at 10m"
       data.100.vals = t.obj$tower6$data$wind_speed
       min.t.val = min(t.obj$tower$data$wind_speed, na.rm=TRUE)
       max.t.val = max(t.obj$tower6$data$wind_speed, na.rm=TRUE)
+      max.val = ceiling(max(max(t.obj$era20c100$data$wind_speed, na.rm=TRUE),
+                            max(data.100.vals, na.rm=TRUE),
+                            max(t.obj$herz116$data$wind_speed, na.rm=TRUE))) + 1
     } else {
       tit.100.ext = "Cabauw at 80m"
       tit2.100.ext = "Cabauw at 140m"
@@ -926,23 +933,27 @@ PlotHistogramsTower <- function(outdir, fname, ana.time.res, tower.obj) {
       data2.100.vals = t.obj$tower5$data$wind_speed
       min.t.val = min(t.obj$tower4$data$wind_speed, na.rm=TRUE)
       max.t.val = max(t.obj$tower5$data$wind_speed, na.rm=TRUE)
+      max.val = ceiling(max(max(t.obj$era20c100$data$wind_speed, na.rm=TRUE),
+                            max(data.100.vals, na.rm=TRUE),
+                            max(data2.100.vals, na.rm=TRUE),
+                            max(t.obj$herz116$data$wind_speed, na.rm=TRUE))) + 1
     }
-    min.val = floor(min(min(t.obj$era20c10$data$wind_speed, na.rm=TRUE),
-                        min(t.obj$herz10$data$wind_speed, na.rm=TRUE),
-                        min(data.10.vals, na.rm=TRUE)))
-    max.val = ceiling(max(max(t.obj$era20c100$data$wind_speed, na.rm=TRUE),
-                          max(data.100.vals, na.rm=TRUE),
-                          max(t.obj$herz116$data$wind_speed, na.rm=TRUE))) + 1
 
     if (ana.time.res$time.res == ana.time.res$monthly) breaks = seq(min.val, max.val, 0.5)
     if (ana.time.res$time.res == ana.time.res$daily) breaks = seq(min.val, max.val, 0.75)
+    if (ana.time.res$time.res == ana.time.res$hourly) breaks = seq(min.val, max.val, 0.75)
 
-    dummy = numeric(length=length(t.obj$era20c10$data$wind_speed)) * NA
+    dummy = numeric(length=length(t.obj$herz116$data$wind_speed)) * NA
 
     fname = gsub('Histogram', 'Histogram_100m', fname)
     pdf(paste0(outdir, fname), width=PS$land.a4width, height=PS$land.a4height/2.,
         onefile=TRUE, pointsize=13)
-    par(mfrow=c(1,3), mar=c(3,3,2,1), cex=1.1)
+    if (t.obj$tower$data$StationName[1] == "Cabauw" |
+        ana.time.res$time.res != ana.time.res$hourly) {
+      par(mfrow=c(1,3), mar=c(3,3,2,1), cex=1.1)
+    } else {
+      par(mfrow=c(1,2), mar=c(3,3,2,1), cex=1.1)
+    }
 
     titname = paste0(monthly.ext, " wind speed in ", tit.100.ext)
     histoPlot(data.100.vals, dummy, breaks, xlims=c(min.val, max.val),
@@ -961,16 +972,22 @@ PlotHistogramsTower <- function(outdir, fname, ana.time.res, tower.obj) {
               titname, xlabname.full, ylabname.empty)
     plotLegendStats(xlims=c(min.val, max.val), as.numeric(t.obj$herz116$data$wind_speed))
 
-    titname = paste0(monthly.ext, " wind speed of ERA20C at 100m")
-    histoPlot(t.obj$era20c100$data$wind_speed, dummy, breaks, xlims=c(min.val, max.val),
-              titname, xlabname.full, ylabname.empty)
-    plotLegendStats(xlims=c(min.val, max.val), as.numeric(t.obj$era20c100$data$wind_speed))
+    if (ana.time.res$time.res != ana.time.res$hourly) {
+      titname = paste0(monthly.ext, " wind speed of ERA20C at 100m")
+      histoPlot(t.obj$era20c100$data$wind_speed, dummy, breaks, xlims=c(min.val, max.val),
+                titname, xlabname.full, ylabname.empty)
+      plotLegendStats(xlims=c(min.val, max.val), as.numeric(t.obj$era20c100$data$wind_speed))
+    }
     dev.off()
 
     fname = gsub('Histogram_100m', 'Histogram_10m', fname)
     pdf(paste0(outdir, fname), width=PS$land.a4width, height=PS$land.a4height/2.,
         onefile=TRUE, pointsize=13)
-    par(mfrow=c(1,3), mar=c(3,3,2,1), cex=1.1)
+    if (ana.time.res$time.res != ana.time.res$hourly) {
+      par(mfrow=c(1,3), mar=c(3,3,2,1), cex=1.1)
+    } else {
+      par(mfrow=c(1,2), mar=c(3,3,2,1), cex=1.1)
+    }
 
     titname = paste0(monthly.ext, " wind speed of ", tit.10.ext)
     histoPlot(data.10.vals, dummy, breaks, xlims=c(min.val, max.val),
@@ -982,22 +999,30 @@ PlotHistogramsTower <- function(outdir, fname, ana.time.res, tower.obj) {
               titname, xlabname.full, ylabname.empty)
     plotLegendStats(xlims=c(min.val, max.val), as.numeric(t.obj$herz10$data$wind_speed))
 
-    titname = paste0(monthly.ext, " wind speed of ERA20C at 10m")
-    histoPlot(t.obj$era20c10$data$wind_speed, dummy, breaks, xlims=c(min.val, max.val),
-              titname, xlabname.full, ylabname.empty)
-    plotLegendStats(xlims=c(min.val, max.val), as.numeric(t.obj$era20c10$data$wind_speed))
+    if (ana.time.res$time.res != ana.time.res$hourly) {
+      titname = paste0(monthly.ext, " wind speed of ERA20C at 10m")
+      histoPlot(t.obj$era20c10$data$wind_speed, dummy, breaks, xlims=c(min.val, max.val),
+                titname, xlabname.full, ylabname.empty)
+      plotLegendStats(xlims=c(min.val, max.val), as.numeric(t.obj$era20c10$data$wind_speed))
+    }
     dev.off()
 
     fname = gsub('Histogram_10m', 'HistogramComp_10m', fname)
     pdf(paste0(outdir, fname), width=PS$land.a4width/0.75, height=PS$land.a4height,
         onefile=TRUE, pointsize=13)
-    par(mfrow=c(1,2), mar=c(3,3,2,1), cex=1.1)
+    if (ana.time.res$time.res != ana.time.res$hourly) {
+      par(mfrow=c(1,2), mar=c(3,3,2,1), cex=1.1)
+    } else {
+      par(mfrow=c(1,1), mar=c(3,3,2,1), cex=1.1)
+    }
 
-    titname = paste0("Frequency distribution of ", monthly.ext, " wind speed of\n",
-                     tit.10.ext, " in green and ERA20C shaded")
-    histoPlot(data.10.vals, t.obj$era20c10$data$wind_speed, breaks,
-              xlims=c(min.val, max.val), titname, xlabname.full, ylabname.full,
-              xaxis=axis.y, addPlot=TRUE)
+    if (ana.time.res$time.res != ana.time.res$hourly) {
+      titname = paste0("Frequency distribution of ", monthly.ext, " wind speed of\n",
+                       tit.10.ext, " in green and ERA20C shaded")
+      histoPlot(data.10.vals, t.obj$era20c10$data$wind_speed, breaks,
+                xlims=c(min.val, max.val), titname, xlabname.full, ylabname.full,
+                xaxis=axis.y, addPlot=TRUE)
+    }
 
     titname = paste0("Frequency distribution of ", monthly.ext, " wind speed of\n",
                      tit.10.ext, " in green and COSMO HErZ shaded")
@@ -1009,13 +1034,19 @@ PlotHistogramsTower <- function(outdir, fname, ana.time.res, tower.obj) {
     fname = gsub('HistogramComp_10m', 'HistogramComp_100m', fname)
     pdf(paste0(outdir, fname), width=PS$land.a4width/0.75, height=PS$land.a4height,
         onefile=TRUE, pointsize=13)
-    par(mfrow=c(1,2), mar=c(3,3,3,1))
+    if (ana.time.res$time.res != ana.time.res$hourly) {
+      par(mfrow=c(1,2), mar=c(3,3,3,1))
+    } else {
+      par(mfrow=c(1,1), mar=c(3,3,3,1))
+    }
 
-    titname = paste0("Frequency distribution of ", monthly.ext, " wind speed of\n",
-                     tit.100.ext, " in green and ERA20C shaded")
-    histoPlot(data.100.vals, t.obj$era20c100$data$wind_speed, breaks,
-              xlims=c(min.val, max.val),
-              titname, xlabname.full, ylabname.full, xaxis=axis.y, addPlot=TRUE)
+    if (ana.time.res$time.res != ana.time.res$hourly) {
+      titname = paste0("Frequency distribution of ", monthly.ext, " wind speed of\n",
+                       tit.100.ext, " in green and ERA20C shaded")
+      histoPlot(data.100.vals, t.obj$era20c100$data$wind_speed, breaks,
+                xlims=c(min.val, max.val),
+                titname, xlabname.full, ylabname.full, xaxis=axis.y, addPlot=TRUE)
+    }
 
     titname = paste0("Frequency distribution of ", monthly.ext, " wind speed of\n",
                      tit.100.ext, " in green and COSMO HErZ shaded")
@@ -1024,11 +1055,13 @@ PlotHistogramsTower <- function(outdir, fname, ana.time.res, tower.obj) {
               xaxis=axis.y, addPlot=TRUE)
 
     if (t.obj$tower$data$StationName[1] == "Cabauw") {
-      titname = paste0("Frequency distribution of ", monthly.ext, " wind speed of\n",
-                       tit2.100.ext, " in green and ERA20C shaded")
-      histoPlot(data2.100.vals, t.obj$era20c100$data$wind_speed, breaks,
-                xlims=c(min.val, max.val), titname, xlabname.full, ylabname.full,
-                xaxis=axis.y, addPlot=TRUE)
+      if (ana.time.res$time.res != ana.time.res$hourly) {
+        titname = paste0("Frequency distribution of ", monthly.ext, " wind speed of\n",
+                         tit2.100.ext, " in green and ERA20C shaded")
+        histoPlot(data2.100.vals, t.obj$era20c100$data$wind_speed, breaks,
+                  xlims=c(min.val, max.val), titname, xlabname.full, ylabname.full,
+                  xaxis=axis.y, addPlot=TRUE)
+      }
 
       titname = paste0("Frequency distribution of ", monthly.ext, " wind speed of\n",
                        tit2.100.ext, " in green and COSMO HErZ shaded")
@@ -1053,13 +1086,18 @@ PlotHistogramsTower <- function(outdir, fname, ana.time.res, tower.obj) {
 
     if (ana.time.res$time.res == ana.time.res$monthly) breaks = seq(min.val, max.val, 0.5)
     if (ana.time.res$time.res == ana.time.res$daily) breaks = seq(min.val, max.val, 0.75)
+    if (ana.time.res$time.res == ana.time.res$hourly) breaks = seq(min.val, max.val, 0.75)
 
-    dummy = numeric(length=length(t.obj$era20c10$data$wind_speed)) * NA
+    dummy = numeric(length=length(t.obj$herz116$data$wind_speed)) * NA
 
     fname = gsub('Histogram', 'Histogram_100m', fname)
     pdf(paste0(outdir, fname), width=PS$land.a4width, height=PS$land.a4height/2.,
         onefile=TRUE, pointsize=13)
-    par(mfrow=c(1,3), mar=c(3,3,2,1), cex=1.1)
+    if (ana.time.res$time.res != ana.time.res$hourly) {
+      par(mfrow=c(1,3), mar=c(3,3,2,1), cex=1.1)
+    } else {
+      par(mfrow=c(1,2), mar=c(3,3,2,1), cex=1.1)
+    }
     titname = paste0(monthly.ext, " wind speed in ", tit.ext)
     histoPlot(data.vals, dummy, breaks, xlims=c(min.val, max.val),
               titname, xlabname.full, ylabname.full)
@@ -1070,10 +1108,12 @@ PlotHistogramsTower <- function(outdir, fname, ana.time.res, tower.obj) {
               titname, xlabname.full, ylabname.empty)
     plotLegendStats(xlims=c(min.val, max.val), as.numeric(t.obj$herz116$data$wind_speed))
 
-    titname = paste0(monthly.ext, " wind speed of ERA20C at 100m")
-    histoPlot(t.obj$era20c100$data$wind_speed, dummy, breaks, xlims=c(min.val, max.val),
-              titname, xlabname.full, ylabname.empty)
-    plotLegendStats(xlims=c(min.val, max.val), as.numeric(t.obj$era20c100$data$wind_speed))
+    if (ana.time.res$time.res != ana.time.res$hourly) {
+      titname = paste0(monthly.ext, " wind speed of ERA20C at 100m")
+      histoPlot(t.obj$era20c100$data$wind_speed, dummy, breaks, xlims=c(min.val, max.val),
+                titname, xlabname.full, ylabname.empty)
+      plotLegendStats(xlims=c(min.val, max.val), as.numeric(t.obj$era20c100$data$wind_speed))
+    }
     dev.off()
 
     tit.ext = paste0(t.obj$tower$data$height[1], "m wind speed\nat ",
@@ -1082,12 +1122,18 @@ PlotHistogramsTower <- function(outdir, fname, ana.time.res, tower.obj) {
     fname = gsub('Histogram_100m', 'HistogramComp_100m', fname)
     pdf(paste0(outdir, fname), width=PS$land.a4width/0.75, height=PS$land.a4height,
         onefile=TRUE, pointsize=13)
-    par(mfrow=c(1,2), mar=c(3,3,3,1))
+    if (ana.time.res$time.res != ana.time.res$hourly) {
+      par(mfrow=c(1,2), mar=c(3,3,3,1))
+    } else {
+      par(mfrow=c(1,1), mar=c(3,3,3,1))
+    }
 
-    titname = paste0("Frequency distribution of ", monthly.ext, tit.ext,
-                     "in green and ERA20C shaded")
-    histoPlot(data.vals, t.obj$era20c100$data$wind_speed, breaks, xlims=c(min.val, max.val),
-              titname, xlabname.full, ylabname.full, xaxis=axis.y, addPlot=TRUE)
+    if (ana.time.res$time.res != ana.time.res$hourly) {
+      titname = paste0("Frequency distribution of ", monthly.ext, tit.ext,
+                       "in green and ERA20C shaded")
+      histoPlot(data.vals, t.obj$era20c100$data$wind_speed, breaks, xlims=c(min.val, max.val),
+                titname, xlabname.full, ylabname.full, xaxis=axis.y, addPlot=TRUE)
+    }
 
     titname = paste0("Frequency distribution of ", monthly.ext, tit.ext,
                      "in green and COSMO HErZ shaded")
@@ -1139,6 +1185,10 @@ PlotPDFScore <- function(era.xts, station.xts, outdir, fname, titname,
     titname.hist = paste0("Daily ", titname)
     titname.pdfs = paste0("PDF score of daily ", titname)
     titname.viol = paste0("Violine plot of daily ", titname)
+  } else if (ana.time.res$time.res == ana.time.res$hourly) {
+    titname.hist = paste0("Hourly ", titname)
+    titname.pdfs = paste0("PDF score of hourly ", titname)
+    titname.viol = paste0("Violine plot of hourly ", titname)
   }
 
   for (month in seq(0,11)) {
