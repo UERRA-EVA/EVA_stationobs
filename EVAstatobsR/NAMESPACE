@@ -1,6 +1,1 @@
 exportPattern("^[[:alpha:]]+")
-import(ncdf)
-import(ncdf.tools)
-import(fitdistrplus)
-import(xts)
-import(zoo)

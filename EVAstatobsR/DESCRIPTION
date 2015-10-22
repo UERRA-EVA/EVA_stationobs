@@ -12,12 +12,11 @@ Description: A verification package of global (ERA20C and ERA_Interim) and
     and plotted.
 Depends:
     R (>= 3.0.2),
-    vioplot
-Imports:
+    vioplot,
     ncdf,
     ncdf.tools,
-    xts,
     zoo,
+    xts,
     fitdistrplus
 License: GPL (>=3)
 LazyData: false
