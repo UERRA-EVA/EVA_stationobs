@@ -55,17 +55,16 @@ ReadHerzNetcdfMonthlyDaily2Xts <- function(herz.param, herz.fname,
     } else {
       dat10 = ReadNetcdf(herz.param[1], herz.fname, count=c(1,1,-1),
                          start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-      dat116 = ReadNetcdf(herz.param[4], herz.fname, count=c(1,1,-1),
+      dat116 = ReadNetcdf(herz.param[2], herz.fname, count=c(1,1,-1),
                           start=c(lonidx, latidx, 1), verb.dat=verb.dat)
 
-      ndf = data.frame(dat10$time, dat10$data, dat35$data, dat69$data,
-                       dat116$data, dat178$data, dat258$data)
+      ndf = data.frame(dat10$time, dat10$data, dat116$data)
 
     }
   } else if (ana.time.res$time.res == ana.time.res$daily) {
 
+    ndf = data.frame()
     if (herz.profile) {
-      ndf = data.frame()
       for (step in seq(herz.fname)) {
         dat10 = ReadNetcdf(herz.param[1], herz.fname[step], count=c(1,1,-1),
                            start=c(lonidx, latidx, 1), verb.dat=verb.dat)
@@ -88,11 +87,10 @@ ReadHerzNetcdfMonthlyDaily2Xts <- function(herz.param, herz.fname,
       for (step in seq(herz.fname)) {
         dat10 = ReadNetcdf(herz.param[1], herz.fname[step], count=c(1,1,-1),
                            start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-        dat116 = ReadNetcdf(herz.param[4], herz.fname[step], count=c(1,1,-1),
+        dat116 = ReadNetcdf(herz.param[2], herz.fname[step], count=c(1,1,-1),
                             start=c(lonidx, latidx, 1), verb.dat=verb.dat)
 
-        df = data.frame(dat10$time, dat10$data, dat35$data, dat69$data,
-                        dat116$data, dat178$data, dat258$data)
+        df = data.frame(dat10$time, dat10$data, dat116$data)
         ndf = rbind(ndf, df)
       }
     }
