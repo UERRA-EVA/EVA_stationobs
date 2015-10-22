@@ -35,41 +35,66 @@ ReadHerzNetcdfMonthlyDaily2Xts <- function(herz.param, herz.fname,
 
   # read HErZ data into a data.frame
   if (ana.time.res$time.res == ana.time.res$monthly) {
-    dat10 = ReadNetcdf(herz.param[1], herz.fname, count=c(1,1,-1),
-                       start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-    dat35 = ReadNetcdf(herz.param[2], herz.fname, count=c(1,1,-1),
-                       start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-    dat69 = ReadNetcdf(herz.param[3], herz.fname, count=c(1,1,-1),
-                       start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-    dat116 = ReadNetcdf(herz.param[4], herz.fname, count=c(1,1,-1),
-                        start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-    dat178 = ReadNetcdf(herz.param[5], herz.fname, count=c(1,1,-1),
-                        start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-    dat258 = ReadNetcdf(herz.param[6], herz.fname, count=c(1,1,-1),
-                        start=c(lonidx, latidx, 1), verb.dat=verb.dat)
+    if (herz.profile) {
+      dat10 = ReadNetcdf(herz.param[1], herz.fname, count=c(1,1,-1),
+                         start=c(lonidx, latidx, 1), verb.dat=verb.dat)
+      dat35 = ReadNetcdf(herz.param[2], herz.fname, count=c(1,1,-1),
+                         start=c(lonidx, latidx, 1), verb.dat=verb.dat)
+      dat69 = ReadNetcdf(herz.param[3], herz.fname, count=c(1,1,-1),
+                         start=c(lonidx, latidx, 1), verb.dat=verb.dat)
+      dat116 = ReadNetcdf(herz.param[4], herz.fname, count=c(1,1,-1),
+                          start=c(lonidx, latidx, 1), verb.dat=verb.dat)
+      dat178 = ReadNetcdf(herz.param[5], herz.fname, count=c(1,1,-1),
+                          start=c(lonidx, latidx, 1), verb.dat=verb.dat)
+      dat258 = ReadNetcdf(herz.param[6], herz.fname, count=c(1,1,-1),
+                          start=c(lonidx, latidx, 1), verb.dat=verb.dat)
 
-    ndf = data.frame(dat10$time, dat10$data, dat35$data, dat69$data,
-                     dat116$data, dat178$data, dat258$data)
+      ndf = data.frame(dat10$time, dat10$data, dat35$data, dat69$data,
+                       dat116$data, dat178$data, dat258$data)
 
+    } else {
+      dat10 = ReadNetcdf(herz.param[1], herz.fname, count=c(1,1,-1),
+                         start=c(lonidx, latidx, 1), verb.dat=verb.dat)
+      dat116 = ReadNetcdf(herz.param[4], herz.fname, count=c(1,1,-1),
+                          start=c(lonidx, latidx, 1), verb.dat=verb.dat)
+
+      ndf = data.frame(dat10$time, dat10$data, dat35$data, dat69$data,
+                       dat116$data, dat178$data, dat258$data)
+
+    }
   } else if (ana.time.res$time.res == ana.time.res$daily) {
 
-    ndf = data.frame()
-    for (step in seq(herz.fname)) {
-      dat10 = ReadNetcdf(herz.param[1], herz.fname[step], count=c(1,1,-1),
-                         start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-      dat35 = ReadNetcdf(herz.param[2], herz.fname[step], count=c(1,1,-1),
-                         start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-      dat69 = ReadNetcdf(herz.param[3], herz.fname[step], count=c(1,1,-1),
-                         start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-      dat116 = ReadNetcdf(herz.param[4], herz.fname[step], count=c(1,1,-1),
-                          start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-      dat178 = ReadNetcdf(herz.param[5], herz.fname[step], count=c(1,1,-1),
-                          start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-      dat258 = ReadNetcdf(herz.param[6], herz.fname[step], count=c(1,1,-1),
-                          start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-      df = data.frame(dat10$time, dat10$data, dat35$data, dat69$data,
-                      dat116$data, dat178$data, dat258$data)
-      ndf = rbind(ndf, df)
+    if (herz.profile) {
+      ndf = data.frame()
+      for (step in seq(herz.fname)) {
+        dat10 = ReadNetcdf(herz.param[1], herz.fname[step], count=c(1,1,-1),
+                           start=c(lonidx, latidx, 1), verb.dat=verb.dat)
+        dat35 = ReadNetcdf(herz.param[2], herz.fname[step], count=c(1,1,-1),
+                           start=c(lonidx, latidx, 1), verb.dat=verb.dat)
+        dat69 = ReadNetcdf(herz.param[3], herz.fname[step], count=c(1,1,-1),
+                           start=c(lonidx, latidx, 1), verb.dat=verb.dat)
+        dat116 = ReadNetcdf(herz.param[4], herz.fname[step], count=c(1,1,-1),
+                            start=c(lonidx, latidx, 1), verb.dat=verb.dat)
+        dat178 = ReadNetcdf(herz.param[5], herz.fname[step], count=c(1,1,-1),
+                            start=c(lonidx, latidx, 1), verb.dat=verb.dat)
+        dat258 = ReadNetcdf(herz.param[6], herz.fname[step], count=c(1,1,-1),
+                            start=c(lonidx, latidx, 1), verb.dat=verb.dat)
+
+        df = data.frame(dat10$time, dat10$data, dat35$data, dat69$data,
+                        dat116$data, dat178$data, dat258$data)
+        ndf = rbind(ndf, df)
+      }
+    } else {
+      for (step in seq(herz.fname)) {
+        dat10 = ReadNetcdf(herz.param[1], herz.fname[step], count=c(1,1,-1),
+                           start=c(lonidx, latidx, 1), verb.dat=verb.dat)
+        dat116 = ReadNetcdf(herz.param[4], herz.fname[step], count=c(1,1,-1),
+                            start=c(lonidx, latidx, 1), verb.dat=verb.dat)
+
+        df = data.frame(dat10$time, dat10$data, dat35$data, dat69$data,
+                        dat116$data, dat178$data, dat258$data)
+        ndf = rbind(ndf, df)
+      }
     }
   }
 
@@ -116,14 +141,23 @@ ReadHerzNetcdfHourly2Xts <- function(herz.param, herz.fname,
                                      herz.profile) {
 
   # read HErZ data into a data.frame
-  dat10 = ReadNetcdf(herz.param, herz.fname[1])
-  dat35 = ReadNetcdf(herz.param, herz.fname[2])
-  dat69 = ReadNetcdf(herz.param, herz.fname[3])
-  dat116 = ReadNetcdf(herz.param, herz.fname[4])
-  dat178 = ReadNetcdf(herz.param, herz.fname[5])
-  dat258 = ReadNetcdf(herz.param, herz.fname[6])
-  ndf = data.frame(dat10$time, dat10$data, dat35$data, dat69$data,
-                   dat116$data, dat178$data, dat258$data)
+  if (herz.profile) {
+    dat10 = ReadNetcdf(herz.param, herz.fname[1])
+    dat35 = ReadNetcdf(herz.param, herz.fname[2])
+    dat69 = ReadNetcdf(herz.param, herz.fname[3])
+    dat116 = ReadNetcdf(herz.param, herz.fname[4])
+    dat178 = ReadNetcdf(herz.param, herz.fname[5])
+    dat258 = ReadNetcdf(herz.param, herz.fname[6])
+
+    ndf = data.frame(dat10$time, dat10$data, dat35$data, dat69$data,
+                     dat116$data, dat178$data, dat258$data)
+  } else {
+    dat10 = ReadNetcdf(herz.param, herz.fname[1])
+    dat116 = ReadNetcdf(herz.param, herz.fname[4])
+
+    ndf = data.frame(dat10$time, dat10$data, dat35$data, dat69$data,
+                     dat116$data, dat178$data, dat258$data)
+  }
 
   # convert data.frame of HErZ data into an extended time series
   ndf$dat10.time = as.POSIXct(strptime(ndf$dat10.time, format="%Y-%m-%d %H:%M:%S"),

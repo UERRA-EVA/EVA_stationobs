@@ -9,7 +9,7 @@ res.switch = high.res
 hourly="hourly"
 daily="daily"
 monthly="monthly"
-time.res=hourly
+time.res=monthly
 ana.time.res = list(hourly=hourly, daily=daily, monthly=monthly, time.res=time.res)
 if (ana.time.res$time.res == ana.time.res$monthly) {
   time.ext = "Monthly"
@@ -95,6 +95,7 @@ if (herz.grid.read.grb) {
 # filename(s) of the COSMO HErZ reanalysis file(s)
 if (ana.time.res$time.res == ana.time.res$monthly) {
   herz.fname = "./data/WindSpeed_HErZ_MonMean_1995to2014.nc"
+  CheckFile(herz.fname)
 } else if (ana.time.res$time.res == ana.time.res$daily) {
   herz.fname = c("./data/WindSpeed_1995_DayMean.nc",
                  "./data/WindSpeed_1996_DayMean.nc",
@@ -116,6 +117,7 @@ if (ana.time.res$time.res == ana.time.res$monthly) {
                  "./data/WindSpeed_2012_DayMean.nc",
                  "./data/WindSpeed_2013_DayMean.nc",
                  "./data/WindSpeed_2014_DayMean.nc")
+  CheckFile(herz.fname)
 } else if (ana.time.res$time.res == ana.time.res$hourly) {
   # file names need to be in increasing height order !!!
   herz.fname = list(Fino1=c("./data/WindSpeed_1995TO2014_HErZ-10m_at_Fino1.nc",
@@ -143,11 +145,11 @@ if (ana.time.res$time.res == ana.time.res$monthly) {
                              "./data/WindSpeed_1995TO2014_HErZ-178m_at_Cabauw.nc",
                              "./data/WindSpeed_1995TO2014_HErZ-258m_at_Cabauw.nc")
   )
+  CheckFile(herz.fname$Fino1)
+  CheckFile(herz.fname$Fino2)
+  CheckFile(herz.fname$Lindenberg)
+  CheckFile(herz.fname$Cabauw)
 }
-CheckFile(herz.fname$Fino1)
-CheckFile(herz.fname$Fino2)
-CheckFile(herz.fname$Lindenberg)
-CheckFile(herz.fname$Cabauw)
 
 # variable names to read from above files
 if (ana.time.res$time.res == ana.time.res$monthly | ana.time.res$time.res == ana.time.res$daily) {
