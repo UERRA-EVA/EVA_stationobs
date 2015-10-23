@@ -3,9 +3,8 @@
 #'   plotting. Default values are set and will be adjusted depending on input data.
 #'   As of now it is divided only into station and tower data.
 #' @param data.vals is a data input object. It is either of class xts (which is still
-#'   the case for station data) or a ClimObject which is the new normal and already
-#'   works for tower data. It will be checked for the tower names and if it is not
-#'   equal to one of the used towers it is decided that it must be station data.
+#'   the case for station data) or a data frame as the data part of the ClimObject
+#'   which is the new normal and already works for tower data.
 #' @return is a named list holding all the parameters.
 PlottingSettings <- function(data.vals) {
 
@@ -25,15 +24,20 @@ PlottingSettings <- function(data.vals) {
     time.Agg = "Hourly"
   }
 
-  if (!is.xts(data.vals)) {
-    tower.name = data.vals$tower$data$StationName[1]
+  if (is.data.frame(data.vals)) {
+    tower.name = data.vals$StationName[1]
+    tower.height = data.vals$height[1]
     return(list(land.a4width=land.a4width, land.a4height=land.a4height,
                 port.a4width=port.a4width, port.a4height=port.a4height,
-                time.agg=time.agg, time.Agg=time.Agg, tower.name=tower.name))
-  } else {
+                time.agg=time.agg, time.Agg=time.Agg, tower.name=tower.name,
+                tower.height=tower.height))
+  } else if (is.xts) {
     return(list(land.a4width=land.a4width, land.a4height=land.a4height,
                 port.a4width=port.a4width, port.a4height=port.a4height,
                 time.agg=time.agg, time.Agg=time.Agg))
+  } else {
+    CallStop(paste0("Expected either a data.frame or xts; data.vals is class ",
+                    class(data.vals)))
   }
 }
 

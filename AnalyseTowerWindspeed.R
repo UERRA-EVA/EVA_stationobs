@@ -390,7 +390,7 @@ if (plot.ProfileTS & ana.time.res$time.res == ana.time.res$monthly) {
 #-----------------------------------------------------------------------------
 
 if(plot.Extremes) {
-
+  cat("  **  Plotting tower extreme values and their scores\n")
   extremes.thresh = seq(0.01,0.99,0.01)
   if (ana.time.res$time.res == ana.time.res$monthly) {
     fname = paste0(outdir, "Fino1_MM-extremes_", res.switch, '_', fname_ext, ".pdf")
@@ -421,3 +421,19 @@ if(plot.Extremes) {
     PlotTowerExtremesContr(lind.climobj, fname, extremes.thresh)
   }
 }
+
+#-----------------------------------------------------------------------------
+
+if(plot.DailyCycle & ana.time.res$time.res == ana.time.res$hourly) {
+  cat("  **  Plotting the daily cycle of tower measurements\n")
+  fname = paste0(outdir, "Fino1_DailyCycle_", res.switch, '_', fname_ext, ".pdf")
+  PlotTowerDailyCycle(fino1.climobj, fname)
+  fname = paste0(outdir, "Fino2_DailyCycle_", res.switch, '_', fname_ext, ".pdf")
+  PlotTowerDailyCycle(fino2.climobj, fname)
+  fname = paste0(outdir, "Cabauw_DailyCycle_", res.switch, '_', fname_ext, ".pdf")
+  PlotTowerDailyCycle(cabauw.climobj, fname)
+  fname = paste0(outdir, "Lindenberg_DailyCycle_", res.switch, '_', fname_ext, ".pdf")
+  PlotTowerDailyCycle(lind.climobj, fname)
+}
+
+#-----------------------------------------------------------------------------
