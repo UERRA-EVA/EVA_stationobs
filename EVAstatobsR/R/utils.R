@@ -437,8 +437,6 @@ GetScoresDF <- function(thresh, obs, frcst) {
     }
   }
 
-  a = "asdf"
-
   return(scores.df)
 
 }
