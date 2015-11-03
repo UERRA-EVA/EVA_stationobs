@@ -907,7 +907,7 @@ PlotHistogramsTower <- function(outdir, fname, ana.time.res, tower.obj) {
   ylabname.full = "Density"
   ylabname.empty = ""
 
-  PS = PlottingSettings(t.obj)
+  PS = PlottingSettings(t.obj$herz116$data)
 
   if (t.obj$tower$data$StationName[1] == "Lindenberg" |
       t.obj$tower$data$StationName[1] == "Cabauw") {
@@ -1251,7 +1251,7 @@ PlotTowerERAprofileBP <- function(tower.obj, fname, ana.time.res) {
   if (ana.time.res$time.res == ana.time.res$daily) tit.ext = "Daily"
   if (ana.time.res$time.res == ana.time.res$hourly) tit.ext = "Hourly"
 
-  PS = PlottingSettings(t.obj)
+  PS = PlottingSettings(t.obj$herz116$data)
   pdf(fname, width=PS$port.a4width, height=PS$port.a4height/0.8,
       onefile=TRUE, pointsize=13)
   par(mar=c(4,7,3,0.5), cex=1.5)
@@ -1465,7 +1465,7 @@ PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
     CallStop(paste0("Unexpected tower name: ", t.obj$tower$data$StationName[1], " "))
   }
 
-  PS = PlottingSettings(t.obj)
+  PS = PlottingSettings(t.obj$herz116$data)
   pdf(fname, width=PS$port.a4width/0.67, height=PS$port.a4height,
       onefile=TRUE, pointsize=13)
   par(mfrow=c(3,1), mar=c(0,4,0,0), oma=c(4,0,3,0.5), cex=1.3)
@@ -1557,7 +1557,7 @@ PlotTowerERAprofileAnnualVar <- function(tower.obj, fname) {
   Herz116Xts = xts(t.obj$herz116$data$wind_speed, order.by=tower.date)
   Herz10Xts = xts(t.obj$herz10$data$wind_speed, order.by=tower.date)
 
-  PS = PlottingSettings(t.obj)
+  PS = PlottingSettings(t.obj$herz116$data)
 
   for (cnt in seq(12)) {
     mon.Era20c100[[cnt]] = Era20c100Xts[which( tower.date$mon==cnt-1 )]
@@ -1793,7 +1793,7 @@ PlotTowerERAprofileAnnualCycle <- function(tower.obj, fname) {
     mon.Herz10[cnt] = mean(Herz10Xts[which( tower.date$mon==cnt-1 )])
   }
 
-  PS = PlottingSettings(t.obj)
+  PS = PlottingSettings(t.obj$herz116$data)
 
   if (t.obj$tower$data$StationName[1] == "Lindenberg") {
 
@@ -2283,8 +2283,7 @@ PlotTowerDailyCycle <- function(tower.obj, fname) {
 
   x.lab = "time of day [hours]"
   y.lab = "wind speed [m/s]"
-  # names include all months to be analysed; counts includes the corresponding value
-  # of month within year
+  # names include all months to be analysed; counts is the month of year
   month.names = list(names=c("Jan", "Aug"),
                      counts=as.numeric(c(1,8)))
 
@@ -2296,6 +2295,7 @@ PlotTowerDailyCycle <- function(tower.obj, fname) {
   Herz35Xts = xts(t.obj$herz35$data$wind_speed, order.by=tower.date)
   Herz10Xts = xts(t.obj$herz10$data$wind_speed, order.by=tower.date)
 
+  # these lists I use for the complete time period
   dayhourHerz116 = list(vals=vector(mode="numeric", length=length(tower.date)/24.),
                         mean=vector(mode="numeric", length=24),
                         sd=vector(mode="numeric", length=24))
@@ -2309,6 +2309,7 @@ PlotTowerDailyCycle <- function(tower.obj, fname) {
                        mean=vector(mode="numeric", length=24),
                        sd=vector(mode="numeric", length=24))
 
+  # these lists I use for specific months only time periods
   dayhour.month.Herz116 = list()
   dayhour.month.Herz69 = list()
   dayhour.month.Herz35 = list()
@@ -2364,7 +2365,7 @@ PlotTowerDailyCycle <- function(tower.obj, fname) {
   lines(dayhour.Herz69$mean, col="red", pch=16, type="b")
   lines(dayhour.Herz35$mean, col="orange", pch=16, type="b")
   lines(dayhour.Herz10$mean, col="green", pch=16, type="b")
-  title(main=paste0("Herz ", PS$tower.height, "daily cycle of wind speed at tower location ",
+  title(main=paste0("Herz ", PS$tower.height, " daily cycle of wind speed at tower location ",
                     PS$tower.name), line=1, cex=1.5)
 
   dev.off()
@@ -2397,18 +2398,18 @@ PlotTowerDailyCycle <- function(tower.obj, fname) {
   title(main=paste0("Daily cycle of wind speed of HErZ in ", PS$tower.height,
                     " at station location ", PS$tower.name), line=1, cex=1.5)
 
-  boxplot.default(coredata(dayhour.Her10$vals[1]), coredata(dayhour.Her10$vals[2]),
-                  coredata(dayhour.Her10$vals[3]), coredata(dayhour.Her10$vals[4]),
-                  coredata(dayhour.Her10$vals[5]), coredata(dayhour.Her10$vals[6]),
-                  coredata(dayhour.Her10$vals[7]), coredata(dayhour.Her10$vals[8]),
-                  coredata(dayhour.Her10$vals[9]), coredata(dayhour.Her10$vals[10]),
-                  coredata(dayhour.Her10$vals[11]), coredata(dayhour.Her10$vals[12]),
-                  coredata(dayhour.Her10$vals[13]), coredata(dayhour.Her10$vals[14]),
-                  coredata(dayhour.Her10$vals[15]), coredata(dayhour.Her10$vals[16]),
-                  coredata(dayhour.Her10$vals[17]), coredata(dayhour.Her10$vals[18]),
-                  coredata(dayhour.Her10$vals[19]), coredata(dayhour.Her10$vals[20]),
-                  coredata(dayhour.Her10$vals[21]), coredata(dayhour.Her10$vals[22]),
-                  coredata(dayhour.Her10$vals[23]), coredata(dayhour.Her10$vals[24]),
+  boxplot.default(coredata(dayhour.Herz10$vals[1]), coredata(dayhour.Herz10$vals[2]),
+                  coredata(dayhour.Herz10$vals[3]), coredata(dayhour.Herz10$vals[4]),
+                  coredata(dayhour.Herz10$vals[5]), coredata(dayhour.Herz10$vals[6]),
+                  coredata(dayhour.Herz10$vals[7]), coredata(dayhour.Herz10$vals[8]),
+                  coredata(dayhour.Herz10$vals[9]), coredata(dayhour.Herz10$vals[10]),
+                  coredata(dayhour.Herz10$vals[11]), coredata(dayhour.Herz10$vals[12]),
+                  coredata(dayhour.Herz10$vals[13]), coredata(dayhour.Herz10$vals[14]),
+                  coredata(dayhour.Herz10$vals[15]), coredata(dayhour.Herz10$vals[16]),
+                  coredata(dayhour.Herz10$vals[17]), coredata(dayhour.Herz10$vals[18]),
+                  coredata(dayhour.Herz10$vals[19]), coredata(dayhour.Herz10$vals[20]),
+                  coredata(dayhour.Herz10$vals[21]), coredata(dayhour.Herz10$vals[22]),
+                  coredata(dayhour.Herz10$vals[23]), coredata(dayhour.Herz10$vals[24]),
                   horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
                   boxwex=bwex, staplewex=swex, las=1, ylim=c(0,25), col="green",
                   xlab=x.lab, ylab=y.lab, names=c(seq(24)))
@@ -2438,7 +2439,7 @@ PlotTowerDailyCycle <- function(tower.obj, fname) {
 PlotTowerExtremesContr <- function(tower.obj, fname, threshold) {
 
   t.obj = tower.obj$climate_data_objects
-  PS = PlottingSettings(t.obj)
+  PS = PlottingSettings(t.obj$herz116$data)
 
   if (t.obj$tower$data$StationName[1] == "Fino1" |
       t.obj$tower$data$StationName[1] == "Fino2") {
