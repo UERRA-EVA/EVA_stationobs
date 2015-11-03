@@ -354,7 +354,7 @@ CalcContTable <- function(obs, frcst, benchmark) {
           cnt_c = cnt_c + 1
         }
       } else {
-        if (frcst[steps] >= abs.bench.obs) {
+        if (frcst[steps] >= abs.bench.frcst) {
           cnt_b = cnt_b + 1
         } else {
           cnt_d = cnt_d + 1
@@ -436,6 +436,8 @@ GetScoresDF <- function(thresh, obs, frcst) {
       scores.df = rbind(scores.df, scores)
     }
   }
+
+  a = "asdf"
 
   return(scores.df)
 
