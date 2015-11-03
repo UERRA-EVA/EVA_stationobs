@@ -2295,63 +2295,37 @@ PlotTowerDailyCycle <- function(tower.obj, fname) {
   Herz35Xts = xts(t.obj$herz35$data$wind_speed, order.by=tower.date)
   Herz10Xts = xts(t.obj$herz10$data$wind_speed, order.by=tower.date)
 
-  # these lists I use for the complete time period
-  dayhourHerz116 = list(vals=vector(mode="numeric", length=length(tower.date)/24.),
-                        mean=vector(mode="numeric", length=24),
-                        sd=vector(mode="numeric", length=24))
-  dayhourHerz69 = list(vals=vector(mode="numeric", length=length(tower.date)/24.),
-                       mean=vector(mode="numeric", length=24),
-                       sd=vector(mode="numeric", length=24))
-  dayhourHerz35 = list(vals=vector(mode="numeric", length=length(tower.date)/24.),
-                       mean=vector(mode="numeric", length=24),
-                       sd=vector(mode="numeric", length=24))
-  dayhourHerz10 = list(vals=vector(mode="numeric", length=length(tower.date)/24.),
-                       mean=vector(mode="numeric", length=24),
-                       sd=vector(mode="numeric", length=24))
-
-  # these lists I use for specific months only time periods
-  dayhour.month.Herz116 = list()
-  dayhour.month.Herz69 = list()
-  dayhour.month.Herz35 = list()
-  dayhour.month.Herz10 = list()
-  for (label in seq(month.names$names)) {
-    for (cnt in seq(24)) {
-    dayhour.month.Herz116 =
-      list(vals=vector(mode="numeric",
-                       length=length(which(tower.date$hour==cnt-1 &
-                                             tower.date$mon==month.names$counts[label]))))
-    dayhour.month.Herz69 =
-      list(vals=vector(mode="numeric",
-                       length=length(which(tower.date$hour==cnt-1 &
-                                             tower.date$mon==month.names$counts[label]))))
-    dayhour.month.Herz35 =
-      list(vals=vector(mode="numeric",
-                       length=length(which(tower.date$hour==cnt-1 &
-                                             tower.date$mon==month.names$counts[label]))))
-    dayhour.month.Herz10 =
-      list(vals=vector(mode="numeric",
-                       length=length(which(tower.date$hour==cnt-1 &
-                                             tower.date$mon==month.names$counts[label]))))
-    }
-  }
+  # these lists are used for the complete time period
+  dayhourHerz116 = list(list(vals=vector(mode="numeric", length=length(tower.date)/24.)),
+                        list(mean=vector(mode="numeric", length=24)),
+                        list(sd=vector(mode="numeric", length=24)))
+  dayhourHerz69 = list(list(vals=vector(mode="numeric", length=length(tower.date)/24.)),
+                       list(mean=vector(mode="numeric", length=24)),
+                       list(sd=vector(mode="numeric", length=24)))
+  dayhourHerz35 = list(list(vals=vector(mode="numeric", length=length(tower.date)/24.)),
+                       list(mean=vector(mode="numeric", length=24)),
+                       list(sd=vector(mode="numeric", length=24)))
+  dayhourHerz10 = list(list(vals=vector(mode="numeric", length=length(tower.date)/24.)),
+                       list(mean=vector(mode="numeric", length=24)),
+                       list(sd=vector(mode="numeric", length=24)))
 
   for (cnt in seq(24)) {
-    dayhour.Herz116$vals[cnt] = Herz116Xts[which( tower.date$hour==cnt-1 )]
-    dayhour.Herz116$mean[cnt] = mean(dayhourHerz116[[cnt]])
-    dayhour.Herz116$sd[cnt] = sd(dayhourHerz116[[cnt]])
-    dayhour.Herz69$vals[cnt] = Herz69Xts[which( tower.date$hour==cnt-1 )]
-    dayhour.Herz69$mean[cnt] = mean(dayhourHerz69[[cnt]])
-    dayhour.Herz69$sd[cnt] = sd(dayhourHerz69[[cnt]])
-    dayhour.Herz35$vals[cnt] = Herz35Xts[which( tower.date$hour==cnt-1 )]
-    dayhour.Herz35$mean[cnt] = mean(dayhourHerz35[[cnt]])
-    dayhour.Herz35$sd[cnt] = sd(dayhourHerz35[[cnt]])
-    dayhour.Herz10$vals[cnt] = Herz10Xts[which( tower.date$hour==cnt-1 )]
-    dayhour.Herz10$mean[cnt] = mean(dayhourHerz10[[cnt]])
-    dayhour.Herz10$sd[cnt] = sd(dayhourHerz10[[cnt]])
+    dayhourHerz116$vals[[cnt]] = Herz116Xts[which( tower.date$hour==cnt-1 )]
+    dayhourHerz116$mean[[cnt]] = mean(dayhourHerz116$vals[[cnt]])
+    dayhourHerz116$sd[[cnt]] = sd(dayhourHerz116$vals[[cnt]])
+    dayhourHerz69$vals[[cnt]] = Herz69Xts[which( tower.date$hour==cnt-1 )]
+    dayhourHerz69$mean[[cnt]] = mean(dayhourHerz69$vals[[cnt]])
+    dayhourHerz69$sd[[cnt]] = sd(dayhourHerz69$vals[[cnt]])
+    dayhourHerz35$vals[[cnt]] = Herz35Xts[which( tower.date$hour==cnt-1 )]
+    dayhourHerz35$mean[[cnt]] = mean(dayhourHerz35$vals[[cnt]])
+    dayhourHerz35$sd[[cnt]] = sd(dayhourHerz35$vals[[cnt]])
+    dayhourHerz10$vals[[cnt]] = Herz10Xts[which( tower.date$hour==cnt-1 )]
+    dayhourHerz10$mean[[cnt]] = mean(dayhourHerz10$vals[[cnt]])
+    dayhourHerz10$sd[[cnt]] = sd(dayhourHerz10$vals[[cnt]])
   }
 
-  min.val = floor(min(dayhour.Herz10$mean, na.rm=TRUE))
-  max.val = ceiling(max(dayhour.Herz116$mean, na.rm=TRUE))
+  min.val = floor(min(dayhourHerz10$mean, na.rm=TRUE))
+  max.val = ceiling(max(dayhourHerz116$mean, na.rm=TRUE))
 
   PS = PlottingSettings(t.obj$herz116$data)
 
@@ -2360,11 +2334,11 @@ PlotTowerDailyCycle <- function(tower.obj, fname) {
       onefile=TRUE, pointsize=13)
   par(mfrow=c(1,1), mar=c(4,4,2,0), cex=1.0)
 
-  plot(dayhour.Herz116$mean, col="blue", pch=16, type="b", ylim=c(min.val,max.val),
+  plot(dayhourHerz116$mean, col="blue", pch=16, type="b", ylim=c(min.val,max.val),
        xlab=x.lab, ylab=y.lab)
-  lines(dayhour.Herz69$mean, col="red", pch=16, type="b")
-  lines(dayhour.Herz35$mean, col="orange", pch=16, type="b")
-  lines(dayhour.Herz10$mean, col="green", pch=16, type="b")
+  lines(dayhourHerz69$mean, col="red", pch=16, type="b")
+  lines(dayhourHerz35$mean, col="orange", pch=16, type="b")
+  lines(dayhourHerz10$mean, col="green", pch=16, type="b")
   title(main=paste0("Herz ", PS$tower.height, " daily cycle of wind speed at tower location ",
                     PS$tower.name), line=1, cex=1.5)
 
@@ -2380,36 +2354,36 @@ PlotTowerDailyCycle <- function(tower.obj, fname) {
   hori = F
   nch = T
   oline = F
-  boxplot.default(coredata(dayhour.Herz116$vals[1]), coredata(dayhour.Herz116$vals[2]),
-                  coredata(dayhour.Herz116$vals[3]), coredata(dayhour.Herz116$vals[4]),
-                  coredata(dayhour.Herz116$vals[5]), coredata(dayhour.Herz116$vals[6]),
-                  coredata(dayhour.Herz116$vals[7]), coredata(dayhour.Herz116$vals[8]),
-                  coredata(dayhour.Herz116$vals[9]), coredata(dayhour.Herz116$vals[10]),
-                  coredata(dayhour.Herz116$vals[11]), coredata(dayhour.Herz116$vals[12]),
-                  coredata(dayhour.Herz116$vals[13]), coredata(dayhour.Herz116$vals[14]),
-                  coredata(dayhour.Herz116$vals[15]), coredata(dayhour.Herz116$vals[16]),
-                  coredata(dayhour.Herz116$vals[17]), coredata(dayhour.Herz116$vals[18]),
-                  coredata(dayhour.Herz116$vals[19]), coredata(dayhour.Herz116$vals[20]),
-                  coredata(dayhour.Herz116$vals[21]), coredata(dayhour.Herz116$vals[22]),
-                  coredata(dayhour.Herz116$vals[23]), coredata(dayhour.Herz116$vals[24]),
+  boxplot.default(coredata(dayhourHerz116$vals[[1]]), coredata(dayhourHerz116$vals[[2]]),
+                  coredata(dayhourHerz116$vals[[3]]), coredata(dayhourHerz116$vals[[4]]),
+                  coredata(dayhourHerz116$vals[[5]]), coredata(dayhourHerz116$vals[[6]]),
+                  coredata(dayhourHerz116$vals[[7]]), coredata(dayhourHerz116$vals[[8]]),
+                  coredata(dayhourHerz116$vals[[9]]), coredata(dayhourHerz116$vals[[10]]),
+                  coredata(dayhourHerz116$vals[[11]]), coredata(dayhourHerz116$vals[[12]]),
+                  coredata(dayhourHerz116$vals[[13]]), coredata(dayhourHerz116$vals[[14]]),
+                  coredata(dayhourHerz116$vals[[15]]), coredata(dayhourHerz116$vals[[16]]),
+                  coredata(dayhourHerz116$vals[[17]]), coredata(dayhourHerz116$vals[[18]]),
+                  coredata(dayhourHerz116$vals[[19]]), coredata(dayhourHerz116$vals[[20]]),
+                  coredata(dayhourHerz116$vals[[21]]), coredata(dayhourHerz116$vals[[22]]),
+                  coredata(dayhourHerz116$vals[[23]]), coredata(dayhourHerz116$vals[[24]]),
                   horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
-                  boxwex=bwex, staplewex=swex, las=1, ylim=c(0,25), col="blue",
-                  xlab=x.lab, ylab=y.lab, names=c(seq(24)))
+                  boxwex=bwex, staplewex=swex, las=1, ylim=c(0,max.val), col="blue",
+                  xlab="", ylab=y.lab, names=c(seq(24)))
   title(main=paste0("Daily cycle of wind speed of HErZ in ", PS$tower.height,
                     " at station location ", PS$tower.name), line=1, cex=1.5)
 
-  boxplot.default(coredata(dayhour.Herz10$vals[1]), coredata(dayhour.Herz10$vals[2]),
-                  coredata(dayhour.Herz10$vals[3]), coredata(dayhour.Herz10$vals[4]),
-                  coredata(dayhour.Herz10$vals[5]), coredata(dayhour.Herz10$vals[6]),
-                  coredata(dayhour.Herz10$vals[7]), coredata(dayhour.Herz10$vals[8]),
-                  coredata(dayhour.Herz10$vals[9]), coredata(dayhour.Herz10$vals[10]),
-                  coredata(dayhour.Herz10$vals[11]), coredata(dayhour.Herz10$vals[12]),
-                  coredata(dayhour.Herz10$vals[13]), coredata(dayhour.Herz10$vals[14]),
-                  coredata(dayhour.Herz10$vals[15]), coredata(dayhour.Herz10$vals[16]),
-                  coredata(dayhour.Herz10$vals[17]), coredata(dayhour.Herz10$vals[18]),
-                  coredata(dayhour.Herz10$vals[19]), coredata(dayhour.Herz10$vals[20]),
-                  coredata(dayhour.Herz10$vals[21]), coredata(dayhour.Herz10$vals[22]),
-                  coredata(dayhour.Herz10$vals[23]), coredata(dayhour.Herz10$vals[24]),
+  boxplot.default(coredata(dayhourHerz10$vals[[1]]), coredata(dayhourHerz10$vals[[2]]),
+                  coredata(dayhourHerz10$vals[[3]]), coredata(dayhourHerz10$vals[[4]]),
+                  coredata(dayhourHerz10$vals[[5]]), coredata(dayhourHerz10$vals[[6]]),
+                  coredata(dayhourHerz10$vals[[7]]), coredata(dayhourHerz10$vals[[8]]),
+                  coredata(dayhourHerz10$vals[[9]]), coredata(dayhourHerz10$vals[[10]]),
+                  coredata(dayhourHerz10$vals[[11]]), coredata(dayhourHerz10$vals[[12]]),
+                  coredata(dayhourHerz10$vals[[13]]), coredata(dayhourHerz10$vals[[14]]),
+                  coredata(dayhourHerz10$vals[[15]]), coredata(dayhourHerz10$vals[[16]]),
+                  coredata(dayhourHerz10$vals[[17]]), coredata(dayhourHerz10$vals[[18]]),
+                  coredata(dayhourHerz10$vals[[19]]), coredata(dayhourHerz10$vals[[20]]),
+                  coredata(dayhourHerz10$vals[[21]]), coredata(dayhourHerz10$vals[[22]]),
+                  coredata(dayhourHerz10$vals[[23]]), coredata(dayhourHerz10$vals[[24]]),
                   horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
                   boxwex=bwex, staplewex=swex, las=1, ylim=c(0,25), col="green",
                   xlab=x.lab, ylab=y.lab, names=c(seq(24)))
