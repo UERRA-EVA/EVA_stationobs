@@ -9,7 +9,7 @@ res.switch = high.res
 hourly="hourly"
 daily="daily"
 monthly="monthly"
-time.res=monthly
+time.res=hourly
 ana.time.res = list(hourly=hourly, daily=daily, monthly=monthly, time.res=time.res)
 if (ana.time.res$time.res == ana.time.res$monthly) {
   time.ext = "Monthly"
@@ -178,11 +178,11 @@ CheckFile(c(station.daily.fname, station.hourly.fname))
 #- era20c: 1900 to 2010
 #- eraI: 1979 to 2014
 #- herz: 1995 to 2014
-era20c.tsstart = c(1997,1)
+era20c.tsstart = c(1995,1)
 era20c.tsend = c(2010,12)
-eraI.tsstart = c(1997,1)
+eraI.tsstart = c(1995,1)
 eraI.tsend = c(2010,12)
-herz.tsstart = c(1997,1)
+herz.tsstart = c(1995,1)
 herz.tsend = c(2010,12)
 fname_ext = "1995to2010"
 
