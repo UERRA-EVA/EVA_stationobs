@@ -2279,36 +2279,26 @@ PlotTowerERAprofileAnnualCycle <- function(tower.obj, fname) {
 #' @title
 #' @description
 #' @param
-PlotTowerDailyCycle <- function(tower.obj, fname) {
+PreparePlottingTowerDailyCycle <- function(tower.obj, fname) {
 
-  x.lab = "time of day [hours]"
-  y.lab = "wind speed [m/s]"
   # names include all months to be analysed; counts is the month of year
-  month.names = list(names=c("Jan", "Aug"),
-                     counts=as.numeric(c(1,8)))
+  month.names = list(names=c("January", "March", "June", "September"),
+                     counts=as.numeric(c(1,3,6,9)))
 
   t.obj = tower.obj$climate_data_objects
   tower.date <- as.POSIXlt(t.obj$tower$data$date)
 
+  # extended time series HErZ at tower location
   Herz116Xts = xts(t.obj$herz116$data$wind_speed, order.by=tower.date)
   Herz69Xts = xts(t.obj$herz69$data$wind_speed, order.by=tower.date)
   Herz35Xts = xts(t.obj$herz35$data$wind_speed, order.by=tower.date)
   Herz10Xts = xts(t.obj$herz10$data$wind_speed, order.by=tower.date)
 
   # these lists are used for the complete time period
-  dayhourHerz116 = list(list(vals=vector(mode="numeric", length=length(tower.date)/24.)),
-                        list(mean=vector(mode="numeric", length=24)),
-                        list(sd=vector(mode="numeric", length=24)))
-  dayhourHerz69 = list(list(vals=vector(mode="numeric", length=length(tower.date)/24.)),
-                       list(mean=vector(mode="numeric", length=24)),
-                       list(sd=vector(mode="numeric", length=24)))
-  dayhourHerz35 = list(list(vals=vector(mode="numeric", length=length(tower.date)/24.)),
-                       list(mean=vector(mode="numeric", length=24)),
-                       list(sd=vector(mode="numeric", length=24)))
-  dayhourHerz10 = list(list(vals=vector(mode="numeric", length=length(tower.date)/24.)),
-                       list(mean=vector(mode="numeric", length=24)),
-                       list(sd=vector(mode="numeric", length=24)))
-
+  dayhourHerz116 = list()
+  dayhourHerz69 = list()
+  dayhourHerz35 = list()
+  dayhourHerz10 = list()
   for (cnt in seq(24)) {
     dayhourHerz116$vals[[cnt]] = Herz116Xts[which( tower.date$hour==cnt-1 )]
     dayhourHerz116$mean[[cnt]] = mean(dayhourHerz116$vals[[cnt]])
@@ -2324,28 +2314,134 @@ PlotTowerDailyCycle <- function(tower.obj, fname) {
     dayhourHerz10$sd[[cnt]] = sd(dayhourHerz10$vals[[cnt]])
   }
 
-  min.val = floor(min(dayhourHerz10$mean, na.rm=TRUE))
-  max.val = ceiling(max(dayhourHerz116$mean, na.rm=TRUE))
+  PS116 = PlottingSettings(t.obj$herz116$data)
+  PS69 = PlottingSettings(t.obj$herz69$data)
+  PS35 = PlottingSettings(t.obj$herz35$data)
+  PS10 = PlottingSettings(t.obj$herz10$data)
+  PS = list(PS10=PS10, PS35=PS35, PS69=PS69, PS116=PS116)
+  fname.new = c(gsub("DailyCycle", "DailyCycle_allTime-line", fname),
+                gsub("DailyCycle", "DailyCycle_allTime-boxPlot", fname))
+  PlotTowerDailyCycle(dayhourHerz10, dayhourHerz35,
+                      dayhourHerz69, dayhourHerz116, month.names, PS, fname.new)
 
-  PS = PlottingSettings(t.obj$herz116$data)
+  # these lists are used for specific months only time periods
+  dayhour.month.Herz116 = list()
+  dayhour.month.Herz69 = list()
+  dayhour.month.Herz35 = list()
+  dayhour.month.Herz10 = list()
+  for (cnt in seq((month.names$names))) {
+    dummy116 = list()
+    dummy69 = list()
+    dummy35 = list()
+    dummy10 = list()
+    for (tstep in seq(24)) {
+      dummy116$vals[[tstep]] = Herz116Xts[which( tower.date$hour==tstep-1 &
+                                                   tower.date$mon==month.names$counts[cnt])]
+      dummy116$mean[[tstep]] = mean(dummy116$vals[[tstep]])
+      dummy116$sd[[tstep]] = sd(dummy116$vals[[tstep]])
 
-  fname.new = gsub("DailyCycle", "DailyCycle_allTime-line", fname)
-  pdf(fname.new, width=PS$land.a4width, height=PS$land.a4height,
+      dummy69$vals[[tstep]] = Herz69Xts[which( tower.date$hour==tstep-1 &
+                                                 tower.date$mon==month.names$counts[cnt])]
+      dummy69$mean[[tstep]] = mean(dummy69$vals[[tstep]])
+      dummy69$sd[[tstep]] = sd(dummy69$vals[[tstep]])
+
+      dummy35$vals[[tstep]] = Herz35Xts[which( tower.date$hour==tstep-1 &
+                                                 tower.date$mon==month.names$counts[cnt])]
+      dummy35$mean[[tstep]] = mean(dummy35$vals[[tstep]])
+      dummy35$sd[[tstep]] = sd(dummy35$vals[[tstep]])
+
+      dummy10$vals[[tstep]] = Herz10Xts[which( tower.date$hour==tstep-1 &
+                                                 tower.date$mon==month.names$counts[cnt])]
+      dummy10$mean[[tstep]] = mean(dummy10$vals[[tstep]])
+      dummy10$sd[[tstep]] = sd(dummy10$vals[[tstep]])
+    }
+    dayhour.month.Herz116[[cnt]] = dummy116
+    dayhour.month.Herz69[[cnt]] = dummy69
+    dayhour.month.Herz35[[cnt]] = dummy35
+    dayhour.month.Herz10[[cnt]] = dummy10
+  }
+  dayhour.month.Herz116 = setNames(dayhour.month.Herz116, month.names$names)
+  dayhour.month.Herz69 = setNames(dayhour.month.Herz69, month.names$names)
+  dayhour.month.Herz35 = setNames(dayhour.month.Herz35, month.names$names)
+  dayhour.month.Herz10 = setNames(dayhour.month.Herz10, month.names$names)
+
+  fname.new = c(gsub("DailyCycle", "DailyCycle_selectMonths-line", fname),
+                gsub("DailyCycle", "DailyCycle_selectMonths-boxPlot", fname))
+  PlotTowerDailyCycle(dayhour.month.Herz10, dayhour.month.Herz35,
+                      dayhour.month.Herz69, dayhour.month.Herz116, month.names, PS,
+                      fname.new)
+
+}
+
+#-----------------------------------------------------------------------------------
+
+#' @title
+#' @description
+#' @param
+PlotTowerDailyCycle <- function(Herz10, Herz35, Herz69, Herz116, month.names, PS, fname) {
+
+  x.lab = "time of day [hours]"
+  y.lab = "wind speed [m/s]"
+
+  # determine min and max value for plotting range
+  if (is.null(Herz10$mean)) { # there are more than one data value set saved
+    min.dummy.mean = vector(mode="numeric", length=length(month.names$names))
+    max.dummy.mean = vector(mode="numeric", length=length(month.names$names))
+    max.dummy = vector(mode="numeric", length=length(month.names$names))
+    for (cnt in seq(month.names$names)) {
+      min.dummy.mean[cnt] = floor(min(Herz10[[cnt]]$mean, na.rm=TRUE))
+      max.dummy.mean[cnt] = ceiling(max(Herz116[[cnt]]$mean, na.rm=TRUE))
+      max.dummy[cnt] = ceiling(max(Herz116[[cnt]]$vals[[1]], na.rm=TRUE)) # see comment below
+    }
+    min.val.mean = min(min.dummy.mean)
+    max.val.mean = max(max.dummy.mean)
+    max.val = max(max.dummy)
+  } else {  # there is only one data value set saved
+    min.val.mean = floor(min(Herz10$mean, na.rm=TRUE))
+    max.val.mean = ceiling(max(Herz116$mean, na.rm=TRUE))
+    max.val = ceiling(max(Herz116$vals[[1]], na.rm=TRUE)) # see comment below
+  }
+  # comment: I assume that it is long enough to cover the variability of all hours
+
+  # plot line plots
+  pdf(fname[1], width=PS$PS10$land.a4width, height=PS$PS10$land.a4height,
       onefile=TRUE, pointsize=13)
   par(mfrow=c(1,1), mar=c(4,4,2,0), cex=1.0)
 
-  plot(dayhourHerz116$mean, col="blue", pch=16, type="b", ylim=c(min.val,max.val),
-       xlab=x.lab, ylab=y.lab)
-  lines(dayhourHerz69$mean, col="red", pch=16, type="b")
-  lines(dayhourHerz35$mean, col="orange", pch=16, type="b")
-  lines(dayhourHerz10$mean, col="green", pch=16, type="b")
-  title(main=paste0("Herz ", PS$tower.height, " daily cycle of wind speed at tower location ",
-                    PS$tower.name), line=1, cex=1.5)
-
+  if (is.null(Herz10$mean)) {
+    for (cnt in seq(month.names$names)) {
+      plot(Herz116[[cnt]]$mean, col="blue", pch=16, type="b",
+           ylim=c(min.val.mean,max.val.mean), xlab=x.lab, ylab=y.lab)
+      lines(Herz69[[cnt]]$mean, col="red", pch=16, type="b")
+      lines(Herz35[[cnt]]$mean, col="orange", pch=16, type="b")
+      lines(Herz10[[cnt]]$mean, col="green", pch=16, type="b")
+      title(main=paste0("Daily cycle of HErZ wind speed in ",
+                        month.names$names[[cnt]], " at tower location ",
+                        PS$PS10$tower.name), line=1, cex=1.5)
+      legend("top", legend=c(paste0("HErZ at ", as.character(PS$PS116$tower.height)),
+                             paste0("HErZ at ", as.character(PS$PS69$tower.height)),
+                             paste0("HErZ at ", as.character(PS$PS35$tower.height)),
+                             paste0("HErZ at ", as.character(PS$PS10$tower.height))),
+             text.col=c("blue", "red", "orange", "green"))
+    }
+  } else {
+    plot(Herz116$mean, col="blue", pch=16, type="b",
+         ylim=c(min.val.mean,max.val.mean), xlab=x.lab, ylab=y.lab)
+    lines(Herz69$mean, col="red", pch=16, type="b")
+    lines(Herz35$mean, col="orange", pch=16, type="b")
+    lines(Herz10$mean, col="green", pch=16, type="b")
+    title(main=paste0("Daily cycle of HErZ wind speed at tower location ",
+                      PS$PS10$tower.name), line=1, cex=1.5)
+    legend("top", legend=c(paste0("HErZ at ", as.character(PS$PS116$tower.height)),
+                           paste0("HErZ at ", as.character(PS$PS69$tower.height)),
+                           paste0("HErZ at ", as.character(PS$PS35$tower.height)),
+                           paste0("HErZ at ", as.character(PS$PS10$tower.height))),
+           text.col=c("blue", "red", "orange", "green"))
+  }
   dev.off()
 
-  fname.new = gsub("DailyCycle", "DailyCycle_allTime-boxPlot", fname)
-  pdf(fname.new, width=PS$land.a4width, height=PS$land.a4height,
+  # plot box plots
+  pdf(fname[2], width=PS$PS10$land.a4width, height=PS$PS10$land.a4height,
       onefile=TRUE, pointsize=13)
   par(mfrow=c(2,1), oma=c(0.5,0.5,0.5,0.5), mar=c(4,4,2,0), cex=1.0)
 
@@ -2354,42 +2450,83 @@ PlotTowerDailyCycle <- function(tower.obj, fname) {
   hori = F
   nch = T
   oline = F
-  boxplot.default(coredata(dayhourHerz116$vals[[1]]), coredata(dayhourHerz116$vals[[2]]),
-                  coredata(dayhourHerz116$vals[[3]]), coredata(dayhourHerz116$vals[[4]]),
-                  coredata(dayhourHerz116$vals[[5]]), coredata(dayhourHerz116$vals[[6]]),
-                  coredata(dayhourHerz116$vals[[7]]), coredata(dayhourHerz116$vals[[8]]),
-                  coredata(dayhourHerz116$vals[[9]]), coredata(dayhourHerz116$vals[[10]]),
-                  coredata(dayhourHerz116$vals[[11]]), coredata(dayhourHerz116$vals[[12]]),
-                  coredata(dayhourHerz116$vals[[13]]), coredata(dayhourHerz116$vals[[14]]),
-                  coredata(dayhourHerz116$vals[[15]]), coredata(dayhourHerz116$vals[[16]]),
-                  coredata(dayhourHerz116$vals[[17]]), coredata(dayhourHerz116$vals[[18]]),
-                  coredata(dayhourHerz116$vals[[19]]), coredata(dayhourHerz116$vals[[20]]),
-                  coredata(dayhourHerz116$vals[[21]]), coredata(dayhourHerz116$vals[[22]]),
-                  coredata(dayhourHerz116$vals[[23]]), coredata(dayhourHerz116$vals[[24]]),
-                  horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
-                  boxwex=bwex, staplewex=swex, las=1, ylim=c(0,max.val), col="blue",
-                  xlab="", ylab=y.lab, names=c(seq(24)))
-  title(main=paste0("Daily cycle of wind speed of HErZ in ", PS$tower.height,
-                    " at station location ", PS$tower.name), line=1, cex=1.5)
+  if (is.null(Herz116$vals)) {
+    for (cnt in seq(month.names$names)) {
+      boxplot.default(coredata(Herz116[[cnt]]$vals[[1]]), coredata(Herz116[[cnt]]$vals[[2]]),
+                      coredata(Herz116[[cnt]]$vals[[3]]), coredata(Herz116[[cnt]]$vals[[4]]),
+                      coredata(Herz116[[cnt]]$vals[[5]]), coredata(Herz116[[cnt]]$vals[[6]]),
+                      coredata(Herz116[[cnt]]$vals[[7]]), coredata(Herz116[[cnt]]$vals[[8]]),
+                      coredata(Herz116[[cnt]]$vals[[9]]), coredata(Herz116[[cnt]]$vals[[10]]),
+                      coredata(Herz116[[cnt]]$vals[[11]]), coredata(Herz116[[cnt]]$vals[[12]]),
+                      coredata(Herz116[[cnt]]$vals[[13]]), coredata(Herz116[[cnt]]$vals[[14]]),
+                      coredata(Herz116[[cnt]]$vals[[15]]), coredata(Herz116[[cnt]]$vals[[16]]),
+                      coredata(Herz116[[cnt]]$vals[[17]]), coredata(Herz116[[cnt]]$vals[[18]]),
+                      coredata(Herz116[[cnt]]$vals[[19]]), coredata(Herz116[[cnt]]$vals[[20]]),
+                      coredata(Herz116[[cnt]]$vals[[21]]), coredata(Herz116[[cnt]]$vals[[22]]),
+                      coredata(Herz116[[cnt]]$vals[[23]]), coredata(Herz116[[cnt]]$vals[[24]]),
+                      horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
+                      boxwex=bwex, staplewex=swex, las=1, ylim=c(0,20), col="blue",
+                      xlab="", ylab=y.lab, names=c(seq(24)))
+      title(main=paste0("Daily cycle of ", PS$PS116$tower.height, " HErZ wind speed in ",
+                        month.names$names[[cnt]], " at station location ",
+                        PS$PS116$tower.name), line=1, cex=1.5)
 
-  boxplot.default(coredata(dayhourHerz10$vals[[1]]), coredata(dayhourHerz10$vals[[2]]),
-                  coredata(dayhourHerz10$vals[[3]]), coredata(dayhourHerz10$vals[[4]]),
-                  coredata(dayhourHerz10$vals[[5]]), coredata(dayhourHerz10$vals[[6]]),
-                  coredata(dayhourHerz10$vals[[7]]), coredata(dayhourHerz10$vals[[8]]),
-                  coredata(dayhourHerz10$vals[[9]]), coredata(dayhourHerz10$vals[[10]]),
-                  coredata(dayhourHerz10$vals[[11]]), coredata(dayhourHerz10$vals[[12]]),
-                  coredata(dayhourHerz10$vals[[13]]), coredata(dayhourHerz10$vals[[14]]),
-                  coredata(dayhourHerz10$vals[[15]]), coredata(dayhourHerz10$vals[[16]]),
-                  coredata(dayhourHerz10$vals[[17]]), coredata(dayhourHerz10$vals[[18]]),
-                  coredata(dayhourHerz10$vals[[19]]), coredata(dayhourHerz10$vals[[20]]),
-                  coredata(dayhourHerz10$vals[[21]]), coredata(dayhourHerz10$vals[[22]]),
-                  coredata(dayhourHerz10$vals[[23]]), coredata(dayhourHerz10$vals[[24]]),
-                  horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
-                  boxwex=bwex, staplewex=swex, las=1, ylim=c(0,25), col="green",
-                  xlab=x.lab, ylab=y.lab, names=c(seq(24)))
-  title(main=paste0("Daily cycle of wind speed of HErZ in ", PS$tower.height,
-                    " at station location ", PS$tower.name), line=1, cex=1.5)
+      boxplot.default(coredata(Herz10[[cnt]]$vals[[1]]), coredata(Herz10[[cnt]]$vals[[2]]),
+                      coredata(Herz10[[cnt]]$vals[[3]]), coredata(Herz10[[cnt]]$vals[[4]]),
+                      coredata(Herz10[[cnt]]$vals[[5]]), coredata(Herz10[[cnt]]$vals[[6]]),
+                      coredata(Herz10[[cnt]]$vals[[7]]), coredata(Herz10[[cnt]]$vals[[8]]),
+                      coredata(Herz10[[cnt]]$vals[[9]]), coredata(Herz10[[cnt]]$vals[[10]]),
+                      coredata(Herz10[[cnt]]$vals[[11]]), coredata(Herz10[[cnt]]$vals[[12]]),
+                      coredata(Herz10[[cnt]]$vals[[13]]), coredata(Herz10[[cnt]]$vals[[14]]),
+                      coredata(Herz10[[cnt]]$vals[[15]]), coredata(Herz10[[cnt]]$vals[[16]]),
+                      coredata(Herz10[[cnt]]$vals[[17]]), coredata(Herz10[[cnt]]$vals[[18]]),
+                      coredata(Herz10[[cnt]]$vals[[19]]), coredata(Herz10[[cnt]]$vals[[20]]),
+                      coredata(Herz10[[cnt]]$vals[[21]]), coredata(Herz10[[cnt]]$vals[[22]]),
+                      coredata(Herz10[[cnt]]$vals[[23]]), coredata(Herz10[[cnt]]$vals[[24]]),
+                      horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
+                      boxwex=bwex, staplewex=swex, las=1, ylim=c(0,10), col="green",
+                      xlab=x.lab, ylab=y.lab, names=c(seq(24)))
+      title(main=paste0("Daily cycle of ", PS$PS10$tower.height, " HErZ wind speed in ",
+                        month.names$names[[cnt]], " at station location ",
+                        PS$PS10$tower.name), line=1, cex=1.5)
+    }
+  } else {
+    boxplot.default(coredata(Herz116$vals[[1]]), coredata(Herz116$vals[[2]]),
+                    coredata(Herz116$vals[[3]]), coredata(Herz116$vals[[4]]),
+                    coredata(Herz116$vals[[5]]), coredata(Herz116$vals[[6]]),
+                    coredata(Herz116$vals[[7]]), coredata(Herz116$vals[[8]]),
+                    coredata(Herz116$vals[[9]]), coredata(Herz116$vals[[10]]),
+                    coredata(Herz116$vals[[11]]), coredata(Herz116$vals[[12]]),
+                    coredata(Herz116$vals[[13]]), coredata(Herz116$vals[[14]]),
+                    coredata(Herz116$vals[[15]]), coredata(Herz116$vals[[16]]),
+                    coredata(Herz116$vals[[17]]), coredata(Herz116$vals[[18]]),
+                    coredata(Herz116$vals[[19]]), coredata(Herz116$vals[[20]]),
+                    coredata(Herz116$vals[[21]]), coredata(Herz116$vals[[22]]),
+                    coredata(Herz116$vals[[23]]), coredata(Herz116$vals[[24]]),
+                    horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
+                    boxwex=bwex, staplewex=swex, las=1, ylim=c(0,20), col="blue",
+                    xlab="", ylab=y.lab, names=c(seq(24)))
+    title(main=paste0("Daily cycle of wind speed of HErZ in ", PS$PS116$tower.height,
+                      " at station location ", PS$PS116$tower.name), line=1, cex=1.5)
 
+    boxplot.default(coredata(Herz10$vals[[1]]), coredata(Herz10$vals[[2]]),
+                    coredata(Herz10$vals[[3]]), coredata(Herz10$vals[[4]]),
+                    coredata(Herz10$vals[[5]]), coredata(Herz10$vals[[6]]),
+                    coredata(Herz10$vals[[7]]), coredata(Herz10$vals[[8]]),
+                    coredata(Herz10$vals[[9]]), coredata(Herz10$vals[[10]]),
+                    coredata(Herz10$vals[[11]]), coredata(Herz10$vals[[12]]),
+                    coredata(Herz10$vals[[13]]), coredata(Herz10$vals[[14]]),
+                    coredata(Herz10$vals[[15]]), coredata(Herz10$vals[[16]]),
+                    coredata(Herz10$vals[[17]]), coredata(Herz10$vals[[18]]),
+                    coredata(Herz10$vals[[19]]), coredata(Herz10$vals[[20]]),
+                    coredata(Herz10$vals[[21]]), coredata(Herz10$vals[[22]]),
+                    coredata(Herz10$vals[[23]]), coredata(Herz10$vals[[24]]),
+                    horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
+                    boxwex=bwex, staplewex=swex, las=1, ylim=c(0,10), col="green",
+                    xlab=x.lab, ylab=y.lab, names=c(seq(24)))
+    title(main=paste0("Daily cycle of wind speed of HErZ in ", PS$PS10$tower.height,
+                      " at station location ", PS$PS10$tower.name), line=1, cex=1.5)
+  }
   dev.off()
 
 }

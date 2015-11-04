@@ -427,13 +427,13 @@ if(plot.Extremes) {
 if(plot.DailyCycle & ana.time.res$time.res == ana.time.res$hourly) {
   cat("  **  Plotting the daily cycle of tower measurements\n")
   fname = paste0(outdir, "Fino1_DailyCycle_", res.switch, '_', fname_ext, ".pdf")
-  PlotTowerDailyCycle(fino1.climobj, fname)
+  PreparePlottingTowerDailyCycle(fino1.climobj, fname)
   fname = paste0(outdir, "Fino2_DailyCycle_", res.switch, '_', fname_ext, ".pdf")
-  PlotTowerDailyCycle(fino2.climobj, fname)
+  PreparePlottingTowerDailyCycle(fino2.climobj, fname)
   fname = paste0(outdir, "Cabauw_DailyCycle_", res.switch, '_', fname_ext, ".pdf")
-  PlotTowerDailyCycle(cabauw.climobj, fname)
+  PreparePlottingTowerDailyCycle(cabauw.climobj, fname)
   fname = paste0(outdir, "Lindenberg_DailyCycle_", res.switch, '_', fname_ext, ".pdf")
-  PlotTowerDailyCycle(lind.climobj, fname)
+  PreparePlottingTowerDailyCycle(lind.climobj, fname)
 }
 
 #-----------------------------------------------------------------------------
