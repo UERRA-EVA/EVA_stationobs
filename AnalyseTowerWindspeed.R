@@ -21,7 +21,7 @@ if (interactive) {
 
 if (use.synthetic) {
   # prepare one pair of random data with predifined n
-  n = 10000
+  n = 100000
   use.distr = "Gaussian" # "Gaussian", "Weibull"
   data.vals = PrepareRandomData(n, use.distr)
 
@@ -30,7 +30,7 @@ if (use.synthetic) {
   random.climobj = climobj$random.object
   # plot extremes
   extremes.thresh = seq(0.01,0.99,0.01)
-  fname = paste0(outdir, "Random-hourly-extremes.pdf")
+  fname = paste0(outdir, paste0(use.distr, "-randomly-distributed-hourly-extremes.pdf"))
   PlotRandomExtremesContr(random.climobj, fname, extremes.thresh)
 
   CallStop("Program normally finished")
