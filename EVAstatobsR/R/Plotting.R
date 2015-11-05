@@ -2751,7 +2751,28 @@ PlotTowerExtremesContr <- function(tower.obj, fname, threshold) {
 #' @title
 #' @description
 #' @param
-PlotTowerExtremes <- function(t.obj, fname, scores.df, threshold, PS) {
+PlotRandomExtremesContr <- function(random.obj, fname, threshold) {
+  r.obj = random.obj$climate_data_objects
+  PS = PlottingSettings(r.obj$obs$data)
+
+  obs = r.obj$obs$data$wind_speed
+  forec = r.obj$forec$data$wind_speed
+  scores.df = GetScoresDF(threshold, obs, forec)
+  title.name = " of random data"
+  PlotTowerExtremes(r.obj, fname, scores.df, threshold, PS, title.name)
+  fname.new = gsub("-extremes", "-extremes-HRvsFAR", fname)
+  title.name = "Hit rate vs False alarm rate of random data"
+  PlotTowerHRvsFAR(r.obj, fname.new, scores.df$false.alarm.rate,
+                   scores.df$hit.rate, PS, title.name)
+}
+
+#-----------------------------------------------------------------------------------
+
+#' @title
+#' @description
+#' @param
+PlotTowerExtremes <- function(t.obj, fname, scores.df, threshold, PS,
+                              title.name=NULL) {
 
   score.names = names(scores.df)
   pdf(fname, width=PS$land.a4width, height=PS$land.a4height,
@@ -2760,10 +2781,15 @@ PlotTowerExtremes <- function(t.obj, fname, scores.df, threshold, PS) {
 
   for (plot.step in seq(score.names)) {
     if (all(!is.finite(scores.df[[plot.step]]))) next
-    plot(threshold, scores.df[[plot.step]], xlab="percentile",
+    if (is.null(title.name)) {
+      titleName = paste0(score.names[plot.step]," of ", PS$time.agg, " means at ",
+                          PS$tower.name, " in ", PS$tower.height, " height")
+    } else {
+      titleName = gsub(" of", paste0(score.names[plot.step], " of"), title.name)
+    }
+      plot(threshold, scores.df[[plot.step]], xlab="percentile",
          ylab=score.names[plot.step], col = "blue", pch=16, type="b",
-         main=paste0(score.names[plot.step]," of ", PS$time.agg, " means at ",
-                     PS$tower.name, " in ", PS$tower.height, " height"))
+           main = titleName)
   }
 
   dev.off()
@@ -2774,16 +2800,23 @@ PlotTowerExtremes <- function(t.obj, fname, scores.df, threshold, PS) {
 #' @title
 #' @description
 #' @param
-PlotTowerHRvsFAR <- function(t.obj, fname, false.alarm.rate, hit.rate, PS) {
+PlotTowerHRvsFAR <- function(t.obj, fname, false.alarm.rate, hit.rate, PS,
+                             title.name=NULL) {
 
   pdf(fname, width=PS$land.a4width, height=PS$land.a4height,
       onefile=TRUE, pointsize=13)
 
+  if (is.null(title.name)) {
+
+  }
+  if(is.null(title.name)) {
+    title.name = paste0("Hit rate vs False alarm rate of ", PS$time.agg, " means at ",
+                        PS$tower.name, " in ", PS$tower.height, " height")
+  }
   plot(false.alarm.rate, hit.rate,
        xlim = c(0,1), ylim = c(0,1), col = "blue", pch=16, type = "p",
        xlab = "False Alarm Rate", ylab = "Hit Rate",
-       main = paste0("Hit rate vs Fals alarm rate of ", PS$time.agg, " means at ",
-                     PS$tower.name, " in ", PS$tower.height, " height"))
+       main = title.name)
 
   dev.off()
 }

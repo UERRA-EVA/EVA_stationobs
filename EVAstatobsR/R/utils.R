@@ -442,3 +442,30 @@ GetScoresDF <- function(thresh, obs, frcst) {
 }
 
 #-----------------------------------------------------------------------------------
+
+#' @title Prepare two exetended time series with random data.
+#' @description
+#' @param
+#' @return
+PrepareRandomData <- function(num, use.distr) {
+  if (use.distr != "Gaussian" & use.distr != "Weibull") {
+    CallStop(paste0("I expected either Gaussian or Weibull, but parameter is: ",
+                    use.distr))
+  }
+  if (use.distr == "Gaussian") {
+    obs = rnorm(num)
+    forec = rnorm(num)
+  } else if (use.distr == "Weibull") {
+    obs = rweibull(num, shape=2, scale = 6)
+    forec = rweibull(num, shape=2, scale = 6)
+  }
+  date.seq = seq.POSIXt(strptime("20000101", format="%Y%m%d", tz="UTC"),
+                        by="hour", length.out=num)
+
+  obs.xts = xts(obs, order.by=date.seq)
+  forec.xts = xts(forec, order.by=date.seq)
+
+  return(list(obs=obs.xts, forec=forec.xts))
+}
+
+#-----------------------------------------------------------------------------------

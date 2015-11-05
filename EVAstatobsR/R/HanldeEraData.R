@@ -511,3 +511,23 @@ GetTowerObject <- function(tower.xts, tower2.xts=NULL, tower3.xts=NULL,
 }
 
 #-----------------------------------------------------------------------------------
+
+#' @title
+#' @description
+#' @param
+#' @return
+GetRandomClimObject <- function(obs.xts, forec.xts) {
+
+  obs.df = data.frame(date=index(obs.xts),
+                        StationName="random data",
+                        wind_speed=coredata(obs.xts))
+  forec.df = data.frame(date=index(forec.xts),
+                        StationName="random data",
+                        wind_speed=coredata(forec.xts))
+  climate.random.object = climate(data_tables=
+                                    list(obs=obs.df, forec=forec.df))
+
+  return(list(random.object = climate.random.object))
+}
+
+#-----------------------------------------------------------------------------------
