@@ -23,12 +23,12 @@ if (ana.time.res$time.res == ana.time.res$monthly) {
 
 fino1.param = "windspeed_100m"
 fino2.param = "windspeed_102m"
-lind.param = c("windspeed_10m", "windspeed_20m", "windspeed_40m",
-               "windspeed_60m", "windspeed_80m", "windspeed_98m")
-cabauw.param = c("windspeed_10m", "windspeed_20m", "windspeed_40m",
-                 "windspeed_80m", "windspeed_140m", "windspeed_200m")
-hamburg.param = c("wind_speed_10m", "wind_speed_50m", "wind_speed_110m",
-                  "wind_speed_175m", "wind_speed_250m", "wind_speed_280m")
+lind.param = c("windspeed_98m", "windspeed_80m", "windspeed_60m",
+               "windspeed_40m", "windspeed_20m", "windspeed_10m")
+cabauw.param = c("windspeed_200m", "windspeed_140m", "windspeed_80m",
+                 "windspeed_40m", "windspeed_20m", "windspeed_10m")
+hamburg.param = c("wind_speed_280m", "wind_speed_250m", "wind_speed_175m",
+                  "wind_speed_110m", "wind_speed_50m", "wind_speed_10m")
 
 # following www.fino1.de and www.fino2.de the location of the towers is:
 fino1.lon =  6.58764

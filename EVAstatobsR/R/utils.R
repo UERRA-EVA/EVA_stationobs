@@ -77,46 +77,94 @@ CheckFile <- function(infile) {
 #' @title Check HErZ parameter names.
 #' @description HErZ parameter names are checked which is especially important if
 #'   the complete profile is passed. Within the package the names are expected to
-#'   follow a certain structure: "windspeed_xxxm", whereas xxx equals the height of
-#'   the model level and is expected to be increasing, i.e., 10m, 35m, 69m, 116m,
-#'   178m, 258m. This function does not have a return value.
+#'   follow a certain structure: "windspeed_xxxm", where xxx equals the height of
+#'   the model level and is expected to be decreasing, i.e., 258m, 178m, 116m, 69m,
+#'   35m, 10m. This function does not have a return value.
 #' @param herz.param a string of length n which holds n parameter names.
 #' @param herz.profile boolean which determines whether to check for the complete
 #'   HErZ profile or only the two levels 10m and 116m.
 CheckHerzParams <- function(herz.param, herz.profile) {
   if (herz.profile) {
-    if (!herz.param[1] == "windspeed_10m") {
+    if (!herz.param[1] == "windspeed_258m") {
       CallStop(paste0("Unexpected HErZ parameter: ", herz.param[1],
-                      "\n   Should be: windspeed_10m"))
-    }
-    if (!herz.param[2] == "windspeed_35m") {
-      CallStop(paste0("Unexpected HErZ parameter: ", herz.param[2],
-                      "\n   Should be: windspeed_35m"))
-    }
-    if (!herz.param[3] == "windspeed_69m") {
-      CallStop(paste0("Unexpected HErZ parameter: ", herz.param[3],
-                      "\n   Should be: windspeed_69m"))
-    }
-    if (!herz.param[4] == "windspeed_116m") {
-      CallStop(paste0("Unexpected HErZ parameter: ", herz.param[4],
-                      "\n   Should be: windspeed_116m"))
-    }
-    if (!herz.param[5] == "windspeed_178m") {
-      CallStop(paste0("Unexpected HErZ parameter: ", herz.param[5],
-                      "\n   Should be: windspeed_178m"))
-    }
-    if (!herz.param[6] == "windspeed_258m") {
-      CallStop(paste0("Unexpected HErZ parameter: ", herz.param[6],
                       "\n   Should be: windspeed_258m"))
     }
-  } else {
-    if (!herz.param[1] == "windspeed_10m") {
-      CallStop(paste0("Unexpected HErZ parameter: ", herz.param[1],
+    if (!herz.param[2] == "windspeed_178m") {
+      CallStop(paste0("Unexpected HErZ parameter: ", herz.param[2],
+                      "\n   Should be: windspeed_178m"))
+    }
+    if (!herz.param[3] == "windspeed_116m") {
+      CallStop(paste0("Unexpected HErZ parameter: ", herz.param[3],
+                      "\n   Should be: windspeed_116m"))
+    }
+    if (!herz.param[4] == "windspeed_69m") {
+      CallStop(paste0("Unexpected HErZ parameter: ", herz.param[4],
+                      "\n   Should be: windspeed_69m"))
+    }
+    if (!herz.param[5] == "windspeed_35m") {
+      CallStop(paste0("Unexpected HErZ parameter: ", herz.param[5],
+                      "\n   Should be: windspeed_35m"))
+    }
+    if (!herz.param[6] == "windspeed_10m") {
+      CallStop(paste0("Unexpected HErZ parameter: ", herz.param[6],
                       "\n   Should be: windspeed_10m"))
     }
-    if (!herz.param[2] == "windspeed_116m") {
-      CallStop(paste0("Unexpected HErZ parameter: ", herz.param[2],
+  } else {
+    if (!herz.param[1] == "windspeed_116m") {
+      CallStop(paste0("Unexpected HErZ parameter: ", herz.param[1],
                       "\n   Should be: windspeed_116m"))
+    }
+    if (!herz.param[2] == "windspeed_10m") {
+      CallStop(paste0("Unexpected HErZ parameter: ", herz.param[2],
+                      "\n   Should be: windspeed_10m"))
+    }
+  }
+}
+
+#-----------------------------------------------------------------------------------
+
+#' @title Check HErZ file height order.
+#' @description HErZ file names are checked for the correct height order which is
+#'   especially important if the complete profile is passed. Within the package the
+#'   file names are expected to be decreasing, i.e., 258m, 178m, 116m, 69m,
+#'   35m, 10m. This function does not have a return value.
+#' @param fname a string of length n which holds n file names.
+#' @param herz.profile boolean which determines whether to check for the complete
+#'   HErZ profile or only the two levels 10m and 116m.
+CheckHerzHeightOrder <- function(fname, herz.profile) {
+  if (herz.profile) {
+    if (!grepl("258m", fname[1])) {
+      CallStop(paste0("Unexpected HErZ height: ", fname[1],
+                      "\n   Should be: 258m"))
+    }
+    if (!grepl("178m", fname[2])) {
+      CallStop(paste0("Unexpected HErZ height: ", fname[2],
+                      "\n   Should be: 178m"))
+    }
+    if (!grepl("116m", fname[3])) {
+      CallStop(paste0("Unexpected HErZ height: ", fname[3],
+                      "\n   Should be: 116m"))
+    }
+    if (!grepl("69m", fname[4])) {
+      CallStop(paste0("Unexpected HErZ height: ", fname[4],
+                      "\n   Should be: 69m"))
+    }
+    if (!grepl("35m", fname[5])) {
+      CallStop(paste0("Unexpected HErZ : ", fname[5],
+                      "\n   Should be: 35m"))
+    }
+    if (!grepl("10m", fname[6])) {
+      CallStop(paste0("Unexpected HErZ height: ", fname[6],
+                      "\n   Should be: 10m"))
+    }
+  } else {
+    if (!grepl("116m", fname[1])) {
+      CallStop(paste0("Unexpected HErZ height: ", fname[1],
+                      "\n   Should be: 116m"))
+    }
+    if (!grepl("10m", fname[2])) {
+      CallStop(paste0("Unexpected HErZ height: ", fname[2],
+                      "\n   Should be: 10m"))
     }
   }
 }
@@ -125,60 +173,59 @@ CheckHerzParams <- function(herz.param, herz.profile) {
 
 #' @title Check parameter names of specific tower measurements.
 #' @description Parameter names are checked. Within the package the names
-#'   are expected to follow a certain structure: "windspeed_xxxm", whereas xxx
+#'   are expected to follow a certain structure: "windspeed_xxxm", where xxx
 #'   equals the height of the measurement level and is expected to be monotonically
-#'   increasing or decreasing, depending on measurement site. This function does not
-#'   have a return value.
+#'   decreasing. This function does not have a return value.
 #' @param tower.param a string of length n which holds n parameter names.
 #' @param tower.name a string which holds the name of the tower.
 CheckTowerParams <- function(tower.param, tower.name) {
   if (tower.name == "Lindenberg") {
-    if (!tower.param[1] == "windspeed_10m") {
+    if (!tower.param[1] == "windspeed_98m") {
       CallStop(paste0("Unexpected Lindenberg parameter: ", tower.param[1],
-                      "\n   Should be: windspeed_10m"))
-    }
-    if (!tower.param[2] == "windspeed_20m") {
-      CallStop(paste0("Unexpected Lindenberg parameter: ", tower.param[2],
-                      "\n  Should be: windspeed_20m"))
-    }
-    if (!tower.param[3] == "windspeed_40m") {
-      CallStop(paste0("Unexpected Lindenberg parameter: ", tower.param[3],
-                      "\n   Should be: windspeed_40m"))
-    }
-    if (!tower.param[4] == "windspeed_60m") {
-      CallStop(paste0("Unexpected Lindenberg parameter: ", tower.param[4],
-                      "\n   Should be: windspeed_60m"))
-    }
-    if (!tower.param[5] == "windspeed_80m") {
-      CallStop(paste0("Unexpected Lindenberg parameter: ", tower.param[5],
-                      "\n  Should be: windspeed_80m"))
-    }
-    if (!tower.param[6] == "windspeed_98m") {
-      CallStop(paste0("Unexpected Lindenberg parameter: ", tower.param[6],
                       "\n   Should be: windspeed_98m"))
     }
+    if (!tower.param[2] == "windspeed_80m") {
+      CallStop(paste0("Unexpected Lindenberg parameter: ", tower.param[2],
+                      "\n  Should be: windspeed_80m"))
+    }
+    if (!tower.param[3] == "windspeed_60m") {
+      CallStop(paste0("Unexpected Lindenberg parameter: ", tower.param[3],
+                      "\n   Should be: windspeed_60m"))
+    }
+    if (!tower.param[4] == "windspeed_40m") {
+      CallStop(paste0("Unexpected Lindenberg parameter: ", tower.param[4],
+                      "\n   Should be: windspeed_40m"))
+    }
+    if (!tower.param[5] == "windspeed_20m") {
+      CallStop(paste0("Unexpected Lindenberg parameter: ", tower.param[5],
+                      "\n  Should be: windspeed_20m"))
+    }
+    if (!tower.param[6] == "windspeed_10m") {
+      CallStop(paste0("Unexpected Lindenberg parameter: ", tower.param[6],
+                      "\n   Should be: windspeed_10m"))
+    }
   } else if (tower.name == "Cabauw") {
-    if (!tower.param[1] == "windspeed_10m") {
+    if (!tower.param[1] == "windspeed_200m") {
       CallStop(paste0("Unexpected Cabauw parameter: ", tower.param[1],
                       "\n   Should be: windspeed_200m"))
     }
-    if (!tower.param[2] == "windspeed_20m") {
+    if (!tower.param[2] == "windspeed_140m") {
       CallStop(paste0("Unexpected Cabauw parameter: ", tower.param[2],
                       "\n   Should be: windspeed_140m"))
     }
-    if (!tower.param[3] == "windspeed_40m") {
+    if (!tower.param[3] == "windspeed_80m") {
       CallStop(paste0("Unexpected Cabauw parameter: ", tower.param[3],
                       "\n   Should be: windspeed_80m"))
     }
-    if (!tower.param[4] == "windspeed_80m") {
+    if (!tower.param[4] == "windspeed_40m") {
       CallStop(paste0("Unexpected Cabauw parameter: ", tower.param[4],
                       "\n   Should be: windspeed_40m"))
     }
-    if (!tower.param[5] == "windspeed_140m") {
+    if (!tower.param[5] == "windspeed_20m") {
       CallStop(paste0("Unexpected Cabauw parameter: ", tower.param[5],
                       "\n   Should be: windspeed_20m"))
     }
-    if (!tower.param[6] == "windspeed_200m") {
+    if (!tower.param[6] == "windspeed_10m") {
       CallStop(paste0("Unexpected Cabauw parameter: ", tower.param[6],
                       "\n   Should be: windspeed_10m"))
     }

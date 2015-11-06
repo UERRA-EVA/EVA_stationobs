@@ -41,6 +41,11 @@ if (use.synthetic) {
 # == Checks on parameters ==
 if (ana.time.res$time.res != ana.time.res$hourly) {
   CheckHerzParams(herz.param, herz.profile)
+} else {
+  CheckHerzHeightOrder(herz.fname$Fino1, herz.profile)
+  CheckHerzHeightOrder(herz.fname$Fino2, herz.profile)
+  CheckHerzHeightOrder(herz.fname$Lindenberg, herz.profile)
+  CheckHerzHeightOrder(herz.fname$Cabauw, herz.profile)
 }
 if (!herz.profile) CallStop("HErZ profile is needed!")
 CheckTowerParams(lind.param, tower.name="Lindenberg")
@@ -58,21 +63,21 @@ fino2.102.xts = dat[[fino2.param]]
 
 # for Lindenberg
 dat = ExtractTowerData(lind.file, lind.param, ana.time.res)
-lind.10.xts = dat[[lind.param[1]]]
-lind.20.xts = dat[[lind.param[2]]]
-lind.40.xts = dat[[lind.param[3]]]
-lind.60.xts = dat[[lind.param[4]]]
-lind.80.xts = dat[[lind.param[5]]]
-lind.98.xts = dat[[lind.param[6]]]
+lind.10.xts = dat[[lind.param[6]]]
+lind.20.xts = dat[[lind.param[5]]]
+lind.40.xts = dat[[lind.param[4]]]
+lind.60.xts = dat[[lind.param[3]]]
+lind.80.xts = dat[[lind.param[2]]]
+lind.98.xts = dat[[lind.param[1]]]
 
 # for Cabauw
 dat = ExtractTowerData(cabauw.file, cabauw.param, ana.time.res)
-cabauw.10.xts = dat[[cabauw.param[[1]]]]
-cabauw.20.xts = dat[[cabauw.param[[2]]]]
-cabauw.40.xts = dat[[cabauw.param[[3]]]]
-cabauw.80.xts = dat[[cabauw.param[[4]]]]
-cabauw.140.xts = dat[[cabauw.param[[5]]]]
-cabauw.200.xts = dat[[cabauw.param[[6]]]]
+cabauw.10.xts = dat[[cabauw.param[[6]]]]
+cabauw.20.xts = dat[[cabauw.param[[5]]]]
+cabauw.40.xts = dat[[cabauw.param[[4]]]]
+cabauw.80.xts = dat[[cabauw.param[[3]]]]
+cabauw.140.xts = dat[[cabauw.param[[2]]]]
+cabauw.200.xts = dat[[cabauw.param[[1]]]]
 
 if (ana.time.res$time.res == monthly | ana.time.res$time.res == daily) {
   # == read ERA20C data ==
@@ -251,6 +256,7 @@ if (ana.time.res$time.res == monthly | ana.time.res$time.res == daily) {
 }
 
 # == get time series of same length ==
+# === tower data in objects are ordered from heighest to lowest height ===
 climobj = GetTowerObject(tower.xts=fino1.100.xts,
                          herz10.xts=herz10.fino1.xts,
                          herz35.xts=herz35.fino1.xts,
@@ -283,9 +289,9 @@ climobj = GetTowerObject(tower.xts=fino2.102.xts,
                          era20c.param=era20c.param)
 fino2.climobj = climobj$tower.object
 
-climobj = GetTowerObject(tower.xts=lind.10.xts, tower2.xts=lind.20.xts,
-                         tower3.xts=lind.40.xts, tower4.xts=lind.60.xts,
-                         tower5.xts=lind.80.xts, tower6.xts=lind.98.xts,
+climobj = GetTowerObject(tower.xts=lind.98.xts, tower2.xts=lind.80.xts,
+                         tower3.xts=lind.60.xts, tower4.xts=lind.40.xts,
+                         tower5.xts=lind.20.xts, tower6.xts=lind.10.xts,
                          herz10.xts=herz10.lind.xts,
                          herz35.xts=herz35.lind.xts,
                          herz69.xts=herz69.lind.xts,
@@ -301,9 +307,9 @@ climobj = GetTowerObject(tower.xts=lind.10.xts, tower2.xts=lind.20.xts,
                          era20c.param=era20c.param)
 lind.climobj = climobj$tower.object
 
-climobj = GetTowerObject(tower.xts=cabauw.10.xts, tower2.xts=cabauw.20.xts,
-                         tower3.xts=cabauw.40.xts, tower4.xts=cabauw.80.xts,
-                         tower5.xts=cabauw.140.xts, tower6.xts=cabauw.200.xts,
+climobj = GetTowerObject(tower.xts=cabauw.200.xts, tower2.xts=cabauw.140.xts,
+                         tower3.xts=cabauw.80.xts, tower4.xts=cabauw.40.xts,
+                         tower5.xts=cabauw.20.xts, tower6.xts=cabauw.10.xts,
                          herz10.xts=herz10.cabauw.xts,
                          herz35.xts=herz35.cabauw.xts,
                          herz69.xts=herz69.cabauw.xts,

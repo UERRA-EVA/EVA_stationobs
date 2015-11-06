@@ -912,16 +912,16 @@ PlotHistogramsTower <- function(outdir, fname, ana.time.res, tower.obj) {
   if (t.obj$tower$data$StationName[1] == "Lindenberg" |
       t.obj$tower$data$StationName[1] == "Cabauw") {
 
-    data.10.vals = t.obj$tower$data$wind_speed
+    data.10.vals = t.obj$tower6$data$wind_speed
     min.val = floor(min(min(t.obj$era20c10$data$wind_speed, na.rm=TRUE),
                         min(t.obj$herz10$data$wind_speed, na.rm=TRUE),
                         min(data.10.vals, na.rm=TRUE)))
     if (t.obj$tower$data$StationName[1] == "Lindenberg") {
       tit.100.ext = "Lindenberg at 98m"
       tit.10.ext = "Lindenberg at 10m"
-      data.100.vals = t.obj$tower6$data$wind_speed
-      min.t.val = min(t.obj$tower$data$wind_speed, na.rm=TRUE)
-      max.t.val = max(t.obj$tower6$data$wind_speed, na.rm=TRUE)
+      data.100.vals = t.obj$tower$data$wind_speed
+      min.t.val = min(t.obj$tower6$data$wind_speed, na.rm=TRUE)
+      max.t.val = max(t.obj$tower$data$wind_speed, na.rm=TRUE)
       max.val = ceiling(max(max(t.obj$era20c100$data$wind_speed, na.rm=TRUE),
                             max(data.100.vals, na.rm=TRUE),
                             max(t.obj$herz116$data$wind_speed, na.rm=TRUE))) + 1
@@ -929,10 +929,10 @@ PlotHistogramsTower <- function(outdir, fname, ana.time.res, tower.obj) {
       tit.100.ext = "Cabauw at 80m"
       tit2.100.ext = "Cabauw at 140m"
       tit.10.ext = "Cabauw at 10m"
-      data.100.vals = t.obj$tower4$data$wind_speed
-      data2.100.vals = t.obj$tower5$data$wind_speed
-      min.t.val = min(t.obj$tower4$data$wind_speed, na.rm=TRUE)
-      max.t.val = max(t.obj$tower5$data$wind_speed, na.rm=TRUE)
+      data.100.vals = t.obj$tower3$data$wind_speed
+      data2.100.vals = t.obj$tower2$data$wind_speed
+      min.t.val = min(t.obj$tower3$data$wind_speed, na.rm=TRUE)
+      max.t.val = max(t.obj$tower2$data$wind_speed, na.rm=TRUE)
       max.val = ceiling(max(max(t.obj$era20c100$data$wind_speed, na.rm=TRUE),
                             max(data.100.vals, na.rm=TRUE),
                             max(data2.100.vals, na.rm=TRUE),
@@ -1258,16 +1258,16 @@ PlotTowerERAprofileBP <- function(tower.obj, fname, ana.time.res) {
 
   if (t.obj$tower$data$StationName[1] == "Lindenberg") {
     if (ana.time.res$time.res == ana.time.res$hourly) {
-      boxplot.default(t.obj$tower$data$wind_speed,
+      boxplot.default(t.obj$tower6$data$wind_speed,
                       t.obj$herz10$data$wind_speed,
                       dummy,
-                      t.obj$tower2$data$wind_speed,
-                      t.obj$herz35$data$wind_speed,
-                      t.obj$tower3$data$wind_speed,
-                      t.obj$tower4$data$wind_speed,
-                      t.obj$herz69$data$wind_speed,
                       t.obj$tower5$data$wind_speed,
-                      t.obj$tower6$data$wind_speed,
+                      t.obj$herz35$data$wind_speed,
+                      t.obj$tower4$data$wind_speed,
+                      t.obj$tower3$data$wind_speed,
+                      t.obj$herz69$data$wind_speed,
+                      t.obj$tower2$data$wind_speed,
+                      t.obj$tower$data$wind_speed,
                       dummy,
                       t.obj$herz116$data$wind_speed,
                       horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
@@ -1278,16 +1278,16 @@ PlotTowerERAprofileBP <- function(tower.obj, fname, ana.time.res) {
                       col=c("red", "blue", "", "red", "blue", "red", "red",
                             "blue", "red", "red", "", "blue"))
     } else {
-      boxplot.default(t.obj$tower$data$wind_speed,
+      boxplot.default(t.obj$tower6$data$wind_speed,
                       t.obj$herz10$data$wind_speed,
                       t.obj$era20c10$data$wind_speed,
-                      t.obj$tower2$data$wind_speed,
-                      t.obj$herz35$data$wind_speed,
-                      t.obj$tower3$data$wind_speed,
-                      t.obj$tower4$data$wind_speed,
-                      t.obj$herz69$data$wind_speed,
                       t.obj$tower5$data$wind_speed,
-                      t.obj$tower6$data$wind_speed,
+                      t.obj$herz35$data$wind_speed,
+                      t.obj$tower4$data$wind_speed,
+                      t.obj$tower3$data$wind_speed,
+                      t.obj$herz69$data$wind_speed,
+                      t.obj$tower2$data$wind_speed,
+                      t.obj$tower$data$wind_speed,
                       t.obj$era20c100$data$wind_speed,
                       t.obj$herz116$data$wind_speed,
                       horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
@@ -1300,17 +1300,17 @@ PlotTowerERAprofileBP <- function(tower.obj, fname, ana.time.res) {
     }
   } else if (t.obj$tower$data$StationName[1] == "Cabauw") {
     if (ana.time.res$time.res == ana.time.res$hourly) {
-      boxplot.default(t.obj$tower$data$wind_speed,
+      boxplot.default(t.obj$tower6$data$wind_speed,
                       t.obj$herz10$data$wind_speed,
                       dummy,
-                      t.obj$tower2$data$wind_speed,
+                      t.obj$tower5$data$wind_speed,
                       t.obj$herz35$data$wind_speed,
-                      t.obj$tower3$data$wind_speed,
-                      t.obj$herz69$data$wind_speed,
                       t.obj$tower4$data$wind_speed,
+                      t.obj$herz69$data$wind_speed,
+                      t.obj$tower3$data$wind_speed,
                       dummy,
                       t.obj$herz116$data$wind_speed,
-                      t.obj$tower5$data$wind_speed,
+                      t.obj$tower2$data$wind_speed,
                       horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
                       boxwex=bwex, staplewex=swex, las=1, ylim=wind.range,
                       names=c("Cabauw 10m", "HErZ 10m", "", "Cabauw 20m",
@@ -1319,17 +1319,17 @@ PlotTowerERAprofileBP <- function(tower.obj, fname, ana.time.res) {
                       col=c("red", "blue", "", "red", "blue", "red",
                             "blue", "red", "", "blue", "red"))
     } else {
-      boxplot.default(t.obj$tower$data$wind_speed,
+      boxplot.default(t.obj$tower6$data$wind_speed,
                       t.obj$herz10$data$wind_speed,
                       t.obj$era20c10$data$wind_speed,
-                      t.obj$tower2$data$wind_speed,
+                      t.obj$tower5$data$wind_speed,
                       t.obj$herz35$data$wind_speed,
-                      t.obj$tower3$data$wind_speed,
-                      t.obj$herz69$data$wind_speed,
                       t.obj$tower4$data$wind_speed,
+                      t.obj$herz69$data$wind_speed,
+                      t.obj$tower3$data$wind_speed,
                       t.obj$era20c100$data$wind_speed,
                       t.obj$herz116$data$wind_speed,
-                      t.obj$tower5$data$wind_speed,
+                      t.obj$tower2$data$wind_speed,
                       horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
                       boxwex=bwex, staplewex=swex, las=1, ylim=wind.range,
                       names=c("Cabauw 10m", "HErZ 10m", "ERA20C 10m", "Cabauw 20m",
@@ -1448,15 +1448,15 @@ PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
   color = list(tower="blue", herz="red", era20="green", black="black")
 
   if (t.obj$tower$data$StationName[1] == "Lindenberg") {
-    plot.10.ext = paste0(t.obj$tower$data$StationName[1], " at ",
-                         t.obj$tower$data$height[1], "m ")
-    plot.100.ext = paste0(t.obj$tower6$data$StationName[1], " at ",
-                          t.obj$tower6$data$height[1], "m ")
+    plot.10.ext = paste0(t.obj$tower6$data$StationName[1], " at ",
+                         t.obj$tower6$data$height[1], "m ")
+    plot.100.ext = paste0(t.obj$tower$data$StationName[1], " at ",
+                          t.obj$tower$data$height[1], "m ")
   } else if (t.obj$tower$data$StationName[1] == "Cabauw") {
-    plot.10.ext = paste0(t.obj$tower$data$StationName[1], " at ",
-                         t.obj$tower$data$height[1], "m ")
-    plot.100.ext = paste0(t.obj$tower4$data$StationName[1], " at ",
-                          t.obj$tower4$data$height[1], "m ")
+    plot.10.ext = paste0(t.obj$tower6$data$StationName[1], " at ",
+                         t.obj$tower6$data$height[1], "m ")
+    plot.100.ext = paste0(t.obj$tower3$data$StationName[1], " at ",
+                          t.obj$tower3$data$height[1], "m ")
   } else if (t.obj$tower$data$StationName[1] == "Fino1" |
              t.obj$tower$data$StationName[1] == "Fino2") {
     plot.100.ext = paste0(t.obj$tower$data$StationName[1], " at ",
@@ -1476,9 +1476,9 @@ PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
 
   h.xts = xts(t.obj$herz116$data$wind_speed, order.by=tower.date)
   if (t.obj$tower$data$StationName[1] == "Lindenberg")
-    l.xts = xts(t.obj$tower6$data$wind_speed, order.by=tower.date)
+    l.xts = xts(t.obj$tower$data$wind_speed, order.by=tower.date)
   if (t.obj$tower$data$StationName[1] == "Cabauw")
-    l.xts = xts(t.obj$tower4$data$wind_speed, order.by=tower.date)
+    l.xts = xts(t.obj$tower3$data$wind_speed, order.by=tower.date)
   if (t.obj$tower$data$StationName[1] == "Fino1" |
       t.obj$tower$data$StationName[1] == "Fino2")
     l.xts = xts(t.obj$tower$data$wind_speed, order.by=tower.date)
@@ -1507,7 +1507,7 @@ PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
   h.xts = xts(t.obj$herz10$data$wind_speed, order.by=tower.date)
   if (t.obj$tower$data$StationName[1] == "Lindenberg" |
       t.obj$tower$data$StationName[1] == "Cabauw") {
-    l.xts = xts(t.obj$tower$data$wind_speed, order.by=tower.date)
+    l.xts = xts(t.obj$tower6$data$wind_speed, order.by=tower.date)
     plot(dummy, main=NULL, ylim=c(yliml.rel, ylimh.rel), las=1)
     title(ylab="relative difference", line=2.5)
     lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col=color$herz)
@@ -1573,8 +1573,8 @@ PlotTowerERAprofileAnnualVar <- function(tower.obj, fname) {
       plot.ext.100 = "Lindenberg at 98m"
       mon.tower.100 = list()
       mon.tower.10 = list()
-      Lind98Xts = xts(t.obj$tower6$data$wind_speed, order.by=tower.date)
-      Lind10Xts = xts(t.obj$tower$data$wind_speed, order.by=tower.date)
+      Lind98Xts = xts(t.obj$tower$data$wind_speed, order.by=tower.date)
+      Lind10Xts = xts(t.obj$tower6$data$wind_speed, order.by=tower.date)
       for (cnt in seq(12)) {
         mon.tower.100[[cnt]] = Lind98Xts[which( tower.date$mon==cnt-1 )]
         mon.tower.10[[cnt]] = Lind10Xts[which( tower.date$mon==cnt-1 )]
@@ -1586,9 +1586,9 @@ PlotTowerERAprofileAnnualVar <- function(tower.obj, fname) {
       mon.tower.100 = list()
       mon.tower2.100 = list()
       mon.tower.10 = list()
-      Cabauw10Xts = xts(t.obj$tower$data$wind_speed, order.by=tower.date)
-      Cabauw80Xts = xts(t.obj$tower4$data$wind_speed, order.by=tower.date)
-      Cabauw140Xts = xts(t.obj$tower5$data$wind_speed, order.by=tower.date)
+      Cabauw10Xts = xts(t.obj$tower6$data$wind_speed, order.by=tower.date)
+      Cabauw80Xts = xts(t.obj$tower3$data$wind_speed, order.by=tower.date)
+      Cabauw140Xts = xts(t.obj$tower2$data$wind_speed, order.by=tower.date)
       for (cnt in seq(12)) {
         mon.tower.100[[cnt]] = Cabauw80Xts[which( tower.date$mon==cnt-1 )]
         mon.tower2.100[[cnt]] = Cabauw140Xts[which( tower.date$mon==cnt-1 )]
@@ -1804,10 +1804,10 @@ PlotTowerERAprofileAnnualCycle <- function(tower.obj, fname) {
     mon.Lind60 = vector(mode="numeric", length=12)
     mon.Lind40 = vector(mode="numeric", length=12)
     mon.Lind10 = vector(mode="numeric", length=12)
-    Lind98Xts = xts(t.obj$tower6$data$wind_speed, order.by=tower.date)
-    Lind60Xts = xts(t.obj$tower4$data$wind_speed, order.by=tower.date)
-    Lind40Xts = xts(t.obj$tower3$data$wind_speed, order.by=tower.date)
-    Lind10Xts = xts(t.obj$tower$data$wind_speed, order.by=tower.date)
+    Lind98Xts = xts(t.obj$tower$data$wind_speed, order.by=tower.date)
+    Lind60Xts = xts(t.obj$tower3$data$wind_speed, order.by=tower.date)
+    Lind40Xts = xts(t.obj$tower4$data$wind_speed, order.by=tower.date)
+    Lind10Xts = xts(t.obj$tower6$data$wind_speed, order.by=tower.date)
     for (cnt in seq(12)) {
       mon.Lind98[cnt] = mean(Lind98Xts[which( tower.date$mon==cnt-1 )])
       mon.Lind60[cnt] = mean(Lind60Xts[which( tower.date$mon==cnt-1 )])
@@ -1993,11 +1993,11 @@ PlotTowerERAprofileAnnualCycle <- function(tower.obj, fname) {
     mon.Cabauw40 = vector(mode="numeric", length=12)
     mon.Cabauw20 = vector(mode="numeric", length=12)
     mon.Cabauw10 = vector(mode="numeric", length=12)
-    Cabauw140Xts = xts(t.obj$tower5$data$wind_speed, order.by=tower.date)
-    Cabauw80Xts = xts(t.obj$tower4$data$wind_speed, order.by=tower.date)
-    Cabauw40Xts = xts(t.obj$tower3$data$wind_speed, order.by=tower.date)
-    Cabauw20Xts = xts(t.obj$tower2$data$wind_speed, order.by=tower.date)
-    Cabauw10Xts = xts(t.obj$tower$data$wind_speed, order.by=tower.date)
+    Cabauw140Xts = xts(t.obj$tower2$data$wind_speed, order.by=tower.date)
+    Cabauw80Xts = xts(t.obj$tower3$data$wind_speed, order.by=tower.date)
+    Cabauw40Xts = xts(t.obj$tower4$data$wind_speed, order.by=tower.date)
+    Cabauw20Xts = xts(t.obj$tower5$data$wind_speed, order.by=tower.date)
+    Cabauw10Xts = xts(t.obj$tower6$data$wind_speed, order.by=tower.date)
     for (cnt in seq(12)) {
       mon.Cabauw140[cnt] = mean(Cabauw140Xts[which( tower.date$mon==cnt-1 )])
       mon.Cabauw80[cnt] = mean(Cabauw80Xts[which( tower.date$mon==cnt-1 )])
@@ -2311,6 +2311,7 @@ PreparePlottingTowerDailyCycle <- function(tower.obj, fname) {
     tower3.xts = xts(t.obj$tower3$data$wind_speed, order.by=tower.date)
     tower4.xts = xts(t.obj$tower4$data$wind_speed, order.by=tower.date)
     tower5.xts = xts(t.obj$tower5$data$wind_speed, order.by=tower.date)
+    tower6.xts = xts(t.obj$tower6$data$wind_speed, order.by=tower.date)
   }
 
   # these lists are used for the complete time period
@@ -2347,14 +2348,11 @@ PreparePlottingTowerDailyCycle <- function(tower.obj, fname) {
   }
 
   PST1 = PlottingSettings(t.obj$tower$data)
-  if (!is.null(tower2.xts) & !is.null(tower3.xts) &
-      !is.null(tower4.xts) & !is.null(tower5.xts)) {
+  if (!is.null(tower6.xts)) {
     PST2 = PlottingSettings(t.obj$tower2$data)
     PST3 = PlottingSettings(t.obj$tower3$data)
     PST4 = PlottingSettings(t.obj$tower4$data)
     PST5 = PlottingSettings(t.obj$tower5$data)
-    PS = list(PST1=PST1, PST2=PST2, PST3=PST3, PST4=PST4, PST5=PST5)
-  } else if (!is.null(tower6.xts)) {
     PST6 = PlottingSettings(t.obj$tower6$data)
     PS = list(PST1=PST1, PST2=PST2, PST3=PST3, PST4=PST4, PST5=PST5, PST6=PST6)
   } else {
@@ -2362,7 +2360,7 @@ PreparePlottingTowerDailyCycle <- function(tower.obj, fname) {
   }
   fname.new = c(gsub("DailyCycle", "DailyCycle_allTime-line", fname),
                 gsub("DailyCycle", "DailyCycle_allTime-boxPlot", fname))
-  PlotTowerDailyCycle(dayhour.tower1, dayhour.tower2, dayhour.tower3,
+  PlotDailyCycleTower(dayhour.tower1, dayhour.tower2, dayhour.tower3,
                       dayhour.tower4, dayhour.tower5, dayhour.tower6,
                       month.names, PS, fname.new)
 
@@ -2415,7 +2413,7 @@ PreparePlottingHerzDailyCycle <- function(tower.obj, fname) {
   PS = list(PS10=PS10, PS35=PS35, PS69=PS69, PS116=PS116)
   fname.new = c(gsub("DailyCycle", "DailyCycle_allTime-line", fname),
                 gsub("DailyCycle", "DailyCycle_allTime-boxPlot", fname))
-  PlotHerzDailyCycle(dayhourHerz10, dayhourHerz35,
+  PlotDailyCycleHerz(dayhourHerz10, dayhourHerz35,
                      dayhourHerz69, dayhourHerz116, month.names, PS, fname.new)
 
   # these lists are used for specific months only time periods
@@ -2461,7 +2459,7 @@ PreparePlottingHerzDailyCycle <- function(tower.obj, fname) {
 
   fname.new = c(gsub("DailyCycle", "DailyCycle_selectMonths-line", fname),
                 gsub("DailyCycle", "DailyCycle_selectMonths-boxPlot", fname))
-  PlotHerzDailyCycle(dayhour.month.Herz10, dayhour.month.Herz35,
+  PlotDailyCycleHerz(dayhour.month.Herz10, dayhour.month.Herz35,
                      dayhour.month.Herz69, dayhour.month.Herz116, month.names, PS,
                      fname.new)
 
@@ -2472,7 +2470,7 @@ PreparePlottingHerzDailyCycle <- function(tower.obj, fname) {
 #' @title
 #' @description
 #' @param
-PlotHerzDailyCycle <- function(Herz10, Herz35, Herz69, Herz116, month.names, PS, fname) {
+PlotDailyCycleHerz <- function(Herz10, Herz35, Herz69, Herz116, month.names, PS, fname) {
 
   x.lab = "time of day [hours]"
   y.lab = "wind speed [m/s]"
@@ -2630,7 +2628,7 @@ PlotHerzDailyCycle <- function(Herz10, Herz35, Herz69, Herz116, month.names, PS,
 #' @title
 #' @description
 #' @param
-PlotTowerDailyCycle <- function(tower1, tower2, tower3, tower4, tower5, tower6,
+PlotDailyCycleTower <- function(tower1, tower2, tower3, tower4, tower5, tower6,
                                 month.names, PS, fname) {
 
   x.lab = "time of day [hours]"
@@ -2647,10 +2645,10 @@ PlotTowerDailyCycle <- function(tower1, tower2, tower3, tower4, tower5, tower6,
            ylim=c(2,7), xlab=x.lab, ylab=y.lab)
       if (length(tower6)>0) {
         lines(tower2[[cnt]]$mean, col="red", pch=16, type="b")
-        lines(tower3[[cnt]]$mean, col="orange", pch=16, type="b")
-        lines(tower4[[cnt]]$mean, col="green", pch=16, type="b")
+        lines(tower3[[cnt]]$mean, col="magenta", pch=16, type="b")
+        lines(tower4[[cnt]]$mean, col="orange", pch=16, type="b")
         lines(tower5[[cnt]]$mean, col="black", pch=16, type="b")
-        lines(tower6[[cnt]]$mean, col="magenta", pch=16, type="b")
+        lines(tower6[[cnt]]$mean, col="green", pch=16, type="b")
         legend("top", legend=c(paste0(as.character(PS$PST1$tower.name), " at ",
                                       as.character(PS$PST1$tower.height)),
                                paste0(as.character(PS$PST2$tower.name), " at ",
@@ -2663,24 +2661,7 @@ PlotTowerDailyCycle <- function(tower1, tower2, tower3, tower4, tower5, tower6,
                                       as.character(PS$PST5$tower.height)),
                                paste0(as.character(PS$PST6$tower.name), " at ",
                                       as.character(PS$PST6$tower.height))),
-               text.col=c("blue", "red", "orange", "green", "black", "magenta"))
-      } else if(length(tower2)>0 & length(tower3)>0 &
-                length(tower4)>0 & length(tower5)>0) {
-        lines(tower2[[cnt]]$mean, col="red", pch=16, type="b")
-        lines(tower3[[cnt]]$mean, col="orange", pch=16, type="b")
-        lines(tower4[[cnt]]$mean, col="green", pch=16, type="b")
-        lines(tower5[[cnt]]$mean, col="black", pch=16, type="b")
-        legend("top", legend=c(paste0(as.character(PS$PST1$tower.name), " at ",
-                                      as.character(PS$PST1$tower.height)),
-                               paste0(as.character(PS$PST2$tower.name), " at ",
-                                      as.character(PS$PST2$tower.height)),
-                               paste0(as.character(PS$PST3$tower.name), " at ",
-                                      as.character(PS$PST3$tower.height)),
-                               paste0(as.character(PS$PST4$tower.name), " at ",
-                                      as.character(PS$PST4$tower.height)),
-                               paste0(as.character(PS$PST5$tower.name), " at ",
-                                      as.character(PS$PST5$tower.height))),
-               text.col=c("blue", "red", "orange", "green", "black"))
+               text.col=c("blue", "red", "magenta", "orange", "black", "green"))
       } else {
         legend("top", legend=c(paste0(as.character(PS$PST1$tower.name), " at ",
                                       as.character(PS$PST1$tower.height))),
@@ -2698,10 +2679,10 @@ PlotTowerDailyCycle <- function(tower1, tower2, tower3, tower4, tower5, tower6,
     if (length(tower6)>0) {
       cat("\n----------- Im in tower6------------------\n")
       lines(tower2$mean, col="red", pch=16, type="b")
-      lines(tower3$mean, col="orange", pch=16, type="b")
-      lines(tower4$mean, col="green", pch=16, type="b")
+      lines(tower3$mean, col="magenta", pch=16, type="b")
+      lines(tower4$mean, col="orange", pch=16, type="b")
       lines(tower5$mean, col="black", pch=16, type="b")
-      lines(tower6$mean, col="magenta", pch=16, type="b")
+      lines(tower6$mean, col="green", pch=16, type="b")
       legend("top", legend=c(paste0(as.character(PS$PST1$tower.name), " at ",
                                     as.character(PS$PST1$tower.height)),
                              paste0(as.character(PS$PST2$tower.name), " at ",
@@ -2714,25 +2695,7 @@ PlotTowerDailyCycle <- function(tower1, tower2, tower3, tower4, tower5, tower6,
                                     as.character(PS$PST5$tower.height)),
                              paste0(as.character(PS$PST6$tower.name), " at ",
                                     as.character(PS$PST6$tower.height))),
-             text.col=c("blue", "red", "orange", "green", "black", "magenta"))
-    } else if (length(tower2)>0 & length(tower3)>0 &
-               length(tower4)>0 & length(tower5)>0) {
-      cat("\n----------- Im in tower2 to tower5------------------\n")
-      lines(tower2$mean, col="red", pch=16, type="b")
-      lines(tower3$mean, col="orange", pch=16, type="b")
-      lines(tower4$mean, col="green", pch=16, type="b")
-      lines(tower5$mean, col="black", pch=16, type="b")
-      legend("top", legend=c(paste0(as.character(PS$PST1$tower.name), " at ",
-                                    as.character(PS$PST1$tower.height)),
-                             paste0(as.character(PS$PST2$tower.name), " at ",
-                                    as.character(PS$PST2$tower.height)),
-                             paste0(as.character(PS$PST3$tower.name), " at ",
-                                    as.character(PS$PST3$tower.height)),
-                             paste0(as.character(PS$PST4$tower.name), " at ",
-                                    as.character(PS$PST4$tower.height)),
-                             paste0(as.character(PS$PST5$tower.name), " at ",
-                                    as.character(PS$PST5$tower.height))),
-             text.col=c("blue", "red", "orange", "green", "black"))
+             text.col=c("blue", "red", "magenta", "orange", "black", "green"))
     } else {
       cat("\n----------- Im in tower1 only------------------\n")
       legend("top", legend=c(paste0(as.character(PS$PST1$tower.name), " at ",
@@ -2796,11 +2759,11 @@ PlotTowerExtremesContr <- function(tower.obj, fname, threshold) {
   } else if (t.obj$tower$data$StationName[1] == "Lindenberg") {
 
     # against HErZ at 10m
-    obs = t.obj$tower$data$wind_speed
+    obs = t.obj$tower6$data$wind_speed
     forec = t.obj$herz10$data$wind_speed
     scores.df = GetScoresDF(threshold, obs, forec)
     fname.new = gsub("-extremes_", "_HErZ10m-L10m-extremes_", fname)
-    PS["tower.height"] = as.character(t.obj$tower$data$height[1])
+    PS["tower.height"] = as.character(t.obj$tower6$data$height[1])
     PlotTowerExtremes(t.obj, fname.new, scores.df, threshold, PS)
     fname.new = gsub("-extremes_", "_HErZ10m-L10m-extremes-HRvsFAR_", fname)
     PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.rate,
@@ -2808,11 +2771,11 @@ PlotTowerExtremesContr <- function(tower.obj, fname, threshold) {
 
     if (ana.time.res$time.res != ana.time.res$hourly) {
       # against ERA20C at 10m
-      obs = t.obj$tower$data$wind_speed
+      obs = t.obj$tower6$data$wind_speed
       forec = t.obj$era20c10$data$wind_speed
       scores.df = GetScoresDF(threshold, obs, forec)
       fname.new = gsub("-extremes_", "_ERA20C10m-L10m-extremes_", fname)
-      PS["tower.height"] = as.character(t.obj$tower$data$height[1])
+      PS["tower.height"] = as.character(t.obj$tower6$data$height[1])
       PlotTowerExtremes(t.obj, fname.new, scores.df, threshold, PS)
       fname.new = gsub("-extremes_", "_ERA20C10m-L10m-extremes-HRvsFAR_", fname)
       PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.rate,
@@ -2820,44 +2783,44 @@ PlotTowerExtremesContr <- function(tower.obj, fname, threshold) {
     }
 
     # against HErZ at 35m
-    obs = t.obj$tower3$data$wind_speed
+    obs = t.obj$tower4$data$wind_speed
     forec = t.obj$herz35$data$wind_speed
     scores.df = GetScoresDF(threshold, obs, forec)
     fname.new = gsub("-extremes_", "_HErZ35m-L40-extremes_", fname)
-    PS["tower.height"] = as.character(t.obj$tower3$data$height[1])
+    PS["tower.height"] = as.character(t.obj$tower4$data$height[1])
     PlotTowerExtremes(t.obj, fname.new, scores.df, threshold, PS)
     fname.new = gsub("-extremes_", "_HErZ35m-L40-extremes-HRvsFAR_", fname)
     PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.rate,
                      scores.df$hit.rate, PS)
 
     # against HErZ at 69m
-    obs = t.obj$tower4$data$wind_speed
+    obs = t.obj$tower3$data$wind_speed
     forec = t.obj$herz69$data$wind_speed
     scores.df = GetScoresDF(threshold, obs, forec)
     fname.new = gsub("-extremes_", "_HErZ69m-L60-extremes_", fname)
-    PS["tower.height"] = as.character(t.obj$tower4$data$height[1])
+    PS["tower.height"] = as.character(t.obj$tower3$data$height[1])
     PlotTowerExtremes(t.obj, fname.new, scores.df, threshold, PS)
     fname.new = gsub("-extremes_", "_HErZ69m-L60-extremes-HRvsFAR_", fname)
     PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.rate,
                      scores.df$hit.rate, PS)
 
     # against HErZ at 69m
-    obs = t.obj$tower5$data$wind_speed
+    obs = t.obj$tower2$data$wind_speed
     forec = t.obj$herz69$data$wind_speed
     scores.df = GetScoresDF(threshold, obs, forec)
     fname.new = gsub("-extremes_", "_HErZ69m-L80-extremes_", fname)
-    PS["tower.height"] = as.character(t.obj$tower5$data$height[1])
+    PS["tower.height"] = as.character(t.obj$tower2$data$height[1])
     PlotTowerExtremes(t.obj, fname.new, scores.df, threshold, PS)
     fname.new = gsub("-extremes_", "_HErZ69m-L80-extremes-HRvsFAR_", fname)
     PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.rate,
                      scores.df$hit.rate, PS)
 
     # against HErZ at 116m
-    obs = t.obj$tower6$data$wind_speed
+    obs = t.obj$tower$data$wind_speed
     forec = t.obj$herz116$data$wind_speed
     scores.df = GetScoresDF(threshold, obs, forec)
     fname.new = gsub("-extremes_", "_HErZ116m-L98m-extremes_", fname)
-    PS["tower.height"] = as.character(t.obj$tower6$data$height[1])
+    PS["tower.height"] = as.character(t.obj$tower$data$height[1])
     PlotTowerExtremes(t.obj, fname.new, scores.df, threshold, PS)
     fname.new = gsub("-extremes_", "_HErZ116m-L98m-extremes-HRvsFAR_", fname)
     PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.rate,
@@ -2865,11 +2828,11 @@ PlotTowerExtremesContr <- function(tower.obj, fname, threshold) {
 
     if (ana.time.res$time.res != ana.time.res$hourly) {
       # against ERA20C at 100m
-      obs = t.obj$tower6$data$wind_speed
+      obs = t.obj$tower$data$wind_speed
       forec = t.obj$era20c100$data$wind_speed
       scores.df = GetScoresDF(threshold, obs, forec)
       fname.new = gsub("-extremes_", "_ERA20C100m-L98m-extremes_", fname)
-      PS["tower.height"] = as.character(t.obj$tower6$data$height[1])
+      PS["tower.height"] = as.character(t.obj$tower$data$height[1])
       PlotTowerExtremes(t.obj, fname.new, scores.df, threshold, PS)
       fname.new = gsub("-extremes_", "_ERA20C100m-L98m-extremes-HRvsFAR_", fname)
       PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.rate,
@@ -2879,79 +2842,79 @@ PlotTowerExtremesContr <- function(tower.obj, fname, threshold) {
   } else if (t.obj$tower$data$StationName[1] == "Cabauw") {
 
     # against HErZ at 10m
-    obs = t.obj$tower$data$wind_speed
+    obs = t.obj$tower6$data$wind_speed
     forec = t.obj$herz10$data$wind_speed
     scores.df = GetScoresDF(threshold, obs, forec)
     fname.new = gsub("-extremes_", "_HErZ10m-C10m-extremes_", fname)
-    PS["tower.height"] = as.character(t.obj$tower$data$height[1])
+    PS["tower.height"] = as.character(t.obj$tower6$data$height[1])
     PlotTowerExtremes(t.obj, fname.new, scores.df, threshold, PS)
     fname.new = gsub("-extremes_", "_HErZ10m-C10m-extremes-HRvsFAR_", fname)
     PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.rate,
                      scores.df$hit.rate, PS)
 
     # against HErZ at 35m
-    obs = t.obj$tower3$data$wind_speed
+    obs = t.obj$tower4$data$wind_speed
     forec = t.obj$herz35$data$wind_speed
     scores.df = GetScoresDF(threshold, obs, forec)
     fname.new = gsub("-extremes_", "_HErZ35m-C40m-extremes_", fname)
-    PS["tower.height"] = as.character(t.obj$tower3$data$height[1])
+    PS["tower.height"] = as.character(t.obj$tower4$data$height[1])
     PlotTowerExtremes(t.obj, fname.new, scores.df, threshold, PS)
     fname.new = gsub("-extremes_", "_HErZ35m-C40m-extremes-HRvsFAR_", fname)
     PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.rate,
                      scores.df$hit.rate, PS)
 
     # against HErZ at 69m
-    obs = t.obj$tower4$data$wind_speed
+    obs = t.obj$tower3$data$wind_speed
     forec = t.obj$herz69$data$wind_speed
     scores.df = GetScoresDF(threshold, obs, forec)
     fname.new = gsub("-extremes_", "_HErZ69m-C80m-extremes_", fname)
-    PS["tower.height"] = as.character(t.obj$tower4$data$height[1])
+    PS["tower.height"] = as.character(t.obj$tower3$data$height[1])
     PlotTowerExtremes(t.obj, fname.new, scores.df, threshold, PS)
     fname.new = gsub("-extremes_", "_HErZ69m-C80m-extremes-HRvsFAR_", fname)
     PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.rate,
                      scores.df$hit.rate, PS)
 
     # against HErZ at 116m
-    obs = t.obj$tower5$data$wind_speed
+    obs = t.obj$tower2$data$wind_speed
     forec = t.obj$herz116$data$wind_speed
     scores.df = GetScoresDF(threshold, obs, forec)
-    fname.new = gsub("-extremes_", "_HErZ116m-C120m-extremes_", fname)
-    PS["tower.height"] = as.character(t.obj$tower5$data$height[1])
+    fname.new = gsub("-extremes_", "_HErZ116m-C140m-extremes_", fname)
+    PS["tower.height"] = as.character(t.obj$tower2$data$height[1])
     PlotTowerExtremes(t.obj, fname.new, scores.df, threshold, PS)
-    fname.new = gsub("-extremes_", "_HErZ116m-C120m-extremes-HRvsFAR_", fname)
+    fname.new = gsub("-extremes_", "_HErZ116m-C140m-extremes-HRvsFAR_", fname)
     PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.rate,
                      scores.df$hit.rate, PS)
 
     if (ana.time.res$time.res != ana.time.res$hourly) {
       # against ERA20C at 100m
-      obs = t.obj$tower4$data$wind_speed
+      obs = t.obj$tower3$data$wind_speed
       forec = t.obj$era20c100$data$wind_speed
       scores.df = GetScoresDF(threshold, obs, forec)
       fname.new = gsub("-extremes_", "_ERA20C100m-C80m-extremes_", fname)
-      PS["tower.height"] = as.character(t.obj$tower4$data$height[1])
+      PS["tower.height"] = as.character(t.obj$tower3$data$height[1])
       PlotTowerExtremes(t.obj, fname.new, scores.df, threshold, PS)
       fname.new = gsub("-extremes_", "_ERA20C100m-C80m-extremes-HRvsFAR_", fname)
       PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.rate,
                        scores.df$hit.rate, PS)
 
       # against ERA20C at 100m
-      obs = t.obj$tower5$data$wind_speed
+      obs = t.obj$tower2$data$wind_speed
       forec = t.obj$era20c100$data$wind_speed
       scores.df = GetScoresDF(threshold, obs, forec)
-      fname.new = gsub("-extremes_", "_ERA20C100m-C120m-extremes_", fname)
-      PS["tower.height"] = as.character(t.obj$tower5$data$height[1])
+      fname.new = gsub("-extremes_", "_ERA20C100m-C140m-extremes_", fname)
+      PS["tower.height"] = as.character(t.obj$tower2$data$height[1])
       PlotTowerExtremes(t.obj, fname.new, scores.df, threshold, PS)
-      fname.new = gsub("-extremes_", "_ERA20C100m-C120m-extremes-HRvsFAR_", fname)
+      fname.new = gsub("-extremes_", "_ERA20C100m-C140m-extremes-HRvsFAR_", fname)
       PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.rate,
                        scores.df$hit.rate, PS)
     }
 
     # against HErZ at 178m
-    obs = t.obj$tower6$data$wind_speed
+    obs = t.obj$tower$data$wind_speed
     forec = t.obj$herz178$data$wind_speed
     scores.df = GetScoresDF(threshold, obs, forec)
     fname.new = gsub("-extremes_", "_HErZ178m-C200m-extremes_", fname)
-    PS["tower.height"] = as.character(t.obj$tower6$data$height[1])
+    PS["tower.height"] = as.character(t.obj$tower$data$height[1])
     PlotTowerExtremes(t.obj, fname.new, scores.df, threshold, PS)
     fname.new = gsub("-extremes_", "_HErZ178m-C200m-extremes-HRvsFAR_", fname)
     PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.rate,
