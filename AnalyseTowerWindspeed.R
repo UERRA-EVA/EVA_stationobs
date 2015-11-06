@@ -20,6 +20,8 @@ if (interactive) {
 }
 
 if (use.synthetic) {
+  cat("  **  Plotting scores and skill scores of randomly distributed data\n")
+
   # prepare one pair of random data with predifined n
   n = 100000
   use.distr = "Gaussian" # "Gaussian", "Weibull"
@@ -33,7 +35,7 @@ if (use.synthetic) {
   fname = paste0(outdir, paste0(use.distr, "-randomly-distributed-hourly-extremes.pdf"))
   PlotRandomExtremesContr(random.climobj, fname, extremes.thresh)
 
-  CallStop("Program normally finished")
+  CallStop("Program finished normally")
 }
 
 # == Checks on parameters ==
@@ -443,6 +445,15 @@ if(plot.Extremes) {
 
 if(plot.DailyCycle & ana.time.res$time.res == ana.time.res$hourly) {
   cat("  **  Plotting the daily cycle of tower measurements\n")
+  fname = paste0(outdir, "HErZ-Fino1_DailyCycle_", res.switch, '_', fname_ext, ".pdf")
+  PreparePlottingHerzDailyCycle(fino1.climobj, fname)
+  fname = paste0(outdir, "HErZ-Fino2_DailyCycle_", res.switch, '_', fname_ext, ".pdf")
+  PreparePlottingHerzDailyCycle(fino2.climobj, fname)
+  fname = paste0(outdir, "HErZ-Cabauw_DailyCycle_", res.switch, '_', fname_ext, ".pdf")
+  PreparePlottingHerzDailyCycle(cabauw.climobj, fname)
+  fname = paste0(outdir, "HErZ-Lindenberg_DailyCycle_", res.switch, '_', fname_ext, ".pdf")
+  PreparePlottingHerzDailyCycle(lind.climobj, fname)
+
   fname = paste0(outdir, "Fino1_DailyCycle_", res.switch, '_', fname_ext, ".pdf")
   PreparePlottingTowerDailyCycle(fino1.climobj, fname)
   fname = paste0(outdir, "Fino2_DailyCycle_", res.switch, '_', fname_ext, ".pdf")

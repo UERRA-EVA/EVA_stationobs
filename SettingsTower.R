@@ -1,5 +1,5 @@
 # produce synthetic equalliy distributed data (T) or real data (F)
-use.synthetic = T
+use.synthetic = F
 
 if (ana.time.res$time.res == ana.time.res$monthly) {
   fino1.file = paste0("./data/FINO1_Windgeschwindigkeit_100m_20040101_20131231_MonMean.nc")

@@ -1983,7 +1983,7 @@ PlotTowerERAprofileAnnualCycle <- function(tower.obj, fname) {
 
     dev.off()
 
-  } else   if (t.obj$tower$data$StationName[1] == "Cabauw") {
+  } else if (t.obj$tower$data$StationName[1] == "Cabauw") {
 
     yliml.rel = -0.2
     ylimh.rel = 0.2
@@ -2289,6 +2289,100 @@ PreparePlottingTowerDailyCycle <- function(tower.obj, fname) {
   tower.date <- as.POSIXlt(t.obj$tower$data$date)
 
   # extended time series HErZ at tower location
+  tower1.xts = NULL
+  tower2.xts = NULL
+  tower3.xts = NULL
+  tower4.xts = NULL
+  tower5.xts = NULL
+  tower6.xts = NULL
+  if (t.obj$tower$data$StationName[1] == "Fino1" |
+      t.obj$tower$data$StationName[1] == "Fino2") {
+    tower1.xts = xts(t.obj$tower$data$wind_speed, order.by=tower.date)
+  } else if (t.obj$tower$data$StationName[1] == "Lindenberg") {
+    tower1.xts = xts(t.obj$tower$data$wind_speed, order.by=tower.date)
+    tower2.xts = xts(t.obj$tower2$data$wind_speed, order.by=tower.date)
+    tower3.xts = xts(t.obj$tower3$data$wind_speed, order.by=tower.date)
+    tower4.xts = xts(t.obj$tower4$data$wind_speed, order.by=tower.date)
+    tower5.xts = xts(t.obj$tower5$data$wind_speed, order.by=tower.date)
+    tower6.xts = xts(t.obj$tower6$data$wind_speed, order.by=tower.date)
+  } else if (t.obj$tower$data$StationName[1] == "Cabauw") {
+    tower1.xts = xts(t.obj$tower$data$wind_speed, order.by=tower.date)
+    tower2.xts = xts(t.obj$tower2$data$wind_speed, order.by=tower.date)
+    tower3.xts = xts(t.obj$tower3$data$wind_speed, order.by=tower.date)
+    tower4.xts = xts(t.obj$tower4$data$wind_speed, order.by=tower.date)
+    tower5.xts = xts(t.obj$tower5$data$wind_speed, order.by=tower.date)
+  }
+
+  # these lists are used for the complete time period
+  dayhour.tower1 = list()
+  dayhour.tower2 = list()
+  dayhour.tower3 = list()
+  dayhour.tower4 = list()
+  dayhour.tower5 = list()
+  dayhour.tower6 = list()
+  for (cnt in seq(24)) {
+    dayhour.tower1$vals[[cnt]] = tower1.xts[which( tower.date$hour==cnt-1 )]
+    dayhour.tower1$mean[[cnt]] = mean(dayhour.tower1$vals[[cnt]], na.rm=T)
+    dayhour.tower1$sd[[cnt]] = sd(dayhour.tower1$vals[[cnt]], na.rm=T)
+    if (!is.null(tower2.xts) & !is.null(tower3.xts) &
+        !is.null(tower4.xts) & !is.null(tower5.xts)) {
+      dayhour.tower2$vals[[cnt]] = tower2.xts[which( tower.date$hour==cnt-1 )]
+      dayhour.tower2$mean[[cnt]] = mean(dayhour.tower2$vals[[cnt]], na.rm=T)
+      dayhour.tower2$sd[[cnt]] = sd(dayhour.tower2$vals[[cnt]], na.rm=T)
+      dayhour.tower3$vals[[cnt]] = tower3.xts[which( tower.date$hour==cnt-1 )]
+      dayhour.tower3$mean[[cnt]] = mean(dayhour.tower3$vals[[cnt]], na.rm=T)
+      dayhour.tower3$sd[[cnt]] = sd(dayhour.tower3$vals[[cnt]], na.rm=T)
+      dayhour.tower4$vals[[cnt]] = tower4.xts[which( tower.date$hour==cnt-1 )]
+      dayhour.tower4$mean[[cnt]] = mean(dayhour.tower4$vals[[cnt]], na.rm=T)
+      dayhour.tower4$sd[[cnt]] = sd(dayhour.tower4$vals[[cnt]], na.rm=T)
+      dayhour.tower5$vals[[cnt]] = tower5.xts[which( tower.date$hour==cnt-1 )]
+      dayhour.tower5$mean[[cnt]] = mean(dayhour.tower5$vals[[cnt]], na.rm=T)
+      dayhour.tower5$sd[[cnt]] = sd(dayhour.tower5$vals[[cnt]], na.rm=T)
+    }
+    if (!is.null(tower6.xts)) {
+      dayhour.tower6$vals[[cnt]] = tower6.xts[which( tower.date$hour==cnt-1 )]
+      dayhour.tower6$mean[[cnt]] = mean(dayhour.tower6$vals[[cnt]], na.rm=T)
+      dayhour.tower6$sd[[cnt]] = sd(dayhour.tower6$vals[[cnt]], na.rm=T)
+    }
+  }
+
+  PST1 = PlottingSettings(t.obj$tower$data)
+  if (!is.null(tower2.xts) & !is.null(tower3.xts) &
+      !is.null(tower4.xts) & !is.null(tower5.xts)) {
+    PST2 = PlottingSettings(t.obj$tower2$data)
+    PST3 = PlottingSettings(t.obj$tower3$data)
+    PST4 = PlottingSettings(t.obj$tower4$data)
+    PST5 = PlottingSettings(t.obj$tower5$data)
+    PS = list(PST1=PST1, PST2=PST2, PST3=PST3, PST4=PST4, PST5=PST5)
+  } else if (!is.null(tower6.xts)) {
+    PST6 = PlottingSettings(t.obj$tower6$data)
+    PS = list(PST1=PST1, PST2=PST2, PST3=PST3, PST4=PST4, PST5=PST5, PST6=PST6)
+  } else {
+    PS = list(PST1=PST1)
+  }
+  fname.new = c(gsub("DailyCycle", "DailyCycle_allTime-line", fname),
+                gsub("DailyCycle", "DailyCycle_allTime-boxPlot", fname))
+  PlotTowerDailyCycle(dayhour.tower1, dayhour.tower2, dayhour.tower3,
+                      dayhour.tower4, dayhour.tower5, dayhour.tower6,
+                      month.names, PS, fname.new)
+
+}
+
+#-----------------------------------------------------------------------------------
+
+#' @title
+#' @description
+#' @param
+PreparePlottingHerzDailyCycle <- function(tower.obj, fname) {
+
+  # names include all months to be analysed; counts is the month of year
+  month.names = list(names=c("January", "March", "June", "September"),
+                     counts=as.numeric(c(1,3,6,9)))
+
+  t.obj = tower.obj$climate_data_objects
+  tower.date <- as.POSIXlt(t.obj$tower$data$date)
+
+  # extended time series HErZ at tower location
   Herz116Xts = xts(t.obj$herz116$data$wind_speed, order.by=tower.date)
   Herz69Xts = xts(t.obj$herz69$data$wind_speed, order.by=tower.date)
   Herz35Xts = xts(t.obj$herz35$data$wind_speed, order.by=tower.date)
@@ -2321,8 +2415,8 @@ PreparePlottingTowerDailyCycle <- function(tower.obj, fname) {
   PS = list(PS10=PS10, PS35=PS35, PS69=PS69, PS116=PS116)
   fname.new = c(gsub("DailyCycle", "DailyCycle_allTime-line", fname),
                 gsub("DailyCycle", "DailyCycle_allTime-boxPlot", fname))
-  PlotTowerDailyCycle(dayhourHerz10, dayhourHerz35,
-                      dayhourHerz69, dayhourHerz116, month.names, PS, fname.new)
+  PlotHerzDailyCycle(dayhourHerz10, dayhourHerz35,
+                     dayhourHerz69, dayhourHerz116, month.names, PS, fname.new)
 
   # these lists are used for specific months only time periods
   dayhour.month.Herz116 = list()
@@ -2367,9 +2461,9 @@ PreparePlottingTowerDailyCycle <- function(tower.obj, fname) {
 
   fname.new = c(gsub("DailyCycle", "DailyCycle_selectMonths-line", fname),
                 gsub("DailyCycle", "DailyCycle_selectMonths-boxPlot", fname))
-  PlotTowerDailyCycle(dayhour.month.Herz10, dayhour.month.Herz35,
-                      dayhour.month.Herz69, dayhour.month.Herz116, month.names, PS,
-                      fname.new)
+  PlotHerzDailyCycle(dayhour.month.Herz10, dayhour.month.Herz35,
+                     dayhour.month.Herz69, dayhour.month.Herz116, month.names, PS,
+                     fname.new)
 
 }
 
@@ -2378,7 +2472,7 @@ PreparePlottingTowerDailyCycle <- function(tower.obj, fname) {
 #' @title
 #' @description
 #' @param
-PlotTowerDailyCycle <- function(Herz10, Herz35, Herz69, Herz116, month.names, PS, fname) {
+PlotHerzDailyCycle <- function(Herz10, Herz35, Herz69, Herz116, month.names, PS, fname) {
 
   x.lab = "time of day [hours]"
   y.lab = "wind speed [m/s]"
@@ -2529,6 +2623,126 @@ PlotTowerDailyCycle <- function(Herz10, Herz35, Herz69, Herz116, month.names, PS
   }
   dev.off()
 
+}
+
+#-----------------------------------------------------------------------------------
+
+#' @title
+#' @description
+#' @param
+PlotTowerDailyCycle <- function(tower1, tower2, tower3, tower4, tower5, tower6,
+                                month.names, PS, fname) {
+
+  x.lab = "time of day [hours]"
+  y.lab = "wind speed [m/s]"
+
+  # plot line plots
+  pdf(fname[1], width=PS$PST1$land.a4width, height=PS$PST1$land.a4height,
+      onefile=TRUE, pointsize=13)
+  par(mfrow=c(1,1), mar=c(4,4,2,0), cex=1.0)
+
+  if (is.null(tower1$mean)) {
+    for (cnt in seq(month.names$names)) {
+      plot(tower1[[cnt]]$mean, col="blue", pch=16, type="b",
+           ylim=c(2,7), xlab=x.lab, ylab=y.lab)
+      if (length(tower6)>0) {
+        lines(tower2[[cnt]]$mean, col="red", pch=16, type="b")
+        lines(tower3[[cnt]]$mean, col="orange", pch=16, type="b")
+        lines(tower4[[cnt]]$mean, col="green", pch=16, type="b")
+        lines(tower5[[cnt]]$mean, col="black", pch=16, type="b")
+        lines(tower6[[cnt]]$mean, col="magenta", pch=16, type="b")
+        legend("top", legend=c(paste0(as.character(PS$PST1$tower.name), " at ",
+                                      as.character(PS$PST1$tower.height)),
+                               paste0(as.character(PS$PST2$tower.name), " at ",
+                                      as.character(PS$PST2$tower.height)),
+                               paste0(as.character(PS$PST3$tower.name), " at ",
+                                      as.character(PS$PST3$tower.height)),
+                               paste0(as.character(PS$PST4$tower.name), " at ",
+                                      as.character(PS$PST4$tower.height)),
+                               paste0(as.character(PS$PST5$tower.name), " at ",
+                                      as.character(PS$PST5$tower.height)),
+                               paste0(as.character(PS$PST6$tower.name), " at ",
+                                      as.character(PS$PST6$tower.height))),
+               text.col=c("blue", "red", "orange", "green", "black", "magenta"))
+      } else if(length(tower2)>0 & length(tower3)>0 &
+                length(tower4)>0 & length(tower5)>0) {
+        lines(tower2[[cnt]]$mean, col="red", pch=16, type="b")
+        lines(tower3[[cnt]]$mean, col="orange", pch=16, type="b")
+        lines(tower4[[cnt]]$mean, col="green", pch=16, type="b")
+        lines(tower5[[cnt]]$mean, col="black", pch=16, type="b")
+        legend("top", legend=c(paste0(as.character(PS$PST1$tower.name), " at ",
+                                      as.character(PS$PST1$tower.height)),
+                               paste0(as.character(PS$PST2$tower.name), " at ",
+                                      as.character(PS$PST2$tower.height)),
+                               paste0(as.character(PS$PST3$tower.name), " at ",
+                                      as.character(PS$PST3$tower.height)),
+                               paste0(as.character(PS$PST4$tower.name), " at ",
+                                      as.character(PS$PST4$tower.height)),
+                               paste0(as.character(PS$PST5$tower.name), " at ",
+                                      as.character(PS$PST5$tower.height))),
+               text.col=c("blue", "red", "orange", "green", "black"))
+      } else {
+        legend("top", legend=c(paste0(as.character(PS$PST1$tower.name), " at ",
+                                      as.character(PS$PST1$tower.height))),
+               text.col=c("blue"))
+      }
+      title(main=paste0("Daily cycle of ", PS$PST1$tower.name, " wind speed in ",
+                        month.names$names[[cnt]], " at tower location ",
+                        PS$PST1$tower.name), line=1, cex=1.5)
+    }
+
+  } else {
+
+    plot(tower1$mean, col="blue", pch=16, type="b",
+         ylim=c(2,9), xlab=x.lab, ylab=y.lab)
+    if (length(tower6)>0) {
+      cat("\n----------- Im in tower6------------------\n")
+      lines(tower2$mean, col="red", pch=16, type="b")
+      lines(tower3$mean, col="orange", pch=16, type="b")
+      lines(tower4$mean, col="green", pch=16, type="b")
+      lines(tower5$mean, col="black", pch=16, type="b")
+      lines(tower6$mean, col="magenta", pch=16, type="b")
+      legend("top", legend=c(paste0(as.character(PS$PST1$tower.name), " at ",
+                                    as.character(PS$PST1$tower.height)),
+                             paste0(as.character(PS$PST2$tower.name), " at ",
+                                    as.character(PS$PST2$tower.height)),
+                             paste0(as.character(PS$PST3$tower.name), " at ",
+                                    as.character(PS$PST3$tower.height)),
+                             paste0(as.character(PS$PST4$tower.name), " at ",
+                                    as.character(PS$PST4$tower.height)),
+                             paste0(as.character(PS$PST5$tower.name), " at ",
+                                    as.character(PS$PST5$tower.height)),
+                             paste0(as.character(PS$PST6$tower.name), " at ",
+                                    as.character(PS$PST6$tower.height))),
+             text.col=c("blue", "red", "orange", "green", "black", "magenta"))
+    } else if (length(tower2)>0 & length(tower3)>0 &
+               length(tower4)>0 & length(tower5)>0) {
+      cat("\n----------- Im in tower2 to tower5------------------\n")
+      lines(tower2$mean, col="red", pch=16, type="b")
+      lines(tower3$mean, col="orange", pch=16, type="b")
+      lines(tower4$mean, col="green", pch=16, type="b")
+      lines(tower5$mean, col="black", pch=16, type="b")
+      legend("top", legend=c(paste0(as.character(PS$PST1$tower.name), " at ",
+                                    as.character(PS$PST1$tower.height)),
+                             paste0(as.character(PS$PST2$tower.name), " at ",
+                                    as.character(PS$PST2$tower.height)),
+                             paste0(as.character(PS$PST3$tower.name), " at ",
+                                    as.character(PS$PST3$tower.height)),
+                             paste0(as.character(PS$PST4$tower.name), " at ",
+                                    as.character(PS$PST4$tower.height)),
+                             paste0(as.character(PS$PST5$tower.name), " at ",
+                                    as.character(PS$PST5$tower.height))),
+             text.col=c("blue", "red", "orange", "green", "black"))
+    } else {
+      cat("\n----------- Im in tower1 only------------------\n")
+      legend("top", legend=c(paste0(as.character(PS$PST1$tower.name), " at ",
+                                    as.character(PS$PST1$tower.height))),
+             text.col=c("blue"))
+    }
+    title(main=paste0("Daily cycle of ", PS$PST1$tower.name, " wind speed at ",
+                      PS$PST1$tower.height), line=1, cex=1.5)
+  }
+  dev.off()
 }
 
 #-----------------------------------------------------------------------------------
@@ -2783,13 +2997,13 @@ PlotTowerExtremes <- function(t.obj, fname, scores.df, threshold, PS,
     if (all(!is.finite(scores.df[[plot.step]]))) next
     if (is.null(title.name)) {
       titleName = paste0(score.names[plot.step]," of ", PS$time.agg, " means at ",
-                          PS$tower.name, " in ", PS$tower.height, " height")
+                         PS$tower.name, " in ", PS$tower.height, " height")
     } else {
       titleName = gsub(" of", paste0(score.names[plot.step], " of"), title.name)
     }
-      plot(threshold, scores.df[[plot.step]], xlab="percentile",
+    plot(threshold, scores.df[[plot.step]], xlab="percentile",
          ylab=score.names[plot.step], col = "blue", pch=16, type="b",
-           main = titleName)
+         main = titleName)
   }
 
   dev.off()
