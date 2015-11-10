@@ -468,6 +468,36 @@ ContTableScores <- function(a, b, c, d) {
 #' @description
 #' @param
 #' @return
+YLimsScores <- function() {
+
+  POD.ylim = c(0,1)
+  POFD.ylim = c(0,1)
+  FAR.ylim = c(0,1)
+  HK.ylim = c(-1,1)
+  TS.ylim = c(0,1)
+  ETS.ylim = c(-0.33,1)
+  BIAS.ylim = c(0,2)
+  HSS.ylim = c(-1,1)
+  PC.ylim = c(0,1)
+  OR.ylim = c(0,1000)
+  EDI.ylim = c(-1,1)
+  SEDI.ylim = c(-1,1)
+
+  return(list(hit.rate.ylim=POD.ylim, false.alarm.rate.ylim=POFD.ylim,
+              false.alarm.ratio.ylim=FAR.ylim,
+              true.skill.stats.ylim=HK.ylim, threat.score.ylim=TS.ylim,
+              equi.threat.score.ylim=ETS.ylim,
+              bias.index.ylim=BIAS.ylim, heidke.sksc.ylim=HSS.ylim,
+              accuracy.ylim=PC.ylim, odds.ratio.ylilm=OR.ylim,
+              edi.yim=EDI.ylim, sedi.ylim=SEDI.ylim))
+}
+
+#-----------------------------------------------------------------------------------
+
+#' @title
+#' @description
+#' @param
+#' @return
 GetScoresDF <- function(thresh, obs, frcst) {
 
   Cont.Table.cnt = CalcContTable(obs, frcst, thresh[1])

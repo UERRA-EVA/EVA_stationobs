@@ -2934,22 +2934,24 @@ PlotTowerExtremesContr <- function(tower.obj, fname, threshold) {
     obs = t.obj$tower$data$wind_speed
     forec = t.obj$herz116$data$wind_speed
     scores.df = GetScoresDF(threshold, obs, forec)
+    ylims.df = as.data.frame(YLimsScores())
     fname.new = gsub("-extremes_", "_HErZ116m-extremes_", fname)
-    PlotTowerExtremes(t.obj, fname.new, scores.df, threshold, PS)
+    PlotTowerExtremes(t.obj, fname.new, scores.df, ylims.df, threshold, PS)
     fname.new = gsub("-extremes_", "_HErZ116m-extremes-HRvsFAR_", fname)
-    PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.rate,
-                     scores.df$hit.rate, PS)
+    PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.ratio,
+                     scores.df$hit.rate, threshold, PS)
 
     if (ana.time.res$time.res != ana.time.res$hourly) {
       # against ERA20C at 100m
       obs = t.obj$tower$data$wind_speed
       forec = t.obj$era20c100$data$wind_speed
       scores.df = GetScoresDF(threshold, obs, forec)
+      ylims.df = as.data.frame(YLimsScores())
       fname.new = gsub("-extremes_", "_ERA20C100m-extremes_", fname)
-      PlotTowerExtremes(t.obj, fname.new, scores.df, threshold, PS)
+      PlotTowerExtremes(t.obj, fname.new, scores.df, ylims.df, threshold, PS)
       fname.new = gsub("-extremes_", "_ERA20C100m-extremes-HRvsFAR_", fname)
-      PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.rate,
-                       scores.df$hit.rate, PS)
+      PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.ratio,
+                       scores.df$hit.rate, threshold, PS)
     }
 
   } else if (t.obj$tower$data$StationName[1] == "Lindenberg") {
@@ -2958,81 +2960,88 @@ PlotTowerExtremesContr <- function(tower.obj, fname, threshold) {
     obs = t.obj$tower6$data$wind_speed
     forec = t.obj$herz10$data$wind_speed
     scores.df = GetScoresDF(threshold, obs, forec)
+    ylims.df = as.data.frame(YLimsScores())
     fname.new = gsub("-extremes_", "_HErZ10m-L10m-extremes_", fname)
     PS["tower.height"] = as.character(t.obj$tower6$data$height[1])
-    PlotTowerExtremes(t.obj, fname.new, scores.df, threshold, PS)
+    PlotTowerExtremes(t.obj, fname.new, scores.df, ylims.df, threshold, PS)
     fname.new = gsub("-extremes_", "_HErZ10m-L10m-extremes-HRvsFAR_", fname)
-    PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.rate,
-                     scores.df$hit.rate, PS)
+    PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.ratio,
+                     scores.df$hit.rate, threshold, PS)
 
     if (ana.time.res$time.res != ana.time.res$hourly) {
       # against ERA20C at 10m
       obs = t.obj$tower6$data$wind_speed
       forec = t.obj$era20c10$data$wind_speed
       scores.df = GetScoresDF(threshold, obs, forec)
+      ylims.df = as.data.frame(YLimsScores())
       fname.new = gsub("-extremes_", "_ERA20C10m-L10m-extremes_", fname)
       PS["tower.height"] = as.character(t.obj$tower6$data$height[1])
-      PlotTowerExtremes(t.obj, fname.new, scores.df, threshold, PS)
+      PlotTowerExtremes(t.obj, fname.new, scores.df, ylims.df, threshold, PS)
       fname.new = gsub("-extremes_", "_ERA20C10m-L10m-extremes-HRvsFAR_", fname)
-      PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.rate,
-                       scores.df$hit.rate, PS)
+      PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.ratio,
+                       scores.df$hit.rate, threshold, PS)
     }
 
     # against HErZ at 35m
     obs = t.obj$tower4$data$wind_speed
     forec = t.obj$herz35$data$wind_speed
     scores.df = GetScoresDF(threshold, obs, forec)
+    ylims.df = as.data.frame(YLimsScores())
     fname.new = gsub("-extremes_", "_HErZ35m-L40-extremes_", fname)
     PS["tower.height"] = as.character(t.obj$tower4$data$height[1])
-    PlotTowerExtremes(t.obj, fname.new, scores.df, threshold, PS)
+    PlotTowerExtremes(t.obj, fname.new, scores.df, ylims.df, threshold, PS)
     fname.new = gsub("-extremes_", "_HErZ35m-L40-extremes-HRvsFAR_", fname)
-    PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.rate,
-                     scores.df$hit.rate, PS)
+    PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.ratio,
+                     scores.df$hit.rate, threshold, PS)
 
     # against HErZ at 69m
     obs = t.obj$tower3$data$wind_speed
     forec = t.obj$herz69$data$wind_speed
     scores.df = GetScoresDF(threshold, obs, forec)
+    ylims.df = as.data.frame(YLimsScores())
     fname.new = gsub("-extremes_", "_HErZ69m-L60-extremes_", fname)
     PS["tower.height"] = as.character(t.obj$tower3$data$height[1])
-    PlotTowerExtremes(t.obj, fname.new, scores.df, threshold, PS)
+    PlotTowerExtremes(t.obj, fname.new, scores.df, ylims.df, threshold, PS)
     fname.new = gsub("-extremes_", "_HErZ69m-L60-extremes-HRvsFAR_", fname)
-    PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.rate,
-                     scores.df$hit.rate, PS)
+    PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.ratio,
+                     scores.df$hit.rate, threshold, PS)
 
     # against HErZ at 69m
     obs = t.obj$tower2$data$wind_speed
     forec = t.obj$herz69$data$wind_speed
     scores.df = GetScoresDF(threshold, obs, forec)
+    ylims.df = as.data.frame(YLimsScores())
     fname.new = gsub("-extremes_", "_HErZ69m-L80-extremes_", fname)
     PS["tower.height"] = as.character(t.obj$tower2$data$height[1])
-    PlotTowerExtremes(t.obj, fname.new, scores.df, threshold, PS)
+    PlotTowerExtremes(t.obj, fname.new, scores.df, ylims.df, threshold, PS)
     fname.new = gsub("-extremes_", "_HErZ69m-L80-extremes-HRvsFAR_", fname)
-    PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.rate,
-                     scores.df$hit.rate, PS)
+    PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.ratio,
+                     scores.df$hit.rate, threshold, PS)
 
     # against HErZ at 116m
     obs = t.obj$tower$data$wind_speed
     forec = t.obj$herz116$data$wind_speed
     scores.df = GetScoresDF(threshold, obs, forec)
+    ylims.df = as.data.frame(YLimsScores())
     fname.new = gsub("-extremes_", "_HErZ116m-L98m-extremes_", fname)
     PS["tower.height"] = as.character(t.obj$tower$data$height[1])
-    PlotTowerExtremes(t.obj, fname.new, scores.df, threshold, PS)
+    PlotTowerExtremes(t.obj, fname.new, scores.df, ylims.df, threshold, PS)
     fname.new = gsub("-extremes_", "_HErZ116m-L98m-extremes-HRvsFAR_", fname)
-    PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.rate,
-                     scores.df$hit.rate, PS)
+    PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.ratio,
+                     scores.df$hit.rate, threshold, PS)
 
     if (ana.time.res$time.res != ana.time.res$hourly) {
       # against ERA20C at 100m
       obs = t.obj$tower$data$wind_speed
       forec = t.obj$era20c100$data$wind_speed
       scores.df = GetScoresDF(threshold, obs, forec)
+      ylims.df = as.data.frame(YLimsScores())
       fname.new = gsub("-extremes_", "_ERA20C100m-L98m-extremes_", fname)
       PS["tower.height"] = as.character(t.obj$tower$data$height[1])
-      PlotTowerExtremes(t.obj, fname.new, scores.df, threshold, PS)
+      PlotTowerExtremes(t.obj, fname.new, scores.df, ylims.df, threshold, PS)
       fname.new = gsub("-extremes_", "_ERA20C100m-L98m-extremes-HRvsFAR_", fname)
-      PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.rate,
-                       scores.df$hit.rate, PS)
+      PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.ratio,
+                       scores.df$hit.rate, threshold, PS)
     }
 
   } else if (t.obj$tower$data$StationName[1] == "Cabauw") {
@@ -3041,80 +3050,87 @@ PlotTowerExtremesContr <- function(tower.obj, fname, threshold) {
     obs = t.obj$tower6$data$wind_speed
     forec = t.obj$herz10$data$wind_speed
     scores.df = GetScoresDF(threshold, obs, forec)
+    ylims.df = as.data.frame(YLimsScores())
     fname.new = gsub("-extremes_", "_HErZ10m-C10m-extremes_", fname)
     PS["tower.height"] = as.character(t.obj$tower6$data$height[1])
-    PlotTowerExtremes(t.obj, fname.new, scores.df, threshold, PS)
+    PlotTowerExtremes(t.obj, fname.new, scores.df, ylims.df, threshold, PS)
     fname.new = gsub("-extremes_", "_HErZ10m-C10m-extremes-HRvsFAR_", fname)
-    PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.rate,
-                     scores.df$hit.rate, PS)
+    PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.ratio,
+                     scores.df$hit.rate, threshold, PS)
 
     # against HErZ at 35m
     obs = t.obj$tower4$data$wind_speed
     forec = t.obj$herz35$data$wind_speed
     scores.df = GetScoresDF(threshold, obs, forec)
+    ylims.df = as.data.frame(YLimsScores())
     fname.new = gsub("-extremes_", "_HErZ35m-C40m-extremes_", fname)
     PS["tower.height"] = as.character(t.obj$tower4$data$height[1])
-    PlotTowerExtremes(t.obj, fname.new, scores.df, threshold, PS)
+    PlotTowerExtremes(t.obj, fname.new, scores.df, ylims.df, threshold, PS)
     fname.new = gsub("-extremes_", "_HErZ35m-C40m-extremes-HRvsFAR_", fname)
-    PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.rate,
-                     scores.df$hit.rate, PS)
+    PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.ratio,
+                     scores.df$hit.rate, threshold, PS)
 
     # against HErZ at 69m
     obs = t.obj$tower3$data$wind_speed
     forec = t.obj$herz69$data$wind_speed
     scores.df = GetScoresDF(threshold, obs, forec)
+    ylims.df = as.data.frame(YLimsScores())
     fname.new = gsub("-extremes_", "_HErZ69m-C80m-extremes_", fname)
     PS["tower.height"] = as.character(t.obj$tower3$data$height[1])
-    PlotTowerExtremes(t.obj, fname.new, scores.df, threshold, PS)
+    PlotTowerExtremes(t.obj, fname.new, scores.df, ylims.df, threshold, PS)
     fname.new = gsub("-extremes_", "_HErZ69m-C80m-extremes-HRvsFAR_", fname)
-    PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.rate,
-                     scores.df$hit.rate, PS)
+    PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.ratio,
+                     scores.df$hit.rate, threshold, PS)
 
     # against HErZ at 116m
     obs = t.obj$tower2$data$wind_speed
     forec = t.obj$herz116$data$wind_speed
     scores.df = GetScoresDF(threshold, obs, forec)
+    ylims.df = as.data.frame(YLimsScores())
     fname.new = gsub("-extremes_", "_HErZ116m-C140m-extremes_", fname)
     PS["tower.height"] = as.character(t.obj$tower2$data$height[1])
-    PlotTowerExtremes(t.obj, fname.new, scores.df, threshold, PS)
+    PlotTowerExtremes(t.obj, fname.new, scores.df, ylims.df, threshold, PS)
     fname.new = gsub("-extremes_", "_HErZ116m-C140m-extremes-HRvsFAR_", fname)
-    PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.rate,
-                     scores.df$hit.rate, PS)
+    PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.ratio,
+                     scores.df$hit.rate, threshold, PS)
 
     if (ana.time.res$time.res != ana.time.res$hourly) {
       # against ERA20C at 100m
       obs = t.obj$tower3$data$wind_speed
       forec = t.obj$era20c100$data$wind_speed
       scores.df = GetScoresDF(threshold, obs, forec)
+      ylims.df = as.data.frame(YLimsScores())
       fname.new = gsub("-extremes_", "_ERA20C100m-C80m-extremes_", fname)
       PS["tower.height"] = as.character(t.obj$tower3$data$height[1])
-      PlotTowerExtremes(t.obj, fname.new, scores.df, threshold, PS)
+      PlotTowerExtremes(t.obj, fname.new, scores.df, ylims.df, threshold, PS)
       fname.new = gsub("-extremes_", "_ERA20C100m-C80m-extremes-HRvsFAR_", fname)
-      PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.rate,
-                       scores.df$hit.rate, PS)
+      PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.ratio,
+                       scores.df$hit.rate, threshold, PS)
 
       # against ERA20C at 100m
       obs = t.obj$tower2$data$wind_speed
       forec = t.obj$era20c100$data$wind_speed
       scores.df = GetScoresDF(threshold, obs, forec)
+      ylims.df = as.data.frame(YLimsScores())
       fname.new = gsub("-extremes_", "_ERA20C100m-C140m-extremes_", fname)
       PS["tower.height"] = as.character(t.obj$tower2$data$height[1])
-      PlotTowerExtremes(t.obj, fname.new, scores.df, threshold, PS)
+      PlotTowerExtremes(t.obj, fname.new, scores.df, ylims.df, threshold, PS)
       fname.new = gsub("-extremes_", "_ERA20C100m-C140m-extremes-HRvsFAR_", fname)
-      PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.rate,
-                       scores.df$hit.rate, PS)
+      PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.ratio,
+                       scores.df$hit.rate, threshold, PS)
     }
 
     # against HErZ at 178m
     obs = t.obj$tower$data$wind_speed
     forec = t.obj$herz178$data$wind_speed
     scores.df = GetScoresDF(threshold, obs, forec)
+    ylims.df = as.data.frame(YLimsScores())
     fname.new = gsub("-extremes_", "_HErZ178m-C200m-extremes_", fname)
     PS["tower.height"] = as.character(t.obj$tower$data$height[1])
-    PlotTowerExtremes(t.obj, fname.new, scores.df, threshold, PS)
+    PlotTowerExtremes(t.obj, fname.new, scores.df, ylims.df, threshold, PS)
     fname.new = gsub("-extremes_", "_HErZ178m-C200m-extremes-HRvsFAR_", fname)
-    PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.rate,
-                     scores.df$hit.rate, PS)
+    PlotTowerHRvsFAR(t.obj, fname.new, scores.df$false.alarm.ratio,
+                     scores.df$hit.rate, threshold, PS)
 
   }
 }
@@ -3131,12 +3147,13 @@ PlotRandomExtremesContr <- function(random.obj, fname, threshold) {
   obs = r.obj$obs$data$wind_speed
   forec = r.obj$forec$data$wind_speed
   scores.df = GetScoresDF(threshold, obs, forec)
+  ylims.df = as.data.frame(YLimsScores())
   title.name = " of random data"
-  PlotTowerExtremes(r.obj, fname, scores.df, threshold, PS, title.name)
+  PlotTowerExtremes(r.obj, fname, scores.df, ylims.df, threshold, PS, title.name)
   fname.new = gsub("-extremes", "-extremes-HRvsFAR", fname)
   title.name = "Hit rate vs False alarm rate of random data"
-  PlotTowerHRvsFAR(r.obj, fname.new, scores.df$false.alarm.rate,
-                   scores.df$hit.rate, PS, title.name)
+  PlotTowerHRvsFAR(r.obj, fname.new, scores.df$false.alarm.ratio,
+                   scores.df$hit.rate, threshold, PS, title.name)
 }
 
 #-----------------------------------------------------------------------------------
@@ -3144,8 +3161,8 @@ PlotRandomExtremesContr <- function(random.obj, fname, threshold) {
 #' @title
 #' @description
 #' @param
-PlotTowerExtremes <- function(t.obj, fname, scores.df, threshold, PS,
-                              title.name=NULL) {
+PlotTowerExtremes <- function(t.obj, fname, scores.df, ylims.df, threshold, PS,
+                              title.name=NULL, use.ylims=F) {
 
   score.names = names(scores.df)
   pdf(fname, width=PS$land.a4width, height=PS$land.a4height,
@@ -3160,9 +3177,17 @@ PlotTowerExtremes <- function(t.obj, fname, scores.df, threshold, PS,
     } else {
       titleName = gsub(" of", paste0(score.names[plot.step], " of"), title.name)
     }
-    plot(threshold, scores.df[[plot.step]], xlab="percentile",
-         ylab=score.names[plot.step], col = "blue", pch=16, type="b",
-         main = titleName)
+    if (use.ylims |
+        score.names[plot.step] == "odds.ratio" & max(scores.df[[plot.step]]<100)) {
+      plot(threshold, scores.df[[plot.step]], xlab="percentile",
+           ylab=score.names[plot.step], col = "blue", pch=16, type="b",
+           main = titleName)
+    } else {
+      plot(threshold, scores.df[[plot.step]], xlab="percentile",
+           ylab=score.names[plot.step], col = "blue", pch=16, type="b",
+           main = titleName, ylim=c(ylims.df[[plot.step]][1],
+                                    ylims.df[[plot.step]][2]))
+    }
   }
 
   dev.off()
@@ -3170,10 +3195,10 @@ PlotTowerExtremes <- function(t.obj, fname, scores.df, threshold, PS,
 
 #-----------------------------------------------------------------------------------
 
-#' @title
+#' @title Hit rate and false alarm ratio plotted into the same plot.
 #' @description
 #' @param
-PlotTowerHRvsFAR <- function(t.obj, fname, false.alarm.rate, hit.rate, PS,
+PlotTowerHRvsFAR <- function(t.obj, fname, FAR, HR, threshold, PS,
                              title.name=NULL) {
 
   pdf(fname, width=PS$land.a4width, height=PS$land.a4height,
@@ -3186,10 +3211,10 @@ PlotTowerHRvsFAR <- function(t.obj, fname, false.alarm.rate, hit.rate, PS,
     title.name = paste0("Hit rate vs False alarm rate of ", PS$time.agg, " means at ",
                         PS$tower.name, " in ", PS$tower.height, " height")
   }
-  plot(false.alarm.rate, hit.rate,
-       xlim = c(0,1), ylim = c(0,1), col = "blue", pch=16, type = "p",
-       xlab = "False Alarm Rate", ylab = "Hit Rate",
+  plot(threshold, HR,
+       xlim = c(0,1), ylim=c(0,1), col="blue", pch=16, type="p",
        main = title.name)
+  lines(threshold, FAR, col="red", pch=16, type="p")
 
   dev.off()
 }
