@@ -141,7 +141,7 @@ PlotMultiPanel <- function(outdir, fname, titname, Era20c, EraI, Herz, Stat,
     all.seasons = c("Winter", "Spring", "Summer", "Autumn")
   }
 
-  PS = PlottingSettings(Stat)
+  PS = PlottingSettings(Stat[[1]])
   pdf(paste(outdir, fname, sep=""), width=PS$land.a4width, height=PS$land.a4height,
       onefile=TRUE, pointsize=13)
 

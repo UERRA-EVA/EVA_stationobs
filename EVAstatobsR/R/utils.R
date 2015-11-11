@@ -31,7 +31,7 @@ PlottingSettings <- function(data.vals) {
                 port.a4width=port.a4width, port.a4height=port.a4height,
                 time.agg=time.agg, time.Agg=time.Agg, tower.name=tower.name,
                 tower.height=tower.height))
-  } else if (is.xts) {
+  } else if (is.xts(data.vals)) {
     return(list(land.a4width=land.a4width, land.a4height=land.a4height,
                 port.a4width=port.a4width, port.a4height=port.a4height,
                 time.agg=time.agg, time.Agg=time.Agg))
