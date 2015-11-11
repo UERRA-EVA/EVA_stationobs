@@ -458,7 +458,7 @@ ContTableScores <- function(a, b, c, d) {
 
   return(list(hit.rate=POD, false.alarm.rate=POFD, false.alarm.ratio=FAR,
               true.skill.stats=HK, threat.score=TS, equi.threat.score=ETS,
-              bias.index=BIAS, heidke.sksc=HSS, accuracy=PC, odds.ratio=OR,
+              frequency.bias.index=BIAS, heidke.sksc=HSS, accuracy=PC, odds.ratio=OR,
               edi=EDI, sedi=SEDI))
 }
 
