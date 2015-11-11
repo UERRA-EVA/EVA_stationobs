@@ -3210,7 +3210,7 @@ PlotRandomExtremesContr <- function(random.obj, fname, threshold) {
   scores.df = GetScoresDF(threshold, obs, forec)
   ylims.df = as.data.frame(YLimsScores())
   title.name = " of random data"
-  PlotTowerExtremes(r.obj, fname, scores.df, ylims.df, threshold, PS, title.name)
+  PlotTowerExtremes(fname, scores.df, ylims.df, threshold, PS, title.name)
   fname.new = gsub("-extremes", "-extremes-HRvsFAR", fname)
   title.name = "Hit rate vs False alarm rate of random data"
   PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
