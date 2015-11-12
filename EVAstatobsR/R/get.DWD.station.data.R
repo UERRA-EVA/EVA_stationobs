@@ -398,7 +398,7 @@ AllData <- function(station.id, station.name, station.lat, station.lon,
   if (!(download)) {
     data1 <- GetData(metadata, verbose.DWD)
     data2 <- data.frame(data1$stations_id, station.name, station.lat, station.lon,
-                        data1$mess_datum,data1$windgeschwindigkeit)
+                        data1$mess_datum, data1$windgeschwindigkeit)
     data2 = data2[-nrow(data2),]
     colnames(data2) <- c("STATIONS_ID","STATIONS_NAME", "GEO_BREITE", "GEO_LÄNGE",
                          "MESS_DATUM","WINDGESCHWINDIGKEIT")

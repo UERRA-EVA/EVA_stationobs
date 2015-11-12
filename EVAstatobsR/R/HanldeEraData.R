@@ -350,30 +350,29 @@ GetTowerProfileTS <- function(tower.xts, tower2.xts=NULL, tower3.xts=NULL,
 #' @description
 #' @param
 #' @return
-GetTowerObject <- function(tower.xts, tower2.xts=NULL, tower3.xts=NULL,
-                           tower4.xts=NULL, tower5.xts=NULL, tower6.xts=NULL,
-                           herz10.xts, herz35.xts, herz69.xts, herz116.xts,
-                           herz178.xts, herz258.xts, era20c10.xts, era20c100.xts,
-                           tower.tsstart, tower.tsend, herz.tsend, era20c.tsend,
-                           tower.name="", tower.lon, tower.lat,
-                           tower.param, era20c.param) {
+GetObsObject <- function(obs.xts, obs2.xts=NULL, obs3.xts=NULL,
+                         obs4.xts=NULL, obs5.xts=NULL, obs6.xts=NULL,
+                         herz10.xts, herz35.xts, herz69.xts, herz116.xts,
+                         herz178.xts, herz258.xts, era20c10.xts, era20c100.xts,
+                         obs.tsstart, obs.tsend, herz.tsend, era20c.tsend,
+                         obs.name="", obs.lon, obs.lat,
+                         obs.param, era20c.param) {
 
-  if (nchar(tower.name) == 0 | tower.name != "Fino1" & tower.name != "Fino2" &
-      tower.name != "Lindenberg" & tower.name != "Cabauw") {
-    CallStop(paste0("Unexpected tower.name: ", tower.name, " "))
+  if (nchar(obs.name) == 0 | obs.name != "Fino1" & obs.name != "Fino2" &
+      obs.name != "Lindenberg" & obs.name != "Cabauw") {
+    cat("\n   *** The observation name is: ", obs.name, "  ***\n\n")
   }
 
-  tsstart = c(max(tower.tsstart[1]),1) # this can be extended if necessary
-  tsend = c(min(tower.tsend[1], herz.tsend[1], era20c.tsend[1]), 12)
-  timestr = paste0(toString(tower.tsstart[1]), toString(tower.tsstart[2]), '/',
+  tsend = c(min(obs.tsend[1], herz.tsend[1], era20c.tsend[1]), 12)
+  timestr = paste0(toString(obs.tsstart[1]), toString(obs.tsstart[2]), '/',
                    toString(tsend[1]), toString(tsend[2]))
 
-  tower.xts = tower.xts[timestr]
-  if (!is.null(tower2.xts)) tower2.xts = tower2.xts[timestr]
-  if (!is.null(tower3.xts)) tower3.xts = tower3.xts[timestr]
-  if (!is.null(tower4.xts)) tower4.xts = tower4.xts[timestr]
-  if (!is.null(tower5.xts)) tower5.xts = tower5.xts[timestr]
-  if (!is.null(tower6.xts)) tower6.xts = tower6.xts[timestr]
+  obs.xts = obs.xts[timestr]
+  if (!is.null(obs2.xts)) obs2.xts = obs2.xts[timestr]
+  if (!is.null(obs3.xts)) obs3.xts = obs3.xts[timestr]
+  if (!is.null(obs4.xts)) obs4.xts = obs4.xts[timestr]
+  if (!is.null(obs5.xts)) obs5.xts = obs5.xts[timestr]
+  if (!is.null(obs6.xts)) obs6.xts = obs6.xts[timestr]
   herz10.xts = herz10.xts[timestr]
   herz35.xts = herz35.xts[timestr]
   herz69.xts = herz69.xts[timestr]
@@ -384,129 +383,129 @@ GetTowerObject <- function(tower.xts, tower2.xts=NULL, tower3.xts=NULL,
   era20c100.xts = era20c100.xts[timestr]
 
 
-  tower.df = data.frame(date=index(tower.xts),
-                        ReanaName="", StationName=tower.name,
-                        latitude=tower.lat, longitude=tower.lon,
-                        wind_speed=coredata(tower.xts),
-                        height=strsplit(tower.param, '_')[[1]][[2]])
-  if (!is.null(tower2.xts)) {
-    tower2.df = data.frame(date=index(tower2.xts),
-                           ReanaName="", StationName=tower.name,
-                           latitude=tower.lat, longitude=tower.lon,
-                           wind_speed=coredata(tower2.xts),
-                           height=strsplit(tower.param, '_')[[2]][[2]])
+  obs.df = data.frame(date=index(obs.xts),
+                        ReanaName="", StationName=obs.name,
+                        latitude=obs.lat, longitude=obs.lon,
+                        wind_speed=coredata(obs.xts),
+                        height=strsplit(obs.param, '_')[[1]][[2]])
+  if (!is.null(obs2.xts)) {
+    obs2.df = data.frame(date=index(obs2.xts),
+                           ReanaName="", StationName=obs.name,
+                           latitude=obs.lat, longitude=obs.lon,
+                           wind_speed=coredata(obs2.xts),
+                           height=strsplit(obs.param, '_')[[2]][[2]])
   }
-  if (!is.null(tower3.xts)) {
-    tower3.df = data.frame(date=index(tower3.xts),
-                           ReanaName="", StationName=tower.name,
-                           latitude=tower.lat, longitude=tower.lon,
-                           wind_speed=coredata(tower3.xts),
-                           height=strsplit(tower.param, '_')[[3]][[2]])
+  if (!is.null(obs3.xts)) {
+    obs3.df = data.frame(date=index(obs3.xts),
+                           ReanaName="", StationName=obs.name,
+                           latitude=obs.lat, longitude=obs.lon,
+                           wind_speed=coredata(obs3.xts),
+                           height=strsplit(obs.param, '_')[[3]][[2]])
   }
-  if (!is.null(tower4.xts)) {
-    tower4.df = data.frame(date=index(tower4.xts),
-                           ReanaName="", StationName=tower.name,
-                           latitude=tower.lat, longitude=tower.lon,
-                           wind_speed=coredata(tower4.xts),
-                           height=strsplit(tower.param, '_')[[4]][[2]])
+  if (!is.null(obs4.xts)) {
+    obs4.df = data.frame(date=index(obs4.xts),
+                           ReanaName="", StationName=obs.name,
+                           latitude=obs.lat, longitude=obs.lon,
+                           wind_speed=coredata(obs4.xts),
+                           height=strsplit(obs.param, '_')[[4]][[2]])
   }
-  if (!is.null(tower5.xts)) {
-    tower5.df = data.frame(date=index(tower5.xts),
-                           ReanaName="", StationName=tower.name,
-                           latitude=tower.lat, longitude=tower.lon,
-                           wind_speed=coredata(tower5.xts),
-                           height=strsplit(tower.param, '_')[[5]][[2]])
+  if (!is.null(obs5.xts)) {
+    obs5.df = data.frame(date=index(obs5.xts),
+                           ReanaName="", StationName=obs.name,
+                           latitude=obs.lat, longitude=obs.lon,
+                           wind_speed=coredata(obs5.xts),
+                           height=strsplit(obs.param, '_')[[5]][[2]])
   }
-  if (!is.null(tower6.xts)) {
-    tower6.df = data.frame(date=index(tower6.xts),
-                           ReanaName="", StationName=tower.name,
-                           latitude=tower.lat, longitude=tower.lon,
-                           wind_speed=coredata(tower6.xts),
-                           height=strsplit(tower.param, '_')[[6]][[2]])
+  if (!is.null(obs6.xts)) {
+    obs6.df = data.frame(date=index(obs6.xts),
+                           ReanaName="", StationName=obs.name,
+                           latitude=obs.lat, longitude=obs.lon,
+                           wind_speed=coredata(obs6.xts),
+                           height=strsplit(obs.param, '_')[[6]][[2]])
   }
   herz10.df = data.frame(date=index(herz10.xts),
-                         ReanaName="HErZ", StationName=tower.name,
-                         latitude=tower.lat, longitude=tower.lon,
+                         ReanaName="HErZ", StationName=obs.name,
+                         latitude=obs.lat, longitude=obs.lon,
                          wind_speed=coredata(herz10.xts),
                          height="10m")
   herz35.df = data.frame(date=index(herz35.xts),
-                         ReanaName="HErZ", StationName=tower.name,
-                         latitude=tower.lat, longitude=tower.lon,
+                         ReanaName="HErZ", StationName=obs.name,
+                         latitude=obs.lat, longitude=obs.lon,
                          wind_speed=coredata(herz35.xts),
                          height="35m")
   herz69.df = data.frame(date=index(herz69.xts),
-                         ReanaName="HErZ", StationName=tower.name,
-                         latitude=tower.lat, longitude=tower.lon,
+                         ReanaName="HErZ", StationName=obs.name,
+                         latitude=obs.lat, longitude=obs.lon,
                          wind_speed=coredata(herz69.xts),
                          height="69m")
   herz116.df = data.frame(date=index(herz116.xts),
-                          ReanaName="HErZ", StationName=tower.name,
-                          latitude=tower.lat, longitude=tower.lon,
+                          ReanaName="HErZ", StationName=obs.name,
+                          latitude=obs.lat, longitude=obs.lon,
                           wind_speed=coredata(herz116.xts),
                           height="116m")
   herz178.df = data.frame(date=index(herz178.xts),
-                          ReanaName="HErZ", StationName=tower.name,
-                          latitude=tower.lat, longitude=tower.lon,
+                          ReanaName="HErZ", StationName=obs.name,
+                          latitude=obs.lat, longitude=obs.lon,
                           wind_speed=coredata(herz178.xts),
                           height="178m")
   herz258.df = data.frame(date=index(herz258.xts),
-                          ReanaName="HErZ", StationName=tower.name,
-                          latitude=tower.lat, longitude=tower.lon,
+                          ReanaName="HErZ", StationName=obs.name,
+                          latitude=obs.lat, longitude=obs.lon,
                           wind_speed=coredata(herz258.xts),
                           height="258m")
   if (!is.null(era20c10.xts)) {
     era20c10.df = data.frame(date=index(era20c10.xts),
-                             ReanaName="ERA20C", StationName=tower.name,
-                             latitude=tower.lat, longitude=tower.lon,
+                             ReanaName="ERA20C", StationName=obs.name,
+                             latitude=obs.lat, longitude=obs.lon,
                              wind_speed=coredata(era20c10.xts),
                              height=strsplit(era20c.param, '_')[[1]][[2]])
   }
   if (!is.null(era20c100.xts)) {
     era20c100.df = data.frame(date=index(era20c100.xts),
-                              ReanaName="ERA20C", StationName=tower.name,
-                              latitude=tower.lat, longitude=tower.lon,
+                              ReanaName="ERA20C", StationName=obs.name,
+                              latitude=obs.lat, longitude=obs.lon,
                               wind_speed=coredata(era20c100.xts),
                               height=strsplit(era20c.param, '_')[[2]][[2]])
   }
 
-  if (!is.null(tower6.xts)) {
+  if (!is.null(obs6.xts)) {
     if (!is.null(era20c10.xts) & !is.null(era20c100.xts)) {
-      climate.tower.object = climate(data_tables=
-                                       list(tower=tower.df, tower2=tower2.df,
-                                            tower3=tower3.df, tower4=tower4.df,
-                                            tower5=tower5.df, tower6=tower6.df,
+      climate.obs.object = climate(data_tables=
+                                       list(obs=obs.df, obs2=obs2.df,
+                                            obs3=obs3.df, obs4=obs4.df,
+                                            obs5=obs5.df, obs6=obs6.df,
                                             herz10=herz10.df, herz35=herz35.df,
                                             herz69=herz69.df, herz116=herz116.df,
                                             herz178=herz178.df, herz258=herz258.df,
                                             era20c10=era20c10.df,
                                             era20c100=era20c100.df))
     }  else {
-      climate.tower.object = climate(data_tables=
-                                       list(tower=tower.df, tower2=tower2.df,
-                                            tower3=tower3.df, tower4=tower4.df,
-                                            tower5=tower5.df, tower6=tower6.df,
+      climate.obs.object = climate(data_tables=
+                                       list(obs=obs.df, obs2=obs2.df,
+                                            obs3=obs3.df, obs4=obs4.df,
+                                            obs5=obs5.df, obs6=obs6.df,
                                             herz10=herz10.df, herz35=herz35.df,
                                             herz69=herz69.df, herz116=herz116.df,
                                             herz178=herz178.df, herz258=herz258.df))
     }
   } else {
     if (!is.null(era20c10.xts) & !is.null(era20c100.xts)) {
-      climate.tower.object = climate(data_tables=
-                                       list(tower=tower.df, herz10=herz10.df,
+      climate.obs.object = climate(data_tables=
+                                       list(obs=obs.df, herz10=herz10.df,
                                             herz35=herz35.df, herz69=herz69.df,
                                             herz116=herz116.df, herz178=herz178.df,
                                             herz258=herz258.df, era20c10=era20c10.df,
                                             era20c100=era20c100.df))
     } else {
-      climate.tower.object = climate(data_tables=
-                                       list(tower=tower.df, herz10=herz10.df,
+      climate.obs.object = climate(data_tables=
+                                       list(obs=obs.df, herz10=herz10.df,
                                             herz35=herz35.df, herz69=herz69.df,
                                             herz116=herz116.df, herz178=herz178.df,
                                             herz258=herz258.df))
     }
   }
 
-  return(list(tower.object = climate.tower.object))
+  return(list(obs.object = climate.obs.object))
 
 }
 

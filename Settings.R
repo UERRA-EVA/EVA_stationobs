@@ -9,7 +9,7 @@ res.switch = high.res
 hourly="hourly"
 daily="daily"
 monthly="monthly"
-time.res=hourly
+time.res=monthly
 ana.time.res = list(hourly=hourly, daily=daily, monthly=monthly, time.res=time.res)
 if (ana.time.res$time.res == ana.time.res$monthly) {
   time.ext = "Monthly"
@@ -172,6 +172,8 @@ station.daily.fname = "./data/KL_Tageswerte_Beschreibung_Stationen.txt"
 station.hourly.fname =
   "./data/FF_Stundenwerte_Beschreibung_Stationen_wind_selected4.txt"
 CheckFile(c(station.daily.fname, station.hourly.fname))
+# this so far is only a hack; needs to be incorporated in a better way
+stat.param = "windspeed_10m"
 
 #=== time period ===
 # available data (beginning to end of year):

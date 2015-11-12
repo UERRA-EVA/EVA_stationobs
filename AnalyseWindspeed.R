@@ -40,7 +40,8 @@ if (station.daily) {
   colnames(station.data) = c("Station_id", "von_datum", "bis_datum", "Stationshoehe",
                              "geoBreite", "geoLaenge", "Stationsname", "Bundesland")
 }
-station.info = station.data[,c("Station_id", "Stationsname", "geoBreite", "geoLaenge")]
+station.info = station.data[,c("Station_id", "Stationsname", "geoBreite",
+                               "geoLaenge")]
 station.info[[1]] = sprintf("%05d", station.info[[1]])
 
 #========================================
@@ -74,6 +75,10 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
                "for this time period. ***\n\n"))
     #     next
   }
+  stat.tsstart = c(head(as.POSIXlt(index(MM.station))$year+1900,1),
+                   head(as.POSIXlt(index(MM.station))$mon+1,1))
+  stat.tsend = c(tail(as.POSIXlt(index(MM.station))$year+1900,1),
+                 tail(as.POSIXlt(index(MM.station))$mon+1,1))
 
   #=================================
   #
@@ -136,6 +141,25 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
     herz178.data.xts = herz.data$herz178
     herz258.data.xts = herz.data$herz258
   }
+
+  # == get time series of same length ==
+  # === tower data in objects are ordered from heighest to lowest height ===
+  climobj = GetObsObject(obs.xts=MM.station,
+                         herz10.xts=herz10.data.xts,
+                         herz35.xts=herz35.data.xts,
+                         herz69.xts=herz69.data.xts,
+                         herz116.xts=herz116.data.xts,
+                         herz178.xts=herz178.data.xts,
+                         herz258.xts=herz258.data.xts,
+                         era20c10.xts=era20c.data.xts,
+                         era20c100.xts=era20c100.data.xts,
+                         obs.tsstart=stat.tsstart, obs.tsend=stat.tsend,
+                         herz.tsend=herz.tsend, era20c.tsend=era20c.tsend,
+                         obs.name=as.character(station.info$Stationsname),
+                         obs.lon=station.info$geoLaenge,
+                         obs.lat=station.info$geoBreite,
+                         obs.param=stat.param, era20c.param=era20c.param)
+  stat.climobj = climobj$obs.object
 
   #-----------------------------------------------------------------------------
 
