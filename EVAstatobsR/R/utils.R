@@ -25,12 +25,12 @@ PlottingSettings <- function(data.vals) {
   }
 
   if (is.data.frame(data.vals)) {
-    tower.name = data.vals$StationName[1]
-    tower.height = data.vals$height[1]
+    obs.name = data.vals$StationName[1]
+    obs.height = data.vals$height[1]
     return(list(land.a4width=land.a4width, land.a4height=land.a4height,
                 port.a4width=port.a4width, port.a4height=port.a4height,
-                time.agg=time.agg, time.Agg=time.Agg, tower.name=tower.name,
-                tower.height=tower.height))
+                time.agg=time.agg, time.Agg=time.Agg, obs.name=obs.name,
+                obs.height=obs.height))
   } else if (is.xts(data.vals)) {
     return(list(land.a4width=land.a4width, land.a4height=land.a4height,
                 port.a4width=port.a4width, port.a4height=port.a4height,
@@ -372,8 +372,11 @@ NormVals <- function(value, min.val, max.val) {
 #' @param frcst same as above but the the forecast (here: reanalysis) data.
 #' @param benchmark value as percentile for which the contingency table values shall
 #'   be calculated
+#' @param inverse is a boolean to indicate whether to use the increasing order of
+#'   benchmarks (percentiles) (F) or the inverse (decreasing) order (F) to calculate
+#'   the contigency table
 #' @return is a names list holding the distribution in the variables a, b, c, d.
-CalcContTable <- function(obs, frcst, benchmark) {
+CalcContTable <- function(obs, frcst, benchmark, inverse) {
 
   # check for NA values and set to NA at same time steps to both time series
   idx = which(!is.finite(obs))
@@ -392,19 +395,39 @@ CalcContTable <- function(obs, frcst, benchmark) {
     CallStop(paste0("Length of observation and forecast vector should match; ",
                     "length(obs) = ", length(obs), "   length(frcst) = ", length(frcst)))
 
-  for (steps in seq(obs)) {
-    if (is.finite(obs[steps]) & is.finite(frcst[steps])) {
-      if (obs[steps] >= abs.bench.obs) {
-        if (frcst[steps] >= abs.bench.frcst) {
-          cnt_a = cnt_a + 1
+  if (!inverse) {
+    for (steps in seq(obs)) {
+      if (is.finite(obs[steps]) & is.finite(frcst[steps])) {
+        if (obs[steps] >= abs.bench.obs) {
+          if (frcst[steps] >= abs.bench.frcst) {
+            cnt_a = cnt_a + 1
+          } else {
+            cnt_c = cnt_c + 1
+          }
         } else {
-          cnt_c = cnt_c + 1
+          if (frcst[steps] >= abs.bench.frcst) {
+            cnt_b = cnt_b + 1
+          } else {
+            cnt_d = cnt_d + 1
+          }
         }
-      } else {
-        if (frcst[steps] >= abs.bench.frcst) {
-          cnt_b = cnt_b + 1
+      }
+    }
+  } else {
+    for (steps in seq(obs)) {
+      if (is.finite(obs[steps]) & is.finite(frcst[steps])) {
+        if (obs[steps] <= abs.bench.obs) {
+          if (frcst[steps] <= abs.bench.frcst) {
+            cnt_a = cnt_a + 1
+          } else {
+            cnt_c = cnt_c + 1
+          }
         } else {
-          cnt_d = cnt_d + 1
+          if (frcst[steps] <= abs.bench.frcst) {
+            cnt_b = cnt_b + 1
+          } else {
+            cnt_d = cnt_d + 1
+          }
         }
       }
     }
@@ -498,16 +521,16 @@ YLimsScores <- function() {
 #' @description
 #' @param
 #' @return
-GetScoresDF <- function(thresh, obs, frcst) {
+GetScoresDF <- function(thresh, obs, frcst, inverse=F) {
 
-  Cont.Table.cnt = CalcContTable(obs, frcst, thresh[1])
+  Cont.Table.cnt = CalcContTable(obs, frcst, thresh[1], inverse)
   scores = ContTableScores(Cont.Table.cnt$a, Cont.Table.cnt$b,
                            Cont.Table.cnt$c, Cont.Table.cnt$d)
   scores.df = as.data.frame(scores)
 
   if (length(thresh) > 1) {
     for (thresh.step in seq(length(thresh)-1)+1) {
-      Cont.Table.cnt = CalcContTable(obs, frcst, thresh[thresh.step])
+      Cont.Table.cnt = CalcContTable(obs, frcst, thresh[thresh.step], inverse)
       scores = ContTableScores(Cont.Table.cnt$a, Cont.Table.cnt$b,
                                Cont.Table.cnt$c, Cont.Table.cnt$d)
       scores.df = rbind(scores.df, scores)
