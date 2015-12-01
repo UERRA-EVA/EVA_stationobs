@@ -16,7 +16,9 @@ CheckFile(config.file)
 source(config.file)
 
 #Checks on parameters
-CheckHerzParams(herz.param, herz.profile)
+if (ana.time.res$time.res != ana.time.res$hourly) {
+  CheckHerzParams(herz.param, herz.profile)
+}
 
 #============================================================
 #
@@ -31,15 +33,9 @@ if (station.daily) {
   station.fname = station.hourly.fname
 }
 
-if (station.daily) {
-  station.data = read.table(station.fname, skip=2, sep=";")
-  colnames(station.data) = c("Station_id", "von_datum", "bis_datum", "Stationshoehe",
-                             "geoBreite", "geoLaenge", "Stationsname", "Bundesland")
-} else {
-  station.data = read.table(station.fname, skip=2, sep=";")
-  colnames(station.data) = c("Station_id", "von_datum", "bis_datum", "Stationshoehe",
-                             "geoBreite", "geoLaenge", "Stationsname", "Bundesland")
-}
+station.data = read.table(station.fname, skip=2, sep=";")
+colnames(station.data) = c("Station_id", "von_datum", "bis_datum", "Stationshoehe",
+                           "geoBreite", "geoLaenge", "Stationsname", "Bundesland")
 station.info = station.data[,c("Station_id", "Stationsname", "geoBreite",
                                "geoLaenge")]
 station.info[[1]] = sprintf("%05d", station.info[[1]])
@@ -86,60 +82,73 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
   #
   #=================================
 
-  # read ERA20C data
-  cat(paste0("  **  Reading ERA20C reanalysis data\n"))
-  stat.lon = station.data$GEO_LÄNGE[1]
-  stat.lat = station.data$GEO_BREITE[1]
-  idx = GetLonLatIdx(era20c.fname, stat.lon, stat.lat)
-  lonidx = idx$lonidx
-  latidx = idx$latidx
-  era20c.data = ReadEraNetcdf2Xts(era20c.param, era20c.fname,
-                                  era20c.tsstart, era20c.tsend,
+  if (ana.time.res$time.res == monthly | ana.time.res$time.res == daily) {
+
+    # read ERA20C data
+    cat(paste0("  **  Reading ERA20C reanalysis data\n"))
+    stat.lon = station.data$GEO_LÄNGE[1]
+    stat.lat = station.data$GEO_BREITE[1]
+    idx = GetLonLatIdx(era20c.fname, stat.lon, stat.lat)
+    lonidx = idx$lonidx
+    latidx = idx$latidx
+    era20c.data = ReadEraNetcdf2Xts(era20c.param, era20c.fname,
+                                    era20c.tsstart, era20c.tsend,
+                                    lonidx, latidx, ana.time.res,
+                                    era20c=TRUE, verb.dat=verb.era.dat)
+    era20c.data.xts = era20c.data$era10
+    era20c100.data.xts = era20c.data$era20c100
+
+    # read ERA-Interim data
+    cat(paste0("  **  Reading ERA-Interim reanalysis data\n"))
+    idx = GetLonLatIdx(eraI.fname, stat.lon, stat.lat)
+    lonidx = idx$lonidx
+    latidx = idx$latidx
+    eraI.data = ReadEraNetcdf2Xts(eraI.param, eraI.fname,
+                                  eraI.tsstart, eraI.tsend,
                                   lonidx, latidx, ana.time.res,
-                                  era20c=TRUE, verb.dat=verb.era.dat)
-  era20c.data.xts = era20c.data$era10
-  era20c100.data.xts = era20c.data$era20c100
+                                  era20c=FALSE, verb.dat=verb.era.dat)
+    eraI.data.xts = eraI.data$era10
 
-  # read ERA-Interim data
-  cat(paste0("  **  Reading ERA-Interim reanalysis data\n"))
-  idx = GetLonLatIdx(eraI.fname, stat.lon, stat.lat)
-  lonidx = idx$lonidx
-  latidx = idx$latidx
-  eraI.data = ReadEraNetcdf2Xts(eraI.param, eraI.fname,
-                                eraI.tsstart, eraI.tsend,
-                                lonidx, latidx, ana.time.res,
-                                era20c=FALSE, verb.dat=verb.era.dat)
-  eraI.data.xts = eraI.data$era10
+    # read HErZ data
+    cat(paste0("  **  Reading HErZ reanalysis data\n"))
+    if (herz.grid.read.grb) {
+      nlon = 848
+      nlat = 824
+      herz.lon = readGrib(herz.grid.grb, nlon, nlat, 1, var="RLON", verb.grib=verb.grib)
+      herz.lat = readGrib(herz.grid.grb, nlon, nlat, 1, var="RLAT", verb.grib=verb.grib)
+    } else {
+      herz.lon = ReadNetcdf("longitude", herz.grid.nc, conv.time=F)$data
+      herz.lat = ReadNetcdf("latitude", herz.grid.nc, conv.time=F)$data
+    }
 
-  # read HErZ data
-  cat(paste0("  **  Reading HErZ reanalysis data\n"))
-  if (herz.grid.read.grb) {
-    nlon = 848
-    nlat = 824
-    herz.lon = readGrib(herz.grid.grb, nlon, nlat, 1, var="RLON", verb.grib=verb.grib)
-    herz.lat = readGrib(herz.grid.grb, nlon, nlat, 1, var="RLAT", verb.grib=verb.grib)
-  } else {
-    herz.lon = ReadNetcdf("longitude", herz.grid.nc, conv.time=F)$data
-    herz.lat = ReadNetcdf("latitude", herz.grid.nc, conv.time=F)$data
-  }
+    # only read first file name (if there are more than one)
+    # because all daily files have the same grid
+    idx = GetLonLatIdx(herz.fname[1], stat.lon, stat.lat, herz.lon, herz.lat)
+    lonidx = idx$lonidx
+    latidx = idx$latidx
+    herz.data = ReadHerzNetcdfMonthlyDaily2Xts(herz.param, herz.fname,
+                                               herz.tsstart, herz.tsend,
+                                               lonidx, latidx,
+                                               ana.time.res, herz.profile,
+                                               verb.era.dat)
+    herz10.data.xts = herz.data$herz10
+    herz116.data.xts = herz.data$herz116
+    if (herz.profile) {
+      herz35.data.xts = herz.data$herz35
+      herz69.data.xts = herz.data$herz69
+      herz178.data.xts = herz.data$herz178
+      herz258.data.xts = herz.data$herz258
+    }
 
-  # only read first file name (if there are more than one)
-  # because all daily files have the same grid
-  idx = GetLonLatIdx(herz.fname[1], stat.lon, stat.lat, herz.lon, herz.lat)
-  lonidx = idx$lonidx
-  latidx = idx$latidx
-  herz.data = ReadHerzNetcdfMonthlyDaily2Xts(herz.param, herz.fname,
-                                             herz.tsstart, herz.tsend,
-                                             lonidx, latidx,
-                                             ana.time.res, herz.profile,
-                                             verb.era.dat)
-  herz10.data.xts = herz.data$herz10
-  herz116.data.xts = herz.data$herz116
-  if (herz.profile) {
-    herz35.data.xts = herz.data$herz35
-    herz69.data.xts = herz.data$herz69
-    herz178.data.xts = herz.data$herz178
-    herz258.data.xts = herz.data$herz258
+  } else if (ana.time.res$time.res == ana.time.res$hourly) {
+
+    if (!station.daily) {
+      CallStop("If hourly station analysis is selected, ",
+                      "station data need to be hourly as well.")
+    }
+    era20c.data.xts = NULL
+    era20c100.data.xts = NULL
+    eraI.data.xts = NULL
   }
 
   # == get time series of same length ==
