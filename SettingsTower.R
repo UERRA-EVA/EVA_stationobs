@@ -13,13 +13,45 @@ if (ana.time.res$time.res == ana.time.res$monthly) {
   lind.file = paste0("./data/Lindenberg_Windgeschwindigkeit_20010101_20141231_HourMean.nc")
   cabauw.file = paste0("./data/Cabauw_20000401_20150731_HourMean.nc")
   hamburg.file = paste0("./data/Hamburg_19960101_20150930_HourMean.nc")
+
+  # HErZ values in different height at specific location
+  herz.fname = list(Fino1=c("./data/WindSpeed_1995TO2014_HErZ-258m_at_Fino1.nc",
+                            "./data/WindSpeed_1995TO2014_HErZ-178m_at_Fino1.nc",
+                            "./data/WindSpeed_1995TO2014_HErZ-116m_at_Fino1.nc",
+                            "./data/WindSpeed_1995TO2014_HErZ-69m_at_Fino1.nc",
+                            "./data/WindSpeed_1995TO2014_HErZ-35m_at_Fino1.nc",
+                            "./data/WindSpeed_1995TO2014_HErZ-10m_at_Fino1.nc"),
+                    Fino2=c("./data/WindSpeed_1995TO2014_HErZ-258m_at_Fino2.nc",
+                            "./data/WindSpeed_1995TO2014_HErZ-178m_at_Fino2.nc",
+                            "./data/WindSpeed_1995TO2014_HErZ-116m_at_Fino2.nc",
+                            "./data/WindSpeed_1995TO2014_HErZ-69m_at_Fino2.nc",
+                            "./data/WindSpeed_1995TO2014_HErZ-35m_at_Fino2.nc",
+                            "./data/WindSpeed_1995TO2014_HErZ-10m_at_Fino2.nc"),
+                    Lindenberg=c("./data/WindSpeed_1995TO2014_HErZ-258m_at_Lindenberg.nc",
+                                 "./data/WindSpeed_1995TO2014_HErZ-178m_at_Lindenberg.nc",
+                                 "./data/WindSpeed_1995TO2014_HErZ-116m_at_Lindenberg.nc",
+                                 "./data/WindSpeed_1995TO2014_HErZ-69m_at_Lindenberg.nc",
+                                 "./data/WindSpeed_1995TO2014_HErZ-35m_at_Lindenberg.nc",
+                                 "./data/WindSpeed_1995TO2014_HErZ-10m_at_Lindenberg.nc"),
+                    Cabauw=c("./data/WindSpeed_1995TO2014_HErZ-258m_at_Cabauw.nc",
+                             "./data/WindSpeed_1995TO2014_HErZ-178m_at_Cabauw.nc",
+                             "./data/WindSpeed_1995TO2014_HErZ-116m_at_Cabauw.nc",
+                             "./data/WindSpeed_1995TO2014_HErZ-69m_at_Cabauw.nc",
+                             "./data/WindSpeed_1995TO2014_HErZ-35m_at_Cabauw.nc",
+                             "./data/WindSpeed_1995TO2014_HErZ-10m_at_Cabauw.nc"))
 } else if (ana.time.res$time.res == ana.time.res$daily) {
   fino1.file = paste0("./data/FINO1_Windgeschwindigkeit_100m_20040101_20131231_DayMean.nc")
   fino2.file = paste0("./data/FINO2_Windgeschwindigkeit_102m_20070101_20131231_DayMean.nc")
   lind.file = paste0("./data/Lindenberg_Windgeschwindigkeit_20010101_20141231_DayMean.nc")
   cabauw.file = paste0("./data/Cabauw_20000401_20150731_DayMean.nc")
   hamburg.file = paste0("./data/Hamburg_19960101_20150930_DayMean.nc")
+  CheckFile(fino1.file)
+  CheckFile(fino2.file)
+  CheckFile(lind.file)
+  CheckFile(cabauw.file)
+  CheckFile(hamburg.file)
 }
+CheckFile(c(fino1.file, fino2.file, lind.file, cabauw.file, hamburg.file))
 
 fino1.param = "windspeed_100m"
 fino2.param = "windspeed_102m"
@@ -64,5 +96,5 @@ cabauw.tsend = c(2015,07)
 plot.TowerEraProfile = F
 plot.histograms = F
 plot.ProfileTS = F
-plot.Extremes = F
-plot.DailyCycle = T
+plot.Extremes = T
+plot.DailyCycle = F
