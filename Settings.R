@@ -123,15 +123,11 @@ if (ana.time.res$time.res == ana.time.res$monthly) {
 CheckFile(herz.fname)
 
 # variable names to read from above files
-if (ana.time.res$time.res == ana.time.res$monthly | ana.time.res$time.res == ana.time.res$daily) {
-  if (herz.profile) {
-    herz.param = c("windspeed_258m", "windspeed_178m", "windspeed_116m",
-                   "windspeed_69m", "windspeed_35m", "windspeed_10m")
-  } else {
-    herz.param = c("windspeed_116m", "windspeed_10m")
-  }
-} else if (ana.time.res$time.res == ana.time.res$hourly) {
-  herz.param = ("windspeed")
+if (herz.profile) {
+  herz.param = c("windspeed_258m", "windspeed_178m", "windspeed_116m",
+                 "windspeed_69m", "windspeed_35m", "windspeed_10m")
+} else {
+  herz.param = c("windspeed_116m", "windspeed_10m")
 }
 
 #=== Station data ===

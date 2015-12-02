@@ -49,9 +49,11 @@ station.info[[1]] = sprintf("%05d", station.info[[1]])
 #========================================
 # loop over number of stations
 for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
-  cat(paste0("  **  Reading station data: ", station.info[[2]][steps], "\n"))
+
+  station.name = as.character(station.info[[2]][steps])
+  cat(paste0("  **  Reading station data: ", station.name, "\n"))
   station.data = data.frame()
-  station.data = AllData(station.info[[1]][steps], station.info[[2]][steps],
+  station.data = AllData(station.info[[1]][steps], station.name,
                          station.info[[3]][steps], station.info[[4]][steps],
                          daily = station.daily, verbose.DWD=verb.stat.dat)
 
@@ -65,9 +67,9 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
                "was zero for this time period. ***\n\n"))
     next
   }
-  if (any(!is.finite(MM.station))) {
+  if (any(!is.finite(MM.station)) && ana.time.res$time.res != hourly) {
     cat(paste0("\n  ***  ",
-               "There were no finite values in the station data record ",
+               "There were non-finite values in the station data record ",
                "for this time period. ***\n\n"))
     #     next
   }
@@ -142,9 +144,63 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
 
   } else if (ana.time.res$time.res == ana.time.res$hourly) {
 
-    if (!station.daily) {
-      CallStop("If hourly station analysis is selected, ",
-                      "station data need to be hourly as well.")
+    if (station.daily) {
+      CallStop(paste0("If hourly station analysis is selected, ",
+                      "station data need to be hourly as well."))
+    }
+
+    # aligne station.name to file name in herz.fname
+    for (name.step in seq(herz.fname)) {
+      test.str = strsplit(station.name, ' ')[[1]]
+      for (j in seq(test.str)) {
+        test.str[j] = gsub("\\(", "", test.str[j])
+        test.str[j] = gsub("\\)", "", test.str[j])
+        test.str[j] = gsub("\\)", "", test.str[j])
+        test.str[j] = gsub("/", "", test.str[j])
+        test.str[j] = gsub(",", "", test.str[j])
+      }
+      test.str1 = test.str[1]
+      if (length(test.str) == 2) {
+        test.str2 = test.str[2]
+        if (grepl(test.str1, herz.fname[name.step]) &&
+            grepl(test.str2, herz.fname[name.step])) break
+      } else if (length(test.str) == 3) {
+        test.str2 = test.str[2]
+        test.str3 = test.str[3]
+        if (grepl(test.str1, herz.fname[name.step]) &&
+            grepl(test.str2, herz.fname[name.step]) &&
+            grepl(test.str3, herz.fname[name.step])) break
+      } else if (length(test.str) == 4) {
+        test.str2 = test.str[2]
+        test.str3 = test.str[3]
+        test.str4 = test.str[4]
+        if (grepl(test.str1, herz.fname[name.step]) &&
+            grepl(test.str2, herz.fname[name.step]) &&
+            grepl(test.str3, herz.fname[name.step]) &&
+            grepl(test.str4, herz.fname[name.step])) break
+      } else if(grepl(test.str, herz.fname[name.step])) break
+    }
+    cat(paste0("Station: ", herz.fname[name.step], "\n"))
+
+    herz.data = ReadHerzNetcdfHourly2Xts(herz.param, herz.fname[name.step],
+                                         herz.tsstart, herz.tsend,
+                                         herz.profile)
+    herz10.data.xts = herz.data$herz10
+    herz35.data.xts = herz.data$herz35
+    herz69.data.xts = herz.data$herz69
+    herz116.data.xts = herz.data$herz116
+    herz178.data.xts = herz.data$herz178
+    herz258.data.xts = herz.data$herz258
+
+    # assign NaN values to herz data as in station data
+    if (any(!is.finite(MM.station))) {
+      idx = which(!is.finite(MM.station))
+      herz10.data.xts[idx] = NA
+      herz35.data.xts[idx] = NA
+      herz69.data.xts[idx] = NA
+      herz116.data.xts[idx] = NA
+      herz178.data.xts[idx] = NA
+      herz258.data.xts[idx] = NA
     }
     era20c.data.xts = NULL
     era20c100.data.xts = NULL
@@ -276,7 +332,7 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
     titname = paste0('windspeed [m/s] at station location ',
                      as.character(station.data$STATIONS_NAME[1]))
     PlotStationEraSQ(era20c.data.xts, eraI.data.xts, herz10.data.xts, MM.station,
-                      titname, outdir, fname, ana.time.res)
+                     titname, outdir, fname, ana.time.res)
 
   }
 

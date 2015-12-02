@@ -101,8 +101,7 @@ ExtractStationData <- function(station.data, era20c.tsstart, era20c.tsend,
                             format="%Y-%m-%d", tz = "UTC")
     MM.station = xts(daily.xts, order.by=daily.vals)
   } else if (ana.time.res$time.res == ana.time.res$hourly) {
-    #MM.station = StatXTS
-    CallStop("It is not yet implemented to produce an hourly xtended time series.")
+    MM.station = StatXTS
   }
 
   # cut station time series to length of longest dataset (if shorter than station ts)
