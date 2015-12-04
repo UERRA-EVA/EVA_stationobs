@@ -353,17 +353,18 @@ GetTowerProfileTS <- function(tower.xts, tower2.xts=NULL, tower3.xts=NULL,
 GetObsObject <- function(obs.xts, obs2.xts=NULL, obs3.xts=NULL,
                          obs4.xts=NULL, obs5.xts=NULL, obs6.xts=NULL,
                          herz10.xts, herz35.xts, herz69.xts, herz116.xts,
-                         herz178.xts, herz258.xts, era20c10.xts, era20c100.xts,
-                         obs.tsstart, obs.tsend, herz.tsend, era20c.tsend,
+                         herz178.xts, herz258.xts, eraI10.xts,
+                         era20c10.xts, era20c100.xts,
+                         obs.tsstart, obs.tsend, herz.tsend, eraI.tsend, era20c.tsend,
                          obs.name="", obs.lon, obs.lat,
-                         obs.param, era20c.param) {
+                         obs.param, eraI.param, era20c.param) {
 
   if (nchar(obs.name) == 0 | obs.name != "Fino1" & obs.name != "Fino2" &
       obs.name != "Lindenberg" & obs.name != "Cabauw") {
     cat("\n   *** The observation name is: ", obs.name, "  ***\n\n")
   }
 
-  tsend = c(min(obs.tsend[1], herz.tsend[1], era20c.tsend[1]), 12)
+  tsend = c(min(obs.tsend[1], herz.tsend[1], era20c.tsend[1], eraI.tsend[1]), 12)
   timestr = paste0(toString(obs.tsstart[1]), toString(obs.tsstart[2]), '/',
                    toString(tsend[1]), toString(tsend[2]))
 
@@ -379,8 +380,9 @@ GetObsObject <- function(obs.xts, obs2.xts=NULL, obs3.xts=NULL,
   herz116.xts = herz116.xts[timestr]
   herz178.xts = herz178.xts[timestr]
   herz258.xts = herz258.xts[timestr]
-  era20c10.xts = era20c10.xts[timestr]
-  era20c100.xts = era20c100.xts[timestr]
+  if (!is.null(eraI10.xts)) eraI10.xts = eraI10.xts[timestr]
+  if (!is.null(era20c10.xts)) era20c10.xts = era20c10.xts[timestr]
+  if (!is.null(era20c100.xts)) era20c100.xts = era20c100.xts[timestr]
 
 
   obs.df = data.frame(date=index(obs.xts),
@@ -453,6 +455,13 @@ GetObsObject <- function(obs.xts, obs2.xts=NULL, obs3.xts=NULL,
                           latitude=obs.lat, longitude=obs.lon,
                           wind_speed=coredata(herz258.xts),
                           height="258m")
+  if (!is.null(eraI10.xts)) {
+    eraI10.df = data.frame(date=index(eraI10.xts),
+                             ReanaName="ERA-I", StationName=obs.name,
+                             latitude=obs.lat, longitude=obs.lon,
+                             wind_speed=coredata(eraI10.xts),
+                             height=strsplit(eraI.param, '_')[[1]][[2]])
+  }
   if (!is.null(era20c10.xts)) {
     era20c10.df = data.frame(date=index(era20c10.xts),
                              ReanaName="ERA20C", StationName=obs.name,
@@ -469,7 +478,7 @@ GetObsObject <- function(obs.xts, obs2.xts=NULL, obs3.xts=NULL,
   }
 
   if (!is.null(obs6.xts)) {
-    if (!is.null(era20c10.xts) & !is.null(era20c100.xts)) {
+    if (!is.null(era20c10.xts) & !is.null(era20c100.xts) & !is.null(eraI10.xts)) {
       climate.obs.object = climate(data_tables=
                                        list(obs=obs.df, obs2=obs2.df,
                                             obs3=obs3.df, obs4=obs4.df,
@@ -477,6 +486,7 @@ GetObsObject <- function(obs.xts, obs2.xts=NULL, obs3.xts=NULL,
                                             herz10=herz10.df, herz35=herz35.df,
                                             herz69=herz69.df, herz116=herz116.df,
                                             herz178=herz178.df, herz258=herz258.df,
+                                            eraI10=eraI10.df,
                                             era20c10=era20c10.df,
                                             era20c100=era20c100.df))
     }  else {
@@ -489,12 +499,13 @@ GetObsObject <- function(obs.xts, obs2.xts=NULL, obs3.xts=NULL,
                                             herz178=herz178.df, herz258=herz258.df))
     }
   } else {
-    if (!is.null(era20c10.xts) & !is.null(era20c100.xts)) {
+    if (!is.null(era20c10.xts) & !is.null(era20c100.xts) & !is.null(eraI10.xts)) {
       climate.obs.object = climate(data_tables=
                                        list(obs=obs.df, herz10=herz10.df,
                                             herz35=herz35.df, herz69=herz69.df,
                                             herz116=herz116.df, herz178=herz178.df,
-                                            herz258=herz258.df, era20c10=era20c10.df,
+                                            herz258=herz258.df, eraI10=eraI10.df,
+                                            era20c10=era20c10.df,
                                             era20c100=era20c100.df))
     } else {
       climate.obs.object = climate(data_tables=

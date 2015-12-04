@@ -9,10 +9,22 @@
 #'   limits yliml and ylimh.
 GetYlims <- function(xts1, xts2, xts3, xts4) {
   if (is.xts(xts1) & (is.xts(xts2)) & is.xts(xts3) & (is.xts(xts4))) {
-    yliml = floor(min(min(xts1, na.rm=TRUE), min(xts2, na.rm=TRUE),
-                      min(xts3, na.rm=TRUE), min(xts4, na.rm=TRUE)))
-    ylimh = ceiling(max(max(xts1, na.rm=TRUE), max(xts2, na.rm=TRUE),
-                        max(xts3, na.rm=TRUE), max(xts4, na.rm=TRUE)))
+    if (!any(is.finite(xts4))) {
+      if (!any(is.finite(xts3))) {
+        yliml = floor(min(min(xts1, na.rm=TRUE), min(xts2, na.rm=TRUE)))
+        ylimh = ceiling(max(max(xts1, na.rm=TRUE), max(xts2, na.rm=TRUE)))
+      } else {
+        yliml = floor(min(min(xts1, na.rm=TRUE), min(xts2, na.rm=TRUE),
+                          min(xts3, na.rm=TRUE)))
+        ylimh = ceiling(max(max(xts1, na.rm=TRUE), max(xts2, na.rm=TRUE),
+                            max(xts3, na.rm=TRUE)))
+      }
+    } else {
+      yliml = floor(min(min(xts1, na.rm=TRUE), min(xts2, na.rm=TRUE),
+                        min(xts3, na.rm=TRUE), min(xts4, na.rm=TRUE)))
+      ylimh = ceiling(max(max(xts1, na.rm=TRUE), max(xts2, na.rm=TRUE),
+                          max(xts3, na.rm=TRUE), max(xts4, na.rm=TRUE)))
+    }
   } else {
     CallStop("XTS1 or XTS2 or XTS3 or XTS4 is not an xts, ABORTING!")
   }
@@ -27,68 +39,63 @@ GetYlims <- function(xts1, xts2, xts3, xts4) {
 #'   corresponding ERA20C, ERA-I, and HErZ pixel and provides the correlation
 #'   between these time series. Optionally, it is possible to plot the anomaly.
 #'   The plot is saved in pdf format and there is no return value.
-#' @param Era20cXts monthly mean extended time series of the ERA20C pixel
-#'   corresponding to the station location
-#' @param EraIXts same as above for ERA-Interim
-#' @param HerzXts same as above for HErZ
-#' @param StatXts monthly mean extended time series of the station values
+#' @param s.obj is a ClimObject which holds the station data and corresponding
+#'   reanalysis data at the location of the station data.
 #' @param titname string of the plot title name
 #' @param outdir string of the output directory into which the plot is saved
 #' @param fname string of the file name of the plot
-#' @param monthly is an optional parameter which determines to plot the monthly
-#'   values of the above time series
 #' @param anomaly is an optional parameter which determines whether to plot anomalies
-PlotStationEra <- function(Era20cXts, EraIXts, HerzXts, StatXts,
-                           titname, outdir, fname, monthly=TRUE, anomaly=FALSE) {
+PlotStationEra <- function(s.obj, titname, outdir, fname, anomaly=FALSE) {
 
-  roll.mean = TRUE
-  roll.time = 12
+  obs.date = as.POSIXlt(s.obj$obs$data$date)
 
-  PS = PlottingSettings(StatXts)
+  PS = PlottingSettings(s.obj$obs$data)
   pdf(paste(outdir, fname, sep=""), width=PS$land.a4width, height=PS$land.a4height,
       onefile=TRUE, pointsize=13)
 
-  if (anomaly) {
-    Era20cXts = Era20cXts - mean(Era20cXts)
-    EraIXts = EraIXts - mean(EraIXts)
-    HerzXts = HerzXts - mean(HerzXts)
-    StatXts = StatXts - mean(StatXts)
+  if (is.null(s.obj$era20c10$data$wind_speed)) {
+    Era20cXts = NULL
+  } else {
+    Era20cXts = xts(s.obj$era20c10$data$wind_speed, order.by=obs.date)
   }
-  Ylims = GetYlims(Era20cXts, EraIXts, HerzXts, StatXts)
+  if (is.null(s.obj$eraI10$data$wind_speed)) {
+    EraIXts = NULL
+  } else {
+    EraIXts = xts(s.obj$eraI10$data$wind_speed, order.by=obs.date)
+  }
+  HerzXts = xts(s.obj$herz10$data$wind_speed, order.by=obs.date)
+  StatXts = xts(s.obj$obs$data$wind_speed, order.by=obs.date)
+  if (anomaly) {
+    if (!is.null(Era20cXts)) Era20cXts = Era20cXts - mean(Era20cXts)
+    if (!is.null(EraIXts)) EraIXts = EraIXts - mean(EraIXts)
+    HerzXts = HerzXts - mean(HerzXts, na.rm=T)
+    StatXts = StatXts - mean(StatXts, na.rm=T)
+  }
+  if (!is.null(Era20cXts) & !is.null(EraIXts)) {
+    Ylims = GetYlims(Era20cXts, EraIXts, HerzXts, StatXts)
+  } else {
+    dummy = numeric(length=length(StatXts)) * NA
+    dummy = xts(dummy, order.by = index(StatXts))
+    Ylims = GetYlims(HerzXts, StatXts, dummy, dummy)
+  }
   yliml = Ylims$yll
   ylimh = Ylims$ylh
 
   # ERA20C
-  dummy = numeric(length=length(Era20cXts)) * NA
-  dummy = xts(dummy, order.by = index(Era20cXts))
+  dummy = numeric(length=length(StatXts)) * NA
+  dummy = xts(dummy, order.by = index(StatXts))
   plot(dummy, main=titname, ylab="wind speed [m/s]", ylim=c(yliml, ylimh))
 
-  if (monthly) { lines(Era20cXts, type="b", pch=16, col="blue", lw=1.5) }
-  if (!monthly & roll.mean) {
-    lines(rollmean(Era20cXts, roll.time), type="p", pch=16, col="blue", lw=1.5)
-    lines(rollmean(Era20cXts, roll.time), col="blue", lw=1.5)
-  }
+  if (!is.null(Era20cXts)) lines(Era20cXts, type="b", pch=16, col="blue", lw=1.5)
 
   # ERA-I
-  if (monthly) { lines(EraIXts, type="b", pch=16, col="red", lw=1.5) }
-  if (!monthly & roll.mean) {
-    lines(rollmean(EraIXts, roll.time), type="p", pch=16, col="red", lw=1.5)
-    lines(rollmean(EraIXts, roll.time), col="red", lw=1.5)
-  }
+  if (!is.null(EraIXts)) lines(EraIXts, type="b", pch=16, col="red", lw=1.5)
 
   # HErZ
-  if (monthly) { lines(HerzXts, type="b", pch=16, col="green3", lw=1.5) }
-  if (!monthly & roll.mean) {
-    lines(rollmean(HerzXts, roll.time), type="p", pch=16, col="green3", lw=1.5)
-    lines(rollmean(HerzXts, roll.time), col="green3", lw=1.5)
-  }
+  lines(HerzXts, type="b", pch=16, col="green3", lw=1.5)
 
   # Station
-  if (monthly) { lines(StatXts, type="b", pch=16, col="black", lw=1.5) }
-  if (!monthly & roll.mean) {
-    lines(rollmean(StatXts, roll.time), type="p", pch=16, col="black", lw=1.5)
-    lines(rollmean(StatXts, roll.time), col="black", lw=1.5)
-  }
+  lines(StatXts, type="b", pch=16, col="black", lw=1.5)
 
   Corr.vals = GetCorrXts(era20c=Era20cXts, eraI=EraIXts, herz=HerzXts, stat=StatXts)
 
@@ -408,20 +415,43 @@ PlotStationEraSelMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 PlotStationEraSQ <- function(Era20cXts, EraIXts, HerzXts, StatXts,
                              titname, outdir, fname, ana.time.res) {
 
-  Era20  = as.numeric(Era20cXts)
-  EraI = as.numeric(EraIXts)
+  if (is.null(Era20cXts)) {
+    Era20 = NULL
+  } else {
+    Era20  = as.numeric(Era20cXts)
+  }
+  if (is.null(EraIXts)) {
+    EraI = NULL
+  } else {
+    EraI = as.numeric(EraIXts)
+  }
   Herz = as.numeric(HerzXts)
   Stat = as.numeric(StatXts)
 
-  Ylims = GetYlims(Era20cXts, EraIXts, HerzXts, StatXts)
+  if (!is.null(Era20cXts) & !is.null(EraIXts)) {
+    Ylims = GetYlims(Era20cXts, EraIXts, HerzXts, StatXts)
+  } else {
+    dummy = numeric(length=length(StatXts)) * NA
+    dummy = xts(dummy, order.by = index(StatXts))
+    Ylims = GetYlims(HerzXts, StatXts, dummy, dummy)
+  }
   yliml = Ylims$yll
   ylimh = Ylims$ylh
 
   axis.n = 'n'
   axis.y = 's'
-  mtext.titname = "Daily wind speed at 10m height"
   if (ana.time.res$time.res == ana.time.res$monthly) {
     mtext.titname = "Monthly wind speed at 10m height"
+    titname.scatter = gsub("wind speed", "Scatter and QQ-plot of monthly wind speed",
+                           titname)
+  } else if (ana.time.res$time.res == ana.time.res$daily) {
+    mtext.titname = "Daily wind speed at 10m height"
+    titname.scatter = gsub("wind speed", "Scatter and QQ-plot of daily wind speed",
+                           titname)
+  } else if (ana.time.res$time.res == ana.time.res$hourly) {
+    mtext.titname = "Hourly wind speed at 10m height"
+    titname.scatter = gsub("wind speed", "Scatter and QQ-plot of hourly wind speed",
+                           titname)
   }
 
   PS = PlottingSettings(StatXts)
@@ -429,74 +459,70 @@ PlotStationEraSQ <- function(Era20cXts, EraIXts, HerzXts, StatXts,
   pdf(paste0(outdir, fname.scatter),
       width=PS$port.a4width, height=PS$port.a4height,
       onefile=TRUE, pointsize=13)
-
-  par(mfrow=c(3,2), mar=c(0,0,0,0), oma=c(5,5,4,0.5))
-
-  xlabname = "10m ERA20C wind speed [m/s]"
-  ylabname = "10m ERA-I wind speed [m/s]"
-  if (ana.time.res$time.res == ana.time.res$monthly) {
-    titname.scatter = gsub("wind speed", "Scatter and QQ-plot of monthly wind speed",
-                           titname)
-  } else if (ana.time.res$time.res == ana.time.res$daily) {
-    titname.scatter = gsub("wind speed", "Scatter and QQ-plot of daily wind speed",
-                           titname)
+  if (is.null(Era20) & is.null(EraI)) {
+    par(mfrow=c(2,1), mar=c(0,0,0,0), oma=c(5,5,4,0.5))
+  } else {
+    par(mfrow=c(3,2), mar=c(0,0,0,0), oma=c(5,5,4,0.5))
   }
-  text.str = "Era20c vs ERA-Interim"
-  scatterPlot(Era20, EraI, yliml, ylimh, "",
-              xlabname, ylabname, text.str=text.str, xaxis=axis.n, yaxis=axis.y)
-  qqPlot(Era20, EraI, yliml, ylimh, "",
-         xlabname, ylabname, text.str=text.str, xaxis=axis.n, yaxis=axis.n)
 
-  xlabname = "10m ERA20C wind speed [m/s]"
-  ylabname = "10m HErZ wind speed [m/s]"
-  text.str = "Era20c vs HErZ"
-  scatterPlot(Era20, Herz, yliml, ylimh, "",
-              xlabname, ylabname, text.str=text.str, xaxis=axis.n, yaxis=axis.y)
-  qqPlot(Era20, Herz, yliml, ylimh, "",
-         xlabname, ylabname, text.str=text.str, xaxis=axis.n, yaxis=axis.n)
+  titname = ""
+  xlabname = ""
+  ylabname = ""
+  if (!is.null(Era20)) {
+    text.str = "Era20c vs ERA-Interim"
+    scatterPlot(Era20, EraI, yliml, ylimh, titname,
+                xlabname, ylabname, text.str=text.str, xaxis=axis.n, yaxis=axis.y)
+    qqPlot(Era20, EraI, yliml, ylimh, "",
+           xlabname, ylabname, text.str=text.str, xaxis=axis.n, yaxis=axis.n)
 
-  xlabname = "10m ERA-I wind speed [m/s]"
-  ylabname = "10m HErZ wind speed [m/s]"
-  text.str = "ERA-Interim vs HErZ"
-  scatterPlot(EraI, Herz, yliml, ylimh, "",
-              xlabname, ylabname, text.str=text.str, xaxis=axis.y, yaxis=axis.y)
-  qqPlot(EraI, Herz, yliml, ylimh, "",
-         xlabname, ylabname, text.str=text.str, xaxis=axis.y, yaxis=axis.n)
+    text.str = "Era20c vs HErZ"
+    scatterPlot(Era20, Herz, yliml, ylimh, titname,
+                xlabname, ylabname, text.str=text.str, xaxis=axis.n, yaxis=axis.y)
+    qqPlot(Era20, Herz, yliml, ylimh, "",
+           xlabname, ylabname, text.str=text.str, xaxis=axis.n, yaxis=axis.n)
 
-  mtext(titname.scatter, line=1, outer=TRUE)
-  mtext("wind speed [m/s]", side=2, line=3, outer=TRUE)
-  mtext("wind speed [m/s]", side=1, line=3, outer=TRUE)
+    text.str = "ERA20C vs station data"
+    scatterPlot(Era20, Stat, yliml, ylimh, titname,
+                xlabname, ylabname, text.str=text.str, xaxis=axis.y, yaxis=axis.y)
+    qqPlot(Era20, Stat, yliml, ylimh, "",
+           xlabname, ylabname, text.str=text.str, xaxis=axis.y, yaxis=axis.n)
 
-  xlabname = "10m ERA20C wind speed [m/s]"
-  ylabname = "10m Station wind speed [m/s]"
-  text.str = "ERA20C vs station data"
-  scatterPlot(Era20, Stat, yliml, ylimh, "",
-              xlabname, ylabname, text.str=text.str, xaxis=axis.n, yaxis=axis.y)
-  qqPlot(Era20, Stat, yliml, ylimh, "",
-         xlabname, ylabname, text.str=text.str, xaxis=axis.n, yaxis=axis.n)
+    mtext(titname.scatter, line=1, outer=TRUE)
+    mtext("wind speed [m/s]", side=2, line=3, outer=TRUE)
+    mtext("wind speed [m/s]", side=1, line=3, outer=TRUE)
 
-  xlabname = "10m ERA-I wind speed [m/s]"
-  ylabname = "10m Station wind speed [m/s]"
-  text.str = "ERA-Interim vs station data"
-  scatterPlot(EraI, Stat, yliml, ylimh, "",
-              xlabname, ylabname, text.str=text.str, xaxis=axis.n, yaxis=axis.y)
-  qqPlot(EraI, Stat, yliml, ylimh, "",
-         xlabname, ylabname, text.str=text.str, xaxis=axis.n, yaxis=axis.n)
+  }
 
-  xlabname = "10m HErZ wind speed [m/s]"
-  ylabname = "10m Station wind speed [m/s]"
+  if (!is.null(EraI)) {
+    text.str = "ERA-Interim vs HErZ"
+    scatterPlot(EraI, Herz, yliml, ylimh, titname,
+                xlabname, ylabname, text.str=text.str, xaxis=axis.n, yaxis=axis.y)
+    qqPlot(EraI, Herz, yliml, ylimh, titname,
+           xlabname, ylabname, text.str=text.str, xaxis=axis.n, yaxis=axis.n)
+
+    text.str = "ERA-Interim vs station data"
+    scatterPlot(EraI, Stat, yliml, ylimh, titname,
+                xlabname, ylabname, text.str=text.str, xaxis=axis.n, yaxis=axis.y)
+    qqPlot(EraI, Stat, yliml, ylimh, titname,
+           xlabname, ylabname, text.str=text.str, xaxis=axis.n, yaxis=axis.n)
+  }
+
   text.str = "HErZ vs station data"
-  scatterPlot(Herz, Stat, yliml, ylimh, "",
-              xlabname, ylabname, text.str=text.str, xaxis=axis.y, yaxis=axis.y)
-  qqPlot(Herz, Stat, yliml, ylimh, "",
-         xlabname, ylabname, text.str=text.str, xaxis=axis.y, yaxis=axis.n)
+  scatterPlot(Herz, Stat, yliml, ylimh, titname,
+              xlabname, ylabname, text.str=text.str, xaxis=axis.y, yaxis=axis.n)
+  if (is.null(Era20) & is.null(EraI)) {
+    qqPlot(Herz, Stat, yliml, ylimh, titname,
+           xlabname, ylabname, text.str=text.str, xaxis=axis.y, yaxis=axis.y)
+  } else {
+    qqPlot(Herz, Stat, yliml, ylimh, titname,
+           xlabname, ylabname, text.str=text.str, xaxis=axis.y, yaxis=axis.y)
+  }
 
   mtext(titname.scatter, line=1, outer=TRUE)
   mtext("wind speed [m/s]", side=2, line=3, outer=TRUE)
   mtext("wind speed [m/s]", side=1, line=3, outer=TRUE)
 
   dev.off()
-
 }
 
 #-----------------------------------------------------------------------------------
@@ -519,6 +545,8 @@ PlotStationEraSQ <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 Plot100mEraHerz <- function(Era20cXts, HerzXts,
                             titname, statname, outdir, fname,
                             ana.time.res) {
+
+  if (is.null(Era20cXts)) CallStop("Variable was unexpectadly NULL, aborting!")
 
   same.length = F
   if (length(Era20cXts) == length(HerzXts)) {same.length = T}
@@ -637,22 +665,32 @@ PlotHistograms <- function(outdir, fname, station.name, ana.time.res,
     CallStop("All passed data are NULL!")
   }
 
-  plot.cnt = 0
-  if (!is.null(Era20cXts10)) plot.cnt = plot.cnt + 1
-  if (!is.null(Era20cXts100)) plot.cnt = plot.cnt + 1
-  if (!is.null(EraIXts)) plot.cnt = plot.cnt + 1
-  if (!is.null(HerzXts10)) plot.cnt = plot.cnt + 1
-  if (!is.null(HerzXts35)) plot.cnt = plot.cnt + 1
-  if (!is.null(HerzXts69)) plot.cnt = plot.cnt + 1
-  if (!is.null(HerzXts116)) plot.cnt = plot.cnt + 1
-  if (!is.null(HerzXts178)) plot.cnt = plot.cnt + 1
-  if (!is.null(HerzXts258)) plot.cnt = plot.cnt + 1
-  if (!is.null(StatXts)) plot.cnt = plot.cnt + 1
+  #   plot.cnt = 0
+  #   if (!is.null(Era20cXts10)) plot.cnt = plot.cnt + 1
+  #   if (!is.null(Era20cXts100)) plot.cnt = plot.cnt + 1
+  #   if (!is.null(EraIXts)) plot.cnt = plot.cnt + 1
+  #   if (!is.null(HerzXts10)) plot.cnt = plot.cnt + 1
+  #   if (!is.null(HerzXts35)) plot.cnt = plot.cnt + 1
+  #   if (!is.null(HerzXts69)) plot.cnt = plot.cnt + 1
+  #   if (!is.null(HerzXts116)) plot.cnt = plot.cnt + 1
+  #   if (!is.null(HerzXts178)) plot.cnt = plot.cnt + 1
+  #   if (!is.null(HerzXts258)) plot.cnt = plot.cnt + 1
+  #   if (!is.null(StatXts)) plot.cnt = plot.cnt + 1
 
+  dummy = numeric(length=length(StatXts)) * NA
+  dummy = xts(dummy, order.by = index(StatXts))
   if(is.null(HerzXts258)) {
-    Ylims = GetYlims(EraIXts, HerzXts10, Era20cXts100, StatXts)
+    if (is.null(Era20cXts10)) {
+      Ylims = GetYlims(HerzXts10, StatXts, dummy, dummy)
+    } else {
+      Ylims = GetYlims(EraIXts, HerzXts10, Era20cXts100, StatXts)
+    }
   } else {
-    Ylims = GetYlims(EraIXts, HerzXts10, HerzXts258, StatXts)
+    if (is.null(Era20cXts10)) {
+      Ylims = GetYlims(HerzXts10, HerzXts258, StatXts, dummy)
+    } else {
+      Ylims = GetYlims(EraIXts, HerzXts10, HerzXts258, StatXts)
+    }
   }
   yliml = Ylims$yll
   ylimh = Ylims$ylh
@@ -670,8 +708,18 @@ PlotHistograms <- function(outdir, fname, station.name, ana.time.res,
 
   axis.n = 'n'
   axis.y = 's'
-  if (ana.time.res$time.res == ana.time.res$monthly) monthly.ext = 'monthly'
-  if (ana.time.res$time.res == ana.time.res$daily) monthly.ext = 'daily'
+  if (ana.time.res$time.res == ana.time.res$monthly) {
+    monthly.ext = 'monthly'
+    mtext.titname = paste0("Monthly wind speed at 10m height at ", station.name)
+  }
+  if (ana.time.res$time.res == ana.time.res$daily) {
+    monthly.ext = 'daily'
+    mtext.titname = paste0("Daily wind speed at 10m height at ", station.name)
+  }
+  if (ana.time.res$time.res == ana.time.res$hourly) {
+    monthly.ext = 'hourly'
+    mtext.titname = paste0("Hourly wind speed at 10m height at ", station.name)
+  }
 
   xlabname.empty = ""
   xlabname.full = "wind speed [m/s]"
@@ -679,17 +727,12 @@ PlotHistograms <- function(outdir, fname, station.name, ana.time.res,
 
   PS = PlottingSettings(StatXts)
   if (plot.10m) {
-    if (plot.cnt != 4 & plot.cnt != 6 & plot.cnt != 10) {
-      CallStop(paste0("Depending on data to plot I expect 4, 6, or 10 plots to be ",
-                      "plotted;\n", "   plot.cnt = ", plot.cnt, " for plot.10m: ",
-                      plot.10m, ", plot.10m100m: ", plot.10m100m,
-                      ", and plot.HerzProfile: ", plot.HerzProfile))
-    }
-
-    mtext.titname = paste0("Daily wind speed at 10m height at ", station.name)
-    if (ana.time.res$time.res == ana.time.res$monthly) {
-      mtext.titname = paste0("Monthly wind speed at 10m height at ", station.name)
-    }
+    #     if (plot.cnt != 4 & plot.cnt != 6 & plot.cnt != 10) {
+    #       CallStop(paste0("Depending on data to plot I expect 4, 6, or 10 plots to be ",
+    #                       "plotted;\n", "   plot.cnt = ", plot.cnt, " for plot.10m: ",
+    #                       plot.10m, ", plot.10m100m: ", plot.10m100m,
+    #                       ", and plot.HerzProfile: ", plot.HerzProfile))
+    #     }
 
     fname = gsub('Histogram', 'Histogram_ERA-Station-10m', fname)
     pdf(paste0(outdir, fname), width=PS$land.a4width, height=PS$land.a4height,
@@ -697,61 +740,76 @@ PlotHistograms <- function(outdir, fname, station.name, ana.time.res,
 
     par(mfrow=c(2,2), mar=c(1,1,2,0.5), oma=c(2.5,3,3,0.5))
 
-    min.val = floor(min(min(era20c10, na.rm=TRUE), min(eraI, na.rm=TRUE),
-                        min(herz10, na.rm=TRUE), min(stat, na.rm=TRUE)))
-    max.val = ceiling(max(max(era20c10, na.rm=TRUE), max(eraI, na.rm=TRUE),
-                          max(herz10, na.rm=TRUE), max(stat, na.rm=TRUE)))
+    if (!is.null(Era20cXts10)) {
+      min.val = floor(min(min(era20c10, na.rm=TRUE), min(eraI, na.rm=TRUE),
+                          min(herz10, na.rm=TRUE), min(stat, na.rm=TRUE)))
+      max.val = ceiling(max(max(era20c10, na.rm=TRUE), max(eraI, na.rm=TRUE),
+                            max(herz10, na.rm=TRUE), max(stat, na.rm=TRUE)))
+    } else {
+      min.val = floor(min(min(herz10, na.rm=TRUE), min(stat, na.rm=TRUE)))
+      max.val = ceiling(max(max(herz10, na.rm=TRUE), max(stat, na.rm=TRUE)))
+    }
     breaks = seq(min.val, max.val, 0.25)
-    dummy = numeric(length=length(era20c10)) * NA
+    dummy = numeric(length=length(herz10)) * NA
 
-    titname = paste0("Frequency distribution of ", monthly.ext, " ERA20C")
-    histoPlot(era20c10, dummy, breaks, xlims=c(min.val, max.val),
-              titname, xlabname.empty, ylabname)
+    if (!is.null(Era20cXts10)) {
+      titname = paste0("Frequency distribution of ", monthly.ext, " ERA20C")
+      histoPlot(era20c10, dummy, breaks, xlims=c(min.val, max.val),
+                titname, xlabname.empty, ylabname="", xaxis=axis.n)
+      plotLegendStats(xlims=c(min.val, max.val), era20c10)
 
-    titname = paste0("Frequency distribution of ", monthly.ext, " ERA-I")
-    histoPlot(eraI, dummy, breaks, xlims=c(min.val, max.val),
-              titname, xlabname.empty, ylabname)
+      titname = paste0("Frequency distribution of ", monthly.ext, " ERA20C\n",
+                       "in green and ERA-Interim shaded")
+      histoPlot(era20c10, eraI, breaks, xlims=c(min.val, max.val), titname,
+                xlabname.empty, ylabname="", xaxis=axis.n, addPlot=TRUE)
+
+      titname = paste0("Frequency distribution of ", monthly.ext, " ERA20C\n",
+                       "in green and COSMO HErZ shaded")
+      histoPlot(era20c10, herz10, breaks, xlims=c(min.val, max.val), titname,
+                xlabname.full, ylabname, addPlot=TRUE)
+
+      titname = paste0("Frequency distribution of ", monthly.ext, " ERA20C\n",
+                       "in green and station data shaded")
+      xlabname = "10m station wind speed [m/s]"
+      histoPlot(era20c10, stat, breaks, xlims=c(min.val, max.val), titname,
+                xlabname.full, ylabname="", addPlot=TRUE)
+      mtext(mtext.titname, font=2, cex=1.2, line=1, outer=TRUE)
+    }
+
+    if (!is.null(EraIXts)) {
+      titname = paste0("Frequency distribution of ", monthly.ext, " ERA-I")
+      histoPlot(eraI, dummy, breaks, xlims=c(min.val, max.val),
+                titname, xlabname.empty, ylabname, xaxis=axis.n)
+      plotLegendStats(xlims=c(min.val, max.val), eraI)
+
+      titname = paste0("Frequency distribution of ", monthly.ext, " ERA-Interim\n",
+                       "in green and COSMO HErZ shaded")
+      histoPlot(eraI, herz10, breaks, xlims=c(min.val, max.val), titname,
+                xlabname.empty, ylabname="", xaxis=axis.n, addPlot=TRUE)
+
+      titname = paste0("Frequency distribution of ", monthly.ext, " ERA-Interim\n",
+                       "in green and station data shaded")
+      histoPlot(eraI, stat, breaks, xlims=c(min.val, max.val), titname,
+                xlabname.full, ylabname, addPlot=TRUE)
+
+      mtext(mtext.titname, font=2, cex=1.2, line=1, outer=TRUE)
+    }
 
     titname = paste0("Frequency distribution of ", monthly.ext, " HErZ")
     histoPlot(herz10, dummy, breaks, xlims=c(min.val, max.val),
-              titname, xlabname.full, ylabname)
+              titname, xlabname.full, ylabname="")
+    plotLegendStats(xlims=c(min.val, max.val), herz10)
 
     titname = paste0("Frequency distribution of ", monthly.ext, " station data")
     histoPlot(stat, dummy, breaks, xlims=c(min.val, max.val),
               titname, xlabname.full, ylabname)
     mtext(mtext.titname, font=2, cex=1.2, line=1, outer=TRUE)
-
-    titname = paste0("Frequency distribution of ", monthly.ext, " ERA20C\n",
-                     "in green and ERA-Interim shaded")
-    histoPlot(era20c10, eraI, breaks, xlims=c(min.val, max.val), titname,
-              xlabname.empty, ylabname, xaxis=axis.n, addPlot=TRUE)
-
-    titname = paste0("Frequency distribution of ", monthly.ext, " ERA20C\n",
-                     "in green and COSMO HErZ shaded")
-    histoPlot(era20c10, herz10, breaks, xlims=c(min.val, max.val), titname,
-              xlabname.empty, ylabname, xaxis=axis.n, addPlot=TRUE)
-
-    titname = paste0("Frequency distribution of ", monthly.ext, " ERA20C\n",
-                     "in green and station data shaded")
-    xlabname = "10m station wind speed [m/s]"
-    histoPlot(era20c10, stat, breaks, xlims=c(min.val, max.val), titname,
-              xlabname.full, ylabname, addPlot=TRUE)
-
-    titname = paste0("Frequency distribution of ", monthly.ext, " ERA-Interim\n",
-                     "in green and COSMO HErZ shaded")
-    histoPlot(eraI, herz10, breaks, xlims=c(min.val, max.val), titname,
-              xlabname.full, ylabname, addPlot=TRUE)
-    mtext(mtext.titname, font=2, cex=1.2, line=1, outer=TRUE)
-
-    titname = paste0("Frequency distribution of ", monthly.ext, " ERA-Interim\n",
-                     "in green and station data shaded")
-    histoPlot(eraI, stat, breaks, xlims=c(min.val, max.val), titname,
-              xlabname.full, ylabname, addPlot=TRUE)
+    plotLegendStats(xlims=c(min.val, max.val), stat)
 
     titname = paste0("Frequency distribution of ", monthly.ext, " COSMO HErZ\n",
                      "in green and station data shaded")
     histoPlot(herz10, stat, breaks, xlims=c(min.val, max.val), titname,
-              xlabname.full, ylabname, addPlot=TRUE)
+              xlabname.full, ylabname="", addPlot=TRUE)
     mtext(mtext.titname, font=2, cex=1.2, line=1, outer=TRUE)
 
     dev.off()
@@ -760,17 +818,12 @@ PlotHistograms <- function(outdir, fname, station.name, ana.time.res,
 
   if (plot.10m100m) {
 
-    if (plot.cnt != 4 & plot.cnt != 6 & plot.cnt != 10) {
-      CallStop(paste0("Depending on data to plot I expect 4, 6, or 10 plots to be ",
-                      "plotted;\n", "   plot.cnt = ", plot.cnt, " for plot.10m: ",
-                      plot.10m, ", plot.10m100m: ", plot.10m100m,
-                      ", and plot.HerzProfile: ", plot.HerzProfile))
-    }
-
-    mtext.titname = paste0("Daily wind speed at 10m height at ", station.name)
-    if (ana.time.res$time.res == ana.time.res$monthly) {
-      mtext.titname = paste0("Monthly wind speed at 10m height at ", station.name)
-    }
+    #     if (plot.cnt != 4 & plot.cnt != 6 & plot.cnt != 10) {
+    #       CallStop(paste0("Depending on data to plot I expect 4, 6, or 10 plots to be ",
+    #                       "plotted;\n", "   plot.cnt = ", plot.cnt, " for plot.10m: ",
+    #                       plot.10m, ", plot.10m100m: ", plot.10m100m,
+    #                       ", and plot.HerzProfile: ", plot.HerzProfile))
+    #     }
 
     fname = gsub('Histogram', 'Histogram_ERA20C-HErZ-100m', fname)
     pdf(paste0(outdir, fname), width=PS$land.a4width, height=PS$land.a4height,
@@ -778,27 +831,36 @@ PlotHistograms <- function(outdir, fname, station.name, ana.time.res,
 
     par(mfrow=c(2,2), mar=c(1,1,2,0.5), oma=c(2.5,3,3,0.5))
 
-    min.val = floor(min(min(era20c100, na.rm=TRUE), min(herz116, na.rm=TRUE)))
-    max.val = ceiling(max(max(era20c100, na.rm=TRUE), max(herz116, na.rm=TRUE)))
+    if (!is.null(Era20cXts100)) {
+      min.val = floor(min(min(era20c100, na.rm=TRUE), min(herz116, na.rm=TRUE)))
+      max.val = ceiling(max(max(era20c100, na.rm=TRUE), max(herz116, na.rm=TRUE)))
+    } else {
+      min.val = floor(min(herz116, na.rm=TRUE))
+      max.val = ceiling(max(herz116, na.rm=TRUE))
+    }
     breaks = seq(min.val, max.val, 0.25)
-    dummy = numeric(length=length(era20c100)) * NA
+    dummy = numeric(length=length(herz116)) * NA
 
-    titname = paste0("Frequency distribution of 100m ", monthly.ext,
-                     " ERA20C wind speed")
-    xlabname = "100m ERA20c wind speed [m/s]"
-    histoPlot(era20c100, dummy, breaks, xlims=c(min.val, max.val), titname,
-              xlabname, ylabname)
+    if (!is.null(Era20cXts100)) {
+      titname = paste0("Frequency distribution of 100m ", monthly.ext,
+                       " ERA20C wind speed")
+      xlabname = "100m ERA20c wind speed [m/s]"
+      histoPlot(era20c100, dummy, breaks, xlims=c(min.val, max.val), titname,
+                xlabname.empty, xaxis=axis.n, ylabname)
+      plotLegendStats(xlims=c(min.val, max.val), era20c100)
+
+      titname = paste0("Frequency distribution of ", monthly.ext, " ERA20C wind speed",
+                       " at 100m\n", "in green and COSMO HErZ at 116m shaded")
+      xlabname = "wind speed [m/s]"
+      histoPlot(era20c100, herz116, breaks, xlims=c(min.val, max.val),
+                titname, xlabname, ylabname="", addPlot=T)
+    }
 
     titname = paste0("Frequency distribution of 116m COSMO HErZ wind speed")
     xlabname = "116m HErZ wind speed [m/s]"
     histoPlot(herz116, dummy, breaks, xlims=c(min.val, max.val), titname,
               xlabname, ylabname)
 
-    titname = paste0("Frequency distribution of ", monthly.ext, " ERA20C wind speed",
-                     " at 100m\n", "in green and COSMO HErZ at 116m shaded")
-    xlabname = "wind speed [m/s]"
-    histoPlot(era20c100, herz116, breaks, xlims=c(min.val, max.val),
-              titname, xlabname, ylabname, addPlot=T)
     mtext(mtext.titname, font=2, cex=1.2, line=1, outer=TRUE)
 
     dev.off()
@@ -807,16 +869,21 @@ PlotHistograms <- function(outdir, fname, station.name, ana.time.res,
 
   if (plot.HerzProfile) {
 
-    if (plot.cnt != 4 & plot.cnt != 6 & plot.cnt != 10) {
-      CallStop(paste0("Depending on data to plot I expect 4, 6, or 10 plots to be ",
-                      "plotted;\n", "   plot.cnt = ", plot.cnt, " for plot.10m: ",
-                      plot.10m, ", plot.10m100m: ", plot.10m100m,
-                      ", and plot.HerzProfile: ", plot.HerzProfile))
-    }
+#     if (plot.cnt != 4 & plot.cnt != 6 & plot.cnt != 10) {
+#       CallStop(paste0("Depending on data to plot I expect 4, 6, or 10 plots to be ",
+#                       "plotted;\n", "   plot.cnt = ", plot.cnt, " for plot.10m: ",
+#                       plot.10m, ", plot.10m100m: ", plot.10m100m,
+#                       ", and plot.HerzProfile: ", plot.HerzProfile))
+#     }
 
-    mtext.titname = paste0("Daily wind speed of HErZ profile at ", station.name)
     if (ana.time.res$time.res == ana.time.res$monthly) {
       mtext.titname = paste0("Monthly wind speed of HErZ profile at ", station.name)
+    }
+    if (ana.time.res$time.res == ana.time.res$daily) {
+      mtext.titname = paste0("Daily wind speed of HErZ profile at ", station.name)
+    }
+    if (ana.time.res$time.res == ana.time.res$hourly) {
+      mtext.titname = paste0("Hourly wind speed of HErZ profile at ", station.name)
     }
 
     fname = gsub('Histogram', 'Histogram_HErZ-Profile', fname)
@@ -835,35 +902,41 @@ PlotHistograms <- function(outdir, fname, station.name, ana.time.res,
     dummy = numeric(length=length(herz10)) * NA
 
     titname = paste0("Frequency distribution of 10m ", monthly.ext, " HErZ wind speed")
-    xlabname = "10m HErZ wind speed [m/s]"
+    xlabname = ""
     histoPlot(herz10, dummy, breaks, xlims=c(min.val, max.val), titname,
-              xlabname, ylabname)
+              xlabname, xaxis=axis.n, ylabname)
+    plotLegendStats(xlims=c(min.val, max.val), herz10)
 
     titname = paste0("Frequency distribution of 35m ", monthly.ext, " HErZ wind speed")
-    xlabname = "35m HErZ wind speed [m/s]"
+    xlabname = ""
     histoPlot(herz35, dummy, breaks, xlims=c(min.val, max.val), titname,
-              xlabname, ylabname)
+              xlabname, xaxis=axis.n, ylabname="")
+    plotLegendStats(xlims=c(min.val, max.val), herz35)
 
     titname = paste0("Frequency distribution of 69m ", monthly.ext, " HErZ wind speed")
     xlabname = "69m HErZ wind speed [m/s]"
     histoPlot(herz69, dummy, breaks, xlims=c(min.val, max.val), titname,
               xlabname, ylabname)
+    plotLegendStats(xlims=c(min.val, max.val), herz69)
 
     titname = paste0("Frequency distribution of 116m ", monthly.ext, " HErZ wind speed")
     xlabname = "116m HErZ wind speed [m/s]"
     histoPlot(herz116, dummy, breaks, xlims=c(min.val, max.val), titname,
-              xlabname, ylabname)
+              xlabname, ylabname="")
+    plotLegendStats(xlims=c(min.val, max.val), herz116)
     mtext(mtext.titname, font=2, cex=1.2, line=1, outer=TRUE)
 
     titname = paste0("Frequency distribution of 178m ", monthly.ext, " HErZ wind speed")
     xlabname = "178m HErZ wind speed [m/s]"
     histoPlot(herz178, dummy, breaks, xlims=c(min.val, max.val), titname,
               xlabname, ylabname)
+    plotLegendStats(xlims=c(min.val, max.val), herz178)
 
     titname = paste0("Frequency distribution of 258m ", monthly.ext, " HErZ wind speed")
     xlabname = "258m HErZ wind speed [m/s]"
     histoPlot(herz258, dummy, breaks, xlims=c(min.val, max.val), titname,
-              xlabname, ylabname)
+              xlabname, ylabname="")
+    plotLegendStats(xlims=c(min.val, max.val), herz258)
     mtext(mtext.titname, font=2, cex=1.2, line=1, outer=TRUE)
 
     dev.off()
@@ -1165,6 +1238,8 @@ PlotHistogramsTower <- function(outdir, fname, ana.time.res, tower.obj) {
 PlotPDFScore <- function(era.xts, station.xts, outdir, fname, titname,
                          ana.time.res) {
 
+  if (is.null(era.xts)) return(NULL)
+
   PS = PlottingSettings(station.xts)
   pdf(paste(outdir, fname, sep=""), width=PS$land.a4width, height=PS$land.a4height,
       onefile=TRUE, pointsize=13)
@@ -1178,17 +1253,17 @@ PlotPDFScore <- function(era.xts, station.xts, outdir, fname, titname,
   max.abs.val = ceiling(max(max(era.xts), max(station.xts)))
 
   if (ana.time.res$time.res == ana.time.res$monthly) {
-    titname.hist = paste0("Monthly ", titname)
-    titname.pdfs = paste0("PDF score of monthly ", titname)
-    titname.viol = paste0("Violine plot of monthly ", titname)
+    titname.hist = paste0("Histogram of monthly wind speed [m/s] of ", titname)
+    titname.pdfs = paste0("PDF score of monthly wind speed [m/s] of ", titname)
+    titname.viol = paste0("Violine plot of monthly wind speed [m/s] of ", titname)
   } else if (ana.time.res$time.res == ana.time.res$daily) {
-    titname.hist = paste0("Daily ", titname)
-    titname.pdfs = paste0("PDF score of daily ", titname)
-    titname.viol = paste0("Violine plot of daily ", titname)
+    titname.hist = paste0("Histogram of daily wind speed [m/s] of ", titname)
+    titname.pdfs = paste0("PDF score of daily wind speed [m/s] of ", titname)
+    titname.viol = paste0("Violine plot of daily wind speed [m/s] of ", titname)
   } else if (ana.time.res$time.res == ana.time.res$hourly) {
-    titname.hist = paste0("Hourly ", titname)
-    titname.pdfs = paste0("PDF score of hourly ", titname)
-    titname.viol = paste0("Violine plot of hourly ", titname)
+    titname.hist = paste0("Histogram of hourly wind speed [m/s] of ", titname)
+    titname.pdfs = paste0("PDF score of hourly wind speed [m/s] of ", titname)
+    titname.viol = paste0("Violine plot of hourly wind speed [m/s] of ", titname)
   }
 
   for (month in seq(0,11)) {
@@ -1216,6 +1291,8 @@ PlotPDFScore <- function(era.xts, station.xts, outdir, fname, titname,
        xlab="months of the year", type="b", pch=16, col="blue")
   lines(PDF.score.ann, type="b", lty=2, pch=20, col="red")
 
+  era.xts = na.omit(era.xts)
+  station.xts = na.omit(station.xts)
   vioplot(era.xts, station.xts, horizontal=TRUE,
           names=c("reanalysis", "station data"))
   mtext(titname.viol, line=1, font=2, cex=1.2)
@@ -2957,92 +3034,92 @@ PlotTowerExtremesContr <- function(tower.obj, fname, threshold) {
   } else if (t.obj$obs$data$StationName[1] == "Lindenberg") {
 
     # against HErZ at 10m
-        obs = t.obj$obs6$data$wind_speed
-        forec = t.obj$herz10$data$wind_speed
-        scores.df = GetScoresDF(threshold, obs, forec)
-        ylims.df = as.data.frame(YLimsScores())
-        fname.new = gsub("-extremes_", "_HErZ10m-L10m-extremes_", fname)
-        PS["tower.height"] = as.character(t.obj$obs6$data$height[1])
-        PlotTowerExtremes(fname.new, scores.df, ylims.df, threshold, PS)
-        fname.new = gsub("-extremes_", "_HErZ10m-L10m-extremes-HRvsFAR_", fname)
-        PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
-                         scores.df$hit.rate, threshold, PS)
+    obs = t.obj$obs6$data$wind_speed
+    forec = t.obj$herz10$data$wind_speed
+    scores.df = GetScoresDF(threshold, obs, forec)
+    ylims.df = as.data.frame(YLimsScores())
+    fname.new = gsub("-extremes_", "_HErZ10m-L10m-extremes_", fname)
+    PS["tower.height"] = as.character(t.obj$obs6$data$height[1])
+    PlotTowerExtremes(fname.new, scores.df, ylims.df, threshold, PS)
+    fname.new = gsub("-extremes_", "_HErZ10m-L10m-extremes-HRvsFAR_", fname)
+    PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
+                     scores.df$hit.rate, threshold, PS)
 
-        if (ana.time.res$time.res != ana.time.res$hourly) {
-          # against ERA20C at 10m
-          obs = t.obj$obs6$data$wind_speed
-          forec = t.obj$era20c10$data$wind_speed
-          scores.df = GetScoresDF(threshold, obs, forec)
-          ylims.df = as.data.frame(YLimsScores())
-          fname.new = gsub("-extremes_", "_ERA20C10m-L10m-extremes_", fname)
-          PS["tower.height"] = as.character(t.obj$obs6$data$height[1])
-          PlotTowerExtremes(fname.new, scores.df, ylims.df, threshold, PS)
-          fname.new = gsub("-extremes_", "_ERA20C10m-L10m-extremes-HRvsFAR_", fname)
-          PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
-                           scores.df$hit.rate, threshold, PS)
-        }
+    if (ana.time.res$time.res != ana.time.res$hourly) {
+      # against ERA20C at 10m
+      obs = t.obj$obs6$data$wind_speed
+      forec = t.obj$era20c10$data$wind_speed
+      scores.df = GetScoresDF(threshold, obs, forec)
+      ylims.df = as.data.frame(YLimsScores())
+      fname.new = gsub("-extremes_", "_ERA20C10m-L10m-extremes_", fname)
+      PS["tower.height"] = as.character(t.obj$obs6$data$height[1])
+      PlotTowerExtremes(fname.new, scores.df, ylims.df, threshold, PS)
+      fname.new = gsub("-extremes_", "_ERA20C10m-L10m-extremes-HRvsFAR_", fname)
+      PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
+                       scores.df$hit.rate, threshold, PS)
+    }
 
-        # against HErZ at 35m
-        obs = t.obj$obs4$data$wind_speed
-        forec = t.obj$herz35$data$wind_speed
-        scores.df = GetScoresDF(threshold, obs, forec)
-        ylims.df = as.data.frame(YLimsScores())
-        fname.new = gsub("-extremes_", "_HErZ35m-L40-extremes_", fname)
-        PS["tower.height"] = as.character(t.obj$obs4$data$height[1])
-        PlotTowerExtremes(fname.new, scores.df, ylims.df, threshold, PS)
-        fname.new = gsub("-extremes_", "_HErZ35m-L40-extremes-HRvsFAR_", fname)
-        PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
-                         scores.df$hit.rate, threshold, PS)
+    # against HErZ at 35m
+    obs = t.obj$obs4$data$wind_speed
+    forec = t.obj$herz35$data$wind_speed
+    scores.df = GetScoresDF(threshold, obs, forec)
+    ylims.df = as.data.frame(YLimsScores())
+    fname.new = gsub("-extremes_", "_HErZ35m-L40-extremes_", fname)
+    PS["tower.height"] = as.character(t.obj$obs4$data$height[1])
+    PlotTowerExtremes(fname.new, scores.df, ylims.df, threshold, PS)
+    fname.new = gsub("-extremes_", "_HErZ35m-L40-extremes-HRvsFAR_", fname)
+    PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
+                     scores.df$hit.rate, threshold, PS)
 
-        # against HErZ at 69m
-        obs = t.obj$obs3$data$wind_speed
-        forec = t.obj$herz69$data$wind_speed
-        scores.df = GetScoresDF(threshold, obs, forec)
-        ylims.df = as.data.frame(YLimsScores())
-        fname.new = gsub("-extremes_", "_HErZ69m-L60-extremes_", fname)
-        PS["tower.height"] = as.character(t.obj$obs3$data$height[1])
-        PlotTowerExtremes(fname.new, scores.df, ylims.df, threshold, PS)
-        fname.new = gsub("-extremes_", "_HErZ69m-L60-extremes-HRvsFAR_", fname)
-        PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
-                         scores.df$hit.rate, threshold, PS)
+    # against HErZ at 69m
+    obs = t.obj$obs3$data$wind_speed
+    forec = t.obj$herz69$data$wind_speed
+    scores.df = GetScoresDF(threshold, obs, forec)
+    ylims.df = as.data.frame(YLimsScores())
+    fname.new = gsub("-extremes_", "_HErZ69m-L60-extremes_", fname)
+    PS["tower.height"] = as.character(t.obj$obs3$data$height[1])
+    PlotTowerExtremes(fname.new, scores.df, ylims.df, threshold, PS)
+    fname.new = gsub("-extremes_", "_HErZ69m-L60-extremes-HRvsFAR_", fname)
+    PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
+                     scores.df$hit.rate, threshold, PS)
 
-        # against HErZ at 69m
-        obs = t.obj$obs2$data$wind_speed
-        forec = t.obj$herz69$data$wind_speed
-        scores.df = GetScoresDF(threshold, obs, forec)
-        ylims.df = as.data.frame(YLimsScores())
-        fname.new = gsub("-extremes_", "_HErZ69m-L80-extremes_", fname)
-        PS["tower.height"] = as.character(t.obj$obs2$data$height[1])
-        PlotTowerExtremes(fname.new, scores.df, ylims.df, threshold, PS)
-        fname.new = gsub("-extremes_", "_HErZ69m-L80-extremes-HRvsFAR_", fname)
-        PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
-                         scores.df$hit.rate, threshold, PS)
+    # against HErZ at 69m
+    obs = t.obj$obs2$data$wind_speed
+    forec = t.obj$herz69$data$wind_speed
+    scores.df = GetScoresDF(threshold, obs, forec)
+    ylims.df = as.data.frame(YLimsScores())
+    fname.new = gsub("-extremes_", "_HErZ69m-L80-extremes_", fname)
+    PS["tower.height"] = as.character(t.obj$obs2$data$height[1])
+    PlotTowerExtremes(fname.new, scores.df, ylims.df, threshold, PS)
+    fname.new = gsub("-extremes_", "_HErZ69m-L80-extremes-HRvsFAR_", fname)
+    PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
+                     scores.df$hit.rate, threshold, PS)
 
-        # against HErZ at 116m
-        obs = t.obj$obs$data$wind_speed
-        forec = t.obj$herz116$data$wind_speed
-        scores.df = GetScoresDF(threshold, obs, forec)
-        ylims.df = as.data.frame(YLimsScores())
-        fname.new = gsub("-extremes_", "_HErZ116m-L98m-extremes_", fname)
-        PS["tower.height"] = as.character(t.obj$obs$data$height[1])
-        PlotTowerExtremes(fname.new, scores.df, ylims.df, threshold, PS)
-        fname.new = gsub("-extremes_", "_HErZ116m-L98m-extremes-HRvsFAR_", fname)
-        PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
-                         scores.df$hit.rate, threshold, PS)
+    # against HErZ at 116m
+    obs = t.obj$obs$data$wind_speed
+    forec = t.obj$herz116$data$wind_speed
+    scores.df = GetScoresDF(threshold, obs, forec)
+    ylims.df = as.data.frame(YLimsScores())
+    fname.new = gsub("-extremes_", "_HErZ116m-L98m-extremes_", fname)
+    PS["tower.height"] = as.character(t.obj$obs$data$height[1])
+    PlotTowerExtremes(fname.new, scores.df, ylims.df, threshold, PS)
+    fname.new = gsub("-extremes_", "_HErZ116m-L98m-extremes-HRvsFAR_", fname)
+    PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
+                     scores.df$hit.rate, threshold, PS)
 
-        if (ana.time.res$time.res != ana.time.res$hourly) {
-          # against ERA20C at 100m
-          obs = t.obj$obs$data$wind_speed
-          forec = t.obj$era20c100$data$wind_speed
-          scores.df = GetScoresDF(threshold, obs, forec)
-          ylims.df = as.data.frame(YLimsScores())
-          fname.new = gsub("-extremes_", "_ERA20C100m-L98m-extremes_", fname)
-          PS["tower.height"] = as.character(t.obj$obs$data$height[1])
-          PlotTowerExtremes(fname.new, scores.df, ylims.df, threshold, PS)
-          fname.new = gsub("-extremes_", "_ERA20C100m-L98m-extremes-HRvsFAR_", fname)
-          PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
-                           scores.df$hit.rate, threshold, PS)
-        }
+    if (ana.time.res$time.res != ana.time.res$hourly) {
+      # against ERA20C at 100m
+      obs = t.obj$obs$data$wind_speed
+      forec = t.obj$era20c100$data$wind_speed
+      scores.df = GetScoresDF(threshold, obs, forec)
+      ylims.df = as.data.frame(YLimsScores())
+      fname.new = gsub("-extremes_", "_ERA20C100m-L98m-extremes_", fname)
+      PS["tower.height"] = as.character(t.obj$obs$data$height[1])
+      PlotTowerExtremes(fname.new, scores.df, ylims.df, threshold, PS)
+      fname.new = gsub("-extremes_", "_ERA20C100m-L98m-extremes-HRvsFAR_", fname)
+      PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
+                       scores.df$hit.rate, threshold, PS)
+    }
 
     # against HErZ at different heights
     obs = t.obj$obs$data$wind_speed
@@ -3084,91 +3161,91 @@ PlotTowerExtremesContr <- function(tower.obj, fname, threshold) {
 
   } else if (t.obj$obs$data$StationName[1] == "Cabauw") {
 
-        # against HErZ at 10m
-        obs = t.obj$obs6$data$wind_speed
-        forec = t.obj$herz10$data$wind_speed
-        scores.df = GetScoresDF(threshold, obs, forec)
-        ylims.df = as.data.frame(YLimsScores())
-        fname.new = gsub("-extremes_", "_HErZ10m-C10m-extremes_", fname)
-        PS["tower.height"] = as.character(t.obj$obs6$data$height[1])
-        PlotTowerExtremes(fname.new, scores.df, ylims.df, threshold, PS)
-        fname.new = gsub("-extremes_", "_HErZ10m-C10m-extremes-HRvsFAR_", fname)
-        PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
-                         scores.df$hit.rate, threshold, PS)
+    # against HErZ at 10m
+    obs = t.obj$obs6$data$wind_speed
+    forec = t.obj$herz10$data$wind_speed
+    scores.df = GetScoresDF(threshold, obs, forec)
+    ylims.df = as.data.frame(YLimsScores())
+    fname.new = gsub("-extremes_", "_HErZ10m-C10m-extremes_", fname)
+    PS["tower.height"] = as.character(t.obj$obs6$data$height[1])
+    PlotTowerExtremes(fname.new, scores.df, ylims.df, threshold, PS)
+    fname.new = gsub("-extremes_", "_HErZ10m-C10m-extremes-HRvsFAR_", fname)
+    PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
+                     scores.df$hit.rate, threshold, PS)
 
-        # against HErZ at 35m
-        obs = t.obj$obs4$data$wind_speed
-        forec = t.obj$herz35$data$wind_speed
-        scores.df = GetScoresDF(threshold, obs, forec)
-        ylims.df = as.data.frame(YLimsScores())
-        fname.new = gsub("-extremes_", "_HErZ35m-C40m-extremes_", fname)
-        PS["tower.height"] = as.character(t.obj$obs4$data$height[1])
-        PlotTowerExtremes(fname.new, scores.df, ylims.df, threshold, PS)
-        fname.new = gsub("-extremes_", "_HErZ35m-C40m-extremes-HRvsFAR_", fname)
-        PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
-                         scores.df$hit.rate, threshold, PS)
+    # against HErZ at 35m
+    obs = t.obj$obs4$data$wind_speed
+    forec = t.obj$herz35$data$wind_speed
+    scores.df = GetScoresDF(threshold, obs, forec)
+    ylims.df = as.data.frame(YLimsScores())
+    fname.new = gsub("-extremes_", "_HErZ35m-C40m-extremes_", fname)
+    PS["tower.height"] = as.character(t.obj$obs4$data$height[1])
+    PlotTowerExtremes(fname.new, scores.df, ylims.df, threshold, PS)
+    fname.new = gsub("-extremes_", "_HErZ35m-C40m-extremes-HRvsFAR_", fname)
+    PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
+                     scores.df$hit.rate, threshold, PS)
 
-        # against HErZ at 69m
-        obs = t.obj$obs3$data$wind_speed
-        forec = t.obj$herz69$data$wind_speed
-        scores.df = GetScoresDF(threshold, obs, forec)
-        ylims.df = as.data.frame(YLimsScores())
-        fname.new = gsub("-extremes_", "_HErZ69m-C80m-extremes_", fname)
-        PS["tower.height"] = as.character(t.obj$obs3$data$height[1])
-        PlotTowerExtremes(fname.new, scores.df, ylims.df, threshold, PS)
-        fname.new = gsub("-extremes_", "_HErZ69m-C80m-extremes-HRvsFAR_", fname)
-        PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
-                         scores.df$hit.rate, threshold, PS)
+    # against HErZ at 69m
+    obs = t.obj$obs3$data$wind_speed
+    forec = t.obj$herz69$data$wind_speed
+    scores.df = GetScoresDF(threshold, obs, forec)
+    ylims.df = as.data.frame(YLimsScores())
+    fname.new = gsub("-extremes_", "_HErZ69m-C80m-extremes_", fname)
+    PS["tower.height"] = as.character(t.obj$obs3$data$height[1])
+    PlotTowerExtremes(fname.new, scores.df, ylims.df, threshold, PS)
+    fname.new = gsub("-extremes_", "_HErZ69m-C80m-extremes-HRvsFAR_", fname)
+    PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
+                     scores.df$hit.rate, threshold, PS)
 
-        # against HErZ at 116m
-        obs = t.obj$obs2$data$wind_speed
-        forec = t.obj$herz116$data$wind_speed
-        scores.df = GetScoresDF(threshold, obs, forec)
-        ylims.df = as.data.frame(YLimsScores())
-        fname.new = gsub("-extremes_", "_HErZ116m-C140m-extremes_", fname)
-        PS["tower.height"] = as.character(t.obj$obs2$data$height[1])
-        PlotTowerExtremes(fname.new, scores.df, ylims.df, threshold, PS)
-        fname.new = gsub("-extremes_", "_HErZ116m-C140m-extremes-HRvsFAR_", fname)
-        PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
-                         scores.df$hit.rate, threshold, PS)
+    # against HErZ at 116m
+    obs = t.obj$obs2$data$wind_speed
+    forec = t.obj$herz116$data$wind_speed
+    scores.df = GetScoresDF(threshold, obs, forec)
+    ylims.df = as.data.frame(YLimsScores())
+    fname.new = gsub("-extremes_", "_HErZ116m-C140m-extremes_", fname)
+    PS["tower.height"] = as.character(t.obj$obs2$data$height[1])
+    PlotTowerExtremes(fname.new, scores.df, ylims.df, threshold, PS)
+    fname.new = gsub("-extremes_", "_HErZ116m-C140m-extremes-HRvsFAR_", fname)
+    PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
+                     scores.df$hit.rate, threshold, PS)
 
-        if (ana.time.res$time.res != ana.time.res$hourly) {
-          # against ERA20C at 100m
-          obs = t.obj$obs3$data$wind_speed
-          forec = t.obj$era20c100$data$wind_speed
-          scores.df = GetScoresDF(threshold, obs, forec)
-          ylims.df = as.data.frame(YLimsScores())
-          fname.new = gsub("-extremes_", "_ERA20C100m-C80m-extremes_", fname)
-          PS["tower.height"] = as.character(t.obj$obs3$data$height[1])
-          PlotTowerExtremes(fname.new, scores.df, ylims.df, threshold, PS)
-          fname.new = gsub("-extremes_", "_ERA20C100m-C80m-extremes-HRvsFAR_", fname)
-          PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
-                           scores.df$hit.rate, threshold, PS)
+    if (ana.time.res$time.res != ana.time.res$hourly) {
+      # against ERA20C at 100m
+      obs = t.obj$obs3$data$wind_speed
+      forec = t.obj$era20c100$data$wind_speed
+      scores.df = GetScoresDF(threshold, obs, forec)
+      ylims.df = as.data.frame(YLimsScores())
+      fname.new = gsub("-extremes_", "_ERA20C100m-C80m-extremes_", fname)
+      PS["tower.height"] = as.character(t.obj$obs3$data$height[1])
+      PlotTowerExtremes(fname.new, scores.df, ylims.df, threshold, PS)
+      fname.new = gsub("-extremes_", "_ERA20C100m-C80m-extremes-HRvsFAR_", fname)
+      PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
+                       scores.df$hit.rate, threshold, PS)
 
-          # against ERA20C at 100m
-          obs = t.obj$obs2$data$wind_speed
-          forec = t.obj$era20c100$data$wind_speed
-          scores.df = GetScoresDF(threshold, obs, forec)
-          ylims.df = as.data.frame(YLimsScores())
-          fname.new = gsub("-extremes_", "_ERA20C100m-C140m-extremes_", fname)
-          PS["tower.height"] = as.character(t.obj$obs2$data$height[1])
-          PlotTowerExtremes(fname.new, scores.df, ylims.df, threshold, PS)
-          fname.new = gsub("-extremes_", "_ERA20C100m-C140m-extremes-HRvsFAR_", fname)
-          PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
-                           scores.df$hit.rate, threshold, PS)
-        }
+      # against ERA20C at 100m
+      obs = t.obj$obs2$data$wind_speed
+      forec = t.obj$era20c100$data$wind_speed
+      scores.df = GetScoresDF(threshold, obs, forec)
+      ylims.df = as.data.frame(YLimsScores())
+      fname.new = gsub("-extremes_", "_ERA20C100m-C140m-extremes_", fname)
+      PS["tower.height"] = as.character(t.obj$obs2$data$height[1])
+      PlotTowerExtremes(fname.new, scores.df, ylims.df, threshold, PS)
+      fname.new = gsub("-extremes_", "_ERA20C100m-C140m-extremes-HRvsFAR_", fname)
+      PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
+                       scores.df$hit.rate, threshold, PS)
+    }
 
-        # against HErZ at 178m
-        obs = t.obj$obs$data$wind_speed
-        forec = t.obj$herz178$data$wind_speed
-        scores.df = GetScoresDF(threshold, obs, forec)
-        ylims.df = as.data.frame(YLimsScores())
-        fname.new = gsub("-extremes_", "_HErZ178m-C200m-extremes_", fname)
-        PS["tower.height"] = as.character(t.obj$obs$data$height[1])
-        PlotTowerExtremes(fname.new, scores.df, ylims.df, threshold, PS)
-        fname.new = gsub("-extremes_", "_HErZ178m-C200m-extremes-HRvsFAR_", fname)
-        PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
-                         scores.df$hit.rate, threshold, PS)
+    # against HErZ at 178m
+    obs = t.obj$obs$data$wind_speed
+    forec = t.obj$herz178$data$wind_speed
+    scores.df = GetScoresDF(threshold, obs, forec)
+    ylims.df = as.data.frame(YLimsScores())
+    fname.new = gsub("-extremes_", "_HErZ178m-C200m-extremes_", fname)
+    PS["tower.height"] = as.character(t.obj$obs$data$height[1])
+    PlotTowerExtremes(fname.new, scores.df, ylims.df, threshold, PS)
+    fname.new = gsub("-extremes_", "_HErZ178m-C200m-extremes-HRvsFAR_", fname)
+    PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
+                     scores.df$hit.rate, threshold, PS)
 
     # against HErZ at different heights
     obs = t.obj$obs$data$wind_speed
@@ -3456,7 +3533,7 @@ scatterPlot <- function(X, Y, yliml, ylimh, titname, xlabname, ylabname,
   lines(c(yliml-1,ylimh), c(yliml-1,ylimh))
   abline(lm(Y ~ X), col="blue")
   if(!is.null(text.str)) {
-    text(ceiling(0.1*(ylimh-yliml)), floor(0.9*(ylimh-yliml)),
+    text(yliml, ((ylimh-yliml)/2)+yliml,
          paste(text.str), adj=c(0, 0.5))
   }
 }
@@ -3546,7 +3623,7 @@ qqPlot <- function(X, Y, yliml, ylimh,
          xaxt=xaxis, yaxt=yaxis)
   abline(0,1)
   if(!is.null(text.str)) {
-    text(ceiling(0.1*(ylimh-yliml)), floor(0.9*(ylimh-yliml)),
+    text(yliml, ((ylimh-yliml)/2)+yliml,
          paste(text.str), adj=c(0, 0.5))
   }
 }

@@ -45,41 +45,64 @@ PDFscore <- function(xts1, xts2) {
 #'   extended time series.
 GetCorrXts <- function(era20c, eraI, herz, stat) {
 
-  if ((index(era20c[1]) == index(eraI[1])) &
-        (tail(index(era20c), 1) == tail(index(eraI), 1))) {
-    Corr.Era20cEraI = cor(era20c, eraI)
-  } else{
+  if (is.null(era20c)) {
     Corr.Era20cEraI = NA
-  }
-  if ((index(era20c[1]) == index(herz[1])) &
-        (tail(index(era20c), 1) == tail(index(herz), 1))) {
-    Corr.Era20cHerz = cor(era20c, herz)
-  } else{
     Corr.Era20cHerz = NA
-  }
-
-  if ((index(eraI[1]) == index(herz[1])) &
-        (tail(index(eraI), 1) == tail(index(herz), 1))) {
-    Corr.EraIHerz = cor(eraI, herz)
-  } else{
-    Corr.EraIHerz = NA
-  }
-
-  if ((index(era20c[1]) == index(stat[1])) &
-        (tail(index(era20c), 1) == tail(index(stat), 1))) {
-    Corr.Era20cStat = cor(era20c, stat)
-  } else{
     Corr.Era20cStat = NA
   }
-  if ((index(eraI[1]) == index(stat[1])) &
-        (tail(index(eraI), 1) == tail(index(stat), 1))){
-    Corr.EraIStat = cor(eraI, stat)
-  } else{
+  if (is.null(eraI)) {
+    Corr.EraIHerz = NA
     Corr.EraIStat = NA
   }
+
+  if (!is.null(era20c) & !is.null(eraI)) {
+    if ((index(era20c[1]) == index(eraI[1])) &
+        (tail(index(era20c), 1) == tail(index(eraI), 1))) {
+      Corr.Era20cEraI = cor(era20c, eraI, use="pairwise.complete.obs")
+    } else{
+      Corr.Era20cEraI = NA
+    }
+  }
+
+  if (!is.null(era20c)) {
+    if (!is.null(era20c) & (index(era20c[1]) == index(herz[1])) &
+        (tail(index(era20c), 1) == tail(index(herz), 1))) {
+      Corr.Era20cHerz = cor(era20c, herz, use="pairwise.complete.obs")
+    } else{
+      Corr.Era20cHerz = NA
+    }
+  }
+
+  if (!is.null(eraI)) {
+    if (!is.null(eraI) & (index(eraI[1]) == index(herz[1])) &
+        (tail(index(eraI), 1) == tail(index(herz), 1))) {
+      Corr.EraIHerz = cor(eraI, herz, use="pairwise.complete.obs")
+    } else{
+      Corr.EraIHerz = NA
+    }
+  }
+
+  if (!is.null(era20c)) {
+    if (!is.null(era20c) & (index(era20c[1]) == index(stat[1])) &
+        (tail(index(era20c), 1) == tail(index(stat), 1))) {
+      Corr.Era20cStat = cor(era20c, stat, use="pairwise.complete.obs")
+    } else{
+      Corr.Era20cStat = NA
+    }
+  }
+
+  if (!is.null(eraI)) {
+    if (!is.null(eraI) & (index(eraI[1]) == index(stat[1])) &
+        (tail(index(eraI), 1) == tail(index(stat), 1))){
+      Corr.EraIStat = cor(eraI, stat, use="pairwise.complete.obs")
+    } else{
+      Corr.EraIStat = NA
+    }
+  }
+
   if ((index(herz[1]) == index(stat[1])) &
-        (tail(index(herz), 1) == tail(index(stat), 1))) {
-    Corr.HerzStat = cor(herz, stat)
+      (tail(index(herz), 1) == tail(index(stat), 1))) {
+    Corr.HerzStat = cor(herz, stat, use="pairwise.complete.obs")
   } else{
     Corr.HerzStat = NA
   }
