@@ -256,7 +256,7 @@ if (ana.time.res$time.res == monthly | ana.time.res$time.res == daily) {
 }
 
 # == get time series of same length ==
-# === tower data in objects are ordered from heighest to lowest height ===
+# === data in objects are ordered from heighest to lowest height ===
 climobj = GetObsObject(obs.xts=fino1.100.xts,
                        herz10.xts=herz10.fino1.xts,
                        herz35.xts=herz35.fino1.xts,
