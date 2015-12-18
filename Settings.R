@@ -9,7 +9,7 @@ res.switch = high.res
 hourly="hourly"
 daily="daily"
 monthly="monthly"
-time.res=hourly
+time.res=daily
 ana.time.res = list(hourly=hourly, daily=daily, monthly=monthly, time.res=time.res)
 if (ana.time.res$time.res == ana.time.res$monthly) {
   time.ext = "Monthly"
@@ -172,4 +172,6 @@ plot.EraStationSQ = F
 # PDF score between station data and each reanalysis at 10m height
 plot.PDFscore = F
 # plot histograms of 10m and 100m Era and HErZ data, and HErZ profiles
-plot.histograms = T
+plot.histograms = F
+# plot extreme value analysis
+plot.Extremes = T

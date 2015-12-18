@@ -27,10 +27,11 @@ PlottingSettings <- function(data.vals) {
   if (is.data.frame(data.vals)) {
     obs.name = data.vals$StationName[1]
     obs.height = data.vals$height[1]
+    rea.name = data.vals$ReanaName[1]
     return(list(land.a4width=land.a4width, land.a4height=land.a4height,
                 port.a4width=port.a4width, port.a4height=port.a4height,
                 time.agg=time.agg, time.Agg=time.Agg, obs.name=obs.name,
-                obs.height=obs.height))
+                obs.height=obs.height, rea.name=rea.name))
   } else if (is.xts(data.vals)) {
     return(list(land.a4width=land.a4width, land.a4height=land.a4height,
                 port.a4width=port.a4width, port.a4height=port.a4height,

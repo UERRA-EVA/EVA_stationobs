@@ -376,3 +376,15 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
     }
   }
 }
+
+#-----------------------------------------------------------------------------
+
+if(plot.Extremes) {
+  cat("  **  Plotting station extreme values and their scores\n")
+  extremes.thresh = seq(0.01,0.99,0.01)
+  fname = paste0(outdir, time.ext, "-extremes_", station.data$STATIONS_NAME[1],
+                 '_', res.switch, '_', fname_ext, ".pdf")
+  PlotStationExtremesContr(stat.climobj$climate_data_objects, fname, extremes.thresh)
+}
+
+#-----------------------------------------------------------------------------

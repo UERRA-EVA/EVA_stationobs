@@ -2983,7 +2983,66 @@ PlotDailyCycleTower <- function(tower1, tower2, tower3, tower4, tower5, tower6,
 
 #-----------------------------------------------------------------------------------
 
-#' @title Plot extreme value analysis
+#' @title Plot extreme value analysis for station measurements
+#' @description Plot different scores and skill scores of extreme value analysis.
+#'   TODO: Not yet clear which plots of which scores and skill scores.
+#'   The input to this function are a ClimObject holding measurements at one
+#'   location (if tower also at different heights) and the corresponding reanalysis
+#'   data (at different heights), the file name of the resulting plot, and a
+#'   threshold value against which is tested.
+#'   TODO: the threshold may be a vector holding a sequence of thresholds in order
+#'   to plot the dependence on its value.
+#'   This function does not have a return value.
+#' @param tower.obj is a ClimObject holding the data of tower measurements and
+#'   corresponding reanalysis data
+#' @param fname string of the file name of the plot
+#' @param threshold numeric sequence of percentiles between 0 and 1
+PlotStationExtremesContr <- function(stat.obj, fname, threshold) {
+
+  PS = PlottingSettings(stat.obj$herz10$data)
+
+  # against HErZ at 10m
+  obs = stat.obj$obs$data$wind_speed
+  forec = stat.obj$herz10$data$wind_speed
+  scores.df = GetScoresDF(threshold, obs, forec)
+  ylims.df = as.data.frame(YLimsScores())
+  fname.new = gsub("-extremes_", "_HErZ10m-extremes_", fname)
+  PlotTowerExtremes(fname.new, scores.df, ylims.df, threshold, PS)
+  fname.new = gsub("-extremes_", "_HErZ10m-extremes-HRvsFAR_", fname)
+  PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
+                   scores.df$hit.rate, threshold, PS)
+
+  if (ana.time.res$time.res != ana.time.res$hourly) {
+    # against ERA20C at 10m
+    PS = PlottingSettings(stat.obj$era20c10$data)
+    obs = stat.obj$obs$data$wind_speed
+    forec = stat.obj$era20c10$data$wind_speed
+    scores.df = GetScoresDF(threshold, obs, forec)
+    ylims.df = as.data.frame(YLimsScores())
+    fname.new = gsub("-extremes_", "_ERA20C10m-extremes_", fname)
+    PlotTowerExtremes(fname.new, scores.df, ylims.df, threshold, PS)
+    fname.new = gsub("-extremes_", "_ERA20C10m-extremes-HRvsFAR_", fname)
+    PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
+                     scores.df$hit.rate, threshold, PS)
+
+    # against ERA-Interim at 10m
+    PS = PlottingSettings(stat.obj$eraI10$data)
+    obs = stat.obj$obs$data$wind_speed
+    forec = stat.obj$eraI10$data$wind_speed
+    scores.df = GetScoresDF(threshold, obs, forec)
+    ylims.df = as.data.frame(YLimsScores())
+    fname.new = gsub("-extremes_", "_ERAI10m-extremes_", fname)
+    PlotTowerExtremes(fname.new, scores.df, ylims.df, threshold, PS)
+    fname.new = gsub("-extremes_", "_ERAI10m-extremes-HRvsFAR_", fname)
+    PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
+                     scores.df$hit.rate, threshold, PS)
+  }
+
+}
+
+#-----------------------------------------------------------------------------------
+
+#' @title Plot extreme value analysis for tower measurements
 #' @description Plot different scores and skill scores of extreme value analysis.
 #'   TODO: Not yet clear which plots of which scores and skill scores.
 #'   The input to this function are a ClimObject holding measurements at one
@@ -3331,8 +3390,8 @@ PlotTowerExtremes <- function(fname, scores.df, ylims.df, threshold, PS,
   for (plot.step in seq(score.names)) {
     if (all(!is.finite(scores.df[[plot.step]]))) next
     if (is.null(title.name)) {
-      titleName = paste0(score.names[plot.step]," of ", PS$time.agg, " means at ",
-                         PS$obs.name, " in ", PS$obs.height, " height")
+      titleName = paste0(score.names[plot.step]," of ", PS$time.agg, " ", PS$obs.height,
+                         " WS at ", PS$obs.name, " vs ", PS$rea.name)
     } else {
       titleName = gsub(" of", paste0(score.names[plot.step], " of"), title.name)
     }
@@ -3440,8 +3499,8 @@ PlotTowerHRvsFAR <- function(fname, FAR, HR, threshold, PS,
       onefile=TRUE, pointsize=13)
 
   if(is.null(title.name)) {
-    title.name = paste0("Hit rate and False alarm ratio of ", PS$time.agg, " means at ",
-                        PS$obs.name, " in ", PS$obs.height, " height")
+    title.name = paste0("Hit rate and False alarm ratio of ", PS$time.agg, " ",
+                        PS$obs.height, " WS at ", PS$obs.name, " vs ", PS$rea.name)
   }
   plot(threshold, HR, xlim = c(0,1), ylim=c(0,1), col="blue", pch=16, type="p",
        main = title.name, xlab="", ylab="")
