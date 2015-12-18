@@ -353,18 +353,26 @@ GetTowerProfileTS <- function(tower.xts, tower2.xts=NULL, tower3.xts=NULL,
 GetObsObject <- function(obs.xts, obs2.xts=NULL, obs3.xts=NULL,
                          obs4.xts=NULL, obs5.xts=NULL, obs6.xts=NULL,
                          herz10.xts, herz35.xts, herz69.xts, herz116.xts,
-                         herz178.xts, herz258.xts, eraI10.xts,
-                         era20c10.xts, era20c100.xts,
-                         obs.tsstart, obs.tsend, herz.tsend, eraI.tsend, era20c.tsend,
+                         herz178.xts, herz258.xts, eraI10.xts=NULL,
+                         era20c10.xts=NULL, era20c100.xts=NULL,
+                         obs.tsstart, obs.tsend, herz.tsend,
+                         eraI.tsend=NULL, era20c.tsend=NULL,
                          obs.name="", obs.lon, obs.lat,
-                         obs.param, eraI.param, era20c.param) {
+                         obs.param, eraI.param=NULL, era20c.param=NULL) {
 
   if (nchar(obs.name) == 0 | obs.name != "Fino1" & obs.name != "Fino2" &
       obs.name != "Lindenberg" & obs.name != "Cabauw") {
     cat("\n   *** The observation name is: ", obs.name, "  ***\n\n")
   }
-
-  tsend = c(min(obs.tsend[1], herz.tsend[1], era20c.tsend[1], eraI.tsend[1]), 12)
+  if (is.null(eraI.tsend) & is.null(era20c.tsend)) {
+    tsend = c(min(obs.tsend[1], herz.tsend[1]), 12)
+  } else if (is.null(eraI.tsend) & !is.null(era20c.tsend)) {
+    tsend = c(min(obs.tsend[1], herz.tsend[1], era20c.tsend[1]), 12)
+  } else if (!is.null(eraI.tsend) & is.null(era20c.tsend)) {
+    tsend = c(min(obs.tsend[1], herz.tsend[1], eraI.tsend[1]), 12)
+  } else if (!is.null(eraI.tsend) & !is.null(era20c.tsend)) {
+    tsend = c(min(obs.tsend[1], herz.tsend[1], era20c.tsend[1], eraI.tsend[1]), 12)
+  }
   timestr = paste0(toString(obs.tsstart[1]), toString(obs.tsstart[2]), '/',
                    toString(tsend[1]), toString(tsend[2]))
 

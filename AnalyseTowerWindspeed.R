@@ -81,7 +81,7 @@ cabauw.200.xts = dat[[cabauw.param[[1]]]]
 
 if (ana.time.res$time.res == monthly | ana.time.res$time.res == daily) {
   # == read ERA20C data ==
-  cat(paste0("  **  Reading ERA20C reanalysis data\n"))
+  cat(paste0("  **  Reading global reanalysis data\n"))
   # for FINO1
   idx = GetLonLatIdx(era20c.fname, fino1.lon, fino1.lat)
   lonidx = idx$lonidx
@@ -92,6 +92,11 @@ if (ana.time.res$time.res == monthly | ana.time.res$time.res == daily) {
                                   era20c=TRUE, verb.dat=verb.era.dat)
   era20c10.fino1.xts = era20c.data$era10
   era20c100.fino1.xts = era20c.data$era20c100
+  eraI.data = ReadEraNetcdf2Xts(eraI.param, eraI.fname,
+                                eraI.tsstart, eraI.tsend,
+                                lonidx, latidx, ana.time.res,
+                                era20c=FALSE, verb.dat=verb.era.dat)
+  eraI10.fino1.xts = eraI.data$era10
 
   # for FINO2
   idx = GetLonLatIdx(era20c.fname, fino2.lon, fino2.lat)
@@ -103,6 +108,11 @@ if (ana.time.res$time.res == monthly | ana.time.res$time.res == daily) {
                                   era20c=TRUE, verb.dat=verb.era.dat)
   era20c10.fino2.xts = era20c.data$era10
   era20c100.fino2.xts = era20c.data$era20c100
+  eraI.data = ReadEraNetcdf2Xts(eraI.param, eraI.fname,
+                                eraI.tsstart, eraI.tsend,
+                                lonidx, latidx, ana.time.res,
+                                era20c=FALSE, verb.dat=verb.era.dat)
+  eraI10.fino2.xts = eraI.data$era10
 
   # for Lindenberg
   idx = GetLonLatIdx(era20c.fname, lind.lon, lind.lat)
@@ -114,6 +124,11 @@ if (ana.time.res$time.res == monthly | ana.time.res$time.res == daily) {
                                   era20c=TRUE, verb.dat=verb.era.dat)
   era20c10.lind.xts = era20c.data$era10
   era20c100.lind.xts = era20c.data$era20c100
+  eraI.data = ReadEraNetcdf2Xts(eraI.param, eraI.fname,
+                                eraI.tsstart, eraI.tsend,
+                                lonidx, latidx, ana.time.res,
+                                era20c=FALSE, verb.dat=verb.era.dat)
+  eraI10.lind.xts = eraI.data$era10
 
   # for Cabauw
   idx = GetLonLatIdx(era20c.fname, cabauw.lon, cabauw.lat)
@@ -125,7 +140,11 @@ if (ana.time.res$time.res == monthly | ana.time.res$time.res == daily) {
                                   era20c=TRUE, verb.dat=verb.era.dat)
   era20c10.cabauw.xts = era20c.data$era10
   era20c100.cabauw.xts = era20c.data$era20c100
-
+  eraI.data = ReadEraNetcdf2Xts(eraI.param, eraI.fname,
+                                eraI.tsstart, eraI.tsend,
+                                lonidx, latidx, ana.time.res,
+                                era20c=FALSE, verb.dat=verb.era.dat)
+  eraI10.cabauw.xts = eraI.data$era10
 
   # == read HErZ data ==
   cat(paste0("  **  Reading HErZ reanalysis data\n"))
@@ -247,12 +266,16 @@ if (ana.time.res$time.res == monthly | ana.time.res$time.res == daily) {
   }
   era20c10.fino1.xts = NULL
   era20c100.fino1.xts = NULL
+  eraI10.fino1.xts = NULL
   era20c10.fino2.xts = NULL
   era20c100.fino2.xts = NULL
+  eraI10.fino2.xts = NULL
   era20c10.lind.xts = NULL
   era20c100.lind.xts = NULL
+  eraI10.lind.xts = NULL
   era20c10.cabauw.xts = NULL
   era20c100.cabauw.xts = NULL
+  eraI10.cabauw.xts = NULL
 }
 
 # == get time series of same length ==
@@ -264,13 +287,15 @@ climobj = GetObsObject(obs.xts=fino1.100.xts,
                        herz116.xts=herz116.fino1.xts,
                        herz178.xts=herz178.fino1.xts,
                        herz258.xts=herz258.fino1.xts,
+                       eraI10.xts=eraI10.fino1.xts,
                        era20c10.xts=era20c10.fino1.xts,
                        era20c100.xts=era20c100.fino1.xts,
                        obs.tsstart=fino1.tsstart, obs.tsend=fino1.tsend,
-                       herz.tsend=herz.tsend, era20c.tsend=era20c.tsend,
+                       herz.tsend=herz.tsend, eraI.tsend=eraI.tsend,
+                       era20c.tsend=era20c.tsend,
                        obs.name="Fino1", obs.lon=fino1.lon,
                        obs.lat=fino1.lat, obs.param=fino1.param,
-                       era20c.param=era20c.param)
+                       eraI.param=eraI.param, era20c.param=era20c.param)
 fino1.climobj = climobj$obs.object
 
 climobj = GetObsObject(obs.xts=fino2.102.xts,
@@ -280,13 +305,15 @@ climobj = GetObsObject(obs.xts=fino2.102.xts,
                        herz116.xts=herz116.fino2.xts,
                        herz178.xts=herz178.fino2.xts,
                        herz258.xts=herz258.fino2.xts,
+                       eraI10.xts=eraI10.fino2.xts,
                        era20c10.xts=era20c10.fino2.xts,
                        era20c100.xts=era20c100.fino2.xts,
                        obs.tsstart=fino2.tsstart, obs.tsend=fino2.tsend,
-                       herz.tsend=herz.tsend, era20c.tsend=era20c.tsend,
+                       herz.tsend=herz.tsend, eraI.tsend=eraI.tsend,
+                       era20c.tsend=era20c.tsend,
                        obs.name="Fino2", obs.lon=fino2.lon,
                        obs.lat=fino2.lat, obs.param=fino2.param,
-                       era20c.param=era20c.param)
+                       eraI.param=eraI.param, era20c.param=era20c.param)
 fino2.climobj = climobj$obs.object
 
 climobj = GetObsObject(obs.xts=lind.98.xts, obs2.xts=lind.80.xts,
@@ -298,13 +325,15 @@ climobj = GetObsObject(obs.xts=lind.98.xts, obs2.xts=lind.80.xts,
                        herz116.xts=herz116.lind.xts,
                        herz178.xts=herz178.lind.xts,
                        herz258.xts=herz258.lind.xts,
+                       eraI10.xts=eraI10.lind.xts,
                        era20c10.xts=era20c10.lind.xts,
                        era20c100.xts=era20c100.lind.xts,
                        obs.tsstart=lind.tsstart, obs.tsend=lind.tsend,
-                       herz.tsend=herz.tsend, era20c.tsend=era20c.tsend,
+                       herz.tsend=herz.tsend, eraI.tsend=eraI.tsend,
+                       era20c.tsend=era20c.tsend,
                        obs.name="Lindenberg", obs.lon=lind.lon,
                        obs.lat=lind.lat, obs.param=lind.param,
-                       era20c.param=era20c.param)
+                       eraI.param=eraI.param, era20c.param=era20c.param)
 lind.climobj = climobj$obs.object
 
 climobj = GetObsObject(obs.xts=cabauw.200.xts, obs2.xts=cabauw.140.xts,
@@ -316,13 +345,15 @@ climobj = GetObsObject(obs.xts=cabauw.200.xts, obs2.xts=cabauw.140.xts,
                        herz116.xts=herz116.cabauw.xts,
                        herz178.xts=herz178.cabauw.xts,
                        herz258.xts=herz258.cabauw.xts,
+                       eraI10.xts=eraI10.cabauw.xts,
                        era20c10.xts=era20c10.cabauw.xts,
                        era20c100.xts=era20c100.cabauw.xts,
                        obs.tsstart=cabauw.tsstart, obs.tsend=cabauw.tsend,
-                       herz.tsend=herz.tsend, era20c.tsend=era20c.tsend,
+                       herz.tsend=herz.tsend, eraI.tsend=eraI.tsend,
+                       era20c.tsend=era20c.tsend,
                        obs.name="Cabauw", obs.lon=cabauw.lon,
                        obs.lat=cabauw.lat, obs.param=cabauw.param,
-                       era20c.param=era20c.param)
+                       eraI.param=eraI.param, era20c.param=era20c.param)
 cabauw.climobj = climobj$obs.object
 
 #-----------------------------------------------------------------------------
@@ -383,7 +414,6 @@ if (plot.ProfileTS & ana.time.res$time.res == ana.time.res$monthly) {
   fname = paste0(outdir, "CabauwHErZERA20C_relativeDifferences_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
   PlotTowerERAprofileRelDiff(cabauw.climobj, fname)
-
 
   fname = paste0(outdir, "LindenbergHErZERA20C_selectedMonths_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
