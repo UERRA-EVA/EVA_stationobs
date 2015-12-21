@@ -61,6 +61,7 @@ cabauw.param = c("windspeed_200m", "windspeed_140m", "windspeed_80m",
                  "windspeed_40m", "windspeed_20m", "windspeed_10m")
 hamburg.param = c("wind_speed_280m", "wind_speed_250m", "wind_speed_175m",
                   "wind_speed_110m", "wind_speed_50m", "wind_speed_10m")
+herz.param = "windspeed"
 
 # following www.fino1.de and www.fino2.de the location of the towers is:
 fino1.lon =  6.58764
@@ -88,8 +89,6 @@ fino2.tsstart = c(2007,8)
 fino2.tsend = c(2013,12)
 lind.tsstart = c(2001,1)
 lind.tsend = c(2014,12)
-era20c.tsend = c(2010,12)
-herz.tsend = c(2014,12)
 cabauw.tsstart = c(2000,04)
 cabauw.tsend = c(2015,07)
 
