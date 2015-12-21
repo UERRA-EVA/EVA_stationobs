@@ -140,18 +140,18 @@ ReadHerzNetcdfHourly2Xts <- function(herz.param, herz.file.name,
 
   # read HErZ data into a data.frame
   if (herz.profile) {
-    dat10 = ReadNetcdf(herz.param[6], herz.file.name)
-    dat35 = ReadNetcdf(herz.param[5], herz.file.name)
-    dat69 = ReadNetcdf(herz.param[4], herz.file.name)
-    dat116 = ReadNetcdf(herz.param[3], herz.file.name)
-    dat178 = ReadNetcdf(herz.param[2], herz.file.name)
-    dat258 = ReadNetcdf(herz.param[1], herz.file.name)
+    dat10 = ReadNetcdf(herz.param, herz.file.name[6])
+    dat35 = ReadNetcdf(herz.param, herz.file.name[5])
+    dat69 = ReadNetcdf(herz.param, herz.file.name[4])
+    dat116 = ReadNetcdf(herz.param, herz.file.name[3])
+    dat178 = ReadNetcdf(herz.param, herz.file.name[2])
+    dat258 = ReadNetcdf(herz.param, herz.file.name[1])
 
     ndf = data.frame(dat10$time, dat10$data, dat35$data, dat69$data,
                      dat116$data, dat178$data, dat258$data)
   } else {
-    dat10 = ReadNetcdf(herz.param[2], herz.file.name)
-    dat116 = ReadNetcdf(herz.param[1], herz.file.name)
+    dat10 = ReadNetcdf(herz.param, herz.file.name[2])
+    dat116 = ReadNetcdf(herz.param, herz.file.name[1])
 
     ndf = data.frame(dat10$time, dat10$data, dat35$data, dat69$data,
                      dat116$data, dat178$data, dat258$data)
