@@ -39,6 +39,7 @@ if (ana.time.res$time.res == ana.time.res$monthly) {
                              "./data/WindSpeed_1995TO2014_HErZ-69m_at_Cabauw.nc",
                              "./data/WindSpeed_1995TO2014_HErZ-35m_at_Cabauw.nc",
                              "./data/WindSpeed_1995TO2014_HErZ-10m_at_Cabauw.nc"))
+  herz.param = "windspeed"
 } else if (ana.time.res$time.res == ana.time.res$daily) {
   fino1.file = paste0("./data/FINO1_Windgeschwindigkeit_100m_20040101_20131231_DayMean.nc")
   fino2.file = paste0("./data/FINO2_Windgeschwindigkeit_102m_20070101_20131231_DayMean.nc")
@@ -61,7 +62,6 @@ cabauw.param = c("windspeed_200m", "windspeed_140m", "windspeed_80m",
                  "windspeed_40m", "windspeed_20m", "windspeed_10m")
 hamburg.param = c("wind_speed_280m", "wind_speed_250m", "wind_speed_175m",
                   "wind_speed_110m", "wind_speed_50m", "wind_speed_10m")
-herz.param = "windspeed"
 
 # following www.fino1.de and www.fino2.de the location of the towers is:
 fino1.lon =  6.58764
@@ -94,6 +94,6 @@ cabauw.tsend = c(2015,07)
 
 plot.TowerEraProfile = F
 plot.histograms = F
-plot.ProfileTS = F
-plot.Extremes = T
+plot.ProfileTS = T
+plot.Extremes = F
 plot.DailyCycle = F
