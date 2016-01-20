@@ -9,7 +9,7 @@ res.switch = high.res
 hourly="hourly"
 daily="daily"
 monthly="monthly"
-time.res=daily
+time.res=monthly
 ana.time.res = list(hourly=hourly, daily=daily, monthly=monthly, time.res=time.res)
 if (ana.time.res$time.res == ana.time.res$monthly) {
   time.ext = "Monthly"
@@ -174,4 +174,4 @@ plot.PDFscore = F
 # plot histograms of 10m and 100m Era and HErZ data, and HErZ profiles
 plot.histograms = F
 # plot extreme value analysis
-plot.Extremes = T
+plot.Extremes = F
