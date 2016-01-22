@@ -69,7 +69,7 @@ CheckFile <- function(infile) {
   if (any(!file.exists(infile))) {
     idx = which(!file.exists(infile))
     missing.file = infile[idx]
-    CallStop(paste0("Missing File: ", infile[idx], "  ABORTING!\n"))
+    CallStop(paste0("Missing File: #->", missing.file, "<-#  ABORTING!\n"))
   }
 }
 
