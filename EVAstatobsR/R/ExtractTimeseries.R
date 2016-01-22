@@ -110,8 +110,13 @@ ExtractStationData <- function(station.data, era20c.tsstart, era20c.tsend,
     stat.tsstart = era20c.tsstart
     stat.tsend = era20c.tsend
   } else {
-    year.start.stat = as.numeric(substr(toString(index(MM.station[1])),5,8))
-    year.end.stat = as.numeric(substr(toString(index(tail(MM.station,1))),5,8))
+    if (ana.time.res$time.res == ana.time.res$monthly) {
+      year.start.stat = as.numeric(substr(toString(index(MM.station[1])),5,8))
+      year.end.stat = as.numeric(substr(toString(index(tail(MM.station,1))),5,8))
+    } else {
+      year.start.stat = as.numeric(substr(toString(index(MM.station[1])),1,4))
+      year.end.stat = as.numeric(substr(toString(index(tail(MM.station,1))),1,4))
+    }
     # set start to January (station data may start in a different month)
     stat.tsstart = c(max(year.start.stat, era20c.tsstart[1]), 1)
     stat.tsend = c(min(year.end.stat, era20c.tsend[1]), 12) # same for December here
