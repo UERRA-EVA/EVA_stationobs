@@ -136,6 +136,10 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
                                                verb.era.dat)
     herz10.data.xts = herz.data$herz10
     herz116.data.xts = herz.data$herz116
+    herz35.data.xts = NULL
+    herz69.data.xts = NULL
+    herz178.data.xts = NULL
+    herz258.data.xts = NULL
     if (herz.profile) {
       herz35.data.xts = herz.data$herz35
       herz69.data.xts = herz.data$herz69
@@ -187,22 +191,29 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
                                          herz.tsstart, herz.tsend,
                                          herz.profile)
     herz10.data.xts = herz.data$herz10
-    herz35.data.xts = herz.data$herz35
-    herz69.data.xts = herz.data$herz69
     herz116.data.xts = herz.data$herz116
-    herz178.data.xts = herz.data$herz178
-    herz258.data.xts = herz.data$herz258
+    herz35.data.xts = NULL
+    herz69.data.xts = NULL
+    herz178.data.xts = NULL
+    herz258.data.xts = NULL
+    if (herz.profile) {
+      herz35.data.xts = herz.data$herz35
+      herz69.data.xts = herz.data$herz69
+      herz178.data.xts = herz.data$herz178
+      herz258.data.xts = herz.data$herz258
+    }
 
-#     # assign NaN values to herz data as in station data
-#     if (any(!is.finite(MM.station))) {
-#       idx = which(!is.finite(MM.station))
-#       herz10.data.xts[idx] = NA
-#       herz35.data.xts[idx] = NA
-#       herz69.data.xts[idx] = NA
-#       herz116.data.xts[idx] = NA
-#       herz178.data.xts[idx] = NA
-#       herz258.data.xts[idx] = NA
-#     }
+    #     # assign NaN values to herz data as in station data
+    #     if (any(!is.finite(MM.station))) {
+    #       idx = which(!is.finite(MM.station))
+    #       herz10.data.xts[idx] = NA
+    #       herz35.data.xts[idx] = NA
+    #       herz69.data.xts[idx] = NA
+    #       herz116.data.xts[idx] = NA
+    #       herz178.data.xts[idx] = NA
+    #       herz258.data.xts[idx] = NA
+    #     }
+
     era20c.data.xts = NULL
     era20c100.data.xts = NULL
     eraI.data.xts = NULL
@@ -227,7 +238,7 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
                          obs.lon=station.info$geoLaenge,
                          obs.lat=station.info$geoBreite,
                          obs.param=stat.param, eraI.param=eraI.param,
-                         era20c.param=era20c.param)
+                         era20c.param=era20c.param, herz.profile=herz.profile)
   stat.climobj = climobj$obs.object
 
   #-----------------------------------------------------------------------------

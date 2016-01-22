@@ -372,13 +372,14 @@ GetTowerProfileTS <- function(tower.xts, tower2.xts=NULL, tower3.xts=NULL,
 #' @return
 GetObsObject <- function(obs.xts, obs2.xts=NULL, obs3.xts=NULL,
                          obs4.xts=NULL, obs5.xts=NULL, obs6.xts=NULL,
-                         herz10.xts, herz35.xts, herz69.xts, herz116.xts,
-                         herz178.xts, herz258.xts, eraI10.xts=NULL,
+                         herz10.xts, herz35.xts=NULL, herz69.xts=NULL, herz116.xts,
+                         herz178.xts=NULL, herz258.xts=NULL, eraI10.xts=NULL,
                          era20c10.xts=NULL, era20c100.xts=NULL,
                          obs.tsstart, obs.tsend, herz.tsend,
                          eraI.tsend=NULL, era20c.tsend=NULL,
                          obs.name="", obs.lon, obs.lat,
-                         obs.param, eraI.param=NULL, era20c.param=NULL) {
+                         obs.param, eraI.param=NULL, era20c.param=NULL,
+                         herz.profile, only.10m=FALSE) {
 
   if (nchar(obs.name) == 0 | obs.name != "Fino1" & obs.name != "Fino2" &
       obs.name != "Lindenberg" & obs.name != "Cabauw") {
@@ -395,6 +396,7 @@ GetObsObject <- function(obs.xts, obs2.xts=NULL, obs3.xts=NULL,
   }
   timestr = paste0(toString(obs.tsstart[1]), toString(obs.tsstart[2]), '/',
                    toString(tsend[1]), toString(tsend[2]))
+  if (herz.profile) only.10m = FALSE
 
   obs.xts = obs.xts[timestr]
   if (!is.null(obs2.xts)) obs2.xts = obs2.xts[timestr]
@@ -403,11 +405,15 @@ GetObsObject <- function(obs.xts, obs2.xts=NULL, obs3.xts=NULL,
   if (!is.null(obs5.xts)) obs5.xts = obs5.xts[timestr]
   if (!is.null(obs6.xts)) obs6.xts = obs6.xts[timestr]
   herz10.xts = herz10.xts[timestr]
-  herz35.xts = herz35.xts[timestr]
-  herz69.xts = herz69.xts[timestr]
-  herz116.xts = herz116.xts[timestr]
-  herz178.xts = herz178.xts[timestr]
-  herz258.xts = herz258.xts[timestr]
+  if (!only.10m) {
+    herz116.xts = herz116.xts[timestr]
+  }
+  if (herz.profile) {
+    herz35.xts = herz35.xts[timestr]
+    herz69.xts = herz69.xts[timestr]
+    herz178.xts = herz178.xts[timestr]
+    herz258.xts = herz258.xts[timestr]
+  }
   if (!is.null(eraI10.xts)) eraI10.xts = eraI10.xts[timestr]
   if (!is.null(era20c10.xts)) era20c10.xts = era20c10.xts[timestr]
   if (!is.null(era20c100.xts)) era20c100.xts = era20c100.xts[timestr]
@@ -453,36 +459,49 @@ GetObsObject <- function(obs.xts, obs2.xts=NULL, obs3.xts=NULL,
                          wind_speed=coredata(obs6.xts),
                          height=strsplit(obs.param, '_')[[6]][[2]])
   }
+
+  herz10.df = data.frame()
+  herz35.df = data.frame()
+  herz69.df = data.frame()
+  herz116.df = data.frame()
+  herz178.df = data.frame()
+  herz258.df = data.frame()
+
   herz10.df = data.frame(date=index(herz10.xts),
                          ReanaName="HErZ", StationName=obs.name,
                          latitude=obs.lat, longitude=obs.lon,
                          wind_speed=coredata(herz10.xts),
                          height="10m")
-  herz35.df = data.frame(date=index(herz35.xts),
-                         ReanaName="HErZ", StationName=obs.name,
-                         latitude=obs.lat, longitude=obs.lon,
-                         wind_speed=coredata(herz35.xts),
-                         height="35m")
-  herz69.df = data.frame(date=index(herz69.xts),
-                         ReanaName="HErZ", StationName=obs.name,
-                         latitude=obs.lat, longitude=obs.lon,
-                         wind_speed=coredata(herz69.xts),
-                         height="69m")
-  herz116.df = data.frame(date=index(herz116.xts),
-                          ReanaName="HErZ", StationName=obs.name,
-                          latitude=obs.lat, longitude=obs.lon,
-                          wind_speed=coredata(herz116.xts),
-                          height="116m")
-  herz178.df = data.frame(date=index(herz178.xts),
-                          ReanaName="HErZ", StationName=obs.name,
-                          latitude=obs.lat, longitude=obs.lon,
-                          wind_speed=coredata(herz178.xts),
-                          height="178m")
-  herz258.df = data.frame(date=index(herz258.xts),
-                          ReanaName="HErZ", StationName=obs.name,
-                          latitude=obs.lat, longitude=obs.lon,
-                          wind_speed=coredata(herz258.xts),
-                          height="258m")
+  if (!only.10m) {
+    herz116.df = data.frame(date=index(herz116.xts),
+                            ReanaName="HErZ", StationName=obs.name,
+                            latitude=obs.lat, longitude=obs.lon,
+                            wind_speed=coredata(herz116.xts),
+                            height="116m")
+  }
+  if (herz.profile) {
+    herz35.df = data.frame(date=index(herz35.xts),
+                           ReanaName="HErZ", StationName=obs.name,
+                           latitude=obs.lat, longitude=obs.lon,
+                           wind_speed=coredata(herz35.xts),
+                           height="35m")
+    herz69.df = data.frame(date=index(herz69.xts),
+                           ReanaName="HErZ", StationName=obs.name,
+                           latitude=obs.lat, longitude=obs.lon,
+                           wind_speed=coredata(herz69.xts),
+                           height="69m")
+    herz178.df = data.frame(date=index(herz178.xts),
+                            ReanaName="HErZ", StationName=obs.name,
+                            latitude=obs.lat, longitude=obs.lon,
+                            wind_speed=coredata(herz178.xts),
+                            height="178m")
+    herz258.df = data.frame(date=index(herz258.xts),
+                            ReanaName="HErZ", StationName=obs.name,
+                            latitude=obs.lat, longitude=obs.lon,
+                            wind_speed=coredata(herz258.xts),
+                            height="258m")
+  }
+
   if (!is.null(eraI10.xts)) {
     eraI10.df = data.frame(date=index(eraI10.xts),
                            ReanaName="ERA-I", StationName=obs.name,

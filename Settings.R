@@ -21,7 +21,7 @@ if (ana.time.res$time.res == ana.time.res$monthly) {
 
 # choose whether to analyse the profile (T) of six model levels of HErZ data or only
 # 10m and 116m (F)
-herz.profile = T
+herz.profile = F
 
 #=== diagnostics (verbose) ===
 verb.era.dat = FALSE
