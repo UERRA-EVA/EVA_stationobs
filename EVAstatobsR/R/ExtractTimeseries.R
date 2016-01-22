@@ -36,12 +36,12 @@ getNearest <- function(b1,b2,l1,l2){
 
 #' @title Extract and align wind station data to reanalysis data.
 #'   \code{ExtractStationData} reads wind speed values and dates from station data
-#'   and creates a gap filled extended time series. Monthly or daily mean time
-#'   series are calculated which span the time period of the longest stretching
-#'   reanalysis data set. The time steps of the monthly time series is given with
-#'   precision of months, those of daily time series with precision of days.
-#'   Parts taken from get.timeseries.R of GetPlotsFromFtp and off website
-#'   http://bocoup.com/weblog/padding-time-series-with-r/
+#'   and creates a gap filled (NA), hence continuous, extended time series. Monthly
+#'   or daily mean time series are calculated which span the time period of the
+#'   longest stretching reanalysis data set. The time steps of the monthly time
+#'   series is given with precision of months, those of daily time series with
+#'   precision of days. Parts taken from get.timeseries.R of GetPlotsFromFtp and off
+#'   website http://bocoup.com/weblog/padding-time-series-with-r/
 #' @param station.data is an extended time series holding monthly mean station wind
 #'   data
 #' @param era20c.tsstart is a charcter string of the start date of the ERA20C data
@@ -110,8 +110,8 @@ ExtractStationData <- function(station.data, era20c.tsstart, era20c.tsend,
     stat.tsstart = era20c.tsstart
     stat.tsend = era20c.tsend
   } else {
-    year.start.stat = as.numeric(substr(toString(index(MM.station[1])),1,4))
-    year.end.stat = as.numeric(substr(toString(index(tail(MM.station,1))),1,4))
+    year.start.stat = as.numeric(substr(toString(index(MM.station[1])),5,8))
+    year.end.stat = as.numeric(substr(toString(index(tail(MM.station,1))),5,8))
     # set start to January (station data may start in a different month)
     stat.tsstart = c(max(year.start.stat, era20c.tsstart[1]), 1)
     stat.tsend = c(min(year.end.stat, era20c.tsend[1]), 12) # same for December here
