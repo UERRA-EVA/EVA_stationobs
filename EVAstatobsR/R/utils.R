@@ -334,3 +334,39 @@ GetSeasonalXts <- function(vals.xts) {
 }
 
 #-----------------------------------------------------------------------------------
+
+#' @title Determine y-axis limits from data.
+#' @description \code{GetYlims} determinies the low and high y-axis limits from four
+#'   different time series.
+#'   This needs to be enhanced so that not all of those time series need to be
+#'   available. Something like present= in FORTRAN.
+#' @param xts1,xts2,xts3,xts4 extended time series from which to determine the low
+#'   and high range of the y-axis limits.
+#' @return Return a named list (yll=,ylh=) of the lower and high bound of the y-axis
+#'   limits yliml and ylimh.
+GetYlims <- function(xts1, xts2, xts3, xts4) {
+  if (is.xts(xts1) & (is.xts(xts2)) & is.xts(xts3) & (is.xts(xts4))) {
+    if (!any(is.finite(xts4))) {
+      if (!any(is.finite(xts3))) {
+        yliml = floor(min(min(xts1, na.rm=TRUE), min(xts2, na.rm=TRUE)))
+        ylimh = ceiling(max(max(xts1, na.rm=TRUE), max(xts2, na.rm=TRUE)))
+      } else {
+        yliml = floor(min(min(xts1, na.rm=TRUE), min(xts2, na.rm=TRUE),
+                          min(xts3, na.rm=TRUE)))
+        ylimh = ceiling(max(max(xts1, na.rm=TRUE), max(xts2, na.rm=TRUE),
+                            max(xts3, na.rm=TRUE)))
+      }
+    } else {
+      yliml = floor(min(min(xts1, na.rm=TRUE), min(xts2, na.rm=TRUE),
+                        min(xts3, na.rm=TRUE), min(xts4, na.rm=TRUE)))
+      ylimh = ceiling(max(max(xts1, na.rm=TRUE), max(xts2, na.rm=TRUE),
+                          max(xts3, na.rm=TRUE), max(xts4, na.rm=TRUE)))
+    }
+  } else {
+    CallStop("XTS1 or XTS2 or XTS3 or XTS4 is not an xts, ABORTING!")
+  }
+
+  return(list(yll=yliml, ylh=ylimh))
+}
+
+#-----------------------------------------------------------------------------------

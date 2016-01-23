@@ -1,39 +1,3 @@
-#' @title Determine y-axis limits from data.
-#' @description \code{GetYlims} determinies the low and high y-axis limits from four
-#'   different time series.
-#'   This needs to be enhanced so that not all of those time series need to be
-#'   available. Something like present= in FORTRAN.
-#' @param xts1,xts2,xts3,xts4 extended time series from which to determine the low
-#'   and high range of the y-axis limits.
-#' @return Return a named list (yll=,ylh=) of the lower and high bound of the y-axis
-#'   limits yliml and ylimh.
-GetYlims <- function(xts1, xts2, xts3, xts4) {
-  if (is.xts(xts1) & (is.xts(xts2)) & is.xts(xts3) & (is.xts(xts4))) {
-    if (!any(is.finite(xts4))) {
-      if (!any(is.finite(xts3))) {
-        yliml = floor(min(min(xts1, na.rm=TRUE), min(xts2, na.rm=TRUE)))
-        ylimh = ceiling(max(max(xts1, na.rm=TRUE), max(xts2, na.rm=TRUE)))
-      } else {
-        yliml = floor(min(min(xts1, na.rm=TRUE), min(xts2, na.rm=TRUE),
-                          min(xts3, na.rm=TRUE)))
-        ylimh = ceiling(max(max(xts1, na.rm=TRUE), max(xts2, na.rm=TRUE),
-                            max(xts3, na.rm=TRUE)))
-      }
-    } else {
-      yliml = floor(min(min(xts1, na.rm=TRUE), min(xts2, na.rm=TRUE),
-                        min(xts3, na.rm=TRUE), min(xts4, na.rm=TRUE)))
-      ylimh = ceiling(max(max(xts1, na.rm=TRUE), max(xts2, na.rm=TRUE),
-                          max(xts3, na.rm=TRUE), max(xts4, na.rm=TRUE)))
-    }
-  } else {
-    CallStop("XTS1 or XTS2 or XTS3 or XTS4 is not an xts, ABORTING!")
-  }
-
-  return(list(yll=yliml, ylh=ylimh))
-}
-
-#-----------------------------------------------------------------------------------
-
 #' @title Plot station measurements together with ERA20C, ERA-I, and HErZ.
 #' @description \code{PlotStationEra} plots the station values together with the
 #'   corresponding ERA20C, ERA-I, and HErZ pixel and provides the correlation
@@ -1505,7 +1469,7 @@ PlotTowerERAprofileBP <- function(tower.obj, fname, ana.time.res) {
                     tower.obj$climate_data_objects$obs$data$StationName[1], " "))
   }
   mtext(paste0(tit.ext, " wind speed profile \n",
-                    t.obj$obs$data$StationName[1]), side=3, line=0.5, cex=1.75)
+               t.obj$obs$data$StationName[1]), side=3, line=0.5, cex=1.75)
   mtext(x.labs, side=1, line=2, cex=1.25)
   dev.off()
 }
@@ -2718,9 +2682,9 @@ PlotDailyCycleHerz <- function(Herz10, Herz35, Herz69, Herz116, month.names, PS,
     lines(Herz35$mean, col="orange", pch=16, type="b")
     lines(Herz10$mean, col="green", pch=16, type="b")
     legend("bottom", legend=c(paste0("HErZ at ", as.character(PS$PS116$obs.height)),
-                           paste0("HErZ at ", as.character(PS$PS69$obs.height)),
-                           paste0("HErZ at ", as.character(PS$PS35$obs.height)),
-                           paste0("HErZ at ", as.character(PS$PS10$obs.height))),
+                              paste0("HErZ at ", as.character(PS$PS69$obs.height)),
+                              paste0("HErZ at ", as.character(PS$PS35$obs.height)),
+                              paste0("HErZ at ", as.character(PS$PS10$obs.height))),
            text.col=c("blue", "red", "orange", "green"), cex=1.15)
   }
   dev.off()
