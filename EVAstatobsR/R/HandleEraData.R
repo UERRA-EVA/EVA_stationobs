@@ -8,13 +8,13 @@
 #'   here it is decided whether to return the complete profile ore only 10m and 100m
 #'   data. The time steps of the monthly time series is given with precision of
 #'   months, those of daily time series with precision of days.
-#' @param herz.param string of length n holding the parameters of the n different
+#' @param rra.para string of length n holding the parameters of the n different
 #'   model levels.
-#' @param herz.fname string of length n holding the file names of the n different
+#' @param rra.fname string of length n holding the file names of the n different
 #'   daily or one monthly file(s).
-#' @param herz.tsstart string of the start date of the HErZ data of the format
+#' @param rra.tsstart string of the start date of the HErZ data of the format
 #'   c(YYYY,MM).
-#' @param herz.tsend string of the end date of the HErZ data.
+#' @param rra.tsend string of the end date of the HErZ data.
 #' @param lonidx numeric value of the longitude station location which to extract
 #'   off the HErZ grid.
 #' @param latidx numeric value of the latitude station location.
@@ -27,8 +27,8 @@
 #'   different model levels: (herz10=,herz35=,herz69=,herz116=,herz178,herz258). For
 #'   unspecified model levels (e.g., if(!herz.profile), a NULL value will be
 #'   returned.
-ReadHerzNetcdfMonthlyDaily2Xts <- function(herz.param, herz.fname,
-                                           herz.tsstart, herz.tsend,
+ReadHerzNetcdfMonthlyDaily2Xts <- function(rra.para, rra.fname,
+                                           rra.tsstart, rra.tsend,
                                            lonidx, latidx,
                                            ana.time.res, herz.profile,
                                            only.10m=FALSE, verb.dat=FALSE) {
@@ -36,17 +36,17 @@ ReadHerzNetcdfMonthlyDaily2Xts <- function(herz.param, herz.fname,
   # read HErZ data into a data.frame
   if (ana.time.res$time.res == ana.time.res$monthly) {
     if (herz.profile) {
-      dat10 = ReadNetcdf(herz.param[6], herz.fname, count=c(1,1,-1),
+      dat10 = ReadNetcdf(rra.para[6], rra.fname, count=c(1,1,-1),
                          start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-      dat35 = ReadNetcdf(herz.param[5], herz.fname, count=c(1,1,-1),
+      dat35 = ReadNetcdf(rra.para[5], rra.fname, count=c(1,1,-1),
                          start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-      dat69 = ReadNetcdf(herz.param[4], herz.fname, count=c(1,1,-1),
+      dat69 = ReadNetcdf(rra.para[4], rra.fname, count=c(1,1,-1),
                          start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-      dat116 = ReadNetcdf(herz.param[3], herz.fname, count=c(1,1,-1),
+      dat116 = ReadNetcdf(rra.para[3], rra.fname, count=c(1,1,-1),
                           start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-      dat178 = ReadNetcdf(herz.param[2], herz.fname, count=c(1,1,-1),
+      dat178 = ReadNetcdf(rra.para[2], rra.fname, count=c(1,1,-1),
                           start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-      dat258 = ReadNetcdf(herz.param[1], herz.fname, count=c(1,1,-1),
+      dat258 = ReadNetcdf(rra.para[1], rra.fname, count=c(1,1,-1),
                           start=c(lonidx, latidx, 1), verb.dat=verb.dat)
 
       ndf = data.frame(dat10$time, dat10$data, dat35$data, dat69$data,
@@ -54,13 +54,13 @@ ReadHerzNetcdfMonthlyDaily2Xts <- function(herz.param, herz.fname,
 
     } else {
       if (only.10m) {
-        dat10 = ReadNetcdf(herz.param, herz.fname, count=c(1,1,-1),
+        dat10 = ReadNetcdf(rra.para, rra.fname, count=c(1,1,-1),
                            start=c(lonidx, latidx, 1), verb.dat=verb.dat)
         ndf = data.frame(dat10$time, dat10$data)
       } else {
-        dat10 = ReadNetcdf(herz.param[2], herz.fname, count=c(1,1,-1),
+        dat10 = ReadNetcdf(rra.para[2], rra.fname, count=c(1,1,-1),
                            start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-        dat116 = ReadNetcdf(herz.param[1], herz.fname, count=c(1,1,-1),
+        dat116 = ReadNetcdf(rra.para[1], rra.fname, count=c(1,1,-1),
                             start=c(lonidx, latidx, 1), verb.dat=verb.dat)
         ndf = data.frame(dat10$time, dat10$data, dat116$data)
       }
@@ -70,18 +70,18 @@ ReadHerzNetcdfMonthlyDaily2Xts <- function(herz.param, herz.fname,
 
     ndf = data.frame()
     if (herz.profile) {
-      for (step in seq(herz.fname)) {
-        dat10 = ReadNetcdf(herz.param[6], herz.fname[step], count=c(1,1,-1),
+      for (step in seq(rra.fname)) {
+        dat10 = ReadNetcdf(rra.para[6], rra.fname[step], count=c(1,1,-1),
                            start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-        dat35 = ReadNetcdf(herz.param[5], herz.fname[step], count=c(1,1,-1),
+        dat35 = ReadNetcdf(rra.para[5], rra.fname[step], count=c(1,1,-1),
                            start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-        dat69 = ReadNetcdf(herz.param[4], herz.fname[step], count=c(1,1,-1),
+        dat69 = ReadNetcdf(rra.para[4], rra.fname[step], count=c(1,1,-1),
                            start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-        dat116 = ReadNetcdf(herz.param[3], herz.fname[step], count=c(1,1,-1),
+        dat116 = ReadNetcdf(rra.para[3], rra.fname[step], count=c(1,1,-1),
                             start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-        dat178 = ReadNetcdf(herz.param[2], herz.fname[step], count=c(1,1,-1),
+        dat178 = ReadNetcdf(rra.para[2], rra.fname[step], count=c(1,1,-1),
                             start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-        dat258 = ReadNetcdf(herz.param[1], herz.fname[step], count=c(1,1,-1),
+        dat258 = ReadNetcdf(rra.para[1], rra.fname[step], count=c(1,1,-1),
                             start=c(lonidx, latidx, 1), verb.dat=verb.dat)
 
         df = data.frame(dat10$time, dat10$data, dat35$data, dat69$data,
@@ -89,16 +89,16 @@ ReadHerzNetcdfMonthlyDaily2Xts <- function(herz.param, herz.fname,
         ndf = rbind(ndf, df)
       }
     } else {
-      for (step in seq(herz.fname)) {
+      for (step in seq(rra.fname)) {
         if (only.10m) {
-          dat10 = ReadNetcdf(herz.param, herz.fname[step], count=c(1,1,-1),
+          dat10 = ReadNetcdf(rra.para, rra.fname[step], count=c(1,1,-1),
                              start=c(lonidx, latidx, 1), verb.dat=verb.dat)
           df = data.frame(dat10$time, dat10$data)
           ndf = rbind(ndf, df)
         } else {
-          dat10 = ReadNetcdf(herz.param[2], herz.fname[step], count=c(1,1,-1),
+          dat10 = ReadNetcdf(rra.para[2], rra.fname[step], count=c(1,1,-1),
                              start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-          dat116 = ReadNetcdf(herz.param[1], herz.fname[step], count=c(1,1,-1),
+          dat116 = ReadNetcdf(rra.para[1], rra.fname[step], count=c(1,1,-1),
                               start=c(lonidx, latidx, 1), verb.dat=verb.dat)
           df = data.frame(dat10$time, dat10$data, dat116$data)
           ndf = rbind(ndf, df)
@@ -114,7 +114,7 @@ ReadHerzNetcdfMonthlyDaily2Xts <- function(herz.param, herz.fname,
     ndf$dat10.time = as.POSIXct(strptime(ndf$dat10.time, format="%Y-%m-%d"),
                                 format="%Y-%m-%d", tz = "UTC")
   }
-  timestr = SetToDate(herz.tsstart, herz.tsend)
+  timestr = SetToDate(rra.tsstart, rra.tsend)
   herz10.xts = xts(ndf$dat10.data, order.by=ndf$dat10.time)
   herz10.xts = herz10.xts[timestr]
   herz116.xts = NULL
@@ -148,28 +148,28 @@ ReadHerzNetcdfMonthlyDaily2Xts <- function(herz.param, herz.fname,
 #' @description
 #' @param
 #' @return
-ReadHerzNetcdfHourly2Xts <- function(herz.param, herz.file.name,
-                                     herz.tsstart, herz.tsend,
+ReadHerzNetcdfHourly2Xts <- function(rra.para, rra.fname,
+                                     rra.tsstart, rra.tsend,
                                      herz.profile, only.10m=FALSE) {
 
   # read HErZ data into a data.frame
   if (herz.profile) {
-    dat10 = ReadNetcdf(herz.param, herz.file.name[6])
-    dat35 = ReadNetcdf(herz.param, herz.file.name[5])
-    dat69 = ReadNetcdf(herz.param, herz.file.name[4])
-    dat116 = ReadNetcdf(herz.param, herz.file.name[3])
-    dat178 = ReadNetcdf(herz.param, herz.file.name[2])
-    dat258 = ReadNetcdf(herz.param, herz.file.name[1])
+    dat10 = ReadNetcdf(rra.para, rra.fname[6])
+    dat35 = ReadNetcdf(rra.para, rra.fname[5])
+    dat69 = ReadNetcdf(rra.para, rra.fname[4])
+    dat116 = ReadNetcdf(rra.para, rra.fname[3])
+    dat178 = ReadNetcdf(rra.para, rra.fname[2])
+    dat258 = ReadNetcdf(rra.para, rra.fname[1])
 
     ndf = data.frame(dat10$time, dat10$data, dat35$data, dat69$data,
                      dat116$data, dat178$data, dat258$data)
   } else {
     if (only.10m) {
-      dat10 = ReadNetcdf(herz.param, herz.fname)
+      dat10 = ReadNetcdf(rra.para, rra.fname)
       ndf = data.frame(dat10$time, dat10$data)
     } else {
-      dat10 = ReadNetcdf(herz.param, herz.file.name[2])
-      dat116 = ReadNetcdf(herz.param, herz.file.name[1])
+      dat10 = ReadNetcdf(rra.para, rra.fname[2])
+      dat116 = ReadNetcdf(rra.para, rra.fname[1])
       ndf = data.frame(dat10$time, dat10$data, dat116$data)
     }
   }
@@ -177,7 +177,7 @@ ReadHerzNetcdfHourly2Xts <- function(herz.param, herz.file.name,
   # convert data.frame of HErZ data into an extended time series
   ndf$dat10.time = as.POSIXct(strptime(ndf$dat10.time, format="%Y-%m-%d %H:%M:%S"),
                               format="%Y-%m-%d %H:%M:%S", tz = "UTC")
-  timestr = SetToDate(herz.tsstart, herz.tsend)
+  timestr = SetToDate(rra.tsstart, rra.tsend)
   herz10.xts = xts(ndf$dat10.data, order.by=ndf$dat10.time)
   herz10.xts = herz10.xts[timestr]
   herz116.xts = NULL
@@ -381,6 +381,7 @@ GetObsObject <- function(obs.xts, obs2.xts=NULL, obs3.xts=NULL,
                          obs.param, eraI.param=NULL, era20c.param=NULL,
                          herz.profile, only.10m=FALSE) {
 
+  # -- checks on input variables
   if (nchar(obs.name) == 0 | obs.name != "Fino1" & obs.name != "Fino2" &
       obs.name != "Lindenberg" & obs.name != "Cabauw") {
     cat("\n   *** The observation name is: ", obs.name, "  ***\n\n")
@@ -398,6 +399,7 @@ GetObsObject <- function(obs.xts, obs2.xts=NULL, obs3.xts=NULL,
                    toString(tsend[1]), toString(tsend[2]))
   if (herz.profile) only.10m = FALSE
 
+  # -- assigne time series in time period provided
   obs.xts = obs.xts[timestr]
   if (!is.null(obs2.xts)) obs2.xts = obs2.xts[timestr]
   if (!is.null(obs3.xts)) obs3.xts = obs3.xts[timestr]
@@ -418,7 +420,7 @@ GetObsObject <- function(obs.xts, obs2.xts=NULL, obs3.xts=NULL,
   if (!is.null(era20c10.xts)) era20c10.xts = era20c10.xts[timestr]
   if (!is.null(era20c100.xts)) era20c100.xts = era20c100.xts[timestr]
 
-
+  # -- create data frames to be saved into clim objects
   obs.df = data.frame(date=index(obs.xts),
                       ReanaName="", StationName=obs.name,
                       latitude=obs.lat, longitude=obs.lon,
@@ -524,6 +526,7 @@ GetObsObject <- function(obs.xts, obs2.xts=NULL, obs3.xts=NULL,
                               height=strsplit(era20c.param, '_')[[2]][[2]])
   }
 
+  # -- create clim objects
   if (!is.null(obs6.xts)) {
     if (!is.null(era20c10.xts) & !is.null(era20c100.xts) & !is.null(eraI10.xts)) {
       climate.obs.object = climate(data_tables=
@@ -573,6 +576,96 @@ GetObsObject <- function(obs.xts, obs2.xts=NULL, obs3.xts=NULL,
 #' @description
 #' @param
 #' @return
+Get10mRRAObsObject <- function(obs.xts, rra10.xts, rra10.hourly.xts=NULL,
+                               stats.atrra10.xts=NULL, eraI10.xts=NULL,
+                               obs.tsstart, obs.tsend,
+                               rra.tsend, eraI.tsend=NULL,
+                               rra.name="", eraI.name="", obs.name="",
+                               obs.lon, obs.lat,
+                               obs.param, eraI.param=""){
+
+  tsend = c(min(obs.tsend[1], rra.tsend[1], eraI.tsend[1]), 12)
+  timestr = paste0(toString(obs.tsstart[1]), toString(obs.tsstart[2]), '/',
+                   toString(tsend[1]), toString(tsend[2]))
+
+  # -- assigne time series in time period provided
+  obs.xts = obs.xts[timestr]
+  rra10.xts = rra10.xts[timestr]
+  if (!is.null(rra10.hourly.xts)) rra10.hourly.xts = rra10.hourly.xts[timestr]
+  if (!is.null(stats.atrra10.xts)) stats.atrra10.xts = stats.atrra10.xts[timestr]
+  if (!is.null(eraI10.xts)) eraI10.xts = eraI10.xts[timestr]
+
+  # -- create data frames to be saved into clim objects
+  obs.df = data.frame(date=index(obs.xts),
+                      ReanaName=rra.name, StationName=obs.name,
+                      latitude=obs.lat, longitude=obs.lon,
+                      wind_speed=coredata(obs.xts),
+                      height="10m")
+
+  rra10.df = data.frame(date=index(rra10.xts),
+                        ReanaName=rra.name, StationName=obs.name,
+                        latitude=obs.lat, longitude=obs.lon,
+                        wind_speed=coredata(rra10.xts),
+                        height="10m")
+
+  if (!is.null(rra10.hourly.xts)) {
+    rra10.hourly.df = data.frame(date=index(rra10.hourly.xts),
+                                 ReanaName=rra.name, StationName=obs.name,
+                                 latitude=obs.lat, longitude=obs.lon,
+                                 wind_speed=coredata(rra10.hourly.xts),
+                                 height="10m")
+  }
+
+  if (!is.null(stats.atrra10.xts)) {
+    stats.atrra10.df = data.frame(date=index(stats.atrra10.xts),
+                                  ReanaName=rra.name, StationName=obs.name,
+                                  latitude=obs.lat, longitude=obs.lon,
+                                  wind_speed=coredata(stats.atrra10.xts),
+                                  height="10m")
+  }
+
+  if (!is.null(eraI10.xts)) {
+    eraI.df = data.frame(date=index(eraI10.xts),
+                         ReanaName=eraI.name, StationName=obs.name,
+                         latitude=obs.lat, longitude=obs.lon,
+                         wind_speed=coredata(eraI10.xts),
+                         height="10m")
+  }
+
+  # -- create clim objects
+  if (!is.null(eraI10.xts)) {
+    if (!is.null(rra10.hourly.xts) & !is.null(stats.atrra10.xts)) {
+      climate.obs.object = climate(data_tables=
+                                     list(obs=obs.df, rra10=rra10.df,
+                                          rra10.hourly=rra10.hourly.df,
+                                          stats.atrra10=stats.atrra10.df,
+                                          eraI10=eraI10.df))
+    } else {
+      climate.obs.object = climate(data_tables=
+                                     list(obs=obs.df, rra10=rra10.df,
+                                          eraI10=eraI10.df))
+    }
+  } else {
+    if (!is.null(rra10.hourly.xts) & !is.null(stats.atrra10.xts)) {
+      climate.obs.object = climate(data_tables=
+                                   list(obs=obs.df, rra10=rra10.df,
+                                        rra10.hourly=rra10.hourly.df,
+                                        stats.atrra10=stats.atrra10.df))
+    } else {
+      climate.obs.object = climate(data_tables=
+                                     list(obs=obs.df, rra10=rra10.df))
+    }
+  }
+
+  return(list(obs.object = climate.obs.object))
+}
+
+#-----------------------------------------------------------------------------------
+
+#' @title
+#' @description
+#' @param
+#' @return
 GetRandomClimObject <- function(obs.xts, forec.xts) {
 
   obs.df = data.frame(date=index(obs.xts),
@@ -585,6 +678,42 @@ GetRandomClimObject <- function(obs.xts, forec.xts) {
                                     list(obs=obs.df, forec=forec.df))
 
   return(list(random.object = climate.random.object))
+}
+
+#-----------------------------------------------------------------------------------
+
+#' @title Create hourly RRA time series with NA fill values.
+#' @description
+#' @param
+#' @return
+AligneRRA2Obsxts <- function(stat.xts, rra.xts) {
+
+  merged.xts = merge.xts(rra.xts, stat.xts)
+  aligned.rra.xts = merged.xts$rra.xts
+
+  return(aligned.rra.xts)
+}
+
+#-----------------------------------------------------------------------------------
+
+#' @title Get station values only at RRA time steps.
+#' @description
+#' @param
+#' @return
+AligneObs2RRAxts <- function(stat.xts, rra.xts) {
+
+  new.vector = vector(mode="numeric", length=length(rra.xts))*NA
+  cnt = 1
+  for (n.step in seq(stat.xts)) {
+    # this is especiall need for SMHI which does not span all of 2008 to 2009
+    if (cnt > length(rra.xts)) break
+    if (index(stat.xts)[[n.step]] == index(rra.xts)[[cnt]]) {
+      new.vector[cnt] = stat.xts[[n.step]]
+      cnt = cnt + 1
+    }
+  }
+  new.xts = xts(new.vector, order.by=index(rra.xts))
+  return(new.xts)
 }
 
 #-----------------------------------------------------------------------------------
