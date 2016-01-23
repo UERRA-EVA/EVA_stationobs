@@ -295,7 +295,8 @@ climobj = GetObsObject(obs.xts=fino1.100.xts,
                        era20c.tsend=era20c.tsend,
                        obs.name="Fino1", obs.lon=fino1.lon,
                        obs.lat=fino1.lat, obs.param=fino1.param,
-                       eraI.param=eraI.param, era20c.param=era20c.param)
+                       eraI.param=eraI.param, era20c.param=era20c.param,
+                       herz.profile=herz.profile)
 fino1.climobj = climobj$obs.object
 
 climobj = GetObsObject(obs.xts=fino2.102.xts,
@@ -313,7 +314,8 @@ climobj = GetObsObject(obs.xts=fino2.102.xts,
                        era20c.tsend=era20c.tsend,
                        obs.name="Fino2", obs.lon=fino2.lon,
                        obs.lat=fino2.lat, obs.param=fino2.param,
-                       eraI.param=eraI.param, era20c.param=era20c.param)
+                       eraI.param=eraI.param, era20c.param=era20c.param,
+                       herz.profile=herz.profile)
 fino2.climobj = climobj$obs.object
 
 climobj = GetObsObject(obs.xts=lind.98.xts, obs2.xts=lind.80.xts,
@@ -333,7 +335,8 @@ climobj = GetObsObject(obs.xts=lind.98.xts, obs2.xts=lind.80.xts,
                        era20c.tsend=era20c.tsend,
                        obs.name="Lindenberg", obs.lon=lind.lon,
                        obs.lat=lind.lat, obs.param=lind.param,
-                       eraI.param=eraI.param, era20c.param=era20c.param)
+                       eraI.param=eraI.param, era20c.param=era20c.param,
+                       herz.profile=herz.profile)
 lind.climobj = climobj$obs.object
 
 climobj = GetObsObject(obs.xts=cabauw.200.xts, obs2.xts=cabauw.140.xts,
@@ -353,7 +356,8 @@ climobj = GetObsObject(obs.xts=cabauw.200.xts, obs2.xts=cabauw.140.xts,
                        era20c.tsend=era20c.tsend,
                        obs.name="Cabauw", obs.lon=cabauw.lon,
                        obs.lat=cabauw.lat, obs.param=cabauw.param,
-                       eraI.param=eraI.param, era20c.param=era20c.param)
+                       eraI.param=eraI.param, era20c.param=era20c.param,
+                       herz.profile=herz.profile)
 cabauw.climobj = climobj$obs.object
 
 #-----------------------------------------------------------------------------
