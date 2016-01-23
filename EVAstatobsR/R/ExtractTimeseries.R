@@ -42,6 +42,9 @@ getNearest <- function(b1,b2,l1,l2){
 #'   series is given with precision of months, those of daily time series with
 #'   precision of days. Parts taken from get.timeseries.R of GetPlotsFromFtp and off
 #'   website http://bocoup.com/weblog/padding-time-series-with-r/
+#' @note needs to add functionality to calculate daily or monthly values only if
+#'   there are enough hourly values available; it needsd to be decided what enough
+#'   is.
 #' @param station.data is an extended time series holding monthly mean station wind
 #'   data
 #' @param era20c.tsstart is a charcter string of the start date of the ERA20C data
