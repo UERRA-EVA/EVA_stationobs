@@ -37,24 +37,9 @@ FindStationNameInRraName <- function(rra.fname, stat.name) {
     }
     test.str1 = test.str[1]
     if (length(test.str) == 2) {
-      test.str2 = test.str[2]
-      if (grepl(test.str1, rra.fname[name.step]) &&
-          grepl(test.str2, rra.fname[name.step])) break
-    } else if (length(test.str) == 3) {
-      test.str2 = test.str[2]
-      test.str3 = test.str[3]
-      if (grepl(test.str1, rra.fname[name.step]) &&
-          grepl(test.str2, rra.fname[name.step]) &&
-          grepl(test.str3, rra.fname[name.step])) break
-    } else if (length(test.str) == 4) {
-      test.str2 = test.str[2]
-      test.str3 = test.str[3]
-      test.str4 = test.str[4]
-      if (grepl(test.str1, rra.fname[name.step]) &&
-          grepl(test.str2, rra.fname[name.step]) &&
-          grepl(test.str3, rra.fname[name.step]) &&
-          grepl(test.str4, rra.fname[name.step])) break
-    } else if(grepl(test.str, rra.fname[name.step])) break
+      CallStop(paste0("This should not happen!! It did for station: ", stat.name))
+    } else if(grepl(paste0('_',test.str,'_'), rra.fname[name.step]) |
+              grepl(paste0(test.str,'.nc'), rra.fname[name.step])) break
   }
 
   return(name.step)
@@ -116,11 +101,11 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
   stat.tsend = c(tail(as.POSIXlt(index(MM.station))$year+1900,1),
                  tail(as.POSIXlt(index(MM.station))$mon+1,1))
 
+  stat.lon = station.data$GEO_LÄNGE[1]
+  stat.lat = station.data$GEO_BREITE[1]
+
   if (ana.time.res$time.res == ana.time.res$monthly |
       ana.time.res$time.res == ana.time.res$daily) {
-
-    stat.lon = station.data$GEO_LÄNGE[1]
-    stat.lat = station.data$GEO_BREITE[1]
 
     # read ERA-Interim data
     cat(paste0("  **  Reading ERA-Interim reanalysis data\n"))
@@ -194,6 +179,8 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
                                        mo.tsstart, mo.tsend,
                                        herz.profile, only.10m)
     mo.data.xts = mo.data$herz10
+    # HACK --- NEED TO REMOVE !!
+    index(mo.data.xts) = index(mo.data.xts) + 10800
     mo.hourly.data.xts = AligneRRA2Obsxts(MM.station, mo.data.xts)
     stats.atmo.data.xts = AligneObs2RRAxts(MM.station, mo.data.xts)
 
@@ -208,77 +195,74 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
 
     eraI.data.xts = NULL
   }
+
+  # == get time series of same length ==
+  # === data in objects are ordered from heighest to lowest height ===
+  climobj = Get10mRRAObsObject(obs.xts=MM.station,
+                               rra10.xts=herz.data.xts,
+                               rra10.hourly.xts=herz.hourly.data.xts,
+                               stats.atrra10.xts=stats.atherz.data.xts,
+                               eraI10.xts=NULL,
+                               obs.tsstart=stat.tsstart, obs.tsend=stat.tsend,
+                               rra.tsend=herz.tsend, eraI.tsend=NULL,
+                               rra.name=herz.name,
+                               obs.name=station.name,
+                               obs.lon=stat.lon, obs.lat=stat.lat,
+                               obs.param=stat.param, eraI.param="")
+  StatHerz.climobj = climobj$obs.object$climate_data_objects
+
+  climobj = Get10mRRAObsObject(obs.xts=MM.station,
+                               rra10.xts=smhi.data.xts,
+                               rra10.hourly.xts=smhi.hourly.data.xts,
+                               stats.atrra10.xts=stats.atsmhi.data.xts,
+                               eraI10.xts=NULL,
+                               obs.tsstart=stat.tsstart, obs.tsend=stat.tsend,
+                               rra.tsend=smhi.tsend, eraI.tsend=NULL,
+                               rra.name=smhi.name, eraI.name="",
+                               obs.name=station.name,
+                               obs.lon=stat.lon, obs.lat=stat.lat,
+                               obs.param="", eraI.param="")
+  StatSMHI.climobj = climobj$obs.object$climate_data_objects
+
+  climobj = Get10mRRAObsObject(obs.xts=MM.station,
+                               rra10.xts=mo.data.xts,
+                               rra10.hourly.xts=mo.hourly.data.xts,
+                               stats.atrra10.xts=stats.atmo.data.xts,
+                               eraI10.xts=NULL,
+                               obs.tsstart=stat.tsstart, obs.tsend=stat.tsend,
+                               rra.tsend=mo.tsend, eraI.tsend=NULL,
+                               rra.name=mo.name, eraI.name="",
+                               obs.name=station.name,
+                               obs.lon=stat.lon, obs.lat=stat.lon,
+                               obs.param="", eraI.param="")
+  StatMO.climobj = climobj$obs.object$climate_data_objects
+
+  climobj = Get10mRRAObsObject(obs.xts=MM.station,
+                               rra10.xts=mf.data.xts,
+                               rra10.hourly.xts=mo.hourly.data.xts,
+                               stats.atrra10.xts=stats.atmo.data.xts,
+                               eraI10.xts=NULL,
+                               obs.tsstart=stat.tsstart, obs.tsend=stat.tsend,
+                               rra.tsend=mf.tsend, eraI.tsend=NULL,
+                               rra.name=mf.name, eraI.name="",
+                               obs.name=station.name,
+                               obs.lon=stat.lon, obs.lat=stat.lat,
+                               obs.param=stat.param, eraI.param="")
+  StatMF.climobj = climobj$obs.object$climate_data_objects
+
+  # -- Plotting
+  hourly.switch = F # plot hourly data (T); or at time res of RRA only (F)
+
+  #   fname = paste0(outdir, "RRAs-timeSeries_20082009_vs_", station.name,
+  #                  "_", time.ext, "_", res.switch, "_calmPeriod.pdf")
+  #   PlotRRAtimeSeries(StatHerz.climobj, StatSMHI.climobj,
+  #                     StatMO.climobj, StatMF.climobj, fname,
+  #                     hourly.switch, station.name)
+  #
+  fname = paste0(outdir, "RRAs-scatterQQ_20082009_vs_", station.name,
+                 "_", time.ext, "_", res.switch, ".pdf")
+  PlotRRAscatterQQ(StatHerz.climobj, StatSMHI.climobj,
+                   StatMO.climobj, StatMF.climobj, fname,
+                   hourly.switch, station.name)
+
 }
-
-# == get time series of same length ==
-# === data in objects are ordered from heighest to lowest height ===
-climobj = Get10mRRAObsObject(obs.xts=MM.station,
-                             rra10.xts=herz.data.xts,
-                             rra10.hourly.xts=herz.hourly.data.xts,
-                             stats.atrra10.xts=stats.atherz.data.xts,
-                             eraI10.xts=NULL,
-                             obs.tsstart=stat.tsstart, obs.tsend=stat.tsend,
-                             rra.tsend=herz.tsend, eraI.tsend=NULL,
-                             rra.name=herz.name,
-                             obs.name=as.character(station.info$Stationsname),
-                             obs.lon=station.info$geoLaenge,
-                             obs.lat=station.info$geoBreite, obs.param=stat.param,
-                             eraI.param="")
-StatHerz.climobj = climobj$obs.object$climate_data_objects
-
-climobj = Get10mRRAObsObject(obs.xts=MM.station,
-                             rra10.xts=smhi.data.xts,
-                             rra10.hourly.xts=smhi.hourly.data.xts,
-                             stats.atrra10.xts=stats.atsmhi.data.xts,
-                             eraI10.xts=NULL,
-                             obs.tsstart=stat.tsstart, obs.tsend=stat.tsend,
-                             rra.tsend=smhi.tsend, eraI.tsend=NULL,
-                             rra.name=smhi.name, eraI.name="",
-                             obs.name=as.character(station.info$Stationsname),
-                             obs.lon=station.info$geoLaenge,
-                             obs.lat=station.info$geoBreite, obs.param="",
-                             eraI.param="")
-StatSMHI.climobj = climobj$obs.object$climate_data_objects
-
-climobj = Get10mRRAObsObject(obs.xts=MM.station,
-                             rra10.xts=mo.data.xts,
-                             rra10.hourly.xts=mo.hourly.data.xts,
-                             stats.atrra10.xts=stats.atmo.data.xts,
-                             eraI10.xts=NULL,
-                             obs.tsstart=stat.tsstart, obs.tsend=stat.tsend,
-                             rra.tsend=mo.tsend, eraI.tsend=NULL,
-                             rra.name=mo.name, eraI.name="",
-                             obs.name=as.character(station.info$Stationsname),
-                             obs.lon=station.info$geoLaenge,
-                             obs.lat=station.info$geoBreite, obs.param="",
-                             eraI.param="")
-StatMO.climobj = climobj$obs.object$climate_data_objects
-
-climobj = Get10mRRAObsObject(obs.xts=MM.station,
-                             rra10.xts=mf.data.xts,
-                             rra10.hourly.xts=mo.hourly.data.xts,
-                             stats.atrra10.xts=stats.atmo.data.xts,
-                             eraI10.xts=NULL,
-                             obs.tsstart=stat.tsstart, obs.tsend=stat.tsend,
-                             rra.tsend=mf.tsend, eraI.tsend=NULL,
-                             rra.name=mf.name, eraI.name="",
-                             obs.name=as.character(station.info$Stationsname),
-                             obs.lon=station.info$geoLaenge,
-                             obs.lat=station.info$geoBreite, obs.param=stat.param,
-                             eraI.param="")
-StatMF.climobj = climobj$obs.object$climate_data_objects
-
-fname = paste0(outdir, "RRAs-timeSeries_20082009_", time.ext,"_",
-               res.switch, ".pdf")
-hourly.switch = T # plot hourly data (T); or at time res of RRA only (F)
-PlotRRAtimeSeries(StatHerz.climobj, StatSMHI.climobj,
-                  StatMO.climobj, StatMF.climobj, fname)
-
-a = "asdf"
-# read monthly RRA data (need to cdo monmean that data)
-# read monthly station data (that should be straight forward, right?)
-
-# read hourly RRA data (read data as is)
-# read hourly station data (read data as is)
-
-# plot what's to be plotted
