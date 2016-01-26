@@ -614,6 +614,9 @@ Get10mRRAObsObject <- function(obs.xts, rra10.xts, rra10.hourly.xts=NULL,
                                  latitude=obs.lat, longitude=obs.lon,
                                  wind_speed=coredata(rra10.hourly.xts),
                                  height="10m")
+    col.names = c("date", "ReanaName", "StationName", "latitude", "longitude",
+                  "wind_speed", "height")
+    colnames(rra10.hourly.df) = col.names
   }
 
   if (!is.null(stats.atrra10.xts)) {
