@@ -252,17 +252,37 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
 
   # -- Plotting
   hourly.switch = F # plot hourly data (T); or at time res of RRA only (F)
+  if (plot.TS) {
+    fname = paste0(outdir, "RRAs-timeSeries_20082009_vs_", station.name,
+                   "_", time.ext, "_", res.switch, "_calmPeriod.pdf")
+    PlotRRAtimeSeries(StatHerz.climobj, StatSMHI.climobj,
+                      StatMO.climobj, StatMF.climobj, fname,
+                      hourly.switch, station.name)
+  }
 
-  #   fname = paste0(outdir, "RRAs-timeSeries_20082009_vs_", station.name,
-  #                  "_", time.ext, "_", res.switch, "_calmPeriod.pdf")
-  #   PlotRRAtimeSeries(StatHerz.climobj, StatSMHI.climobj,
-  #                     StatMO.climobj, StatMF.climobj, fname,
-  #                     hourly.switch, station.name)
-  #
-  fname = paste0(outdir, "RRAs-scatterQQ_20082009_vs_", station.name,
-                 "_", time.ext, "_", res.switch, ".pdf")
-  PlotRRAscatterQQ(StatHerz.climobj, StatSMHI.climobj,
-                   StatMO.climobj, StatMF.climobj, fname,
-                   hourly.switch, station.name)
+  if (plot.scatter) {
+    fname = paste0(outdir, "RRAs-scatterQQ_20082009_vs_", station.name,
+                   "_", time.ext, "_", res.switch, ".pdf")
+    PlotRRAscatterQQ(StatHerz.climobj, StatSMHI.climobj,
+                     StatMO.climobj, StatMF.climobj, fname,
+                     hourly.switch, station.name)
+  }
 
+  if (plot.Extremes) {
+    extremes.thresh = seq(0.01,0.99,0.01)
+    fname = paste0(outdir, "HErZ10m-extremes_20082009_vs_", station.name,
+                   '_', time.ext, '_', res.switch, ".pdf")
+    PlotRRAextremes(StatHerz.climobj, fname, extremes.thresh)
+    fname = paste0(outdir, "SMHI10m-extremes_20082009_vs_", station.name,
+                   '_', time.ext, '_', res.switch, ".pdf")
+    PlotRRAextremes(StatSMHI.climobj, fname, extremes.thresh)
+    fname = paste0(outdir, "MO10m-extremes_20082009_vs_", station.name,
+                   '_', time.ext, '_', res.switch, ".pdf")
+    PlotRRAextremes(StatMO.climobj, fname, extremes.thresh)
+
+    fname = paste0(outdir, "RRA10m-extremes_20082009_vs_", station.name,
+                   '_', time.ext, '_', res.switch, ".pdf")
+    PlotAllRRAextremes(StatHerz.climobj, StatSMHI.climobj, StatMO.climobj,
+                       fname, extremes.thresh)
+  }
 }

@@ -1,4 +1,4 @@
-#' @title Plot four RRA time series of monthly, daily, hourly data.
+#' @title Plot a legend with correlation output.
 #' @description
 #' @param
 #' @return
@@ -16,15 +16,16 @@ LegendWithCorr <- function(obs.vals, rra.vals, conf.lev,
 
 #-----------------------------------------------------------------------------------
 
-#' @title Plot four RRA time series of monthly, daily, hourly data.
+#' @title Generate rra and obs xts from climate object.
 #' @description
 #' @param
 #' @return
-GetRRAxts <- function(herz.obj, smhi.obj, mo.obj, mf.obj, ana.time.res, fname) {
+GetRRAxts <- function(herz.obj, smhi.obj, mo.obj, mf.obj, ana.time.res,
+                      hourly.switch, fname) {
 
   if (ana.time.res$time.res == ana.time.res$monthly |
       ana.time.res$time.res == ana.time.res$daily) {
-    titname = paste0("Monthly 10m wind speed at ", station.name, " against ")
+    titname = paste0("Monthly 10m wind speed at ", station.name)
     herz.rra.xts = xts(herz.obj$rra10$data$wind_speed, order.by=herz.obj$rra10$data$date)
     herz.obs.xts = xts(herz.obj$obs$data$wind_speed, order.by=herz.obj$obs$data$date)
     smhi.rra.xts = xts(smhi.obj$rra10$data$wind_speed, order.by=smhi.obj$rra10$data$date)
@@ -36,7 +37,7 @@ GetRRAxts <- function(herz.obj, smhi.obj, mo.obj, mf.obj, ana.time.res, fname) {
   } else  if (ana.time.res$time.res == ana.time.res$hourly) {
     if (!hourly.switch) { # rra and obs only at rra
       fname = gsub(".pdf", "_ObsAtRRA.pdf", fname)
-      titname = paste0("10m Wind speed at ", station.name, "  against ")
+      titname = paste0("10m Wind speed at ", station.name)
       herz.rra.xts = xts(herz.obj$rra10$data$wind_speed, order.by=herz.obj$rra10$data$date)
       herz.obs.xts = xts(herz.obj$obs$data$wind_speed, order.by=herz.obj$obs$data$date)
       smhi.rra.xts = xts(smhi.obj$rra10$data$wind_speed, order.by=smhi.obj$rra10$data$date)
@@ -47,7 +48,7 @@ GetRRAxts <- function(herz.obj, smhi.obj, mo.obj, mf.obj, ana.time.res, fname) {
       mf.obs.xts = xts(mf.obj$stats.atrra10$data$wind_speed, order.by=mf.obj$stats.atrra10$data$date)
     } else { # hourly rra (with na) and hourly obs
       fname = gsub(".pdf", "_HourlyObs.pdf", fname)
-      titname = paste0("Hourly 10m wind speed at ", station.name, " against ")
+      titname = paste0("Hourly 10m wind speed at ", station.name)
       herz.rra.xts = xts(herz.obj$rra10$data$wind_speed, order.by=herz.obj$rra10$data$date)
       herz.obs.xts = xts(herz.obj$obs$data$wind_speed, order.by=herz.obj$obs$data$date)
       smhi.rra.xts = xts(smhi.obj$rra10.hourly$data$wind_speed, order.by=smhi.obj$rra10.hourly$data$date)
@@ -68,7 +69,7 @@ GetRRAxts <- function(herz.obj, smhi.obj, mo.obj, mf.obj, ana.time.res, fname) {
 
 #-----------------------------------------------------------------------------------
 
-#' @title Plot four RRA time series of monthly, daily, hourly data.
+#' @title Plot (four/)three RRA time series of monthly, daily, hourly data.
 #' @description
 #' @param
 #' @return
@@ -84,7 +85,9 @@ PlotRRAtimeSeries <- function(herz.obj, smhi.obj, mo.obj, mf.obj, fname,
   yliml = Ylims$yll
   ylimh = Ylims$ylh
 
-  rra.xts = GetRRAxts(herz.obj, smhi.obj, mo.obj, mf.obj, ana.time.res, fname)
+  #-- extract data and get xts objects
+  rra.xts = GetRRAxts(herz.obj, smhi.obj, mo.obj, mf.obj, ana.time.res,
+                      hourly.switch, fname)
   herz.rra.xts = rra.xts$HE.rra.xts
   herz.obs.xts = rra.xts$HE.obs.xts
   smhi.rra.xts = rra.xts$SM.rra.xts
@@ -96,6 +99,7 @@ PlotRRAtimeSeries <- function(herz.obj, smhi.obj, mo.obj, mf.obj, fname,
   fname = rra.xts$f.name
   titname = rra.xts$tit.name
 
+  #-- plotting settings
   if (ana.time.res$time.res == ana.time.res$monthly |
       ana.time.res$time.res == ana.time.res$daily) {
     pch.rra = 19
@@ -110,10 +114,11 @@ PlotRRAtimeSeries <- function(herz.obj, smhi.obj, mo.obj, mf.obj, fname,
     legend.cex = 1.5
     col.obs = "gray60"
   }
+  PS = PlottingSettings(herz.obj$rra10$data)
   col.light.obs = "gray70"
-  col.herz = "green"
-  col.smhi = "deepskyblue"
-  col.mo = "red"
+  col.herz = PS$col.herz
+  col.smhi = PS$col.smhi
+  col.mo = PS$col.mo
   conf.lev = 0.95
   leg.pos = "topright"
 
@@ -122,8 +127,7 @@ PlotRRAtimeSeries <- function(herz.obj, smhi.obj, mo.obj, mf.obj, fname,
       onefile=TRUE, pointsize=13)
   par(mfrow=c(4,1), mar=c(3,2,2,0), oma=c(0,1,0,0.5), cex.main=1.5)
 
-
-
+  #-- plotting for monthly and hourly seperately
   if (ana.time.res$time.res == ana.time.res$monthly |
       ana.time.res$time.res == ana.time.res$daily) {
 
@@ -248,7 +252,7 @@ PlotRRAtimeSeries <- function(herz.obj, smhi.obj, mo.obj, mf.obj, fname,
 
 #-----------------------------------------------------------------------------------
 
-#' @title Plot four RRA time series of monthly, daily, hourly data.
+#' @title Plot (four/)three RRA monthly and hourly scatter plots.
 #' @description
 #' @param
 #' @return
@@ -264,4 +268,115 @@ PlotRRAscatterQQ <- function(herz.obj, smhi.obj, mo.obj, mf.obj, fname,
   yliml = Ylims$yll
   ylimh = Ylims$ylh
 
+  rra.xts = GetRRAxts(herz.obj, smhi.obj, mo.obj, mf.obj, ana.time.res,
+                      hourly.switch, fname)
+  herz.rra.xts = rra.xts$HE.rra.xts
+  herz.obs.xts = rra.xts$HE.obs.xts
+  smhi.rra.xts = rra.xts$SM.rra.xts
+  smhi.obs.xts = rra.xts$SM.obs.xts
+  mo.rra.xts = rra.xts$MO.rra.xts
+  mo.obs.xts = rra.xts$MO.obs.xts
+  mf.rra.xts = rra.xts$MF.rra.xts
+  mf.obs.xts = rra.xts$MF.obs.xts
+  fname = rra.xts$f.name
+  titname = rra.xts$tit.name
+
+  xlabname = "RRA wind speed [m/s]"
+  ylabname = "station wind speed [m/s]"
+
+  PS = PlottingSettings(herz.obj$rra10$data)
+  col.light.obs = "gray70"
+  col.herz = PS$col.herz
+  col.smhi = PS$col.smhi
+  col.mo = PS$col.mo
+
+  pdf(fname, width=PS$square.a4, height=PS$square.a4,
+      onefile=TRUE, pointsize=13)
+  par(mfrow=c(1,1), mar=c(4,3,2,0), oma=c(0,1,0,0.5), cex.main=1.0)
+
+  text.str = "10m HErZ wind speed"
+  scatterPlot(coredata(herz.rra.xts), coredata(herz.obs.xts), yliml, ylimh, titname,
+              xlabname, ylabname, text.str=text.str, plot.col=col.herz)
+
+  text.str = "10m SMHI wind speed"
+  if (ana.time.res$time.res == ana.time.res$monthly) {
+
+    scatterPlot(coredata(smhi.rra.xts)[1:21], coredata(smhi.obs.xts)[1:21], yliml, ylimh, titname,
+                xlabname, ylabname, text.str=text.str, plot.col=col.smhi)
+
+  } else if (ana.time.res$time.res == ana.time.res$hourly) {
+
+    scatterPlot(coredata(smhi.rra.xts), coredata(smhi.obs.xts), yliml, ylimh, titname,
+                xlabname, ylabname, text.str=text.str, plot.col=col.smhi)
+  }
+
+  text.str = "10m MetOffice wind speed"
+  scatterPlot(coredata(mo.rra.xts), coredata(mo.obs.xts), yliml, ylimh, titname,
+              xlabname, ylabname, text.str=text.str, plot.col=col.mo)
+
+  dev.off()
+
 }
+
+#-----------------------------------------------------------------------------------
+
+#' @title Plot (four/)three RRA monthly and hourly scatter plots.
+#' @description
+#' @param
+#' @return
+PlotRRAextremes <- function(rra.obj, fname, threshold) {
+
+  PS = PlottingSettings(rra.obj$rra10$data)
+
+  if (PS$rea.name == "HErZ") {
+    obs = rra.obj$obs$data$wind_speed
+  } else {
+    obs = rra.obj$stats.atrra$data$wind_speed
+  }
+  forec = rra.obj$rra10$data$wind_speed
+
+  scores.df = GetScoresDF(threshold, obs, forec)
+  ylims.df = as.data.frame(YLimsScores())
+  PlotTowerExtremes(fname, scores.df, ylims.df, threshold, PS)
+  fname.new = gsub("-extremes_", "-extremes-HRvsFAR_", fname)
+  PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
+                   scores.df$hit.rate, threshold, PS)
+
+}
+
+#-----------------------------------------------------------------------------------
+
+#' @title Plot (four/)three RRA monthly and hourly scatter plots.
+#' @description
+#' @param
+#' @return
+PlotAllRRAextremes <- function(herz.obj, smhi.obj, mo.obj, fname, threshold) {
+
+  # against HErZ at different heights
+  obs = herz.obj$obs$data$wind_speed
+  forec = herz.obj$rra10$data$wind_speed
+  scores.herz.df = GetScoresDF(threshold, obs, forec)
+  obs = smhi.obj$stats.atrra10$data$wind_speed
+  forec = smhi.obj$rra10$data$wind_speed
+  scores.smhi.df = GetScoresDF(threshold, obs, forec)
+  obs = mo.obj$stats.atrra10$data$wind_speed
+  forec = mo.obj$rra10$data$wind_speed
+  scores.mo.df = GetScoresDF(threshold, obs, forec)
+  scores.lst = list(scores.herz.df, scores.smhi.df, scores.mo.df)
+  ylims.df = as.data.frame(YLimsScores())
+
+  PSH = PlottingSettings(herz.obj$obs$data)
+  PSS = PlottingSettings(smhi.obj$stats.atrra10$data)
+  PSM = PlottingSettings(mo.obj$stats.atrra10$data)
+  # the var name needs to be increasing in name for further usage
+  PS = list(PST1=PSH, PST2=PSS, PST3=PSM)
+
+  fname.new = gsub("-extremes_", "-extremes_diffHeights_", fname)
+  PlotTowerExtremesList(fname.new, scores.lst, ylims.df, threshold, PS,
+                      use.ylims=T)
+  fname.new = gsub("-extremes_", "-extremes-diffHeights-HRvsFAR_", fname)
+  PlotTowerHRvsFARList(fname.new, scores.lst, threshold, PS)
+
+}
+
+#-----------------------------------------------------------------------------------

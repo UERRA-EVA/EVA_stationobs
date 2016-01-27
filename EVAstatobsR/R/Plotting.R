@@ -3431,7 +3431,7 @@ PlotTowerExtremesList <- function(fname, scores, ylims.df, threshold, PS,
                                   title.name=NULL, use.ylims=F) {
 
   score.names = names(scores[[1]])
-  col.names = c("blue", "red", "green", "magenta", "black", "orange")
+  col.names = c("green", "blue", "red", "magenta", "black", "orange")
   pdf(fname, width=PS$PST1$land.a4width, height=PS$PST1$land.a4height,
       onefile=TRUE, pointsize=13)
   par(mfrow=c(2,2), oma=c(0.5,0.5,0.5,0.5), mar=c(2,2,2,0), cex=0.8)
@@ -3453,8 +3453,8 @@ PlotTowerExtremesList <- function(fname, scores, ylims.df, threshold, PS,
           min.val = 100
           max.val = -100
           for (i in seq(scores)) {
-            min.val = min(min.val, min(scores[[i]][[plot.step]]))
-            max.val = max(max.val, max(scores[[i]][[plot.step]]))
+            min.val = min(min.val, min(scores[[i]][[plot.step]]), na.rm=T)
+            max.val = max(max.val, max(scores[[i]][[plot.step]]), na.rm=T)
           }
           plot(threshold, scores[[cnt]][[plot.step]], col = col.names[[cnt]],
                pch=16, type="b", main = titleName, ylim=c(min.val, max.val))
@@ -3490,6 +3490,12 @@ PlotTowerExtremesList <- function(fname, scores, ylims.df, threshold, PS,
                                     as.character(PS$PST2$obs.height),
                                     as.character(PS$PST3$obs.height),
                                     as.character(PS$PST4$obs.height)),
+             pch=16, col=col.names[1:length(scores)],
+             text.col=col.names[1:length(scores)])
+    } else if (length(scores) == 3) { # comparison of all RRAs (except MF)
+      legend(legend.place, legend=c(as.character(PS$PST1$rea.name),
+                                    as.character(PS$PST2$rea.name),
+                                    as.character(PS$PST3$rea.name)),
              pch=16, col=col.names[1:length(scores)],
              text.col=col.names[1:length(scores)])
     }
@@ -3528,7 +3534,7 @@ PlotTowerHRvsFAR <- function(fname, FAR, HR, threshold, PS,
 PlotTowerHRvsFARList <- function(fname, scores, threshold, PS, title.name=NULL) {
 
   score.names = names(scores[[1]])
-  col.names = c("blue", "red", "green", "magenta", "black", "orange")
+  col.names = c("green", "blue", "red", "magenta", "black", "orange")
   pdf(fname, width=PS$PST1$land.a4width, height=PS$PST1$land.a4height,
       onefile=TRUE, pointsize=13)
 
@@ -3565,6 +3571,12 @@ PlotTowerHRvsFARList <- function(fname, scores, threshold, PS, title.name=NULL) 
                                 as.character(PS$PST4$obs.height)),
            pch=16, col=col.names[1:length(scores)],
            text.col=col.names[1:length(scores)])
+  } else if (length(scores) == 3) { # comparison of all RRAs (except MF)
+    legend("topright", legend=c(as.character(PS$PST1$rea.name),
+                                as.character(PS$PST2$rea.name),
+                                as.character(PS$PST3$rea.name)),
+           pch=16, col=col.names[1:length(scores)],
+           text.col=col.names[1:length(scores)])
   }
 
   dev.off()
@@ -3588,7 +3600,7 @@ PlotTowerHRvsFARList <- function(fname, scores, threshold, PS, title.name=NULL) 
 #'   set the default value will be used which is set to 's' meaning that the axis
 #'   will be plotted.
 scatterPlot <- function(X, Y, yliml, ylimh, titname, xlabname, ylabname,
-                        text.str=NULL, xaxis='s', yaxis='s') {
+                        text.str=NULL, xaxis='s', yaxis='s', plot.col="blue") {
 
   if ((!xaxis=='n' & !xaxis=='s') & (!yaxis=='n' & !yaxis=='s')) {
     CallStop(paste0("Either xaxis or yaxis are not set as expected.\n",
@@ -3598,13 +3610,18 @@ scatterPlot <- function(X, Y, yliml, ylimh, titname, xlabname, ylabname,
 
   plot(X, Y, pch=19,
        xlim=c(yliml,ylimh), ylim=c(yliml, ylimh),
-       main=titname, xlab=xlabname, ylab=ylabname, col="blue",
+       main=titname, xlab=xlabname, ylab=ylabname, col=plot.col,
        xaxt=xaxis, yaxt=yaxis)
-  lines(c(yliml-1,ylimh), c(yliml-1,ylimh))
-  abline(lm(Y ~ X), col="blue")
+  lines(c(yliml-1,ylimh), c(yliml-1,ylimh), col="gray60")
+  lm.model = lm(Y ~ X)
+  abline(lm.model, col="black")
   if(!is.null(text.str)) {
-    text(yliml, ((ylimh-yliml)/2)+yliml,
-         paste(text.str), adj=c(0, 0.5))
+#     text(yliml, ((ylimh-yliml)/2)+yliml,
+#          paste(text.str), adj=c(0, 0.5))
+    text(1.1*yliml, ylimh-0.1*ylimh,
+         paste0(text.str, "\nIntercept = ", round(lm.model$coefficients[1], 2),
+                "\nSlope = ", round(lm.model$coefficient[2], 2)),
+         adj=c(0, 0.5), col="black")
   }
 }
 

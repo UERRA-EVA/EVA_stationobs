@@ -197,18 +197,8 @@ fname_ext = "2008to2009"
 # The following switches decide on which plots to generate
 
 # time series between reanalyses and station data at 10m height
-plot.EraStatComp = F
-# time series between ERA20C and COSMO HErZ reanalyses at 100m height
-plot.100mEraHerz = F
-# only selected seasons of reanalyses and station data at 10m height
-plot.EraStationSelSeasons = F
-# only selected months of reanalyses and station data at 10m height
-plot.EraStationSelMonths = F
-# daily mean time series analysis of reanalyses and station data fo 10m wind speed
-plot.EraStationSQ = F
-# PDF score between station data and each reanalysis at 10m height
-plot.PDFscore = F
-# plot histograms of 10m and 100m Era and HErZ data, and HErZ profiles
-plot.histograms = F
+plot.TS = T
+# scatter (and QQ) plot between reanalyses and station data at 10m height
+plot.scatter = T
 # plot extreme value analysis
-plot.Extremes = F
+plot.Extremes = T

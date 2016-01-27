@@ -12,6 +12,13 @@ PlottingSettings <- function(data.vals) {
   land.a4height = 21./2.54
   port.a4width = 21./2.54
   port.a4height = 29.7/2.54
+  square.a4 = 20./2.54
+
+  col.herz = "green"
+  col.smhi = "deepskyblue"
+  col.mo = "red"
+  col.mf = "magenta"
+  col.light.obs = "gray70"
 
   if (ana.time.res$time.res == ana.time.res$monthly) {
     time.agg = "monthly"
@@ -30,12 +37,18 @@ PlottingSettings <- function(data.vals) {
     rea.name = data.vals$ReanaName[1]
     return(list(land.a4width=land.a4width, land.a4height=land.a4height,
                 port.a4width=port.a4width, port.a4height=port.a4height,
+                square.a4=square.a4,
                 time.agg=time.agg, time.Agg=time.Agg, obs.name=obs.name,
-                obs.height=obs.height, rea.name=rea.name))
+                obs.height=obs.height, rea.name=rea.name,
+                col.herz=col.herz, col.smhi=col.smhi, col.mo=col.mo,
+                col.mf=col.mf, col.light.obs=col.light.obs))
   } else if (is.xts(data.vals)) {
     return(list(land.a4width=land.a4width, land.a4height=land.a4height,
                 port.a4width=port.a4width, port.a4height=port.a4height,
-                time.agg=time.agg, time.Agg=time.Agg))
+                square.a4=square.a4,
+                time.agg=time.agg, time.Agg=time.Agg,
+                col.herz=col.herz, col.smhi=col.smhi, col.mo=col.mo,
+                col.mf=col.mf, col.light.obs=col.light.obs))
   } else {
     CallStop(paste0("Expected either a data.frame or xts; data.vals is class ",
                     class(data.vals)))
