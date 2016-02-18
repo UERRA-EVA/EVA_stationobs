@@ -26,6 +26,16 @@ LegendWithCorr <- function(obs.vals, rra.vals, conf.lev,
 #-----------------------------------------------------------------------------------
 
 #' @title Generate rra and obs xts from climate object.
+#' @param herz.obj,smhi.obj,mo.obj,mf.obj ClimObjects of the differenct regional
+#'   reanalyses
+#' @param ana.time.res named list holding parameters monthly="monthly",
+#'   daily="daily", hourly="hourly", and time.res= to determine the time resolution
+#'   of the data to be read.
+#' @param hourly.switch a boolean to decided whether to plot hourly data (T); or at
+#'   time res of the RRA only (F)
+#' @param fname is a string holding file name of the pdf plot to be created.
+#' @param station.name is a string holding the station name at which location the
+#'   distribution data was extraced
 #' @importFrom xts xts
 GetRRAxts <- function(herz.obj, smhi.obj, mo.obj, mf.obj, ana.time.res,
                       hourly.switch, fname, station.name) {
@@ -77,6 +87,16 @@ GetRRAxts <- function(herz.obj, smhi.obj, mo.obj, mf.obj, ana.time.res,
 #-----------------------------------------------------------------------------------
 
 #' @title Plot (four/)three RRA time series of monthly, daily, hourly data.
+#' @param herz.obj,smhi.obj,mo.obj,mf.obj ClimObjects of the differenct regional
+#'   reanalyses
+#' @param ana.time.res named list holding parameters monthly="monthly",
+#'   daily="daily", hourly="hourly", and time.res= to determine the time resolution
+#'   of the data to be read.
+#' @param hourly.switch a boolean to decided whether to plot hourly data (T); or at
+#'   time res of the RRA only (F)
+#' @param fname is a string holding file name of the pdf plot to be created.
+#' @param station.name is a string holding the station name at which location the
+#'   distribution data was extraced
 #' @importFrom zoo index
 PlotRRAtimeSeries <- function(herz.obj, smhi.obj, mo.obj, mf.obj, fname,
                               hourly.switch, station.name, ana.time.res) {
@@ -258,6 +278,16 @@ PlotRRAtimeSeries <- function(herz.obj, smhi.obj, mo.obj, mf.obj, fname,
 #-----------------------------------------------------------------------------------
 
 #' @title Plot (four/)three RRA monthly and hourly scatter plots.
+#' @param herz.obj,smhi.obj,mo.obj,mf.obj ClimObjects of the differenct regional
+#'   reanalyses
+#' @param ana.time.res named list holding parameters monthly="monthly",
+#'   daily="daily", hourly="hourly", and time.res= to determine the time resolution
+#'   of the data to be read.
+#' @param hourly.switch a boolean to decided whether to plot hourly data (T); or at
+#'   time res of the RRA only (F)
+#' @param fname is a string holding file name of the pdf plot to be created.
+#' @param station.name is a string holding the station name at which location the
+#'   distribution data was extraced
 #' @importFrom xts xts
 #' @importFrom zoo coredata
 PlotRRAscatterQQ <- function(herz.obj, smhi.obj, mo.obj, mf.obj, fname,
@@ -324,7 +354,10 @@ PlotRRAscatterQQ <- function(herz.obj, smhi.obj, mo.obj, mf.obj, fname,
 
 #-----------------------------------------------------------------------------------
 
-#' @title Plot (four/)three RRA monthly and hourly scatter plots.
+#' @title Plot RRA monthly and hourly scatter plots.
+#' @param rra.obj is a ClimObject which holds the RRA data.
+#' @param fname is a string holding file name of the pdf plot to be created.
+#' @param threshold numeric sequence of percentiles between 0 and 1
 PlotRRAextremes <- function(rra.obj, fname, threshold) {
 
   PS = PlottingSettings(rra.obj$rra10$data)
@@ -348,6 +381,10 @@ PlotRRAextremes <- function(rra.obj, fname, threshold) {
 #-----------------------------------------------------------------------------------
 
 #' @title Plot (four/)three RRA monthly and hourly scatter plots.
+#' @param herz.obj,smhi.obj,mo.obj ClimObjects of the differenct regional
+#'   reanalyses
+#' @param fname is a string holding file name of the pdf plot to be created.
+#' @param threshold numeric sequence of percentiles between 0 and 1
 PlotAllRRAextremes <- function(herz.obj, smhi.obj, mo.obj, fname, threshold) {
 
   # against HErZ at different heights
