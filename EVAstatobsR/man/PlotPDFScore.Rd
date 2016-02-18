@@ -3,8 +3,7 @@
 \alias{PlotPDFScore}
 \title{Calculate the S_score as described in Mayer et al., 2015.}
 \usage{
-PlotPDFScore(era.xts, station.xts, outdir, fname, titname,
-  era.monthly = FALSE)
+PlotPDFScore(era.xts, station.xts, outdir, fname, titname, ana.time.res)
 }
 \arguments{
 \item{era.xts}{is the reanalysis time series of one pixel}
@@ -13,13 +12,13 @@ PlotPDFScore(era.xts, station.xts, outdir, fname, titname,
 
 \item{outdir}{is a string containing the output path of the plot}
 
-\item{fname}{is a string of the file name of the plot file}
+\item{fname}{is a string holding file name of the pdf plot to be created.}
 
 \item{titname}{is a string containig the title name of the plot}
 
-\item{era.monthly}{is an optional boolean which determines whether data passed
-is monthly (T) or daily (F) data. The default value is to use daily data
-(era.monthly=FALSE).}
+\item{ana.time.res}{named list holding parameters monthly="monthly",
+daily="daily", hourly="hourly", and time.res= to determine the time resolution
+of the data to be read.}
 }
 \description{
 Mayer et al., 2015: "Identifying added value in high-resolution

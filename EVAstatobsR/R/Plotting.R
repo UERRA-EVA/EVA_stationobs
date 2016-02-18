@@ -7,7 +7,7 @@
 #'   reanalysis data at the location of the station data.
 #' @param titname string of the plot title name
 #' @param outdir string of the output directory into which the plot is saved
-#' @param fname string of the file name of the plot
+#' @param fname is a string holding file name of the pdf plot to be created.
 #' @param anomaly is an optional parameter which determines whether to plot anomalies
 PlotStationEra <- function(s.obj, titname, outdir, fname, anomaly=FALSE) {
 
@@ -87,7 +87,7 @@ PlotStationEra <- function(s.obj, titname, outdir, fname, anomaly=FALSE) {
 #'   (ERA20C, ERA-Interim, HErZ, station data) for monthly and seasonal values. The
 #'   plot is saved into a pdf file, and the function does not have a return value.
 #' @param outdir string of the output directory into which the plot is saved
-#' @param fname string of the file name of the plot
+#' @param fname is a string holding file name of the pdf plot to be created.
 #' @param titname string of the plot title name
 #' @param Era20c extended time series of monthly or seasonal ERA20C data
 #' @param EraI extended time series of momthly or seasonal ERA-Interim data
@@ -218,7 +218,7 @@ PlotMultiPanel <- function(outdir, fname, titname, Era20c, EraI, Herz, Stat,
 #' @param StatXts monthly mean extended time series of the station values
 #' @param titname string of the plot title name
 #' @param outdir string of the output directory into which the plot is saved
-#' @param fname string of the file name of the plot
+#' @param fname is a string holding file name of the pdf plot to be created.
 #' @param seasons is an optional parameter which determines whetther to plot the
 #'   monthly (F) or seasonal (T) values of the above time series
 #' @param anomaly is an optional parameter which determines whether to plot anomalies
@@ -305,7 +305,7 @@ PlotStationEraSelSeasons <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 #' @param StatXts monthly mean extended time series of the station values
 #' @param titname string of the plot title name
 #' @param outdir string of the output directory into which the plot is saved
-#' @param fname string of the output file name
+#' @param fname is a string holding file name of the pdf plot to be created.
 #' @param anomaly is an optional parameter which determines whether to plot anomalies
 #' @note need to adopt titname to months; need to plot into four different panals
 PlotStationEraSelMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
@@ -372,7 +372,7 @@ PlotStationEraSelMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 #' @param StatXts extended time series of the station values
 #' @param titname string of the plot title name
 #' @param outdir string of the output directory into which the plot/s is/are saved
-#' @param fname string of the output file name
+#' @param fname is a string holding file name of the pdf plot to be created.
 #' @param ana.time.res named list holding parameters monthly="monthly",
 #'   daily="daily", hourly="hourly", and time.res= to determine the time resolution
 #'   of the data to be read.
@@ -502,7 +502,7 @@ PlotStationEraSQ <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 #' @param titname string of the plot title name
 #' @param statname string of the station name whose pixel is plotted
 #' @param outdir string of the output directory into which the plot is saved
-#' @param fname string of the file name of the plot
+#' @param fname is a string holding file name of the pdf plot to be created.
 #' @param ana.time.res named list holding parameters monthly="monthly",
 #'   daily="daily", hourly="hourly", and time.res= to determine the time resolution
 #'   of the data to be read.
@@ -600,7 +600,7 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
 #' @description The distributions of monthly and daily wind speed station data and
 #'   reanalysis data, optionally at differnet heights are plotted into histograms.
 #' @param outdir is a string containing the output path of the plot
-#' @param fname is a string of the file name of the plot file
+#' @param fname is a string holding file name of the pdf plot to be created.
 #' @param station.name is a string holding the station name at which location the
 #'   distribution data was extraced
 #' @param ana.time.res named list holding parameters monthly="monthly",
@@ -908,7 +908,7 @@ PlotHistograms <- function(outdir, fname, station.name, ana.time.res,
 #'   tower measurements. Histograms are plotted for 10m and 100m heights; seperately
 #'   and in comparison with reanalysis data.
 #' @param outdir is a string containing the output path of the plot
-#' @param fname is a string of the file name of the plot file
+#' @param fname is a string holding file name of the pdf plot to be created.
 #' @param ana.time.res named list holding parameters monthly="monthly",
 #'   daily="daily", hourly="hourly", and time.res= to determine the time resolution
 #'   of the data to be read.
@@ -1187,7 +1187,7 @@ PlotHistogramsTower <- function(outdir, fname, ana.time.res, tower.obj) {
 #' @param era.xts is the reanalysis time series of one pixel
 #' @param station.xts is the corresponding station time series
 #' @param outdir is a string containing the output path of the plot
-#' @param fname is a string of the file name of the plot file
+#' @param fname is a string holding file name of the pdf plot to be created.
 #' @param titname is a string containig the title name of the plot
 #' @param ana.time.res named list holding parameters monthly="monthly",
 #'   daily="daily", hourly="hourly", and time.res= to determine the time resolution
@@ -1266,7 +1266,7 @@ PlotPDFScore <- function(era.xts, station.xts, outdir, fname, titname,
 #'   Fino1, and Fino2 are supported.
 #' @param tower.obj is a ClimObject holding the data of tower measurements and
 #'   corresponding reanalysis data
-#' @param fname string of the file name of the plot
+#' @param fname is a string holding file name of the pdf plot to be created.
 #' @param ana.time.res named list holding parameters monthly="monthly",
 #'   daily="daily", hourly="hourly", and time.res= to determine the time resolution
 #'   of the data to be read.
@@ -1482,7 +1482,7 @@ PlotTowerERAprofileBP <- function(tower.obj, fname, ana.time.res) {
 #'   Fino1, and Fino2 are supported.
 #' @param tower.obj is a ClimObject holding the data of tower measurements and
 #'   corresponding reanalysis data
-#' @param fname string of the file name of the plot
+#' @param fname is a string holding file name of the pdf plot to be created.
 PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
 
   t.obj = tower.obj$climate_data_objects
@@ -1615,7 +1615,7 @@ PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
 #'   Fino1, and Fino2 are supported.
 #' @param tower.obj is a ClimObject holding the data of tower measurements and
 #'   corresponding reanalysis data
-#' @param fname string of the file name of the plot
+#' @param fname is a string holding file name of the pdf plot to be created.
 PlotTowerERAprofileAnnualVar <- function(tower.obj, fname) {
 
   t.obj = tower.obj$climate_data_objects
@@ -1843,7 +1843,7 @@ PlotTowerERAprofileAnnualVar <- function(tower.obj, fname) {
 #'   of Lindenberg, Cabauw, Fino1, and Fino2 are supported.
 #' @param tower.obj is a ClimObject holding the data of tower measurements and
 #'   corresponding reanalysis data
-#' @param fname string of the file name of the plot
+#' @param fname is a string holding file name of the pdf plot to be created.
 PlotTowerERAprofileAnnualCycle <- function(tower.obj, fname) {
 
   t.obj = tower.obj$climate_data_objects
@@ -2365,9 +2365,12 @@ PlotTowerERAprofileAnnualCycle <- function(tower.obj, fname) {
 
 #-----------------------------------------------------------------------------------
 
-#' @title
-#' @description
-#' @param
+#' @title Prepare plotting daily cycle of tower measurements.
+#' @description Preparing to plot the daily cycle of tower measurements by creating
+#'   lists holding the mean and standard deviation of hourly tower data. This is done
+#'   for (a) all data and (b) for selected months only.
+#' @param tower.obj climate data object holding tower and corresponding reanalysis data.
+#' @param fname is a string holding the file name of the plot.
 PreparePlottingTowerDailyCycle <- function(tower.obj, fname) {
 
   # names include all months to be analysed; counts is the month of year
@@ -2520,9 +2523,12 @@ PreparePlottingTowerDailyCycle <- function(tower.obj, fname) {
 
 #-----------------------------------------------------------------------------------
 
-#' @title
-#' @description
-#' @param
+#' @title Prepare plotting daily cycle of HErZ data.
+#' @description Preparing to plot the daily cycle of the HErZ RRA by creating
+#'   lists holding the mean and standard deviation of hourly HErZ data. This is done
+#'   for (a) all data and (b) for selected months only.
+#' @param tower.obj climate data object holding tower and corresponding reanalysis data.
+#' @param fname is a string holding the file name of the plot.
 PreparePlottingHerzDailyCycle <- function(tower.obj, fname) {
 
   # names include all months to be analysed; counts is the month of year
@@ -2619,9 +2625,19 @@ PreparePlottingHerzDailyCycle <- function(tower.obj, fname) {
 
 #-----------------------------------------------------------------------------------
 
-#' @title
-#' @description
-#' @param
+#' @title Plotting the daily cycle of HErZ reanalysis data.
+#' @description This function actually performs the plotting of the daily cycle of
+#'   the hourly HerZ reanalysis data. Two types of plots are created: line plots
+#'   showing the evolution of the daily cycle of the mean; and box plots showing the
+#'   variability at each hourly time step. This is done each for the complete time
+#'   period and for selected months only.
+#' @param Herz10, Herz35, Herz69, Herz116 are lists holding the HErZ reanalysis data
+#'   at diffferent height levels.
+#' @param month.names is a named list holding the names of the month of year and
+#'   their corresponding number within the year (list(names=, count=)).
+#' @param PS is a plotting setting object (list) derived of function
+#'   \code{\link{PlottingSettings}}.
+#' @param fname is a string of the file name of the plot file
 PlotDailyCycleHerz <- function(Herz10, Herz35, Herz69, Herz116, month.names, PS, fname) {
 
   x.lab = "time of day [hours]"
@@ -2782,9 +2798,19 @@ PlotDailyCycleHerz <- function(Herz10, Herz35, Herz69, Herz116, month.names, PS,
 
 #-----------------------------------------------------------------------------------
 
-#' @title
-#' @description
-#' @param
+#' @title Plotting the daily cycle of tower measurements.
+#' @description This function actually performs the plotting of the daily cycle of
+#'   the hourly tower measurements. Two types of plots are created: line plots
+#'   showing the evolution of the daily cycle of the mean; and box plots showing the
+#'   variability at each hourly time step. This is done each for the complete time
+#'   period and for selected months only.
+#' @param tower1,tower2,tower3,tower4,tower5,tower6 are lists holding the tower
+#'   measurement data at diffferent height levels.
+#' @param month.names is a named list holding the names of the month of year and
+#'   their corresponding number within the year (list(names=, count=)).
+#' @param PS is a plotting setting object (list) derived of function
+#'   \code{\link{PlottingSettings}}.
+#' @param fname is a string holding file name of the pdf plot to be created.
 PlotDailyCycleTower <- function(tower1, tower2, tower3, tower4, tower5, tower6,
                                 month.names, PS, fname) {
 
@@ -3006,7 +3032,7 @@ PlotDailyCycleTower <- function(tower1, tower2, tower3, tower4, tower5, tower6,
 #'   This function does not have a return value.
 #' @param tower.obj is a ClimObject holding the data of tower measurements and
 #'   corresponding reanalysis data
-#' @param fname string of the file name of the plot
+#' @param fname is a string holding file name of the pdf plot to be created.
 #' @param threshold numeric sequence of percentiles between 0 and 1
 PlotStationExtremesContr <- function(stat.obj, fname, threshold) {
 
@@ -3065,7 +3091,7 @@ PlotStationExtremesContr <- function(stat.obj, fname, threshold) {
 #'   This function does not have a return value.
 #' @param tower.obj is a ClimObject holding the data of tower measurements and
 #'   corresponding reanalysis data
-#' @param fname string of the file name of the plot
+#' @param fname is a string holding file name of the pdf plot to be created.
 #' @param threshold numeric sequence of percentiles between 0 and 1
 PlotTowerExtremesContr <- function(tower.obj, fname, threshold) {
 
@@ -3366,9 +3392,10 @@ PlotTowerExtremesContr <- function(tower.obj, fname, threshold) {
 
 #-----------------------------------------------------------------------------------
 
-#' @title
-#' @description
-#' @param
+#' @title Control function to prepare plotting random data.
+#' @param random.obj climate data object holding the random data.
+#' @param fname string holding the file name of the plot.
+#' @param threshold numeric sequence of percentiles between 0 and 1
 PlotRandomExtremesContr <- function(random.obj, fname, threshold) {
   r.obj = random.obj$climate_data_objects
   PS = PlottingSettings(r.obj$obs$data)
@@ -3387,9 +3414,19 @@ PlotRandomExtremesContr <- function(random.obj, fname, threshold) {
 
 #-----------------------------------------------------------------------------------
 
-#' @title
-#' @description
-#' @param
+#' @title Plot all skill scores for tower observations.
+#' @description Plot twelve panels of skill scores for the tower measurements.
+#' @param fname is a string holding file name of the pdf plot to be created.
+#' @param scores.df is a data.frame holding the skill score values corresponding to the
+#'   threshold as calculated by function \code{\link{GetScoresDF}}.
+#' @param ylims.df data.frame holding the range values of the skill scores as provided
+#'   by function \code{\link{YLimsScores}}.
+#' @param threshold numeric sequence of percentiles between 0 and 1
+#' @param PS is a plotting setting object (list) derived of function
+#'   \code{\link{PlottingSettings}}.
+#' @param title.name default value is NULL, but a string can be passed for the title.
+#' @param use.ylims is boolean which decides whether to use the ylim settings of
+#'   function \code{\link{YLimsScores}},
 PlotTowerExtremes <- function(fname, scores.df, ylims.df, threshold, PS,
                               title.name=NULL, use.ylims=F) {
 
@@ -3424,9 +3461,18 @@ PlotTowerExtremes <- function(fname, scores.df, ylims.df, threshold, PS,
 
 #-----------------------------------------------------------------------------------
 
-#' @title
-#' @description
-#' @param
+#' @title Plot all skill scores for tower observations at different heitht levels.
+#' @param fname is a string holding file name of the pdf plot to be created.
+#' @param scores is a data.frame holding the skill score values corresponding to the
+#'   threshold as calculated by function \code{\link{GetScoresDF}}.
+#' @param ylims.df data.frame holding the range values of the skill scores as provided
+#'   by function \code{\link{YLimsScores}}.
+#' @param threshold numeric sequence of percentiles between 0 and 1
+#' @param PS is a plotting setting object (list) derived of function
+#'   \code{\link{PlottingSettings}}.
+#' @param title.name default value is NULL, but a string can be passed for the title.
+#' @param use.ylims is boolean which decides whether to use the ylim settings of
+#'   function \code{\link{YLimsScores}},
 PlotTowerExtremesList <- function(fname, scores, ylims.df, threshold, PS,
                                   title.name=NULL, use.ylims=F) {
 
@@ -3507,8 +3553,14 @@ PlotTowerExtremesList <- function(fname, scores, ylims.df, threshold, PS,
 #-----------------------------------------------------------------------------------
 
 #' @title Hit rate and false alarm ratio plotted into the same plot.
-#' @description
-#' @param
+#' @param fname is a string holding file name of the pdf plot to be created.
+#' @param FAR false alarm ratio values corresponding to the threshold derived of
+#'   function \code{\link{GetScoresDF}}.
+#' @param HR as above for hit rate values.
+#' @param threshold numeric sequence of percentiles between 0 and 1
+#' @param PS is a plotting setting object (list) derived of function
+#'   \code{\link{PlottingSettings}}.
+#' @param title.name default value is NULL, but a string can be passed for the title.
 PlotTowerHRvsFAR <- function(fname, FAR, HR, threshold, PS,
                              title.name=NULL) {
 
@@ -3528,9 +3580,15 @@ PlotTowerHRvsFAR <- function(fname, FAR, HR, threshold, PS,
 
 #-----------------------------------------------------------------------------------
 
-#' @title
-#' @description
-#' @param
+#' @title Plot hit rate vs false alarm ratio at different heights.
+#' @description Plot hit rate vs false alarm ratio of tower measurements at different
+#'   height levels or of different RRAs.
+#' @param fname is a string holding file name of the pdf plot to be created.
+#' @param scores is a data.frame holding the skill score values corresponding to the
+#'   threshold as calculated by function \code{\link{GetScoresDF}}.
+#' @param threshold numeric sequence of percentiles between 0 and 1
+#' @param PS is a plotting setting object (list) derived of function
+#' @param title.name a string as title can be passed, otherwise it is NULL by default.
 PlotTowerHRvsFARList <- function(fname, scores, threshold, PS, title.name=NULL) {
 
   score.names = names(scores[[1]])

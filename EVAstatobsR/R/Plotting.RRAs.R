@@ -1,7 +1,16 @@
 #' @title Plot a legend with correlation output.
-#' @description
-#' @param
-#' @return
+#' @description This is a first try to generalize legend plotting. This legend
+#'   prints correlation between observations and reanalysis as well as the confidence
+#'   intervall of that correlation.
+#' @param obs.vals,rra.vals numeric vector of observation and regional reanalysis
+#'   values of the same length of which the correlation is to be determined.
+#' @param conf.lev a numeric providing the confidence interval to be passed to the
+#'   function \code{\link{cor.test}}
+#' @param stat.name,rra.name a string holding the observation regional reanalysis
+#'   name, respectively.
+#' @param leg.pos,leg.cex legend position as string and legend size as numeric.
+#' @param col.rra,col.obs a string holding the color name for printing the
+#'   observation and regional reanalysis correlation.
 LegendWithCorr <- function(obs.vals, rra.vals, conf.lev,
                            stat.name, rra.name, leg.pos,
                            col.rra, col.obs, leg.cex) {
@@ -17,9 +26,6 @@ LegendWithCorr <- function(obs.vals, rra.vals, conf.lev,
 #-----------------------------------------------------------------------------------
 
 #' @title Generate rra and obs xts from climate object.
-#' @description
-#' @param
-#' @return
 GetRRAxts <- function(herz.obj, smhi.obj, mo.obj, mf.obj, ana.time.res,
                       hourly.switch, fname) {
 
@@ -70,9 +76,6 @@ GetRRAxts <- function(herz.obj, smhi.obj, mo.obj, mf.obj, ana.time.res,
 #-----------------------------------------------------------------------------------
 
 #' @title Plot (four/)three RRA time series of monthly, daily, hourly data.
-#' @description
-#' @param
-#' @return
 PlotRRAtimeSeries <- function(herz.obj, smhi.obj, mo.obj, mf.obj, fname,
                               hourly.switch, station.name) {
 
@@ -253,9 +256,6 @@ PlotRRAtimeSeries <- function(herz.obj, smhi.obj, mo.obj, mf.obj, fname,
 #-----------------------------------------------------------------------------------
 
 #' @title Plot (four/)three RRA monthly and hourly scatter plots.
-#' @description
-#' @param
-#' @return
 PlotRRAscatterQQ <- function(herz.obj, smhi.obj, mo.obj, mf.obj, fname,
                              hourly.switch, station.name) {
 
@@ -321,9 +321,6 @@ PlotRRAscatterQQ <- function(herz.obj, smhi.obj, mo.obj, mf.obj, fname,
 #-----------------------------------------------------------------------------------
 
 #' @title Plot (four/)three RRA monthly and hourly scatter plots.
-#' @description
-#' @param
-#' @return
 PlotRRAextremes <- function(rra.obj, fname, threshold) {
 
   PS = PlottingSettings(rra.obj$rra10$data)
@@ -347,9 +344,6 @@ PlotRRAextremes <- function(rra.obj, fname, threshold) {
 #-----------------------------------------------------------------------------------
 
 #' @title Plot (four/)three RRA monthly and hourly scatter plots.
-#' @description
-#' @param
-#' @return
 PlotAllRRAextremes <- function(herz.obj, smhi.obj, mo.obj, fname, threshold) {
 
   # against HErZ at different heights

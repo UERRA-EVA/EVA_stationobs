@@ -3,16 +3,16 @@
 \alias{PlotHistogramsTower}
 \title{Plot histrograms for tower measurements.}
 \usage{
-PlotHistogramsTower(outdir, fname, era.monthly, tower.obj)
+PlotHistogramsTower(outdir, fname, ana.time.res, tower.obj)
 }
 \arguments{
 \item{outdir}{is a string containing the output path of the plot}
 
-\item{fname}{is a string of the file name of the plot file}
+\item{fname}{is a string holding file name of the pdf plot to be created.}
 
-\item{era.monthly}{is an optional boolean which determines whether data passed
-is monthly (T) or daily (F) data. The default value is to use daily data
-(era.monthly=FALSE).}
+\item{ana.time.res}{named list holding parameters monthly="monthly",
+daily="daily", hourly="hourly", and time.res= to determine the time resolution
+of the data to be read.}
 
 \item{tower.obj}{is a ClimObject holding the data of tower measurements and
 corresponding reanalysis data}

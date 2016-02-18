@@ -9,7 +9,7 @@ PlotMultiPanel(outdir, fname, titname, Era20c, EraI, Herz, Stat, length.plot,
 \arguments{
 \item{outdir}{string of the output directory into which the plot is saved}
 
-\item{fname}{string of the file name of the plot}
+\item{fname}{is a string holding file name of the pdf plot to be created.}
 
 \item{titname}{string of the plot title name}
 

@@ -4,7 +4,7 @@
 \title{Produce a scatter plot}
 \usage{
 scatterPlot(X, Y, yliml, ylimh, titname, xlabname, ylabname, text.str = NULL,
-  xaxis = "s", yaxis = "s")
+  xaxis = "s", yaxis = "s", plot.col = "blue")
 }
 \arguments{
 \item{X}{first data sample for the scatter plot of class numeric}

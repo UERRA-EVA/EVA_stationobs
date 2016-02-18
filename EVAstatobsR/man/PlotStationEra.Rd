@@ -3,27 +3,17 @@
 \alias{PlotStationEra}
 \title{Plot station measurements together with ERA20C, ERA-I, and HErZ.}
 \usage{
-PlotStationEra(Era20cXts, EraIXts, HerzXts, StatXts, titname, outdir, fname,
-  monthly = TRUE, anomaly = FALSE)
+PlotStationEra(s.obj, titname, outdir, fname, anomaly = FALSE)
 }
 \arguments{
-\item{Era20cXts}{monthly mean extended time series of the ERA20C pixel
-corresponding to the station location}
-
-\item{EraIXts}{same as above for ERA-Interim}
-
-\item{HerzXts}{same as above for HErZ}
-
-\item{StatXts}{monthly mean extended time series of the station values}
+\item{s.obj}{is a ClimObject which holds the station data and corresponding
+reanalysis data at the location of the station data.}
 
 \item{titname}{string of the plot title name}
 
 \item{outdir}{string of the output directory into which the plot is saved}
 
-\item{fname}{string of the file name of the plot}
-
-\item{monthly}{is an optional parameter which determines to plot the monthly
-values of the above time series}
+\item{fname}{is a string holding file name of the pdf plot to be created.}
 
 \item{anomaly}{is an optional parameter which determines whether to plot anomalies}
 }

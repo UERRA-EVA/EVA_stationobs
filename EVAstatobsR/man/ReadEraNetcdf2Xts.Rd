@@ -4,7 +4,7 @@
 \title{Read monthly or daily ERA20C or ERA-Interim data and convert to xts}
 \usage{
 ReadEraNetcdf2Xts(era.param, era.fname, era.tsstart, era.tsend, lonidx, latidx,
-  era.monthly, era20c = TRUE, verb.dat = FALSE)
+  ana.time.res, era20c = TRUE, verb.dat = FALSE)
 }
 \arguments{
 \item{era.param}{string of length n holding the parameters of the n different
@@ -22,7 +22,9 @@ off the ERA grid.}
 
 \item{latidx}{same as above for latitude.}
 
-\item{era.monthly}{boolean to determine whether to read daily or mothly HErZ data.}
+\item{ana.time.res}{named list holding parameters monthly="monthly",
+daily="daily", hourly="hourly", and time.res= to determine the time resolution
+of the data to be read.}
 
 \item{era20c}{boolean to determine whether the data is ERA20C (T) or
 ERA-Interim (F).}

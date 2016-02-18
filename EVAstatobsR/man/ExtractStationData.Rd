@@ -3,15 +3,15 @@
 \alias{ExtractStationData}
 \title{Extract and align wind station data to reanalysis data.
   \code{ExtractStationData} reads wind speed values and dates from station data
-  and creates a gap filled extended time series. Monthly or daily mean time
-  series are calculated which span the time period of the longest stretching
-  reanalysis data set. The time steps of the monthly time series is given with
-  precision of months, those of daily time series with precision of days.
-  Parts taken from get.timeseries.R of GetPlotsFromFtp and off website
-  http://bocoup.com/weblog/padding-time-series-with-r/}
+  and creates a gap filled (NA), hence continuous, extended time series. Monthly
+  or daily mean time series are calculated which span the time period of the
+  longest stretching reanalysis data set. The time steps of the monthly time
+  series is given with precision of months, those of daily time series with
+  precision of days. Parts taken from get.timeseries.R of GetPlotsFromFtp and off
+  website http://bocoup.com/weblog/padding-time-series-with-r/}
 \usage{
 ExtractStationData(station.data, era20c.tsstart, era20c.tsend, eraI.tsstart,
-  eraI.tsend, herz.tsstart, herz.tsend, era.monthly, daily = FALSE)
+  eraI.tsend, herz.tsstart, herz.tsend, ana.time.res, station.daily)
 }
 \arguments{
 \item{station.data}{is an extended time series holding monthly mean station wind
@@ -30,10 +30,12 @@ of the format c(YYYY,MM)}
 
 \item{herz.tsend}{is the end date of the HErZ data}
 
-\item{era.monthly}{boolean to determine whether to read daily or mothly HErZ data}
+\item{ana.time.res}{named list holding parameters monthly="monthly",
+daily="daily", hourly="hourly", and time.res= to determine the time resolution
+of the data to be read.}
 
-\item{daily}{optional parameter to specify whether station data is aggregated in
-hourly or daily time steps. Default is hourly (daily=FALSE).}
+\item{station.daily}{boolean parameter to specify whether station data is
+aggregated in hourly (F) or daily (T) time steps.}
 }
 \value{
 MM.station[timestr] is the potentially gab filled monthly mean station
@@ -42,11 +44,16 @@ MM.station[timestr] is the potentially gab filled monthly mean station
 \description{
 Extract and align wind station data to reanalysis data.
   \code{ExtractStationData} reads wind speed values and dates from station data
-  and creates a gap filled extended time series. Monthly or daily mean time
-  series are calculated which span the time period of the longest stretching
-  reanalysis data set. The time steps of the monthly time series is given with
-  precision of months, those of daily time series with precision of days.
-  Parts taken from get.timeseries.R of GetPlotsFromFtp and off website
-  http://bocoup.com/weblog/padding-time-series-with-r/
+  and creates a gap filled (NA), hence continuous, extended time series. Monthly
+  or daily mean time series are calculated which span the time period of the
+  longest stretching reanalysis data set. The time steps of the monthly time
+  series is given with precision of months, those of daily time series with
+  precision of days. Parts taken from get.timeseries.R of GetPlotsFromFtp and off
+  website http://bocoup.com/weblog/padding-time-series-with-r/
+}
+\note{
+needs to add functionality to calculate daily or monthly values only if
+  there are enough hourly values available; it needsd to be decided what enough
+  is.
 }
 

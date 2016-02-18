@@ -9,7 +9,7 @@ PlotTowerERAprofileRelDiff(tower.obj, fname)
 \item{tower.obj}{is a ClimObject holding the data of tower measurements and
 corresponding reanalysis data}
 
-\item{fname}{string of the file name of the plot}
+\item{fname}{is a string holding file name of the pdf plot to be created.}
 }
 \description{
 Plot the relative difference between tower measurements at 10m and

@@ -3,30 +3,30 @@
 \alias{ReadHerzNetcdfMonthlyDaily2Xts}
 \title{Read monthly or daily HErZ data and convert to xts}
 \usage{
-ReadHerzNetcdfMonthlyDaily2Xts(herz.param, herz.fname, herz.tsstart, herz.tsend,
-  lonidx, latidx, era.monthly, herz.profile, verb.dat = FALSE)
+ReadHerzNetcdfMonthlyDaily2Xts(rra.para, rra.fname, rra.tsstart, rra.tsend,
+  lonidx, latidx, ana.time.res, herz.profile, only.10m = FALSE,
+  verb.dat = FALSE)
 }
 \arguments{
-\item{herz.param}{string of length n holding the parameters of the n different
+\item{rra.para}{string of length n holding the parameters of the n different
 model levels.}
 
-\item{herz.fname}{string of length n holding the file names of the n different
+\item{rra.fname}{string of length n holding the file names of the n different
 daily or one monthly file(s).}
 
-\item{herz.tsstart}{string of the start date of the HErZ data of the format
+\item{rra.tsstart}{string of the start date of the HErZ data of the format
 c(YYYY,MM).}
 
-\item{herz.tsend}{string of the end date of the HErZ data.}
+\item{rra.tsend}{string of the end date of the HErZ data.}
 
 \item{lonidx}{numeric value of the longitude station location which to extract
 off the HErZ grid.}
 
 \item{latidx}{numeric value of the latitude station location.}
 
-\item{era.monthly}{boolean to determine whether to read daily or mothly HErZ data.}
-
-\item{herz.profile}{boolean to determine whether to read HErZ profile (six model
-levels) or only the two specified levels (10m and 116m).}
+\item{ana.time.res}{named list holding parameters monthly="monthly",
+daily="daily", hourly="hourly", and time.res= to determine the time resolution
+of the data to be read.}
 
 \item{verb.dat}{optional boolean to determine whether to print out what's going
 on (T). The default is to suppress printing (verb.dat = FALSE).}
@@ -41,11 +41,11 @@ A named list holding the extended time series of HErZ data at the
 This function reads HErZ reanalysis data at the point of the station
   location of monthly or daily data and for the complete profile consisting of
   six model levels (which are hard coded into variable names here because they
-  are assumed to stay the way they are) or only the 10m and 116m model level.
-  After reading and temporarily storing into a data frame, the return values of
-  this function are extended time series holding the complete time series (time)
-  at each model level (windspeed). The time steps of the monthly time series is
-  given with precision of months, those of daily time series with precision of
-  days.
+  are assumed to stay the way they are). After reading and temporarily storing
+  into a data frame, the return values of this function are extended time series
+  holding the complete time series (time) at each model level (windspeed). Only
+  here it is decided whether to return the complete profile ore only 10m and 100m
+  data. The time steps of the monthly time series is given with precision of
+  months, those of daily time series with precision of days.
 }
 

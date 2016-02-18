@@ -14,8 +14,8 @@ HErZ profile or only the two levels 10m and 116m.}
 \description{
 HErZ parameter names are checked which is especially important if
   the complete profile is passed. Within the package the names are expected to
-  follow a certain structure: "windspeed_xxxm", whereas xxx equals the height of
-  the model level and is expected to be increasing, i.e., 10m, 35m, 69m, 116m,
-  178m, 258m. This function does not have a return value.
+  follow a certain structure: "windspeed_xxxm", where xxx equals the height of
+  the model level and is expected to be decreasing, i.e., 258m, 178m, 116m, 69m,
+  35m, 10m. This function does not have a return value.
 }
 

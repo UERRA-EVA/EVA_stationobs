@@ -5,7 +5,7 @@
   and HErZ data.}
 \usage{
 PlotStationEraSQ(Era20cXts, EraIXts, HerzXts, StatXts, titname, outdir, fname,
-  era.monthly = FALSE)
+  ana.time.res)
 }
 \arguments{
 \item{Era20cXts}{extended time series of the ERA20C pixel corresponding to the
@@ -21,11 +21,11 @@ station location}
 
 \item{outdir}{string of the output directory into which the plot/s is/are saved}
 
-\item{fname}{string of the output file name}
+\item{fname}{is a string holding file name of the pdf plot to be created.}
 
-\item{era.monthly}{is an optional boolean which determines whether data passed
-is monthly (T) or daily (F) data. The default value is to use daily data
-(era.monthly=FALSE).}
+\item{ana.time.res}{named list holding parameters monthly="monthly",
+daily="daily", hourly="hourly", and time.res= to determine the time resolution
+of the data to be read.}
 }
 \description{
 This function plots station and reanalysis data into scatter plots

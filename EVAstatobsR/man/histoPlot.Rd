@@ -3,8 +3,8 @@
 \alias{histoPlot}
 \title{Produce one or two overlapping histogram plot(s)}
 \usage{
-histoPlot(X, Y, breaks, xlims, titname, xlabname, ylabname, xaxis = "s",
-  yaxis = "s", addPlot = FALSE)
+histoPlot(X, Y, breaks, xlims, titname = "", xlabname = "", ylabname = "",
+  xaxis = "s", yaxis = "s", addPlot = FALSE)
 }
 \arguments{
 \item{X}{first data sample for the histogram}

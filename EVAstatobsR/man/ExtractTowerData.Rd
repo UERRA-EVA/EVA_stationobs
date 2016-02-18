@@ -3,15 +3,16 @@
 \alias{ExtractTowerData}
 \title{Extract tower measurement data.}
 \usage{
-ExtractTowerData(file.name, para.name, era.mon = FALSE)
+ExtractTowerData(file.name, para.name, ana.time.res)
 }
 \arguments{
 \item{file.name}{character string holding the file name of the file to be read}
 
 \item{para.name}{character string holding the parameter name(s) to be read}
 
-\item{era.mon}{optional boolean which decides whether to format the time axis
-as daily or monthly.}
+\item{ana.time.res}{named list holding parameters monthly="monthly",
+daily="daily", hourly="hourly", and time.res= to determine the time resolution
+of the data to be read.}
 }
 \value{
 The return value is a named list with the names of the parameter names

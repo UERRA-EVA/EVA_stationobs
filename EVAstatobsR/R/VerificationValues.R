@@ -257,9 +257,9 @@ ContTableScores <- function(a, b, c, d) {
   HSS = 2*(a*d - b*c)/( (a+c)*(c+d) + (a+b)*(b+d)) # Heidke Skill Score
   PC = (a+d) / n # aka proportion/percent correct or accuracy
   OR = a*d / (b*c) # odds ratio
-  EDI = (log(POFD) - log(POD)) / (log(POFD) + log(POD)) # aka
-  SEDI = (log(POFD) - log(POD) - log(1-POFD) + log(1-POD)) /
-    (log(POFD) + log(POD) + log(1-POFD) + log(1-POD))
+  EDI = (log(POFD) - log(POD)) / (log(POFD) + log(POD)) # aka extremal dependence index
+  SEDI = (log(POFD) - log(POD) - log(1-POFD) + log(1-POD)) / # aka symmetric extremal
+    (log(POFD) + log(POD) + log(1-POFD) + log(1-POD))        #      dependence index
 
   return(list(hit.rate=POD, false.alarm.rate=POFD, false.alarm.ratio=FAR,
               true.skill.stats=HK, threat.score=TS, equi.threat.score=ETS,
@@ -269,10 +269,12 @@ ContTableScores <- function(a, b, c, d) {
 
 #-----------------------------------------------------------------------------------
 
-#' @title
-#' @description
-#' @param
-#' @return
+#' @title Manual settings of the value of the skill score.
+#' @description This function sets fixed values of the range of each skill score.
+#'   The values are two concantenated numbers, i.e., c(x,y).
+#' @return a list holding the range values for hit rate, false alarm rate, false
+#'   alarm ratio, threat score, equitable threat score, bias, Heidke skill score,
+#'   accuracy, odds ratio, (symmetric) dependence index.
 YLimsScores <- function() {
 
   POD.ylim = c(0,1)
@@ -299,10 +301,18 @@ YLimsScores <- function() {
 
 #-----------------------------------------------------------------------------------
 
-#' @title
-#' @description
-#' @param
-#' @return
+#' @title Calculate contigency table based skill scores into a data frame.
+#' @param thresh value as percentile for which the contingency table values shall
+#'   be calculated. This is to be passed to \code{\link{CalcContTable}}.
+#' @param obs a numeric vector holding the observations. This is to be passed to
+#'   \code{\link{CalcContTable}}.
+#' @param frcst a numeric vector holding the forecast (here: reanalysis) values.
+#'   This is to be passed to \code{\link{CalcContTable}}.
+#' @param inverse is a boolean to be passed to function \code{\link{CalcContTable}}
+#'   to decide whether read the thresholds in increasing (F, default) or descreasing
+#'   (T) order.
+#' @return data.frame which holds the skill scores calculated by
+#'   \code{\link{ContTableScores}}.
 GetScoresDF <- function(thresh, obs, frcst, inverse=F) {
 
   Cont.Table.cnt = CalcContTable(obs, frcst, thresh[1], inverse)
@@ -326,9 +336,13 @@ GetScoresDF <- function(thresh, obs, frcst, inverse=F) {
 #-----------------------------------------------------------------------------------
 
 #' @title Prepare two exetended time series with random data.
-#' @description
-#' @param
-#' @return
+#' @description This function prepares random observation and forecast (reanalysis)
+#'   data in order to plot them and test the skill scores.
+#' @param num is an integer number greater than zero amounting to the random number
+#'   generated.
+#' @param use.distr is a string which chosses the distribution for which the random
+#'   data are to be generated; Gaussian and Weibull are supported right now.
+#' @return a list holding the observation and forecast random data.
 PrepareRandomData <- function(num, use.distr) {
   if (use.distr != "Gaussian" & use.distr != "Weibull") {
     CallStop(paste0("I expected either Gaussian or Weibull, but parameter is: ",

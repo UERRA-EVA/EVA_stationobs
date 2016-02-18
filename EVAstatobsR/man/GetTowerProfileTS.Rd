@@ -25,7 +25,7 @@ available height levels of HErZ data as extended time series}
 data of ERA20C as extended time series}
 
 \item{tower.tsstart,tower.tsend,herz.tsend,era20c.tsend}{start and end time in
-the format c(yyyy,mm) of the tower measurements, HErZ and ERA20C reanalyses}
+the format c(yyyy,mm) of the tower measurements, HErZ, and ERA20C reanalyses}
 
 \item{tower.name}{string holding the tower name; if an unexpected name is passed
 the function will terminate execution}

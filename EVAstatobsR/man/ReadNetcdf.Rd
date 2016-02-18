@@ -4,7 +4,7 @@
 \title{Reading netCDF files}
 \usage{
 ReadNetcdf(variable, infile, start = NULL, count = NULL, revert = FALSE,
-  verb.dat = FALSE)
+  conv.time = TRUE, verb.dat = FALSE)
 }
 \arguments{
 \item{variable}{is a string containing the variable name to be read of the nc-file}
@@ -21,10 +21,14 @@ It needs to be of the same size as variable (for further details see the help
 of \code{\link{get.var.ncdf}}). The default is to read the complete variable
 which leaves count unset.}
 
-\item{revert}{in an optional boolean to decided whether to revert the data in
-North-South direction. Default is not to revert the data (FALSE)}
+\item{revert}{is an optional boolean to decided whether to revert the data in
+North-South direction. Default is not to revert the data (revert=FALSE)}
 
-\item{verb.dat}{optional boolean to determine whether to verbosely write out what
+\item{conv.time}{is an optional boolean to decided whether to read time and
+convert it into R POSIX format; the default is to read and convert time
+(conv.time=TRUE)}
+
+\item{verb.dat}{is an optional boolean to determine whether to verbosely write out what
 is happening (T) or not (F); the default is to suppress output (verb.dat=FALSE).}
 }
 \value{

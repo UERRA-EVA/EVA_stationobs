@@ -4,7 +4,7 @@
 \title{Plot the wind speed histograms of station data and reanalyses at different
   heights.}
 \usage{
-PlotHistograms(outdir, fname, station.name, era.monthly, Era20cXts10 = NULL,
+PlotHistograms(outdir, fname, station.name, ana.time.res, Era20cXts10 = NULL,
   Era20cXts100 = NULL, EraIXts = NULL, HerzXts10 = NULL,
   HerzXts35 = NULL, HerzXts69 = NULL, HerzXts116 = NULL,
   HerzXts178 = NULL, HerzXts258 = NULL, StatXts = NULL,
@@ -13,14 +13,14 @@ PlotHistograms(outdir, fname, station.name, era.monthly, Era20cXts10 = NULL,
 \arguments{
 \item{outdir}{is a string containing the output path of the plot}
 
-\item{fname}{is a string of the file name of the plot file}
+\item{fname}{is a string holding file name of the pdf plot to be created.}
 
 \item{station.name}{is a string holding the station name at which location the
 distribution data was extraced}
 
-\item{era.monthly}{is an optional boolean which determines whether data passed
-is monthly (T) or daily (F) data. The default value is to use daily data
-(era.monthly=FALSE).}
+\item{ana.time.res}{named list holding parameters monthly="monthly",
+daily="daily", hourly="hourly", and time.res= to determine the time resolution
+of the data to be read.}
 
 \item{Era20cXts10,Era20cXts100,EraIXts}{extended time series of ERA20C and ERA-I
 10m and 100m height}

@@ -21,7 +21,7 @@ corresponding to the station location}
 
 \item{outdir}{string of the output directory into which the plot is saved}
 
-\item{fname}{string of the output file name}
+\item{fname}{is a string holding file name of the pdf plot to be created.}
 
 \item{anomaly}{is an optional parameter which determines whether to plot anomalies}
 }
