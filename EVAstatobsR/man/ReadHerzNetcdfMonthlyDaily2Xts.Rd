@@ -28,6 +28,13 @@ off the HErZ grid.}
 daily="daily", hourly="hourly", and time.res= to determine the time resolution
 of the data to be read.}
 
+\item{herz.profile}{is a boolean which indicated whether to read the complete
+HErZ profile (T) (six height levels) or only 10m and 116m (F).}
+
+\item{only.10m}{is a boolean which indicates whether to read only 10m wind speed
+data (T) or not (F). This has only an effect if herz.profile=F. Default value
+is only.10m=F.}
+
 \item{verb.dat}{optional boolean to determine whether to print out what's going
 on (T). The default is to suppress printing (verb.dat = FALSE).}
 }

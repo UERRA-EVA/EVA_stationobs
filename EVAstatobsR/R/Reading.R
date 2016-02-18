@@ -124,6 +124,8 @@ readGrib <- function(filename, nlon, nlat, nlev, var='undef', out='Rfile.dat',
 #'   is happening (T) or not (F); the default is to suppress output (verb.dat=FALSE).
 #' @return Return a named list (data=,lon=,lat=,time=) holding the read data,
 #'   longitude, latitude, and time values.
+#' @importFrom ncdf open.ncdf close.ncdf get.var.ncdf
+#' @importFrom ncdf.tools convertDateNcdf2R
 ReadNetcdf <- function(variable, infile, start=NULL, count=NULL,
                        revert=FALSE, conv.time=TRUE, verb.dat=FALSE) {
 
@@ -192,6 +194,7 @@ ReadNetcdf <- function(variable, infile, start=NULL, count=NULL,
 #' @param infile string of the file name to be read
 #' @return Return a named list (lon=,lat=) for the longitude and latitude arrays
 #'   (1D or 2D) read off the netCDF file.
+#' @importFrom ncdf open.ncdf close.ncdf
 ReadNetcdfLonLat <- function(infile) {
   CheckFile(infile)
   nc <- open.ncdf(infile)

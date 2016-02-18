@@ -43,6 +43,7 @@ PDFscore <- function(xts1, xts2) {
 #' @return Return a named list (c.20c.I=,c.20c.H=,c.20c.S=,c.I.H=,c.I.S=,c.H.S=)
 #'   holding all possible perturbations of correlations between the provided four
 #'   extended time series.
+#' @importFrom zoo index
 GetCorrXts <- function(era20c, eraI, herz, stat) {
 
   if (is.null(era20c)) {
@@ -343,6 +344,7 @@ GetScoresDF <- function(thresh, obs, frcst, inverse=F) {
 #' @param use.distr is a string which chosses the distribution for which the random
 #'   data are to be generated; Gaussian and Weibull are supported right now.
 #' @return a list holding the observation and forecast random data.
+#' @importFrom xts xts
 PrepareRandomData <- function(num, use.distr) {
   if (use.distr != "Gaussian" & use.distr != "Weibull") {
     CallStop(paste0("I expected either Gaussian or Weibull, but parameter is: ",

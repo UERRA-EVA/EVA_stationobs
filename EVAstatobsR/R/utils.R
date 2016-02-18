@@ -6,6 +6,7 @@
 #'   the case for station data) or a data frame as the data part of the ClimObject
 #'   which is the new normal and already works for tower data.
 #' @return is a named list holding all the parameters.
+#' @importFrom xts is.xts
 PlottingSettings <- function(data.vals) {
 
   land.a4width = 29.7/2.54
@@ -323,6 +324,8 @@ SetToDate <- function(tsstart, tsend) {
 #'  off the input xts.
 #' @note could be enhanced by manually splitting into meteorol. seasons DJF, MAM,
 #'   JJA, SON instead of using the generic split 'f="quarters"'.
+#' @importFrom xts as.xts split.xts
+#' @importFrom zoo index as.yearmon
 GetSeasonalXts <- function(vals.xts) {
 
   vals.split.xts = split.xts(vals.xts, f="quarters")
@@ -357,6 +360,7 @@ GetSeasonalXts <- function(vals.xts) {
 #'   and high range of the y-axis limits.
 #' @return Return a named list (yll=,ylh=) of the lower and high bound of the y-axis
 #'   limits yliml and ylimh.
+#' @importFrom xts is.xts
 GetYlims <- function(xts1, xts2, xts3, xts4) {
   if (is.xts(xts1) & (is.xts(xts2)) & is.xts(xts3) & (is.xts(xts4))) {
     if (!any(is.finite(xts4))) {

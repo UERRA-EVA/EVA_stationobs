@@ -9,6 +9,8 @@
 #' @param outdir string of the output directory into which the plot is saved
 #' @param fname is a string holding file name of the pdf plot to be created.
 #' @param anomaly is an optional parameter which determines whether to plot anomalies
+#' @importFrom xts xts
+#' @importFrom zoo index
 PlotStationEra <- function(s.obj, titname, outdir, fname, anomaly=FALSE) {
 
   obs.date = as.POSIXlt(s.obj$obs$data$date)
@@ -102,6 +104,8 @@ PlotStationEra <- function(s.obj, titname, outdir, fname, anomaly=FALSE) {
 #'   series. When plotting the difference, only three panels will be plotted. The
 #'   default value is to plot the absolute values of each time series
 #'   (plot.diff=FALSE).
+#' @importFrom xts xts
+#' @importFrom zoo index
 PlotMultiPanel <- function(outdir, fname, titname, Era20c, EraI, Herz, Stat,
                            length.plot, era.months, plot.diff=FALSE) {
 
@@ -308,6 +312,7 @@ PlotStationEraSelSeasons <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 #' @param fname is a string holding file name of the pdf plot to be created.
 #' @param anomaly is an optional parameter which determines whether to plot anomalies
 #' @note need to adopt titname to months; need to plot into four different panals
+#' @importFrom zoo index
 PlotStationEraSelMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
                                     titname, outdir, fname, anomaly=FALSE) {
 
@@ -376,6 +381,8 @@ PlotStationEraSelMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 #' @param ana.time.res named list holding parameters monthly="monthly",
 #'   daily="daily", hourly="hourly", and time.res= to determine the time resolution
 #'   of the data to be read.
+#' @importFrom xts xts
+#' @importFrom zoo index
 PlotStationEraSQ <- function(Era20cXts, EraIXts, HerzXts, StatXts,
                              titname, outdir, fname, ana.time.res) {
 
@@ -506,6 +513,8 @@ PlotStationEraSQ <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 #' @param ana.time.res named list holding parameters monthly="monthly",
 #'   daily="daily", hourly="hourly", and time.res= to determine the time resolution
 #'   of the data to be read.
+#' @importFrom xts xts
+#' @importFrom zoo index
 Plot100mEraHerz <- function(Era20cXts, HerzXts,
                             titname, statname, outdir, fname,
                             ana.time.res) {
@@ -614,6 +623,8 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
 #' @param plot.10m,plot.10m100m,plot.HerzProfile optional parameters setting whether
 #'   to plot only 10m values, 10m and 100m values together, or the herz profile,
 #'   respectively. The default value is FALSE for all three settings.
+#' @importFrom xts xts
+#' @importFrom zoo index
 PlotHistograms <- function(outdir, fname, station.name, ana.time.res,
                            Era20cXts10=NULL, Era20cXts100=NULL, EraIXts=NULL,
                            HerzXts10=NULL, HerzXts35=NULL, HerzXts69=NULL,
@@ -914,6 +925,7 @@ PlotHistograms <- function(outdir, fname, station.name, ana.time.res,
 #'   of the data to be read.
 #' @param tower.obj is a ClimObject holding the data of tower measurements and
 #'   corresponding reanalysis data
+#' @importFrom xts xts
 PlotHistogramsTower <- function(outdir, fname, ana.time.res, tower.obj) {
 
   t.obj = tower.obj$climate_data_objects
@@ -1192,6 +1204,8 @@ PlotHistogramsTower <- function(outdir, fname, ana.time.res, tower.obj) {
 #' @param ana.time.res named list holding parameters monthly="monthly",
 #'   daily="daily", hourly="hourly", and time.res= to determine the time resolution
 #'   of the data to be read.
+#' @import vioplot
+#' @importFrom zoo index
 PlotPDFScore <- function(era.xts, station.xts, outdir, fname, titname,
                          ana.time.res) {
 
@@ -1483,6 +1497,7 @@ PlotTowerERAprofileBP <- function(tower.obj, fname, ana.time.res) {
 #' @param tower.obj is a ClimObject holding the data of tower measurements and
 #'   corresponding reanalysis data
 #' @param fname is a string holding file name of the pdf plot to be created.
+#' @importFrom xts xts
 PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
 
   t.obj = tower.obj$climate_data_objects
@@ -1616,6 +1631,8 @@ PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
 #' @param tower.obj is a ClimObject holding the data of tower measurements and
 #'   corresponding reanalysis data
 #' @param fname is a string holding file name of the pdf plot to be created.
+#' @importFrom xts xts
+#' @importFrom zoo index
 PlotTowerERAprofileAnnualVar <- function(tower.obj, fname) {
 
   t.obj = tower.obj$climate_data_objects
@@ -1844,6 +1861,8 @@ PlotTowerERAprofileAnnualVar <- function(tower.obj, fname) {
 #' @param tower.obj is a ClimObject holding the data of tower measurements and
 #'   corresponding reanalysis data
 #' @param fname is a string holding file name of the pdf plot to be created.
+#' @importFrom xts xts
+#' @importFrom zoo as.yearmon
 PlotTowerERAprofileAnnualCycle <- function(tower.obj, fname) {
 
   t.obj = tower.obj$climate_data_objects
@@ -2369,8 +2388,9 @@ PlotTowerERAprofileAnnualCycle <- function(tower.obj, fname) {
 #' @description Preparing to plot the daily cycle of tower measurements by creating
 #'   lists holding the mean and standard deviation of hourly tower data. This is done
 #'   for (a) all data and (b) for selected months only.
-#' @param tower.obj climate data object holding tower and corresponding reanalysis data.
+#' @param tower.obj ClimObject holding tower and corresponding reanalysis data.
 #' @param fname is a string holding the file name of the plot.
+#' @importFrom xts xts
 PreparePlottingTowerDailyCycle <- function(tower.obj, fname) {
 
   # names include all months to be analysed; counts is the month of year
@@ -2527,8 +2547,9 @@ PreparePlottingTowerDailyCycle <- function(tower.obj, fname) {
 #' @description Preparing to plot the daily cycle of the HErZ RRA by creating
 #'   lists holding the mean and standard deviation of hourly HErZ data. This is done
 #'   for (a) all data and (b) for selected months only.
-#' @param tower.obj climate data object holding tower and corresponding reanalysis data.
+#' @param tower.obj ClimObject holding tower and corresponding reanalysis data.
 #' @param fname is a string holding the file name of the plot.
+#' @importFrom xts xts
 PreparePlottingHerzDailyCycle <- function(tower.obj, fname) {
 
   # names include all months to be analysed; counts is the month of year
@@ -2631,13 +2652,14 @@ PreparePlottingHerzDailyCycle <- function(tower.obj, fname) {
 #'   showing the evolution of the daily cycle of the mean; and box plots showing the
 #'   variability at each hourly time step. This is done each for the complete time
 #'   period and for selected months only.
-#' @param Herz10, Herz35, Herz69, Herz116 are lists holding the HErZ reanalysis data
+#' @param Herz10,Herz35,Herz69,Herz116 are lists holding the HErZ reanalysis data
 #'   at diffferent height levels.
 #' @param month.names is a named list holding the names of the month of year and
 #'   their corresponding number within the year (list(names=, count=)).
 #' @param PS is a plotting setting object (list) derived of function
 #'   \code{\link{PlottingSettings}}.
 #' @param fname is a string of the file name of the plot file
+#' @importFrom zoo coredata
 PlotDailyCycleHerz <- function(Herz10, Herz35, Herz69, Herz116, month.names, PS, fname) {
 
   x.lab = "time of day [hours]"
@@ -2811,6 +2833,7 @@ PlotDailyCycleHerz <- function(Herz10, Herz35, Herz69, Herz116, month.names, PS,
 #' @param PS is a plotting setting object (list) derived of function
 #'   \code{\link{PlottingSettings}}.
 #' @param fname is a string holding file name of the pdf plot to be created.
+#' @importFrom zoo coredata
 PlotDailyCycleTower <- function(tower1, tower2, tower3, tower4, tower5, tower6,
                                 month.names, PS, fname) {
 
@@ -3030,11 +3053,12 @@ PlotDailyCycleTower <- function(tower1, tower2, tower3, tower4, tower5, tower6,
 #'   TODO: the threshold may be a vector holding a sequence of thresholds in order
 #'   to plot the dependence on its value.
 #'   This function does not have a return value.
-#' @param tower.obj is a ClimObject holding the data of tower measurements and
-#'   corresponding reanalysis data
+#' @param stat.obj is a ClimObject holding the data of the station measurements and
+#'   corresponding reanalysis data.
 #' @param fname is a string holding file name of the pdf plot to be created.
 #' @param threshold numeric sequence of percentiles between 0 and 1
-PlotStationExtremesContr <- function(stat.obj, fname, threshold) {
+#' @param ana.time.res is a named list holding time relevant variables.
+PlotStationExtremesContr <- function(stat.obj, fname, threshold, ana.time.res) {
 
   PS = PlottingSettings(stat.obj$herz10$data)
 
@@ -3093,7 +3117,8 @@ PlotStationExtremesContr <- function(stat.obj, fname, threshold) {
 #'   corresponding reanalysis data
 #' @param fname is a string holding file name of the pdf plot to be created.
 #' @param threshold numeric sequence of percentiles between 0 and 1
-PlotTowerExtremesContr <- function(tower.obj, fname, threshold) {
+#' @param ana.time.res is a named list holding time relevant variables.
+PlotTowerExtremesContr <- function(tower.obj, fname, threshold, ana.time.res) {
 
   t.obj = tower.obj$climate_data_objects
   PS = PlottingSettings(t.obj$herz116$data)
@@ -3393,7 +3418,7 @@ PlotTowerExtremesContr <- function(tower.obj, fname, threshold) {
 #-----------------------------------------------------------------------------------
 
 #' @title Control function to prepare plotting random data.
-#' @param random.obj climate data object holding the random data.
+#' @param random.obj ClimObject holding the random data.
 #' @param fname string holding the file name of the plot.
 #' @param threshold numeric sequence of percentiles between 0 and 1
 PlotRandomExtremesContr <- function(random.obj, fname, threshold) {
@@ -3657,6 +3682,8 @@ PlotTowerHRvsFARList <- function(fname, scores, threshold, PS, title.name=NULL) 
 #'   y-axis (xaxis='s', yaxis='s') or omit either one (either set to 'n'). It not
 #'   set the default value will be used which is set to 's' meaning that the axis
 #'   will be plotted.
+#' @param plot.col is a string holding the plotting color which is set by default to
+#'   "blue".
 scatterPlot <- function(X, Y, yliml, ylimh, titname, xlabname, ylabname,
                         text.str=NULL, xaxis='s', yaxis='s', plot.col="blue") {
 
@@ -3780,6 +3807,7 @@ qqPlot <- function(X, Y, yliml, ylimh,
 #'   etc) and weibull parameters which are calculated.
 #' @param xlims the limits of the x-axis in the form c(low,high)
 #' @param vals vector of the plotted values of which the statistics are calculated
+#' @importFrom fitdistrplus fitdist
 plotLegendStats <- function(xlims, vals) {
 
   weibull = TRUE

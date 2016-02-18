@@ -28,6 +28,9 @@ plot with \code{text}.}
 y-axis (xaxis='s', yaxis='s') or omit either one (either set to 'n'). It not
 set the default value will be used which is set to 's' meaning that the axis
 will be plotted.}
+
+\item{plot.col}{is a string holding the plotting color which is set by default to
+"blue".}
 }
 \description{
 Prodcue a scatter plot of two data set samples.

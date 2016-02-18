@@ -21,12 +21,19 @@
 #' @param ana.time.res named list holding parameters monthly="monthly",
 #'   daily="daily", hourly="hourly", and time.res= to determine the time resolution
 #'   of the data to be read.
+#' @param herz.profile is a boolean which indicated whether to read the complete
+#'   HErZ profile (T) (six height levels) or only 10m and 116m (F).
+#' @param only.10m is a boolean which indicates whether to read only 10m wind speed
+#'   data (T) or not (F). This has only an effect if herz.profile=F. Default value
+#'   is only.10m=F.
 #' @param verb.dat optional boolean to determine whether to print out what's going
 #'   on (T). The default is to suppress printing (verb.dat = FALSE).
 #' @return A named list holding the extended time series of HErZ data at the
 #'   different model levels: (herz10=,herz35=,herz69=,herz116=,herz178,herz258). For
 #'   unspecified model levels (e.g., if(!herz.profile), a NULL value will be
 #'   returned.
+#' @importFrom zoo as.yearmon
+#' @importFrom xts xts
 ReadHerzNetcdfMonthlyDaily2Xts <- function(rra.para, rra.fname,
                                            rra.tsstart, rra.tsend,
                                            lonidx, latidx,
@@ -162,6 +169,7 @@ ReadHerzNetcdfMonthlyDaily2Xts <- function(rra.para, rra.fname,
 #'   is only.10m=F.
 #' @return a list holding the wind speed values in extended time series for each
 #'   height level. If no data had been read, NULL is returned.
+#' @importFrom xts xts
 ReadHerzNetcdfHourly2Xts <- function(rra.para, rra.fname,
                                      rra.tsstart, rra.tsend,
                                      herz.profile, only.10m=FALSE) {
@@ -246,6 +254,8 @@ ReadHerzNetcdfHourly2Xts <- function(rra.para, rra.fname,
 #' @return A named list holding the extended time series of the ERA data at 10m
 #'   height for ERA-Interim and 10m and 100m for ERA20C.: (era10=,era20c100=). If
 #'   ERA-Interim data is read, a NULL value will be returned for era20c100.
+#' @importFrom zoo as.yearmon
+#' @importFrom xts xts
 ReadEraNetcdf2Xts <- function(era.param, era.fname,
                               era.tsstart, era.tsend,
                               lonidx, latidx, ana.time.res,
@@ -309,6 +319,7 @@ ReadEraNetcdf2Xts <- function(era.param, era.fname,
 #' @return The return value is a data frame which holds the available data of the
 #'   wind speed profile at different height levels which are named columns of
 #'   tower measurements and reanalysis data
+#' @importFrom zoo index coredata
 GetTowerProfileTS <- function(tower.xts, tower2.xts=NULL, tower3.xts=NULL,
                               tower4.xts=NULL, tower5.xts=NULL, tower6.xts=NULL,
                               herz10.xts, herz35.xts, herz69.xts, herz116.xts,
@@ -386,10 +397,11 @@ GetTowerProfileTS <- function(tower.xts, tower2.xts=NULL, tower3.xts=NULL,
 #'   levels. Optionally, it is possible to pass ERA20C at 10m and 100m and
 #'   ERA-Interim at 10m. All this data is eventually copied into one climate data
 #'   object with additional information like lat, lon, etc.
-#' @param obs.xts extended time series of observation data (obs.xts to obs6.xts if
-#'   available)
-#' @param herz10.xts extended time series of HErZ data at different height levels
-#'   (10, 35, 69, 116, 178, 258 [m]) if available.
+#' @param obs.xts,obs2.xts,obs3.xts,obs4.xts,obs5.xts,obs6.xts extended time series
+#'   of observation data as availabel; if not available it is set to NULL.
+#' @param herz10.xts,herz35.xts,herz69.xts,herz116.xts,herz178.xts,herz258.xts
+#'   extended time series of HErZ data at different height levels if available; if
+#'   not available it is set to NULL.
 #' @param eraI10.xts extended time series of ERA-Interim data at 10m.
 #' @param era20c10.xts extended time series of ERA20C data at 10m.
 #' @param era20c100.xts extended time series of ERA20C data at 100m.
@@ -407,6 +419,7 @@ GetTowerProfileTS <- function(tower.xts, tower2.xts=NULL, tower3.xts=NULL,
 #'   data (T) or not (F). This has only an effect if herz.profile=F. Default value
 #'   is only.10m=F.
 #' @return a list which holds the climate data object.
+#' @importFrom zoo index coredata
 GetObsObject <- function(obs.xts, obs2.xts=NULL, obs3.xts=NULL,
                          obs4.xts=NULL, obs5.xts=NULL, obs6.xts=NULL,
                          herz10.xts, herz35.xts=NULL, herz69.xts=NULL, herz116.xts,
@@ -611,7 +624,23 @@ GetObsObject <- function(obs.xts, obs2.xts=NULL, obs3.xts=NULL,
 
 #' @title Create climate objects of passed 10m wind speed data.
 #' @description Same as function \code{\link{GetObsObject}} but for 10m RRA data only.
+#' @param obs.xts extended time series of observation data.
+#' @param rra10.xts,rra10.hourly.xts,stats.atrra10.xts extended time series of
+#'   regional reanalysis at 10m, the same for hourly data, and observation data at
+#'   10m but only at time steps of the RRA, respectively.
+#' @param eraI10.xts extended time series of ERA-Interim data at 10m.
+#' @param obs.tsstart start time in the format c(yyyy,mm) of the observation data
+#' @param obs.tsend,rra.tsend,eraI.tsend end time in the format
+#'   c(yyyy,mm) of the observations, regional reanalysis, and ERA_Interim reanalyses,
+#'   resectively.
+#' @param rra.name,eraI.name,obs.name are strings holding the names of the regional
+#'   reanalysis, ERA-Interim, and the observation source, respectively.
+#' @param obs.lon,obs.lat numeric values holding the longitude and latitude values of
+#'   observation location, respectively.
+#' @param obs.param,eraI.param are strings holding the parameter names of the
+#'   observations and ERA-Interim, respectively.
 #' @return a list which holds the climate data object.
+#' @importFrom zoo index coredata
 Get10mRRAObsObject <- function(obs.xts, rra10.xts, rra10.hourly.xts=NULL,
                                stats.atrra10.xts=NULL, eraI10.xts=NULL,
                                obs.tsstart, obs.tsend,
@@ -664,7 +693,7 @@ Get10mRRAObsObject <- function(obs.xts, rra10.xts, rra10.hourly.xts=NULL,
   }
 
   if (!is.null(eraI10.xts)) {
-    eraI.df = data.frame(date=index(eraI10.xts),
+    eraI10.df = data.frame(date=index(eraI10.xts),
                          ReanaName=eraI.name, StationName=obs.name,
                          latitude=obs.lat, longitude=obs.lon,
                          wind_speed=coredata(eraI10.xts),
@@ -702,8 +731,9 @@ Get10mRRAObsObject <- function(obs.xts, rra10.xts, rra10.hourly.xts=NULL,
 #-----------------------------------------------------------------------------------
 
 #' @title Create a climate data object for random data.
-#' @param obs.xts, forec.xts observation and forecast data holding random data.
+#' @param obs.xts,forec.xts observation and forecast data holding random data.
 #' @return a list which holds the climate data object.
+#' @importFrom zoo index coredata
 GetRandomClimObject <- function(obs.xts, forec.xts) {
 
   obs.df = data.frame(date=index(obs.xts),
@@ -726,6 +756,7 @@ GetRandomClimObject <- function(obs.xts, forec.xts) {
 #' @param stat.xts extended time series of station data.
 #' @param rra.xts extended time series of RRA data.
 #' @return an extended time series holding the aligned RRA data.
+#' @importFrom xts merge.xts
 AligneRRA2Obsxts <- function(stat.xts, rra.xts) {
 
   merged.xts = merge.xts(rra.xts, stat.xts)
@@ -742,6 +773,8 @@ AligneRRA2Obsxts <- function(stat.xts, rra.xts) {
 #' @param stat.xts extended time series of station data.
 #' @param rra.xts extended time series of RRA data.
 #' @return an extended time series holding the newly aligned station values.
+#' @importFrom xts xts
+#' @importFrom zoo index
 AligneObs2RRAxts <- function(stat.xts, rra.xts) {
 
   new.vector = vector(mode="numeric", length=length(rra.xts))*NA

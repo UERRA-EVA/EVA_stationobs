@@ -61,6 +61,8 @@ getNearest <- function(b1,b2,l1,l2){
 #'   aggregated in hourly (F) or daily (T) time steps.
 #' @return MM.station[timestr] is the potentially gab filled monthly mean station
 #'   data spanning the time period of the longest ranging reanalysis time series.
+#' @importFrom xts xts as.xts period.apply endpoints
+#' @importFrom zoo index
 ExtractStationData <- function(station.data, era20c.tsstart, era20c.tsend,
                                eraI.tsstart, eraI.tsend, herz.tsstart, herz.tsend,
                                ana.time.res, station.daily) {
@@ -148,6 +150,8 @@ ExtractStationData <- function(station.data, era20c.tsstart, era20c.tsend,
 #' @param stat.lat station latitude
 #' @return era.xts is the time series extracted off the data set at the
 #'   pixel corresponding to the provided station location.
+#' @importFrom zoo as.yearmon
+#' @importFrom xts xts
 ExtractERAxts <- function(data, time.vals,
                           lon, lat, tsstart, tsend, stat.lon, stat.lat) {
 
@@ -190,6 +194,8 @@ ExtractERAxts <- function(data, time.vals,
 #'   the pixel corresponding to the provided station location
 #'   Extract nearest HErZ pixel corresponding to station lon, lat calling Uni Bonn
 #'   function getNearest.
+#' @importFrom zoo as.yearmon
+#' @importFrom xts xts
 ExtractHErZxts <- function(herz.data, time.vals, herz.lon, herz.lat,
                            tsstart, tsend, stat.lon, stat.lat) {
 
@@ -224,6 +230,8 @@ ExtractHErZxts <- function(herz.data, time.vals, herz.lon, herz.lat,
 #'   of the data to be read.
 #' @return The return value is a named list with the names of the parameter names
 #'   holding extended time series of that parameter.
+#' @importFrom zoo as.yearmon
+#' @importFrom xts xts
 ExtractTowerData <- function(file.name, para.name, ana.time.res) {
   CheckFile(file.name)
   data.lst = list()

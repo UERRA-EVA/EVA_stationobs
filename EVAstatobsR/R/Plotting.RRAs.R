@@ -26,8 +26,9 @@ LegendWithCorr <- function(obs.vals, rra.vals, conf.lev,
 #-----------------------------------------------------------------------------------
 
 #' @title Generate rra and obs xts from climate object.
+#' @importFrom xts xts
 GetRRAxts <- function(herz.obj, smhi.obj, mo.obj, mf.obj, ana.time.res,
-                      hourly.switch, fname) {
+                      hourly.switch, fname, station.name) {
 
   if (ana.time.res$time.res == ana.time.res$monthly |
       ana.time.res$time.res == ana.time.res$daily) {
@@ -76,8 +77,9 @@ GetRRAxts <- function(herz.obj, smhi.obj, mo.obj, mf.obj, ana.time.res,
 #-----------------------------------------------------------------------------------
 
 #' @title Plot (four/)three RRA time series of monthly, daily, hourly data.
+#' @importFrom zoo index
 PlotRRAtimeSeries <- function(herz.obj, smhi.obj, mo.obj, mf.obj, fname,
-                              hourly.switch, station.name) {
+                              hourly.switch, station.name, ana.time.res) {
 
   obs.date <- as.POSIXlt(herz.obj$obs$data$date)
 
@@ -90,7 +92,7 @@ PlotRRAtimeSeries <- function(herz.obj, smhi.obj, mo.obj, mf.obj, fname,
 
   #-- extract data and get xts objects
   rra.xts = GetRRAxts(herz.obj, smhi.obj, mo.obj, mf.obj, ana.time.res,
-                      hourly.switch, fname)
+                      hourly.switch, fname, station.name)
   herz.rra.xts = rra.xts$HE.rra.xts
   herz.obs.xts = rra.xts$HE.obs.xts
   smhi.rra.xts = rra.xts$SM.rra.xts
@@ -256,8 +258,10 @@ PlotRRAtimeSeries <- function(herz.obj, smhi.obj, mo.obj, mf.obj, fname,
 #-----------------------------------------------------------------------------------
 
 #' @title Plot (four/)three RRA monthly and hourly scatter plots.
+#' @importFrom xts xts
+#' @importFrom zoo coredata
 PlotRRAscatterQQ <- function(herz.obj, smhi.obj, mo.obj, mf.obj, fname,
-                             hourly.switch, station.name) {
+                             hourly.switch, station.name, ana.time.res) {
 
   obs.date <- as.POSIXlt(herz.obj$obs$data$date)
 
@@ -269,7 +273,7 @@ PlotRRAscatterQQ <- function(herz.obj, smhi.obj, mo.obj, mf.obj, fname,
   ylimh = Ylims$ylh
 
   rra.xts = GetRRAxts(herz.obj, smhi.obj, mo.obj, mf.obj, ana.time.res,
-                      hourly.switch, fname)
+                      hourly.switch, fname, station.name)
   herz.rra.xts = rra.xts$HE.rra.xts
   herz.obs.xts = rra.xts$HE.obs.xts
   smhi.rra.xts = rra.xts$SM.rra.xts

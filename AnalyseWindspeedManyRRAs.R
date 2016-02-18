@@ -257,7 +257,7 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
                    "_", time.ext, "_", res.switch, "_calmPeriod.pdf")
     PlotRRAtimeSeries(StatHerz.climobj, StatSMHI.climobj,
                       StatMO.climobj, StatMF.climobj, fname,
-                      hourly.switch, station.name)
+                      hourly.switch, station.name, ana.time.res)
   }
 
   if (plot.scatter) {
@@ -265,7 +265,7 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
                    "_", time.ext, "_", res.switch, ".pdf")
     PlotRRAscatterQQ(StatHerz.climobj, StatSMHI.climobj,
                      StatMO.climobj, StatMF.climobj, fname,
-                     hourly.switch, station.name)
+                     hourly.switch, station.name, ana.time.res)
   }
 
   if (plot.Extremes) {
