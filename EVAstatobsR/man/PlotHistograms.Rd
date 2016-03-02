@@ -8,7 +8,7 @@ PlotHistograms(outdir, fname, station.name, ana.time.res, Era20cXts10 = NULL,
   Era20cXts100 = NULL, EraIXts = NULL, HerzXts10 = NULL,
   HerzXts35 = NULL, HerzXts69 = NULL, HerzXts116 = NULL,
   HerzXts178 = NULL, HerzXts258 = NULL, StatXts = NULL,
-  plot.10m = FALSE, plot.10m100m = FALSE, plot.HerzProfile = FALSE)
+  plot.10m = FALSE, plot.100m = FALSE, plot.HerzProfile = FALSE)
 }
 \arguments{
 \item{outdir}{is a string containing the output path of the plot}
@@ -30,9 +30,9 @@ time series of available HErZ data at different heights}
 
 \item{StatXts}{extended time series of station data}
 
-\item{plot.10m,plot.10m100m,plot.HerzProfile}{optional parameters setting whether
-to plot only 10m values, 10m and 100m values together, or the herz profile,
-respectively. The default value is FALSE for all three settings.}
+\item{plot.10m,plot.100m,plot.HerzProfile}{optional parameters setting whether
+to plot only 10m values, only 100m values, or the herz profile, respectively.
+The default value is FALSE for all three settings.}
 }
 \description{
 The distributions of monthly and daily wind speed station data and

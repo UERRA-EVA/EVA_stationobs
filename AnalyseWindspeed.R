@@ -375,7 +375,7 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
                      herz10.data.xts, herz35.data.xts, herz69.data.xts,
                      herz116.data.xts, herz178.data.xts, herz258.data.xts,
                      MM.station,
-                     plot.10m=TRUE, plot.10m100m=TRUE, plot.HerzProfile=TRUE)
+                     plot.10m=TRUE, plot.100m=TRUE, plot.HerzProfile=TRUE)
 
     } else {
       PlotHistograms(outdir, fname, statname, ana.time.res,
@@ -383,7 +383,7 @@ for (steps in seq(from=1, to=dim(station.info)[1], by=1)) {
                      herz10.data.xts, HerzXts35=NULL, HerzXts69=NULL,
                      herz116.data.xts, HerzXts178=NULL, HerzXts258=NULL,
                      MM.station,
-                     plot.10m=TRUE, plot.10m100m=TRUE, plot.HerzProfile=FALSE)
+                     plot.10m=TRUE, plot.100m=TRUE, plot.HerzProfile=FALSE)
     }
   }
 

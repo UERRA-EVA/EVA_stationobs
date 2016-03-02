@@ -413,8 +413,6 @@ PlotStationEraSQ <- function(Era20cXts, EraIXts, HerzXts, StatXts,
   yliml = Ylims$yll
   ylimh = Ylims$ylh
 
-  axis.n = 'n'
-  axis.y = 's'
   if (ana.time.res$time.res == ana.time.res$monthly) {
     mtext.titname = "Monthly wind speed at 10m height"
     titname.scatter = gsub("wind speed", "Scatter and QQ-plot of monthly wind speed",
@@ -446,21 +444,21 @@ PlotStationEraSQ <- function(Era20cXts, EraIXts, HerzXts, StatXts,
   if (!is.null(Era20)) {
     text.str = "Era20c vs ERA-Interim"
     scatterPlot(Era20, EraI, yliml, ylimh, titname,
-                xlabname, ylabname, text.str=text.str, xaxis=axis.n, yaxis=axis.y)
+                xlabname, ylabname, text.str=text.str, xaxis=PS$axis.n, yaxis=PS$axis.y)
     qqPlot(Era20, EraI, yliml, ylimh, "",
-           xlabname, ylabname, text.str=text.str, xaxis=axis.n, yaxis=axis.n)
+           xlabname, ylabname, text.str=text.str, xaxis=PS$axis.n, yaxis=PS$axis.n)
 
     text.str = "Era20c vs HErZ"
     scatterPlot(Era20, Herz, yliml, ylimh, titname,
-                xlabname, ylabname, text.str=text.str, xaxis=axis.n, yaxis=axis.y)
+                xlabname, ylabname, text.str=text.str, xaxis=PS$axis.n, yaxis=PS$axis.y)
     qqPlot(Era20, Herz, yliml, ylimh, "",
-           xlabname, ylabname, text.str=text.str, xaxis=axis.n, yaxis=axis.n)
+           xlabname, ylabname, text.str=text.str, xaxis=PS$axis.n, yaxis=PS$axis.n)
 
     text.str = "ERA20C vs station data"
     scatterPlot(Era20, Stat, yliml, ylimh, titname,
-                xlabname, ylabname, text.str=text.str, xaxis=axis.y, yaxis=axis.y)
+                xlabname, ylabname, text.str=text.str, xaxis=PS$axis.y, yaxis=PS$axis.y)
     qqPlot(Era20, Stat, yliml, ylimh, "",
-           xlabname, ylabname, text.str=text.str, xaxis=axis.y, yaxis=axis.n)
+           xlabname, ylabname, text.str=text.str, xaxis=PS$axis.y, yaxis=PS$axis.n)
 
     mtext(titname.scatter, line=1, outer=TRUE)
     mtext("wind speed [m/s]", side=2, line=3, outer=TRUE)
@@ -471,26 +469,26 @@ PlotStationEraSQ <- function(Era20cXts, EraIXts, HerzXts, StatXts,
   if (!is.null(EraI)) {
     text.str = "ERA-Interim vs HErZ"
     scatterPlot(EraI, Herz, yliml, ylimh, titname,
-                xlabname, ylabname, text.str=text.str, xaxis=axis.n, yaxis=axis.y)
+                xlabname, ylabname, text.str=text.str, xaxis=PS$axis.n, yaxis=PS$axis.y)
     qqPlot(EraI, Herz, yliml, ylimh, titname,
-           xlabname, ylabname, text.str=text.str, xaxis=axis.n, yaxis=axis.n)
+           xlabname, ylabname, text.str=text.str, xaxis=PS$axis.n, yaxis=PS$axis.n)
 
     text.str = "ERA-Interim vs station data"
     scatterPlot(EraI, Stat, yliml, ylimh, titname,
-                xlabname, ylabname, text.str=text.str, xaxis=axis.n, yaxis=axis.y)
+                xlabname, ylabname, text.str=text.str, xaxis=PS$axis.n, yaxis=PS$axis.y)
     qqPlot(EraI, Stat, yliml, ylimh, titname,
-           xlabname, ylabname, text.str=text.str, xaxis=axis.n, yaxis=axis.n)
+           xlabname, ylabname, text.str=text.str, xaxis=PS$axis.n, yaxis=PS$axis.n)
   }
 
   text.str = "HErZ vs station data"
   scatterPlot(Herz, Stat, yliml, ylimh, titname,
-              xlabname, ylabname, text.str=text.str, xaxis=axis.y, yaxis=axis.n)
+              xlabname, ylabname, text.str=text.str, xaxis=PS$axis.y, yaxis=PS$axis.n)
   if (is.null(Era20) & is.null(EraI)) {
     qqPlot(Herz, Stat, yliml, ylimh, titname,
-           xlabname, ylabname, text.str=text.str, xaxis=axis.y, yaxis=axis.y)
+           xlabname, ylabname, text.str=text.str, xaxis=PS$axis.y, yaxis=PS$axis.y)
   } else {
     qqPlot(Herz, Stat, yliml, ylimh, titname,
-           xlabname, ylabname, text.str=text.str, xaxis=axis.y, yaxis=axis.y)
+           xlabname, ylabname, text.str=text.str, xaxis=PS$axis.y, yaxis=PS$axis.y)
   }
 
   mtext(titname.scatter, line=1, outer=TRUE)
@@ -529,8 +527,6 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
   same.length = F
   if (length(Era20cXts) == length(HerzXts)) {same.length = T}
 
-  axis.n = 'n'
-  axis.y = 's'
   if (ana.time.res$time.res == ana.time.res$monthly) {
     titname = paste0("Monthly ", titname)
     titname.ext = "monthly"
@@ -625,9 +621,9 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
 #' @param HerzXts10,HerzXts35,HerzXts69,HerzXts116,HerzXts178,HerzXts258 extended
 #'   time series of available HErZ data at different heights
 #' @param StatXts extended time series of station data
-#' @param plot.10m,plot.10m100m,plot.HerzProfile optional parameters setting whether
-#'   to plot only 10m values, 10m and 100m values together, or the herz profile,
-#'   respectively. The default value is FALSE for all three settings.
+#' @param plot.10m,plot.100m,plot.HerzProfile optional parameters setting whether
+#'   to plot only 10m values, only 100m values, or the herz profile, respectively.
+#'   The default value is FALSE for all three settings.
 #' @importFrom xts xts
 #' @importFrom zoo index
 #' @export
@@ -635,7 +631,7 @@ PlotHistograms <- function(outdir, fname, station.name, ana.time.res,
                            Era20cXts10=NULL, Era20cXts100=NULL, EraIXts=NULL,
                            HerzXts10=NULL, HerzXts35=NULL, HerzXts69=NULL,
                            HerzXts116=NULL, HerzXts178=NULL, HerzXts258=NULL,
-                           StatXts=NULL, plot.10m=FALSE, plot.10m100m=FALSE,
+                           StatXts=NULL, plot.10m=FALSE, plot.100m=FALSE,
                            plot.HerzProfile=FALSE) {
 
   if (is.null(Era20cXts10) & is.null(Era20cXts100)
@@ -645,18 +641,6 @@ PlotHistograms <- function(outdir, fname, station.name, ana.time.res,
       & is.null(HerzXts258) & is.null(StatXts)) {
     CallStop("All passed data are NULL!")
   }
-
-  #   plot.cnt = 0
-  #   if (!is.null(Era20cXts10)) plot.cnt = plot.cnt + 1
-  #   if (!is.null(Era20cXts100)) plot.cnt = plot.cnt + 1
-  #   if (!is.null(EraIXts)) plot.cnt = plot.cnt + 1
-  #   if (!is.null(HerzXts10)) plot.cnt = plot.cnt + 1
-  #   if (!is.null(HerzXts35)) plot.cnt = plot.cnt + 1
-  #   if (!is.null(HerzXts69)) plot.cnt = plot.cnt + 1
-  #   if (!is.null(HerzXts116)) plot.cnt = plot.cnt + 1
-  #   if (!is.null(HerzXts178)) plot.cnt = plot.cnt + 1
-  #   if (!is.null(HerzXts258)) plot.cnt = plot.cnt + 1
-  #   if (!is.null(StatXts)) plot.cnt = plot.cnt + 1
 
   dummy = numeric(length=length(StatXts)) * NA
   dummy = xts(dummy, order.by = index(StatXts))
@@ -687,33 +671,15 @@ PlotHistograms <- function(outdir, fname, station.name, ana.time.res,
   herz258 = as.numeric(HerzXts258)
   stat = as.numeric(StatXts)
 
-  axis.n = 'n'
-  axis.y = 's'
-  if (ana.time.res$time.res == ana.time.res$monthly) {
-    monthly.ext = 'monthly'
-    mtext.titname = paste0("Monthly wind speed at 10m height at ", station.name)
-  }
-  if (ana.time.res$time.res == ana.time.res$daily) {
-    monthly.ext = 'daily'
-    mtext.titname = paste0("Daily wind speed at 10m height at ", station.name)
-  }
-  if (ana.time.res$time.res == ana.time.res$hourly) {
-    monthly.ext = 'hourly'
-    mtext.titname = paste0("Hourly wind speed at 10m height at ", station.name)
-  }
-
   xlabname.empty = ""
   xlabname.full = "wind speed [m/s]"
   ylabname = "Density"
 
   PS = PlottingSettings(StatXts)
   if (plot.10m) {
-    #     if (plot.cnt != 4 & plot.cnt != 6 & plot.cnt != 10) {
-    #       CallStop(paste0("Depending on data to plot I expect 4, 6, or 10 plots to be ",
-    #                       "plotted;\n", "   plot.cnt = ", plot.cnt, " for plot.10m: ",
-    #                       plot.10m, ", plot.10m100m: ", plot.10m100m,
-    #                       ", and plot.HerzProfile: ", plot.HerzProfile))
-    #     }
+
+    tit.height = "10m"
+    mtext.titname = HistMultiPanelTitstr(tit.height, station.name, ana.time.res)
 
     fname = gsub('Histogram', 'Histogram_ERA-Station-10m', fname)
     pdf(paste0(outdir, fname), width=PS$land.a4width, height=PS$land.a4height,
@@ -734,22 +700,22 @@ PlotHistograms <- function(outdir, fname, station.name, ana.time.res,
     dummy = numeric(length=length(herz10)) * NA
 
     if (!is.null(Era20cXts10)) {
-      titname = paste0("Frequency distribution of ", monthly.ext, " ERA20C")
+      titname = paste0("Frequency distribution of ", ana.time.res$time.res, " ERA20C")
       histoPlot(era20c10, dummy, breaks, xlims=c(min.val, max.val),
-                titname, xlabname.empty, ylabname="", xaxis=axis.n)
+                titname, xlabname.empty, ylabname="", xaxis=PS$axis.n)
       plotLegendStats(xlims=c(min.val, max.val), era20c10)
 
-      titname = paste0("Frequency distribution of ", monthly.ext, " ERA20C\n",
+      titname = paste0("Frequency distribution of ", ana.time.res$time.res, " ERA20C\n",
                        "in green and ERA-Interim shaded")
       histoPlot(era20c10, eraI, breaks, xlims=c(min.val, max.val), titname,
-                xlabname.empty, ylabname="", xaxis=axis.n, addPlot=TRUE)
+                xlabname.empty, ylabname="", xaxis=PS$axis.n, addPlot=TRUE)
 
-      titname = paste0("Frequency distribution of ", monthly.ext, " ERA20C\n",
+      titname = paste0("Frequency distribution of ", ana.time.res$time.res, " ERA20C\n",
                        "in green and COSMO HErZ shaded")
       histoPlot(era20c10, herz10, breaks, xlims=c(min.val, max.val), titname,
                 xlabname.full, ylabname, addPlot=TRUE)
 
-      titname = paste0("Frequency distribution of ", monthly.ext, " ERA20C\n",
+      titname = paste0("Frequency distribution of ", ana.time.res$time.res, " ERA20C\n",
                        "in green and station data shaded")
       xlabname = "10m station wind speed [m/s]"
       histoPlot(era20c10, stat, breaks, xlims=c(min.val, max.val), titname,
@@ -758,17 +724,17 @@ PlotHistograms <- function(outdir, fname, station.name, ana.time.res,
     }
 
     if (!is.null(EraIXts)) {
-      titname = paste0("Frequency distribution of ", monthly.ext, " ERA-I")
+      titname = paste0("Frequency distribution of ", ana.time.res$time.res, " ERA-I")
       histoPlot(eraI, dummy, breaks, xlims=c(min.val, max.val),
-                titname, xlabname.empty, ylabname, xaxis=axis.n)
+                titname, xlabname.empty, ylabname, xaxis=PS$axis.n)
       plotLegendStats(xlims=c(min.val, max.val), eraI)
 
-      titname = paste0("Frequency distribution of ", monthly.ext, " ERA-Interim\n",
+      titname = paste0("Frequency distribution of ", ana.time.res$time.res, " ERA-Interim\n",
                        "in green and COSMO HErZ shaded")
       histoPlot(eraI, herz10, breaks, xlims=c(min.val, max.val), titname,
-                xlabname.empty, ylabname="", xaxis=axis.n, addPlot=TRUE)
+                xlabname.empty, ylabname="", xaxis=PS$axis.n, addPlot=TRUE)
 
-      titname = paste0("Frequency distribution of ", monthly.ext, " ERA-Interim\n",
+      titname = paste0("Frequency distribution of ", ana.time.res$time.res, " ERA-Interim\n",
                        "in green and station data shaded")
       histoPlot(eraI, stat, breaks, xlims=c(min.val, max.val), titname,
                 xlabname.full, ylabname, addPlot=TRUE)
@@ -776,18 +742,18 @@ PlotHistograms <- function(outdir, fname, station.name, ana.time.res,
       mtext(mtext.titname, font=2, cex=1.2, line=1, outer=TRUE)
     }
 
-    titname = paste0("Frequency distribution of ", monthly.ext, " HErZ")
+    titname = paste0("Frequency distribution of ", ana.time.res$time.res, " COSMO-REA6")
     histoPlot(herz10, dummy, breaks, xlims=c(min.val, max.val),
               titname, xlabname.full, ylabname="")
     plotLegendStats(xlims=c(min.val, max.val), herz10)
 
-    titname = paste0("Frequency distribution of ", monthly.ext, " station data")
+    titname = paste0("Frequency distribution of ", ana.time.res$time.res, " station data")
     histoPlot(stat, dummy, breaks, xlims=c(min.val, max.val),
               titname, xlabname.full, ylabname)
     mtext(mtext.titname, font=2, cex=1.2, line=1, outer=TRUE)
     plotLegendStats(xlims=c(min.val, max.val), stat)
 
-    titname = paste0("Frequency distribution of ", monthly.ext, " COSMO HErZ\n",
+    titname = paste0("Frequency distribution of ", ana.time.res$time.res, " COSMO-REA6\n",
                      "in green and station data shaded")
     histoPlot(herz10, stat, breaks, xlims=c(min.val, max.val), titname,
               xlabname.full, ylabname="", addPlot=TRUE)
@@ -797,14 +763,10 @@ PlotHistograms <- function(outdir, fname, station.name, ana.time.res,
 
   }
 
-  if (plot.10m100m) {
+  if (plot.100m) {
 
-    #     if (plot.cnt != 4 & plot.cnt != 6 & plot.cnt != 10) {
-    #       CallStop(paste0("Depending on data to plot I expect 4, 6, or 10 plots to be ",
-    #                       "plotted;\n", "   plot.cnt = ", plot.cnt, " for plot.10m: ",
-    #                       plot.10m, ", plot.10m100m: ", plot.10m100m,
-    #                       ", and plot.HerzProfile: ", plot.HerzProfile))
-    #     }
+    tit.height = "100m"
+    mtext.titname = HistMultiPanelTitstr(tit.height, station.name, ana.time.res)
 
     fname = gsub('Histogram', 'Histogram_ERA20C-HErZ-100m', fname)
     pdf(paste0(outdir, fname), width=PS$land.a4width, height=PS$land.a4height,
@@ -823,22 +785,23 @@ PlotHistograms <- function(outdir, fname, station.name, ana.time.res,
     dummy = numeric(length=length(herz116)) * NA
 
     if (!is.null(Era20cXts100)) {
-      titname = paste0("Frequency distribution of 100m ", monthly.ext,
+      titname = paste0("Frequency distribution of 100m ", ana.time.res$time.res,
                        " ERA20C wind speed")
-      xlabname = "100m ERA20c wind speed [m/s]"
+      xlabname = "wind speed [m/s]"
       histoPlot(era20c100, dummy, breaks, xlims=c(min.val, max.val), titname,
-                xlabname.empty, xaxis=axis.n, ylabname)
+                xlabname.empty, xaxis=PS$axis.n, ylabname)
       plotLegendStats(xlims=c(min.val, max.val), era20c100)
 
-      titname = paste0("Frequency distribution of ", monthly.ext, " ERA20C wind speed",
-                       " at 100m\n", "in green and COSMO HErZ at 116m shaded")
+      titname = paste0("Frequency distribution of ", ana.time.res$time.res,
+                       " ERA20C wind speed at 100m\n",
+                       "in green and COSMO HErZ at 116m shaded")
       xlabname = "wind speed [m/s]"
       histoPlot(era20c100, herz116, breaks, xlims=c(min.val, max.val),
                 titname, xlabname, ylabname="", addPlot=T)
     }
 
     titname = paste0("Frequency distribution of 116m COSMO HErZ wind speed")
-    xlabname = "116m HErZ wind speed [m/s]"
+    xlabname = "wind speed [m/s]"
     histoPlot(herz116, dummy, breaks, xlims=c(min.val, max.val), titname,
               xlabname, ylabname)
 
@@ -850,72 +813,128 @@ PlotHistograms <- function(outdir, fname, station.name, ana.time.res,
 
   if (plot.HerzProfile) {
 
-    if (ana.time.res$time.res == ana.time.res$monthly) {
-      mtext.titname = paste0("Monthly wind speed of HErZ profile at ", station.name)
-    }
-    if (ana.time.res$time.res == ana.time.res$daily) {
-      mtext.titname = paste0("Daily wind speed of HErZ profile at ", station.name)
-    }
-    if (ana.time.res$time.res == ana.time.res$hourly) {
-      mtext.titname = paste0("Hourly wind speed of HErZ profile at ", station.name)
-    }
-
     fname = gsub('Histogram', 'Histogram_HErZ-Profile', fname)
-    pdf(paste0(outdir, fname), width=PS$land.a4width, height=PS$land.a4height,
-        onefile=TRUE, pointsize=13)
-
-    par(mfrow=c(2,2), mar=c(1,1,2,0.5), oma=c(2.5,3,3,0.5))
-
-    min.val = floor(min(min(herz10, na.rm=TRUE), min(herz35, na.rm=TRUE),
-                        min(herz69, na.rm=TRUE), min(herz116, na.rm=TRUE),
-                        min(herz178, na.rm=TRUE), min(herz258, na.rm=TRUE)))
-    max.val = ceiling(max(max(herz10, na.rm=TRUE), max(herz35, na.rm=TRUE),
-                          max(herz69, na.rm=TRUE), max(herz116, na.rm=TRUE),
-                          max(herz178, na.rm=TRUE), max(herz258, na.rm=TRUE)))
-    breaks = seq(min.val, max.val, 0.25)
-    dummy = numeric(length=length(herz10)) * NA
-
-    titname = paste0("Frequency distribution of 10m ", monthly.ext, " HErZ wind speed")
-    xlabname = ""
-    histoPlot(herz10, dummy, breaks, xlims=c(min.val, max.val), titname,
-              xlabname, xaxis=axis.n, ylabname)
-    plotLegendStats(xlims=c(min.val, max.val), herz10)
-
-    titname = paste0("Frequency distribution of 35m ", monthly.ext, " HErZ wind speed")
-    xlabname = ""
-    histoPlot(herz35, dummy, breaks, xlims=c(min.val, max.val), titname,
-              xlabname, xaxis=axis.n, ylabname="")
-    plotLegendStats(xlims=c(min.val, max.val), herz35)
-
-    titname = paste0("Frequency distribution of 69m ", monthly.ext, " HErZ wind speed")
-    xlabname = "69m HErZ wind speed [m/s]"
-    histoPlot(herz69, dummy, breaks, xlims=c(min.val, max.val), titname,
-              xlabname, ylabname)
-    plotLegendStats(xlims=c(min.val, max.val), herz69)
-
-    titname = paste0("Frequency distribution of 116m ", monthly.ext, " HErZ wind speed")
-    xlabname = "116m HErZ wind speed [m/s]"
-    histoPlot(herz116, dummy, breaks, xlims=c(min.val, max.val), titname,
-              xlabname, ylabname="")
-    plotLegendStats(xlims=c(min.val, max.val), herz116)
-    mtext(mtext.titname, font=2, cex=1.2, line=1, outer=TRUE)
-
-    titname = paste0("Frequency distribution of 178m ", monthly.ext, " HErZ wind speed")
-    xlabname = "178m HErZ wind speed [m/s]"
-    histoPlot(herz178, dummy, breaks, xlims=c(min.val, max.val), titname,
-              xlabname, ylabname)
-    plotLegendStats(xlims=c(min.val, max.val), herz178)
-
-    titname = paste0("Frequency distribution of 258m ", monthly.ext, " HErZ wind speed")
-    xlabname = "258m HErZ wind speed [m/s]"
-    histoPlot(herz258, dummy, breaks, xlims=c(min.val, max.val), titname,
-              xlabname, ylabname="")
-    plotLegendStats(xlims=c(min.val, max.val), herz258)
-    mtext(mtext.titname, font=2, cex=1.2, line=1, outer=TRUE)
-
-    dev.off()
+    PlotHistogramsHerzHeights(paste0(outdir, fname), PS, herz10, herz35, herz69,
+                              herz116, herz178, herz258, ana.time.res, station.name)
 
   }
+}
+
+#-----------------------------------------------------------------------------------
+
+#' @title Create overall title for histogram multi panel plots.
+#' @description Create the overall title for histogram multi-panel plots depending
+#'   on the time step, i.e., hourly, daily, monthly, which is provided by the
+#'   variable ana.time.res. The height string for which the data is plot is provided
+#'   and the title string returned.
+#' @param tit.height is a string holding the height in meter of the data.
+#' @param station.name is a string holding the station name.
+#' @param ana.time.res named list holding parameters monthly="monthly",
+#'   daily="daily", hourly="hourly", and time.res= to determine the time resolution
+#'   of the data to be read.
+#' @return mtext.titname is a string holding the finished title name.
+HistMultiPanelTitstr <- function(tit.height, station.name, ana.time.res) {
+
+  tit.ext = paste0(" wind speed at ", tit.height, " height at ", station.name)
+  if (ana.time.res$time.res == ana.time.res$monthly) {
+    mtext.titname = paste0("Monthly ", tit.ext)
+  }
+  if (ana.time.res$time.res == ana.time.res$daily) {
+    mtext.titname = paste0("Daily ", tit.ext)
+  }
+  if (ana.time.res$time.res == ana.time.res$hourly) {
+    mtext.titname = paste0("Hourly ", tit.ext)
+  }
+
+  return(mtext.titname)
+}
+
+#-----------------------------------------------------------------------------------
+
+#' @title Plot histrograms for COSMO-REA6 of one pixel location at different model
+#'   level heights.
+#' @description Plot histograms for the lowest six model levels between 10m and 258m.
+#' @param fname is a string holding the complete file name (including its path) of
+#'   the pdf plot to be created.
+#' @param PS is a plotting setting object (list) derived of function
+#'   \code{\link{PlottingSettings}}.
+#' @param herz10,herz35,herz69,herz116,herz178,herz258 are numeric vectors holding
+#'   the windspeed data of the COSMO-REA6 regional reanalysis of the lowest six
+#'   model levels.
+#' @param ana.time.res named list holding parameters monthly="monthly",
+#'   daily="daily", hourly="hourly", and time.res= to determine the time resolution
+#'   of the data to be read.
+#' @param station.name is a string holding the station name.
+PlotHistogramsHerzHeights <- function(fname, PS, herz10, herz35, herz69,
+                                      herz116, herz178, herz258, ana.time.res,
+                                      station.name) {
+
+  pdf(fname, width=PS$land.a4width, height=PS$land.a4height,
+      onefile=TRUE, pointsize=13)
+  par(mfrow=c(2,2), mar=c(1,1,2,0.5), oma=c(2.5,3,3,0.5))
+
+  min.val = floor(min(min(herz10, na.rm=TRUE), min(herz35, na.rm=TRUE),
+                      min(herz69, na.rm=TRUE), min(herz116, na.rm=TRUE),
+                      min(herz178, na.rm=TRUE), min(herz258, na.rm=TRUE)))
+  max.val = ceiling(max(max(herz10, na.rm=TRUE), max(herz35, na.rm=TRUE),
+                        max(herz69, na.rm=TRUE), max(herz116, na.rm=TRUE),
+                        max(herz178, na.rm=TRUE), max(herz258, na.rm=TRUE)))
+  breaks = seq(min.val, max.val, 0.25)
+  dummy = numeric(length=length(herz10)) * NA
+
+  if (ana.time.res$time.res == ana.time.res$monthly) {
+    mtext.titname = paste0("Frequency distribution of monthly COSMO-REA6 wind speed for ",
+                           station.name)
+  }
+  if (ana.time.res$time.res == ana.time.res$daily) {
+    mtext.titname = paste0("Frequency distribution of daily COSMO-REA6 wind speed for ",
+                           station.name)
+  }
+  if (ana.time.res$time.res == ana.time.res$hourly) {
+    mtext.titname = paste0("Frequency distribution of hourly COSMO-REA6 wind speed for ",
+                           station.name)
+  }
+
+  titname = paste0("Wind speed distribution at 10m")
+  xlabname = ""
+  ylabname = "Densitiy"
+  histoPlot(herz10, dummy, breaks, xlims=c(min.val, max.val), titname,
+            xlabname, xaxis=PS$axis.n, ylabname)
+  plotLegendStats(xlims=c(min.val, max.val), herz10)
+
+  titname = paste0("Wind speed distribution at 35m")
+  xlabname = ""
+  histoPlot(herz35, dummy, breaks, xlims=c(min.val, max.val), titname,
+            xlabname, xaxis=PS$axis.n, ylabname="")
+  plotLegendStats(xlims=c(min.val, max.val), herz35)
+
+  titname = paste0("Wind speed distribution at 69m")
+  xlabname = "wind speed [m/s]"
+  histoPlot(herz69, dummy, breaks, xlims=c(min.val, max.val), titname,
+            xlabname, ylabname)
+  plotLegendStats(xlims=c(min.val, max.val), herz69)
+
+  titname = paste0("Wind speed distribution at 116m")
+  xlabname = "wind speed [m/s]"
+  histoPlot(herz116, dummy, breaks, xlims=c(min.val, max.val), titname,
+            xlabname, ylabname="")
+  plotLegendStats(xlims=c(min.val, max.val), herz116)
+  mtext(mtext.titname, font=2, cex=1.2, line=1, outer=TRUE)
+
+  titname = paste0("Wind speed distribution at 178m")
+  xlabname = "wind speed [m/s]"
+  histoPlot(herz178, dummy, breaks, xlims=c(min.val, max.val), titname,
+            xlabname, ylabname)
+  plotLegendStats(xlims=c(min.val, max.val), herz178)
+
+  titname = paste0("Wind speed distribution at 258m")
+  xlabname = "wind speed [m/s]"
+  histoPlot(herz258, dummy, breaks, xlims=c(min.val, max.val), titname,
+            xlabname, ylabname="")
+  plotLegendStats(xlims=c(min.val, max.val), herz258)
+  mtext(mtext.titname, font=2, cex=1.2, line=1, outer=TRUE)
+
+  dev.off()
 }
 
 #-----------------------------------------------------------------------------------
@@ -945,8 +964,6 @@ PlotHistogramsTower <- function(outdir, fname, ana.time.res, tower.obj) {
   yliml = Ylims$yll
   ylimh = Ylims$ylh
 
-  axis.n = 'n'
-  axis.y = 's'
   if (ana.time.res$time.res == ana.time.res$monthly) monthly.ext = 'Monthly'
   if (ana.time.res$time.res == ana.time.res$daily) monthly.ext = 'Daily'
   if (ana.time.res$time.res == ana.time.res$hourly) monthly.ext = 'Hourly'
@@ -1070,13 +1087,13 @@ PlotHistogramsTower <- function(outdir, fname, ana.time.res, tower.obj) {
                        tit.10.ext, " in green and ERA20C shaded")
       histoPlot(data.10.vals, t.obj$era20c10$data$wind_speed, breaks,
                 xlims=c(min.val, max.val), titname, xlabname.full, ylabname.full,
-                xaxis=axis.y, addPlot=TRUE)
+                xaxis=PS$axis.y, addPlot=TRUE)
     }
 
     titname = paste0("Frequency distribution of ", monthly.ext, " wind speed of\n",
                      tit.10.ext, " in green and COSMO HErZ shaded")
     histoPlot(data.10.vals, t.obj$herz10$data$wind_speed, breaks, xlims=c(min.val, max.val),
-              titname, xlabname.full, ylabname.empty, xaxis=axis.y, addPlot=TRUE)
+              titname, xlabname.full, ylabname.empty, xaxis=PS$axis.y, addPlot=TRUE)
     dev.off()
 
 
@@ -1094,14 +1111,14 @@ PlotHistogramsTower <- function(outdir, fname, ana.time.res, tower.obj) {
                        tit.100.ext, " in green and ERA20C shaded")
       histoPlot(data.100.vals, t.obj$era20c100$data$wind_speed, breaks,
                 xlims=c(min.val, max.val),
-                titname, xlabname.full, ylabname.full, xaxis=axis.y, addPlot=TRUE)
+                titname, xlabname.full, ylabname.full, xaxis=PS$axis.y, addPlot=TRUE)
     }
 
     titname = paste0("Frequency distribution of ", monthly.ext, " wind speed of\n",
                      tit.100.ext, " in green and COSMO HErZ shaded")
     histoPlot(data.100.vals, t.obj$herz116$data$wind_speed, breaks,
               xlims=c(min.val, max.val), titname, xlabname.full, ylabname.empty,
-              xaxis=axis.y, addPlot=TRUE)
+              xaxis=PS$axis.y, addPlot=TRUE)
 
     if (t.obj$obs$data$StationName[1] == "Cabauw") {
       if (ana.time.res$time.res != ana.time.res$hourly) {
@@ -1109,14 +1126,14 @@ PlotHistogramsTower <- function(outdir, fname, ana.time.res, tower.obj) {
                          tit2.100.ext, " in green and ERA20C shaded")
         histoPlot(data2.100.vals, t.obj$era20c100$data$wind_speed, breaks,
                   xlims=c(min.val, max.val), titname, xlabname.full, ylabname.full,
-                  xaxis=axis.y, addPlot=TRUE)
+                  xaxis=PS$axis.y, addPlot=TRUE)
       }
 
       titname = paste0("Frequency distribution of ", monthly.ext, " wind speed of\n",
                        tit2.100.ext, " in green and COSMO HErZ shaded")
       histoPlot(data2.100.vals, t.obj$herz116$data$wind_speed, breaks,
                 xlims=c(min.val, max.val), titname, xlabname.full, ylabname.empty,
-                xaxis=axis.y, addPlot=TRUE)
+                xaxis=PS$axis.y, addPlot=TRUE)
     }
     dev.off()
 
@@ -1124,7 +1141,7 @@ PlotHistogramsTower <- function(outdir, fname, ana.time.res, tower.obj) {
              t.obj$obs$data$StationName[1] == "Fino2") {
 
     tit.ext = paste0(t.obj$obs$data$StationName[1], " at ",
-                     t.obj$obs$data$height[1], "m ")
+                     t.obj$obs$data$height[1])
     data.vals = t.obj$obs$data$wind_speed
 
     min.val = floor(min(min(t.obj$era20c10$data$wind_speed, na.rm=TRUE),
@@ -1147,7 +1164,7 @@ PlotHistogramsTower <- function(outdir, fname, ana.time.res, tower.obj) {
     } else {
       par(mfrow=c(1,2), mar=c(3,3,2,1), cex=1.1)
     }
-    titname = paste0(monthly.ext, " wind speed in ", tit.ext)
+    titname = paste0(monthly.ext, " wind speed of ", tit.ext)
     histoPlot(data.vals, dummy, breaks, xlims=c(min.val, max.val),
               titname, xlabname.full, ylabname.full)
     plotLegendStats(xlims=c(min.val, max.val), as.numeric(data.vals))
@@ -1181,13 +1198,13 @@ PlotHistogramsTower <- function(outdir, fname, ana.time.res, tower.obj) {
       titname = paste0("Frequency distribution of ", monthly.ext, tit.ext,
                        "in green and ERA20C shaded")
       histoPlot(data.vals, t.obj$era20c100$data$wind_speed, breaks, xlims=c(min.val, max.val),
-                titname, xlabname.full, ylabname.full, xaxis=axis.y, addPlot=TRUE)
+                titname, xlabname.full, ylabname.full, xaxis=PS$axis.y, addPlot=TRUE)
     }
 
     titname = paste0("Frequency distribution of ", monthly.ext, tit.ext,
                      "in green and COSMO HErZ shaded")
     histoPlot(data.vals, t.obj$herz116$data$wind_speed, breaks, xlims=c(min.val, max.val),
-              titname, xlabname.full, ylabname.empty, xaxis=axis.y, addPlot=TRUE)
+              titname, xlabname.full, ylabname.empty, xaxis=PS$axis.y, addPlot=TRUE)
     dev.off()
 
   }

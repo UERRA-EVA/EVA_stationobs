@@ -21,6 +21,9 @@ PlottingSettings <- function(data.vals) {
   col.mf = "magenta"
   col.light.obs = "gray70"
 
+  axis.n = 'n'
+  axis.y = 's'
+
   if (ana.time.res$time.res == ana.time.res$monthly) {
     time.agg = "monthly"
     time.Agg = "Monthly"
@@ -42,14 +45,16 @@ PlottingSettings <- function(data.vals) {
                 time.agg=time.agg, time.Agg=time.Agg, obs.name=obs.name,
                 obs.height=obs.height, rea.name=rea.name,
                 col.herz=col.herz, col.smhi=col.smhi, col.mo=col.mo,
-                col.mf=col.mf, col.light.obs=col.light.obs))
+                col.mf=col.mf, col.light.obs=col.light.obs,
+                axis.n=axis.n, axis.y=axis.y))
   } else if (is.xts(data.vals)) {
     return(list(land.a4width=land.a4width, land.a4height=land.a4height,
                 port.a4width=port.a4width, port.a4height=port.a4height,
                 square.a4=square.a4,
                 time.agg=time.agg, time.Agg=time.Agg,
                 col.herz=col.herz, col.smhi=col.smhi, col.mo=col.mo,
-                col.mf=col.mf, col.light.obs=col.light.obs))
+                col.mf=col.mf, col.light.obs=col.light.obs,
+                axis.n=axis.n, axis.y=axis.y))
   } else {
     CallStop(paste0("Expected either a data.frame or xts; data.vals is class ",
                     class(data.vals)))
