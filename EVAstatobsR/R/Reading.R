@@ -17,6 +17,7 @@
 #'   what's happening (T) or not (F); the default is to suppress output
 #'   (verb.grib=FALSE).
 #' @return x the array containing the read data
+#' @export
 readGrib <- function(filename, nlon, nlat, nlev, var='undef', out='Rfile.dat',
                      recs=c(0), pipe='', verb.grib=FALSE) {
   if (recs[1]==0) {
@@ -126,6 +127,7 @@ readGrib <- function(filename, nlon, nlat, nlev, var='undef', out='Rfile.dat',
 #'   longitude, latitude, and time values.
 #' @importFrom ncdf open.ncdf close.ncdf get.var.ncdf
 #' @importFrom ncdf.tools convertDateNcdf2R
+#' @export
 ReadNetcdf <- function(variable, infile, start=NULL, count=NULL,
                        revert=FALSE, conv.time=TRUE, verb.dat=FALSE) {
 

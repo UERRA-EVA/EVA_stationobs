@@ -63,6 +63,7 @@ PlottingSettings <- function(data.vals) {
 #'   passed to it. It does not have a return value.
 #' @param errstr is a string which hold the error message to be printed before
 #'   stopping execution
+#' @export
 CallStop <- function(errstr) {
   err = simpleError(paste0("\n   ***\n   ", errstr, "\n   ***\n"))
   tryCatch(stop(err))
@@ -75,6 +76,7 @@ CallStop <- function(errstr) {
 #' it. If one file doese not exist it stops with an error message.
 #' @param infile Character string or concatenated character strings holding the file
 #' name(s).
+#' @export
 CheckFile <- function(infile) {
   if (!class(infile) == "character") {
     CallStop(paste0("Unexpected type of infile, ABORTING!\n",
@@ -98,6 +100,7 @@ CheckFile <- function(infile) {
 #' @param herz.param a string of length n which holds n parameter names.
 #' @param herz.profile boolean which determines whether to check for the complete
 #'   HErZ profile or only the two levels 10m and 116m.
+#' @export
 CheckHerzParams <- function(herz.param, herz.profile) {
   if (herz.profile) {
     if (!herz.param[1] == "windspeed_258m") {
@@ -146,6 +149,7 @@ CheckHerzParams <- function(herz.param, herz.profile) {
 #' @param fname a string of length n which holds n file names.
 #' @param herz.profile boolean which determines whether to check for the complete
 #'   HErZ profile or only the two levels 10m and 116m.
+#' @export
 CheckHerzHeightOrder <- function(fname, herz.profile) {
   if (herz.profile) {
     if (!grepl("258m", fname[1])) {
@@ -193,6 +197,7 @@ CheckHerzHeightOrder <- function(fname, herz.profile) {
 #'   decreasing. This function does not have a return value.
 #' @param tower.param a string of length n which holds n parameter names.
 #' @param tower.name a string which holds the name of the tower.
+#' @export
 CheckTowerParams <- function(tower.param, tower.name) {
   if (tower.name == "Lindenberg") {
     if (!tower.param[1] == "windspeed_98m") {
@@ -279,6 +284,7 @@ GetNearestIdx <- function(vec, num) {
 #'   parameter needs to be set to NULL. The default is to set grid.lon to NULL.
 #' @param grid.lat same as above for the grid latitude values.
 #' @return Return a named lilst of (lonidx=,latidx=) longitude and latitude index.
+#' @export
 GetLonLatIdx <- function(fname, point.lon, point.lat,
                          grid.lon=NULL, grid.lat=NULL) {
   CheckFile(fname)

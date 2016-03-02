@@ -98,6 +98,7 @@ GetRRAxts <- function(herz.obj, smhi.obj, mo.obj, mf.obj, ana.time.res,
 #' @param station.name is a string holding the station name at which location the
 #'   distribution data was extraced
 #' @importFrom zoo index
+#' @export
 PlotRRAtimeSeries <- function(herz.obj, smhi.obj, mo.obj, mf.obj, fname,
                               hourly.switch, station.name, ana.time.res) {
 
@@ -290,6 +291,7 @@ PlotRRAtimeSeries <- function(herz.obj, smhi.obj, mo.obj, mf.obj, fname,
 #'   distribution data was extraced
 #' @importFrom xts xts
 #' @importFrom zoo coredata
+#' @export
 PlotRRAscatterQQ <- function(herz.obj, smhi.obj, mo.obj, mf.obj, fname,
                              hourly.switch, station.name, ana.time.res) {
 
@@ -358,6 +360,7 @@ PlotRRAscatterQQ <- function(herz.obj, smhi.obj, mo.obj, mf.obj, fname,
 #' @param rra.obj is a ClimObject which holds the RRA data.
 #' @param fname is a string holding file name of the pdf plot to be created.
 #' @param threshold numeric sequence of percentiles between 0 and 1
+#' @export
 PlotRRAextremes <- function(rra.obj, fname, threshold) {
 
   PS = PlottingSettings(rra.obj$rra10$data)
@@ -385,6 +388,7 @@ PlotRRAextremes <- function(rra.obj, fname, threshold) {
 #'   reanalyses
 #' @param fname is a string holding file name of the pdf plot to be created.
 #' @param threshold numeric sequence of percentiles between 0 and 1
+#' @export
 PlotAllRRAextremes <- function(herz.obj, smhi.obj, mo.obj, fname, threshold) {
 
   # against HErZ at different heights

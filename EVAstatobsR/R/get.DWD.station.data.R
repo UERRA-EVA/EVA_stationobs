@@ -388,6 +388,7 @@ GetMetadata <- function(time.resol, station.id,
 #'   (TRUE) on or surpress it (FALSE). Default is to print out messages (TRUE).
 #' @return \code{data1} a data frame (returned as list) containing all this data
 #'   including windspeed listed chronologically
+#' @export
 AllData <- function(station.id, station.name, station.lat, station.lon,
                      daily=TRUE, download=FALSE, verbose.DWD=TRUE){
   if (daily) {

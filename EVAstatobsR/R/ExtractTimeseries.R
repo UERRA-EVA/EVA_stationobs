@@ -63,6 +63,7 @@ getNearest <- function(b1,b2,l1,l2){
 #'   data spanning the time period of the longest ranging reanalysis time series.
 #' @importFrom xts xts as.xts period.apply endpoints
 #' @importFrom zoo index
+#' @export
 ExtractStationData <- function(station.data, era20c.tsstart, era20c.tsend,
                                eraI.tsstart, eraI.tsend, herz.tsstart, herz.tsend,
                                ana.time.res, station.daily) {
@@ -232,6 +233,7 @@ ExtractHErZxts <- function(herz.data, time.vals, herz.lon, herz.lat,
 #'   holding extended time series of that parameter.
 #' @importFrom zoo as.yearmon
 #' @importFrom xts xts
+#' @export
 ExtractTowerData <- function(file.name, para.name, ana.time.res) {
   CheckFile(file.name)
   data.lst = list()

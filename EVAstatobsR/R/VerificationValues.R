@@ -159,6 +159,7 @@ NormVals <- function(value, min.val, max.val) {
 #'   benchmarks (percentiles) (F) or the inverse (decreasing) order (F) to calculate
 #'   the contigency table
 #' @return is a names list holding the distribution in the variables a, b, c, d.
+#' @export
 CalcContTable <- function(obs, frcst, benchmark, inverse) {
 
   # check for NA values and set to NA at same time steps to both time series
@@ -233,6 +234,7 @@ CalcContTable <- function(obs, frcst, benchmark, inverse) {
 #' @param a,b,c,d the four parameters of the contigency table (calculated by
 #'   \code{\link{CalcContTable}}) which are also called hits, flase alarms, misses,
 #'   and correct rejects, respectively.
+#' @export
 ContTableScores <- function(a, b, c, d) {
 
   n = a + b + c + d
@@ -276,6 +278,7 @@ ContTableScores <- function(a, b, c, d) {
 #' @return a list holding the range values for hit rate, false alarm rate, false
 #'   alarm ratio, threat score, equitable threat score, bias, Heidke skill score,
 #'   accuracy, odds ratio, (symmetric) dependence index.
+#' @export
 YLimsScores <- function() {
 
   POD.ylim = c(0,1)
@@ -314,6 +317,7 @@ YLimsScores <- function() {
 #'   (T) order.
 #' @return data.frame which holds the skill scores calculated by
 #'   \code{\link{ContTableScores}}.
+#' @export
 GetScoresDF <- function(thresh, obs, frcst, inverse=F) {
 
   Cont.Table.cnt = CalcContTable(obs, frcst, thresh[1], inverse)
@@ -345,6 +349,7 @@ GetScoresDF <- function(thresh, obs, frcst, inverse=F) {
 #'   data are to be generated; Gaussian and Weibull are supported right now.
 #' @return a list holding the observation and forecast random data.
 #' @importFrom xts xts
+#' @export
 PrepareRandomData <- function(num, use.distr) {
   if (use.distr != "Gaussian" & use.distr != "Weibull") {
     CallStop(paste0("I expected either Gaussian or Weibull, but parameter is: ",

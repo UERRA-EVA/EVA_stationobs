@@ -34,6 +34,7 @@
 #'   returned.
 #' @importFrom zoo as.yearmon
 #' @importFrom xts xts
+#' @export
 ReadHerzNetcdfMonthlyDaily2Xts <- function(rra.para, rra.fname,
                                            rra.tsstart, rra.tsend,
                                            lonidx, latidx,
@@ -170,6 +171,7 @@ ReadHerzNetcdfMonthlyDaily2Xts <- function(rra.para, rra.fname,
 #' @return a list holding the wind speed values in extended time series for each
 #'   height level. If no data had been read, NULL is returned.
 #' @importFrom xts xts
+#' @export
 ReadHerzNetcdfHourly2Xts <- function(rra.para, rra.fname,
                                      rra.tsstart, rra.tsend,
                                      herz.profile, only.10m=FALSE) {
@@ -256,6 +258,7 @@ ReadHerzNetcdfHourly2Xts <- function(rra.para, rra.fname,
 #'   ERA-Interim data is read, a NULL value will be returned for era20c100.
 #' @importFrom zoo as.yearmon
 #' @importFrom xts xts
+#' @export
 ReadEraNetcdf2Xts <- function(era.param, era.fname,
                               era.tsstart, era.tsend,
                               lonidx, latidx, ana.time.res,
@@ -420,6 +423,7 @@ GetTowerProfileTS <- function(tower.xts, tower2.xts=NULL, tower3.xts=NULL,
 #'   is only.10m=F.
 #' @return a list which holds the climate data object.
 #' @importFrom zoo index coredata
+#' @export
 GetObsObject <- function(obs.xts, obs2.xts=NULL, obs3.xts=NULL,
                          obs4.xts=NULL, obs5.xts=NULL, obs6.xts=NULL,
                          herz10.xts, herz35.xts=NULL, herz69.xts=NULL, herz116.xts,
@@ -641,6 +645,7 @@ GetObsObject <- function(obs.xts, obs2.xts=NULL, obs3.xts=NULL,
 #'   observations and ERA-Interim, respectively.
 #' @return a list which holds the climate data object.
 #' @importFrom zoo index coredata
+#' @export
 Get10mRRAObsObject <- function(obs.xts, rra10.xts, rra10.hourly.xts=NULL,
                                stats.atrra10.xts=NULL, eraI10.xts=NULL,
                                obs.tsstart, obs.tsend,
@@ -734,6 +739,7 @@ Get10mRRAObsObject <- function(obs.xts, rra10.xts, rra10.hourly.xts=NULL,
 #' @param obs.xts,forec.xts observation and forecast data holding random data.
 #' @return a list which holds the climate data object.
 #' @importFrom zoo index coredata
+#' @export
 GetRandomClimObject <- function(obs.xts, forec.xts) {
 
   obs.df = data.frame(date=index(obs.xts),
@@ -757,6 +763,7 @@ GetRandomClimObject <- function(obs.xts, forec.xts) {
 #' @param rra.xts extended time series of RRA data.
 #' @return an extended time series holding the aligned RRA data.
 #' @importFrom xts merge.xts
+#' @export
 AligneRRA2Obsxts <- function(stat.xts, rra.xts) {
 
   merged.xts = merge.xts(rra.xts, stat.xts)
@@ -775,6 +782,7 @@ AligneRRA2Obsxts <- function(stat.xts, rra.xts) {
 #' @return an extended time series holding the newly aligned station values.
 #' @importFrom xts xts
 #' @importFrom zoo index
+#' @export
 AligneObs2RRAxts <- function(stat.xts, rra.xts) {
 
   new.vector = vector(mode="numeric", length=length(rra.xts))*NA
