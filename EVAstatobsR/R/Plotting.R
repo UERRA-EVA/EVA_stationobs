@@ -1,6 +1,6 @@
-#' @title Plot station measurements together with ERA20C, ERA-I, and HErZ.
+#' @title Plot station measurements together with ERA20C, ERA-I, and COSMO-REA6.
 #' @description \code{PlotStationEra} plots the station values together with the
-#'   corresponding ERA20C, ERA-I, and HErZ pixel and provides the correlation
+#'   corresponding ERA20C, ERA-I, and COSMO-REA6 pixel and provides the correlation
 #'   between these time series. Optionally, it is possible to plot the anomaly.
 #'   The plot is saved in pdf format and there is no return value.
 #' @param s.obj is a ClimObject which holds the station data and corresponding
@@ -58,7 +58,7 @@ PlotStationEra <- function(s.obj, titname, outdir, fname, anomaly=FALSE) {
   # ERA-I
   if (!is.null(EraIXts)) lines(EraIXts, type="b", pch=16, col="red", lw=1.5)
 
-  # HErZ
+  # COSMO-REA6
   lines(HerzXts, type="b", pch=16, col="green3", lw=1.5)
 
   # Station
@@ -70,13 +70,13 @@ PlotStationEra <- function(s.obj, titname, outdir, fname, anomaly=FALSE) {
                                     round(Corr.vals$c.20c.S, 2)),
                              paste0("Corr(ERAI, Stat) = ",
                                     round(Corr.vals$c.I.S, 2)),
-                             paste0("Corr(HErZ, Stat) = ",
+                             paste0("Corr(COSMO-REA6, Stat) = ",
                                     round(Corr.vals$c.H.S, 2)),
                              paste0("Corr(ERA20C, ERAI)= ",
                                     round(Corr.vals$c.20c.I, 2)),
-                             paste0("Corr(ERA20C, HErZ)= ",
+                             paste0("Corr(ERA20C, COSMO-REA6)= ",
                                     round(Corr.vals$c.20c.H, 2)),
-                             paste0("Corr(ERAI, HErZ)= ",
+                             paste0("Corr(ERAI, COSMO-REA6)= ",
                                     round(Corr.vals$c.I.H, 2))),
          text.col=c("blue", "red", "green", "black", "black", "black"))
   dev.off()
@@ -87,14 +87,14 @@ PlotStationEra <- function(s.obj, titname, outdir, fname, anomaly=FALSE) {
 #' @title Plot a 2-by-2 multi panel plot.
 #' @description This is supposed to be a rather generic routine to plot a 2-by-2
 #'   multi panel plot. So far, it is used to plot the four different data sources
-#'   (ERA20C, ERA-Interim, HErZ, station data) for monthly and seasonal values. The
+#'   (ERA20C, ERA-Interim, COSMO-REA6, station data) for monthly and seasonal values. The
 #'   plot is saved into a pdf file, and the function does not have a return value.
 #' @param outdir string of the output directory into which the plot is saved
 #' @param fname is a string holding file name of the pdf plot to be created.
 #' @param titname string of the plot title name
 #' @param Era20c extended time series of monthly or seasonal ERA20C data
 #' @param EraI extended time series of momthly or seasonal ERA-Interim data
-#' @param Herz extended time series of monthly or seasonal HErZ data
+#' @param Herz extended time series of monthly or seasonal COSMO-REA6 data
 #' @param Stat extended time series of monthly or seasonal station data
 #' @param length.plot a list holding integers for the months or seasons to plot.
 #'   It holds 1, .., 12 specifying the months, or 1,..,4 specifying the seasons.
@@ -175,12 +175,12 @@ PlotMultiPanel <- function(outdir, fname, titname, Era20c, EraI, Herz, Stat,
           bg=rgb(0,0,0,1./cnt), lw=2)
   }
   if (era.months) {
-    legend("topleft", legend=c(paste0("HErZ ", all.months[length.plot[[1]]]),
-                               paste0("HErZ ", all.months[length.plot[[2]]])),
+    legend("topleft", legend=c(paste0("COSMO-REA6 ", all.months[length.plot[[1]]]),
+                               paste0("COSMO-REA6 ", all.months[length.plot[[2]]])),
            text.col=color)
   } else {
-    legend("topleft", legend=c(paste0("HErZ ", all.seasons[length.plot[[1]]]),
-                               paste0("HErZ ", all.seasons[length.plot[[2]]])),
+    legend("topleft", legend=c(paste0("COSMO-REA6 ", all.seasons[length.plot[[1]]]),
+                               paste0("COSMO-REA6 ", all.seasons[length.plot[[2]]])),
            text.col=color)
   }
 
@@ -209,7 +209,7 @@ PlotMultiPanel <- function(outdir, fname, titname, Era20c, EraI, Herz, Stat,
 #-----------------------------------------------------------------------------------
 
 #' @title Prepare and plot seasonal time series of station data and ERA20C, ERA-I,
-#'   and HErZ data.
+#'   and COSMO-REA6 data.
 #' @description \code{PlotStationEraSelSeasons} prepares extended time series of
 #'   seasonal means, and optionally their anomalies, of station data and locally
 #'   corresponding global and regional reanalyses. The seasons for which data shall
@@ -219,7 +219,7 @@ PlotMultiPanel <- function(outdir, fname, titname, Era20c, EraI, Herz, Stat,
 #' @param Era20cXts monthly mean extended time series of the ERA20C pixel
 #'   corresponding to the station location
 #' @param EraIXts same as above for ERA-Interim
-#' @param HerzXts same as above for HErZ
+#' @param HerzXts same as above for COSMO-REA6
 #' @param StatXts monthly mean extended time series of the station values
 #' @param titname string of the plot title name
 #' @param outdir string of the output directory into which the plot is saved
@@ -297,9 +297,9 @@ PlotStationEraSelSeasons <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 #-----------------------------------------------------------------------------------
 
 #' @title Prepare and plot specifically selected months of station data and ERA20C,
-#'   ERA-I, and HErZ data.
+#'   ERA-I, and COSMO-REA6 data.
 #' @description \code{PlotStationEraSelMonths} prepares extended time series of
-#'   station data, ERA20C, ERA-I, and HErZ data - for specific months only. These
+#'   station data, ERA20C, ERA-I, and COSMO-REA6 data - for specific months only. These
 #'   months are set hard-coded within this function. Of course, this setting can be
 #'   put into the Settings.R file if necessary.
 #'   Optionally, it is possible to prepare the anomalies. A generic plotting routine
@@ -307,7 +307,7 @@ PlotStationEraSelSeasons <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 #' @param Era20cXts monthly mean extended time series of the ERA20C pixel
 #'   corresponding to the station location
 #' @param EraIXts same as above for ERA-Interim
-#' @param HerzXts same as above for HErZ
+#' @param HerzXts same as above for COSMO-REA6
 #' @param StatXts monthly mean extended time series of the station values
 #' @param titname string of the plot title name
 #' @param outdir string of the output directory into which the plot is saved
@@ -370,13 +370,13 @@ PlotStationEraSelMonths <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 #-----------------------------------------------------------------------------------
 
 #' @title Prepare and plot time series of station data and ERA20C, ERA-I,
-#'   and HErZ data.
+#'   and COSMO-REA6 data.
 #' @description This function plots station and reanalysis data into scatter plots
 #'   and Quantile-quantile plots (QQ-plot).
 #' @param Era20cXts extended time series of the ERA20C pixel corresponding to the
 #'   station location
 #' @param EraIXts same as above for ERA-Interim
-#' @param HerzXts same as above for HErZ
+#' @param HerzXts same as above for COSMO-REA6
 #' @param StatXts extended time series of the station values
 #' @param titname string of the plot title name
 #' @param outdir string of the output directory into which the plot/s is/are saved
@@ -448,7 +448,7 @@ PlotStationEraSQ <- function(Era20cXts, EraIXts, HerzXts, StatXts,
     qqPlot(Era20, EraI, yliml, ylimh, "",
            xlabname, ylabname, text.str=text.str, xaxis=PS$axis.n, yaxis=PS$axis.n)
 
-    text.str = "Era20c vs HErZ"
+    text.str = "Era20c vs COSMO-REA6"
     scatterPlot(Era20, Herz, yliml, ylimh, titname,
                 xlabname, ylabname, text.str=text.str, xaxis=PS$axis.n, yaxis=PS$axis.y)
     qqPlot(Era20, Herz, yliml, ylimh, "",
@@ -467,7 +467,7 @@ PlotStationEraSQ <- function(Era20cXts, EraIXts, HerzXts, StatXts,
   }
 
   if (!is.null(EraI)) {
-    text.str = "ERA-Interim vs HErZ"
+    text.str = "ERA-Interim vs COSMO-REA6"
     scatterPlot(EraI, Herz, yliml, ylimh, titname,
                 xlabname, ylabname, text.str=text.str, xaxis=PS$axis.n, yaxis=PS$axis.y)
     qqPlot(EraI, Herz, yliml, ylimh, titname,
@@ -480,7 +480,7 @@ PlotStationEraSQ <- function(Era20cXts, EraIXts, HerzXts, StatXts,
            xlabname, ylabname, text.str=text.str, xaxis=PS$axis.n, yaxis=PS$axis.n)
   }
 
-  text.str = "HErZ vs station data"
+  text.str = "COSMO-REA6 vs station data"
   scatterPlot(Herz, Stat, yliml, ylimh, titname,
               xlabname, ylabname, text.str=text.str, xaxis=PS$axis.y, yaxis=PS$axis.n)
   if (is.null(Era20) & is.null(EraI)) {
@@ -500,14 +500,14 @@ PlotStationEraSQ <- function(Era20cXts, EraIXts, HerzXts, StatXts,
 
 #-----------------------------------------------------------------------------------
 
-#' @title Compare 100m wind speed of ERA20C and HErZ pixel by pixel.
+#' @title Compare 100m wind speed of ERA20C and COSMO-REA6 pixel by pixel.
 #' @description \code{Plot100mEraHerz} compares the 100m wind speed of the ERA20C
-#'   global reanalysis with the 116m wind speed of the HErZ regional reanalysis.
+#'   global reanalysis with the 116m wind speed of the COSMO-REA6 regional reanalysis.
 #'   This function performs a pixel wise comparison at the station locationto
 #'   provided by the package. Scatter plots, QQplots, histogram plots, and the
 #'   PDFscore are produced.
 #' @param Era20cXts extended time series of an ERA20C pixel
-#' @param HerzXts same as above for HErZ
+#' @param HerzXts same as above for COSMO-REA6
 #' @param titname string of the plot title name
 #' @param statname string of the station name whose pixel is plotted
 #' @param outdir string of the output directory into which the plot is saved
@@ -551,15 +551,15 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
   # ERA20C
   lines(Era20cXts, type="b", pch=16, col="blue", lw=1.5)
 
-  # HErZ
+  # COSMO-REA6
   lines(HerzXts, type="b", pch=16, col="green3", lw=1.5)
 
   if (same.length) {
     Corr.vals = GetCorrXts(era20c=Era20cXts, herz=HerzXts, eraI=dummy, stat=dummy)
 
-    legend("topleft", legend=c(paste0("Corr(ERA20C, HErZ)= ",
+    legend("topleft", legend=c(paste0("Corr(ERA20C, COSMO-REA6)= ",
                                       round(Corr.vals$c.20c.H, 2)),
-                               'ERA20C', 'HErZ'),
+                               'ERA20C', 'COSMO-REA6'),
            text.col=c("black", "blue", "green3"))
   }
 
@@ -568,7 +568,7 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
     Era = as.numeric(Era20cXts)
 
     xlabname = "100m ERA20C wind speed [m/s]"
-    ylabname = "116m HErZ wind speed [m/s]"
+    ylabname = "116m COSMO-REA6 wind speed [m/s]"
     text.str = ""
 
     scatterPlot(Era, Herz, yliml, ylimh, titname, xlabname, ylabname,
@@ -588,13 +588,13 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
     histoPlot(Era, dummy, breaks, xlims=c(min.val, max.val), titname, xlabname,
               ylabname)
     titname = paste0("Frequency distribution of ", titname.ext, " wind speed\nof ",
-                     "COSMO HErZ at 116m")
+                     "COSMO-REA6 at 116m")
     xlabname = ylabname
     histoPlot(Herz, dummy, breaks, xlims=c(min.val, max.val), titname, xlabname,
               ylabname)
     titname = paste0("Frequency distribution of ", titname.ext,
                      " ERA20C wind speed at 100m\n",
-                     "in green and COSMO HErZ at 116m shaded")
+                     "in green and COSMO-REA6 at 116m shaded")
     xlabname = "wind speed [m/s]"
     histoPlot(Era, Herz, breaks, xlims=c(min.val, max.val),
               titname, xlabname, ylabname, addPlot=T)
@@ -619,7 +619,7 @@ Plot100mEraHerz <- function(Era20cXts, HerzXts,
 #' @param Era20cXts10,Era20cXts100,EraIXts extended time series of ERA20C and ERA-I
 #'   10m and 100m height
 #' @param HerzXts10,HerzXts35,HerzXts69,HerzXts116,HerzXts178,HerzXts258 extended
-#'   time series of available HErZ data at different heights
+#'   time series of available COSMO-REA6 data at different heights
 #' @param StatXts extended time series of station data
 #' @param plot.10m,plot.100m,plot.HerzProfile optional parameters setting whether
 #'   to plot only 10m values, only 100m values, or the herz profile, respectively.
@@ -711,7 +711,7 @@ PlotHistograms <- function(outdir, fname, station.name, ana.time.res,
                 xlabname.empty, ylabname="", xaxis=PS$axis.n, addPlot=TRUE)
 
       titname = paste0("Frequency distribution of ", ana.time.res$time.res, " ERA20C\n",
-                       "in green and COSMO HErZ shaded")
+                       "in green and COSMO-REA6 shaded")
       histoPlot(era20c10, herz10, breaks, xlims=c(min.val, max.val), titname,
                 xlabname.full, ylabname, addPlot=TRUE)
 
@@ -730,7 +730,7 @@ PlotHistograms <- function(outdir, fname, station.name, ana.time.res,
       plotLegendStats(xlims=c(min.val, max.val), eraI)
 
       titname = paste0("Frequency distribution of ", ana.time.res$time.res, " ERA-Interim\n",
-                       "in green and COSMO HErZ shaded")
+                       "in green and COSMO-REA6 shaded")
       histoPlot(eraI, herz10, breaks, xlims=c(min.val, max.val), titname,
                 xlabname.empty, ylabname="", xaxis=PS$axis.n, addPlot=TRUE)
 
@@ -794,13 +794,13 @@ PlotHistograms <- function(outdir, fname, station.name, ana.time.res,
 
       titname = paste0("Frequency distribution of ", ana.time.res$time.res,
                        " ERA20C wind speed at 100m\n",
-                       "in green and COSMO HErZ at 116m shaded")
+                       "in green and COSMO-REA6 at 116m shaded")
       xlabname = "wind speed [m/s]"
       histoPlot(era20c100, herz116, breaks, xlims=c(min.val, max.val),
                 titname, xlabname, ylabname="", addPlot=T)
     }
 
-    titname = paste0("Frequency distribution of 116m COSMO HErZ wind speed")
+    titname = paste0("Frequency distribution of 116m COSMO-REA6 wind speed")
     xlabname = "wind speed [m/s]"
     histoPlot(herz116, dummy, breaks, xlims=c(min.val, max.val), titname,
               xlabname, ylabname)
@@ -1033,7 +1033,7 @@ PlotHistogramsTower <- function(outdir, fname, ana.time.res, tower.obj) {
       plotLegendStats(xlims=c(min.val, max.val), as.numeric(data2.100.vals))
     }
 
-    titname = paste0(monthly.ext, " wind speed of HErZ at 116m")
+    titname = paste0(monthly.ext, " wind speed of COSMO-REA6 at 116m")
     histoPlot(t.obj$herz116$data$wind_speed, dummy, breaks, xlims=c(min.val, max.val),
               titname, xlabname.full, ylabname.empty)
     plotLegendStats(xlims=c(min.val, max.val), as.numeric(t.obj$herz116$data$wind_speed))
@@ -1060,7 +1060,7 @@ PlotHistogramsTower <- function(outdir, fname, ana.time.res, tower.obj) {
               titname, xlabname.full, ylabname.full)
     plotLegendStats(xlims=c(min.val, max.val), as.numeric(data.10.vals))
 
-    titname = paste0(monthly.ext, " wind speed of HErZ at 10m")
+    titname = paste0(monthly.ext, " wind speed of COSMO-REA6 at 10m")
     histoPlot(t.obj$herz10$data$wind_speed, dummy, breaks, xlims=c(min.val, max.val),
               titname, xlabname.full, ylabname.empty)
     plotLegendStats(xlims=c(min.val, max.val), as.numeric(t.obj$herz10$data$wind_speed))
@@ -1091,7 +1091,7 @@ PlotHistogramsTower <- function(outdir, fname, ana.time.res, tower.obj) {
     }
 
     titname = paste0("Frequency distribution of ", monthly.ext, " wind speed of\n",
-                     tit.10.ext, " in green and COSMO HErZ shaded")
+                     tit.10.ext, " in green and COSMO-REA6 shaded")
     histoPlot(data.10.vals, t.obj$herz10$data$wind_speed, breaks, xlims=c(min.val, max.val),
               titname, xlabname.full, ylabname.empty, xaxis=PS$axis.y, addPlot=TRUE)
     dev.off()
@@ -1115,7 +1115,7 @@ PlotHistogramsTower <- function(outdir, fname, ana.time.res, tower.obj) {
     }
 
     titname = paste0("Frequency distribution of ", monthly.ext, " wind speed of\n",
-                     tit.100.ext, " in green and COSMO HErZ shaded")
+                     tit.100.ext, " in green and COSMO-REA6 shaded")
     histoPlot(data.100.vals, t.obj$herz116$data$wind_speed, breaks,
               xlims=c(min.val, max.val), titname, xlabname.full, ylabname.empty,
               xaxis=PS$axis.y, addPlot=TRUE)
@@ -1130,7 +1130,7 @@ PlotHistogramsTower <- function(outdir, fname, ana.time.res, tower.obj) {
       }
 
       titname = paste0("Frequency distribution of ", monthly.ext, " wind speed of\n",
-                       tit2.100.ext, " in green and COSMO HErZ shaded")
+                       tit2.100.ext, " in green and COSMO-REA6 shaded")
       histoPlot(data2.100.vals, t.obj$herz116$data$wind_speed, breaks,
                 xlims=c(min.val, max.val), titname, xlabname.full, ylabname.empty,
                 xaxis=PS$axis.y, addPlot=TRUE)
@@ -1169,7 +1169,7 @@ PlotHistogramsTower <- function(outdir, fname, ana.time.res, tower.obj) {
               titname, xlabname.full, ylabname.full)
     plotLegendStats(xlims=c(min.val, max.val), as.numeric(data.vals))
 
-    titname = paste0(monthly.ext, " wind speed of HErZ at 116m")
+    titname = paste0(monthly.ext, " wind speed of COSMO-REA6 at 116m")
     histoPlot(t.obj$herz116$data$wind_speed, dummy, breaks, xlims=c(min.val, max.val),
               titname, xlabname.full, ylabname.empty)
     plotLegendStats(xlims=c(min.val, max.val), as.numeric(t.obj$herz116$data$wind_speed))
@@ -1202,7 +1202,7 @@ PlotHistogramsTower <- function(outdir, fname, ana.time.res, tower.obj) {
     }
 
     titname = paste0("Frequency distribution of ", monthly.ext, tit.ext,
-                     "in green and COSMO HErZ shaded")
+                     "in green and COSMO-REA6 shaded")
     histoPlot(data.vals, t.obj$herz116$data$wind_speed, breaks, xlims=c(min.val, max.val),
               titname, xlabname.full, ylabname.empty, xaxis=PS$axis.y, addPlot=TRUE)
     dev.off()
@@ -1346,9 +1346,9 @@ PlotTowerERAprofileBP <- function(tower.obj, fname, ana.time.res) {
                       t.obj$herz116$data$wind_speed,
                       horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
                       boxwex=bwex, staplewex=swex, las=1, ylim=wind.range,
-                      names=c("Lind 10m", "HErZ 10m", "", "Lind 20m",
-                              "HErZ 35m", "Lind 40m", "Lind 60m", "HErZ 69m",
-                              "Lind 80m", "Lind 98m", "", "HErZ 116m"),
+                      names=c("Lind 10m", "COSMO-REA6 10m", "", "Lind 20m",
+                              "COSMO-REA6 35m", "Lind 40m", "Lind 60m", "COSMO-REA6 69m",
+                              "Lind 80m", "Lind 98m", "", "COSMO-REA6 116m"),
                       col=c("red", "blue", "", "red", "blue", "red", "red",
                             "blue", "red", "red", "", "blue"))
     } else {
@@ -1368,9 +1368,9 @@ PlotTowerERAprofileBP <- function(tower.obj, fname, ana.time.res) {
                       dummy,
                       horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
                       boxwex=bwex, staplewex=swex, las=1, ylim=wind.range,
-                      names=c("Lind 10m", "HErZ 10m", "ERA-I 10m", "ERA20C 10m", "Lind 20m",
-                              "HErZ 35m", "Lind 40m", "Lind 60m", "HErZ 69m",
-                              "Lind 80m", "Lind 98m", "ERA20C 100m", "HErZ 116m", ""),
+                      names=c("Lind 10m", "COSMO-REA6 10m", "ERA-I 10m", "ERA20C 10m", "Lind 20m",
+                              "COSMO-REA6 35m", "Lind 40m", "Lind 60m", "COSMO-REA6 69m",
+                              "Lind 80m", "Lind 98m", "ERA20C 100m", "COSMO-REA6 116m", ""),
                       col=c("red", "blue", "green", "green", "red", "blue", "red", "red",
                             "blue", "red", "red", "green", "blue", ""))
     }
@@ -1389,9 +1389,9 @@ PlotTowerERAprofileBP <- function(tower.obj, fname, ana.time.res) {
                       t.obj$obs2$data$wind_speed,
                       horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
                       boxwex=bwex, staplewex=swex, las=1, ylim=wind.range,
-                      names=c("Cabauw 10m", "HErZ 10m", "", "Cabauw 20m",
-                              "HErZ 35m", "Cabauw 40m", "HErZ 69m", "Cabauw 80m",
-                              "", "HErZ 116m", "Cabauw 140m"),
+                      names=c("Cabauw 10m", "COSMO-REA6 10m", "", "Cabauw 20m",
+                              "COSMO-REA6 35m", "Cabauw 40m", "COSMO-REA6 69m", "Cabauw 80m",
+                              "", "COSMO-REA6 116m", "Cabauw 140m"),
                       col=c("red", "blue", "", "red", "blue", "red",
                             "blue", "red", "", "blue", "red"))
     } else {
@@ -1411,10 +1411,10 @@ PlotTowerERAprofileBP <- function(tower.obj, fname, ana.time.res) {
                       t.obj$obs2$data$wind_speed,
                       horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
                       boxwex=bwex, staplewex=swex, las=1, ylim=wind.range,
-                      names=c("Cabauw 10m", "HErZ 10m", "ERA-I 10m", "ERA20C 10m",
-                              "Cabauw 20m", "HErZ 35m", "Cabauw 40m", "",
-                              "HErZ 69m", "Cabauw 80m", "", "ERA20C 100m",
-                              "HErZ 116m", "Cabauw 140m"),
+                      names=c("Cabauw 10m", "COSMO-REA6 10m", "ERA-I 10m", "ERA20C 10m",
+                              "Cabauw 20m", "COSMO-REA6 35m", "Cabauw 40m", "",
+                              "COSMO-REA6 69m", "Cabauw 80m", "", "ERA20C 100m",
+                              "COSMO-REA6 116m", "Cabauw 140m"),
                       col=c("red", "blue", "green", "green", "red", "blue", "red",
                             "", "blue", "red", "", "green", "blue", "red"))
     }
@@ -1434,8 +1434,8 @@ PlotTowerERAprofileBP <- function(tower.obj, fname, ana.time.res) {
                       t.obj$herz116$data$wind_speed,
                       horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
                       boxwex=bwex, staplewex=swex, las=1, ylim=wind.range,
-                      names=c("", "HErZ 10m", "", "", "HErZ 35m", "", "",
-                              "HErZ 69m", "", "", "Fino1 100m", "HErZ 116m"),
+                      names=c("", "COSMO-REA6 10m", "", "", "COSMO-REA6 35m", "", "",
+                              "COSMO-REA6 69m", "", "", "Fino1 100m", "COSMO-REA6 116m"),
                       col=c("", "blue", "", "", "blue", "", "", "blue", "",
                             "", "red", "blue"))
     } else {
@@ -1455,9 +1455,9 @@ PlotTowerERAprofileBP <- function(tower.obj, fname, ana.time.res) {
                       dummy,
                       horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
                       boxwex=bwex, staplewex=swex, las=1, ylim=wind.range,
-                      names=c("", "HErZ 10m", "ERA-I 10m", "ERA20C 10m", "",
-                              "HErZ 35m", "", "",
-                              "HErZ 69m", "", "Fino1 100m", "ERA20C 100m", "HErZ 116m", ""),
+                      names=c("", "COSMO-REA6 10m", "ERA-I 10m", "ERA20C 10m", "",
+                              "COSMO-REA6 35m", "", "",
+                              "COSMO-REA6 69m", "", "Fino1 100m", "ERA20C 100m", "COSMO-REA6 116m", ""),
                       col=c("", "blue", "green", "green", "", "blue", "", "", "blue", "",
                             "red", "green", "blue", ""))
     }
@@ -1477,8 +1477,8 @@ PlotTowerERAprofileBP <- function(tower.obj, fname, ana.time.res) {
                       t.obj$herz116$data$wind_speed,
                       horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
                       boxwex=bwex, staplewex=swex, las=1, ylim=wind.range,
-                      names=c("", "HErZ 10m", "", "", "HErZ 35m", "", "",
-                              "HErZ 69m", "", "", "Fino2 102m", "HErZ 116m"),
+                      names=c("", "COSMO-REA6 10m", "", "", "COSMO-REA6 35m", "", "",
+                              "COSMO-REA6 69m", "", "", "Fino2 102m", "COSMO-REA6 116m"),
                       col=c("", "blue", "", "", "blue", "", "", "blue", "",
                             "", "red", "blue"))
     } else {
@@ -1498,9 +1498,9 @@ PlotTowerERAprofileBP <- function(tower.obj, fname, ana.time.res) {
                       dummy,
                       horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
                       boxwex=bwex, staplewex=swex, las=1, ylim=wind.range,
-                      names=c("", "HErZ 10m", "ERA-I 10m", "ERA20C 10m", "",
-                              "HErZ 35m", "", "",
-                              "HErZ 69m", "", "ERA20C 100m", "Fino2 102m", "HErZ 116m", ""),
+                      names=c("", "COSMO-REA6 10m", "ERA-I 10m", "ERA20C 10m", "",
+                              "COSMO-REA6 35m", "", "",
+                              "COSMO-REA6 69m", "", "ERA20C 100m", "Fino2 102m", "COSMO-REA6 116m", ""),
                       col=c("", "blue", "green", "green", "", "blue", "", "", "blue", "",
                             "green", "red", "blue", ""))
     }
@@ -1577,7 +1577,7 @@ PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
   lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col=color$herz)
   lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$obs)
   corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
-  legend("bottomleft", legend=c("HErZ at 116m", plot.100.ext,
+  legend("bottomleft", legend=c("COSMO-REA6 at 116m", plot.100.ext,
                                 paste0("correlation = ", round(corr$estimate, 2))),
          text.col=c(color$herz, color$obs, color$black), horiz=T)
 
@@ -1614,7 +1614,7 @@ PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
     lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col=color$herz)
     lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$obs)
     corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
-    legend("bottomleft", legend=c("HErZ at 10m", plot.10.ext,
+    legend("bottomleft", legend=c("COSMO-REA6 at 10m", plot.10.ext,
                                   paste0("correlation = ", round(corr$estimate, 2))),
            text.col=c(color$herz, color$obs, color$black), cex=0.75, horiz=T)
 
@@ -1759,8 +1759,8 @@ PlotTowerERAprofileAnnualVar <- function(tower.obj, fname) {
       lines(mon.Herz116[[months[[cnt]]]], type="b", pch=16, col=colorH[cnt],
             bg=rgb(0,0,0,1./cnt), lw=2)
     }
-    legend("bottomleft", legend=c(paste0("HErZ at 116m ", all.months[months[[1]]]),
-                                  paste0("HErZ at 116m ", all.months[months[[2]]])),
+    legend("bottomleft", legend=c(paste0("COSMO-REA6 at 116m ", all.months[months[[1]]]),
+                                  paste0("COSMO-REA6 at 116m ", all.months[months[[2]]])),
            text.col=colorH, cex=legend.cex)
 
     plot(dummy, main=NULL, xaxt="n", ylim=c(yliml, ylimh), las=1)
@@ -1795,8 +1795,8 @@ PlotTowerERAprofileAnnualVar <- function(tower.obj, fname) {
       lines(mon.Herz10[[months[[cnt]]]], type="b", pch=16, col=colorH[cnt],
             bg=rgb(0,0,0,1./cnt), lw=2)
     }
-    legend("topleft", legend=c(paste0("HErZ at 10m ", all.months[months[[1]]]),
-                               paste0("HErZ at 10m ", all.months[months[[2]]])),
+    legend("topleft", legend=c(paste0("COSMO-REA6 at 10m ", all.months[months[[1]]]),
+                               paste0("COSMO-REA6 at 10m ", all.months[months[[2]]])),
            text.col=colorH, cex=legend.cex)
 
     if (t.obj$obs$data$StationName[1] == "Lindenberg") {
@@ -1854,8 +1854,8 @@ PlotTowerERAprofileAnnualVar <- function(tower.obj, fname) {
       lines(mon.Herz116[[months[[cnt]]]], type="b", pch=16, col=colorH[cnt],
             bg=rgb(0,0,0,1./cnt), lw=2)
     }
-    legend("bottomleft", legend=c(paste0("HErZ at 116m ", all.months[months[[1]]]),
-                                  paste0("HErZ at 116m ", all.months[months[[2]]])),
+    legend("bottomleft", legend=c(paste0("COSMO-REA6 at 116m ", all.months[months[[1]]]),
+                                  paste0("COSMO-REA6 at 116m ", all.months[months[[2]]])),
            text.col=colorH, cex=legend.cex)
 
     plot(dummy, main=NULL, ylim=c(yliml, ylimh), las=1)
@@ -2430,7 +2430,7 @@ PreparePlottingTowerDailyCycle <- function(tower.obj, fname) {
   t.obj = tower.obj$climate_data_objects
   tower.date <- as.POSIXlt(t.obj$obs$data$date)
 
-  # extended time series HErZ at tower location
+  # extended time series COSMO-REA6 at tower location
   tower1.xts = NULL
   tower2.xts = NULL
   tower3.xts = NULL
@@ -2573,9 +2573,9 @@ PreparePlottingTowerDailyCycle <- function(tower.obj, fname) {
 
 #-----------------------------------------------------------------------------------
 
-#' @title Prepare plotting daily cycle of HErZ data.
-#' @description Preparing to plot the daily cycle of the HErZ RRA by creating
-#'   lists holding the mean and standard deviation of hourly HErZ data. This is done
+#' @title Prepare plotting daily cycle of COSMO-REA6 data.
+#' @description Preparing to plot the daily cycle of the COSMO-REA6 RRA by creating
+#'   lists holding the mean and standard deviation of hourly COSMO-REA6 data. This is done
 #'   for (a) all data and (b) for selected months only.
 #' @param tower.obj ClimObject holding tower and corresponding reanalysis data.
 #' @param fname is a string holding the file name of the plot.
@@ -2590,7 +2590,7 @@ PreparePlottingHerzDailyCycle <- function(tower.obj, fname) {
   t.obj = tower.obj$climate_data_objects
   tower.date <- as.POSIXlt(t.obj$obs$data$date)
 
-  # extended time series HErZ at tower location
+  # extended time series COSMO-REA6 at tower location
   Herz116Xts = xts(t.obj$herz116$data$wind_speed, order.by=tower.date)
   Herz69Xts = xts(t.obj$herz69$data$wind_speed, order.by=tower.date)
   Herz35Xts = xts(t.obj$herz35$data$wind_speed, order.by=tower.date)
@@ -2677,13 +2677,13 @@ PreparePlottingHerzDailyCycle <- function(tower.obj, fname) {
 
 #-----------------------------------------------------------------------------------
 
-#' @title Plotting the daily cycle of HErZ reanalysis data.
+#' @title Plotting the daily cycle of COSMO-REA6 reanalysis data.
 #' @description This function actually performs the plotting of the daily cycle of
 #'   the hourly HerZ reanalysis data. Two types of plots are created: line plots
 #'   showing the evolution of the daily cycle of the mean; and box plots showing the
 #'   variability at each hourly time step. This is done each for the complete time
 #'   period and for selected months only.
-#' @param Herz10,Herz35,Herz69,Herz116 are lists holding the HErZ reanalysis data
+#' @param Herz10,Herz35,Herz69,Herz116 are lists holding the COSMO-REA6 reanalysis data
 #'   at diffferent height levels.
 #' @param month.names is a named list holding the names of the month of year and
 #'   their corresponding number within the year (list(names=, count=)).
@@ -2733,27 +2733,27 @@ PlotDailyCycleHerz <- function(Herz10, Herz35, Herz69, Herz116, month.names, PS,
       lines(Herz69[[cnt]]$mean, col="red", pch=16, type="b")
       lines(Herz35[[cnt]]$mean, col="orange", pch=16, type="b")
       lines(Herz10[[cnt]]$mean, col="green", pch=16, type="b")
-      title(main=paste0("Daily cycle of HErZ wind speed in ",
+      title(main=paste0("Daily cycle of COSMO-REA6 wind speed in ",
                         month.names$names[[cnt]], " at tower location ",
                         PS$PS10$obs.name), line=1, cex=1.5)
-      legend("top", legend=c(paste0("HErZ at ", as.character(PS$PS116$obs.height)),
-                             paste0("HErZ at ", as.character(PS$PS69$obs.height)),
-                             paste0("HErZ at ", as.character(PS$PS35$obs.height)),
-                             paste0("HErZ at ", as.character(PS$PS10$obs.height))),
+      legend("top", legend=c(paste0("COSMO-REA6 at ", as.character(PS$PS116$obs.height)),
+                             paste0("COSMO-REA6 at ", as.character(PS$PS69$obs.height)),
+                             paste0("COSMO-REA6 at ", as.character(PS$PS35$obs.height)),
+                             paste0("COSMO-REA6 at ", as.character(PS$PS10$obs.height))),
              text.col=c("blue", "red", "orange", "green"), cex=1.25)
     }
   } else {
     plot(Herz116$mean, col="blue", pch=16, type="b",
          ylim=c(2.5,6.5), xlab=x.lab, ylab=y.lab,
-         main=paste0("Daily cycle of HErZ wind speed at tower location ",
+         main=paste0("Daily cycle of COSMO-REA6 wind speed at tower location ",
                      PS$PS10$obs.name))
     lines(Herz69$mean, col="red", pch=16, type="b")
     lines(Herz35$mean, col="orange", pch=16, type="b")
     lines(Herz10$mean, col="green", pch=16, type="b")
-    legend("bottom", legend=c(paste0("HErZ at ", as.character(PS$PS116$obs.height)),
-                              paste0("HErZ at ", as.character(PS$PS69$obs.height)),
-                              paste0("HErZ at ", as.character(PS$PS35$obs.height)),
-                              paste0("HErZ at ", as.character(PS$PS10$obs.height))),
+    legend("bottom", legend=c(paste0("COSMO-REA6 at ", as.character(PS$PS116$obs.height)),
+                              paste0("COSMO-REA6 at ", as.character(PS$PS69$obs.height)),
+                              paste0("COSMO-REA6 at ", as.character(PS$PS35$obs.height)),
+                              paste0("COSMO-REA6 at ", as.character(PS$PS10$obs.height))),
            text.col=c("blue", "red", "orange", "green"), cex=1.15)
   }
   dev.off()
@@ -2785,7 +2785,7 @@ PlotDailyCycleHerz <- function(Herz10, Herz35, Herz69, Herz116, month.names, PS,
                       horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
                       boxwex=bwex, staplewex=swex, las=1, ylim=c(0,max.val.100), col="blue",
                       xlab="", ylab=y.lab, names=c(seq(24)))
-      title(main=paste0("Daily cycle of ", PS$PS116$obs.height, " HErZ wind speed in ",
+      title(main=paste0("Daily cycle of ", PS$PS116$obs.height, " COSMO-REA6 wind speed in ",
                         month.names$names[[cnt]], " at station location ",
                         PS$PS116$obs.name), line=1, cex=1.5)
 
@@ -2804,7 +2804,7 @@ PlotDailyCycleHerz <- function(Herz10, Herz35, Herz69, Herz116, month.names, PS,
                       horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
                       boxwex=bwex, staplewex=swex, las=1, ylim=c(0,max.val.10), col="green",
                       xlab=x.lab, ylab=y.lab, names=c(seq(24)))
-      title(main=paste0("Daily cycle of ", PS$PS10$obs.height, " HErZ wind speed in ",
+      title(main=paste0("Daily cycle of ", PS$PS10$obs.height, " COSMO-REA6 wind speed in ",
                         month.names$names[[cnt]], " at station location ",
                         PS$PS10$obs.name), line=1, cex=1.5)
     }
@@ -2824,7 +2824,7 @@ PlotDailyCycleHerz <- function(Herz10, Herz35, Herz69, Herz116, month.names, PS,
                     horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
                     boxwex=bwex, staplewex=swex, las=1, ylim=c(0,max.val.100), col="blue",
                     xlab="", ylab=y.lab, names=c(seq(24)))
-    title(main=paste0("Daily cycle of wind speed of HErZ in ", PS$PS116$obs.height,
+    title(main=paste0("Daily cycle of wind speed of COSMO-REA6 in ", PS$PS116$obs.height,
                       " at station location ", PS$PS116$obs.name), line=1, cex=1.5)
 
     boxplot.default(coredata(Herz10$vals[[1]]), coredata(Herz10$vals[[2]]),
@@ -2842,7 +2842,7 @@ PlotDailyCycleHerz <- function(Herz10, Herz35, Herz69, Herz116, month.names, PS,
                     horizontal=hori, notch=nch, outline=oline, na.action=na.pass,
                     boxwex=bwex, staplewex=swex, las=1, ylim=c(0,max.val.10), col="green",
                     xlab=x.lab, ylab=y.lab, names=c(seq(24)))
-    title(main=paste0("Daily cycle of wind speed of HErZ in ", PS$PS10$obs.height,
+    title(main=paste0("Daily cycle of wind speed of COSMO-REA6 in ", PS$PS10$obs.height,
                       " at station location ", PS$PS10$obs.name), line=1, cex=1.5)
   }
   dev.off()
@@ -3094,7 +3094,7 @@ PlotStationExtremesContr <- function(stat.obj, fname, threshold, ana.time.res) {
 
   PS = PlottingSettings(stat.obj$herz10$data)
 
-  # against HErZ at 10m
+  # against COSMO-REA6 at 10m
   obs = stat.obj$obs$data$wind_speed
   forec = stat.obj$herz10$data$wind_speed
   scores.df = GetScoresDF(threshold, obs, forec)
@@ -3161,7 +3161,7 @@ PlotTowerExtremesContr <- function(tower.obj, fname, threshold, ana.time.res) {
 
     PS["tower.height"] = t.obj$obs$data$height[1]
 
-    # against HErZ at 116m
+    # against COSMO-REA6 at 116m
     obs = t.obj$obs$data$wind_speed
     forec = t.obj$herz116$data$wind_speed
     scores.df = GetScoresDF(threshold, obs, forec)
@@ -3187,7 +3187,7 @@ PlotTowerExtremesContr <- function(tower.obj, fname, threshold, ana.time.res) {
 
   } else if (t.obj$obs$data$StationName[1] == "Lindenberg") {
 
-    # against HErZ at 10m
+    # against COSMO-REA6 at 10m
     obs = t.obj$obs6$data$wind_speed
     forec = t.obj$herz10$data$wind_speed
     scores.df = GetScoresDF(threshold, obs, forec)
@@ -3213,7 +3213,7 @@ PlotTowerExtremesContr <- function(tower.obj, fname, threshold, ana.time.res) {
                        scores.df$hit.rate, threshold, PS)
     }
 
-    # against HErZ at 35m
+    # against COSMO-REA6 at 35m
     obs = t.obj$obs4$data$wind_speed
     forec = t.obj$herz35$data$wind_speed
     scores.df = GetScoresDF(threshold, obs, forec)
@@ -3225,7 +3225,7 @@ PlotTowerExtremesContr <- function(tower.obj, fname, threshold, ana.time.res) {
     PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
                      scores.df$hit.rate, threshold, PS)
 
-    # against HErZ at 69m
+    # against COSMO-REA6 at 69m
     obs = t.obj$obs3$data$wind_speed
     forec = t.obj$herz69$data$wind_speed
     scores.df = GetScoresDF(threshold, obs, forec)
@@ -3237,7 +3237,7 @@ PlotTowerExtremesContr <- function(tower.obj, fname, threshold, ana.time.res) {
     PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
                      scores.df$hit.rate, threshold, PS)
 
-    # against HErZ at 69m
+    # against COSMO-REA6 at 69m
     obs = t.obj$obs2$data$wind_speed
     forec = t.obj$herz69$data$wind_speed
     scores.df = GetScoresDF(threshold, obs, forec)
@@ -3249,7 +3249,7 @@ PlotTowerExtremesContr <- function(tower.obj, fname, threshold, ana.time.res) {
     PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
                      scores.df$hit.rate, threshold, PS)
 
-    # against HErZ at 116m
+    # against COSMO-REA6 at 116m
     obs = t.obj$obs$data$wind_speed
     forec = t.obj$herz116$data$wind_speed
     scores.df = GetScoresDF(threshold, obs, forec)
@@ -3275,7 +3275,7 @@ PlotTowerExtremesContr <- function(tower.obj, fname, threshold, ana.time.res) {
                        scores.df$hit.rate, threshold, PS)
     }
 
-    # against HErZ at different heights
+    # against COSMO-REA6 at different heights
     obs = t.obj$obs$data$wind_speed
     forec = t.obj$herz116$data$wind_speed
     scores.116.df = GetScoresDF(threshold, obs, forec)
@@ -3315,7 +3315,7 @@ PlotTowerExtremesContr <- function(tower.obj, fname, threshold, ana.time.res) {
 
   } else if (t.obj$obs$data$StationName[1] == "Cabauw") {
 
-    # against HErZ at 10m
+    # against COSMO-REA6 at 10m
     obs = t.obj$obs6$data$wind_speed
     forec = t.obj$herz10$data$wind_speed
     scores.df = GetScoresDF(threshold, obs, forec)
@@ -3327,7 +3327,7 @@ PlotTowerExtremesContr <- function(tower.obj, fname, threshold, ana.time.res) {
     PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
                      scores.df$hit.rate, threshold, PS)
 
-    # against HErZ at 35m
+    # against COSMO-REA6 at 35m
     obs = t.obj$obs4$data$wind_speed
     forec = t.obj$herz35$data$wind_speed
     scores.df = GetScoresDF(threshold, obs, forec)
@@ -3339,7 +3339,7 @@ PlotTowerExtremesContr <- function(tower.obj, fname, threshold, ana.time.res) {
     PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
                      scores.df$hit.rate, threshold, PS)
 
-    # against HErZ at 69m
+    # against COSMO-REA6 at 69m
     obs = t.obj$obs3$data$wind_speed
     forec = t.obj$herz69$data$wind_speed
     scores.df = GetScoresDF(threshold, obs, forec)
@@ -3351,7 +3351,7 @@ PlotTowerExtremesContr <- function(tower.obj, fname, threshold, ana.time.res) {
     PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
                      scores.df$hit.rate, threshold, PS)
 
-    # against HErZ at 116m
+    # against COSMO-REA6 at 116m
     obs = t.obj$obs2$data$wind_speed
     forec = t.obj$herz116$data$wind_speed
     scores.df = GetScoresDF(threshold, obs, forec)
@@ -3389,7 +3389,7 @@ PlotTowerExtremesContr <- function(tower.obj, fname, threshold, ana.time.res) {
                        scores.df$hit.rate, threshold, PS)
     }
 
-    # against HErZ at 178m
+    # against COSMO-REA6 at 178m
     obs = t.obj$obs$data$wind_speed
     forec = t.obj$herz178$data$wind_speed
     scores.df = GetScoresDF(threshold, obs, forec)
@@ -3401,7 +3401,7 @@ PlotTowerExtremesContr <- function(tower.obj, fname, threshold, ana.time.res) {
     PlotTowerHRvsFAR(fname.new, scores.df$false.alarm.ratio,
                      scores.df$hit.rate, threshold, PS)
 
-    # against HErZ at different heights
+    # against COSMO-REA6 at different heights
     obs = t.obj$obs$data$wind_speed
     forec = t.obj$herz178$data$wind_speed
     scores.178.df = GetScoresDF(threshold, obs, forec)
