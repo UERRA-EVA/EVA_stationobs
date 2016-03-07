@@ -385,21 +385,38 @@ if (plot.TowerEraProfile) {
 
 if(plot.histograms) {
   cat("  **  Plotting Histograms\n")
+
+  if (herz.profile) {
+    plot.HerzProfile = TRUE
+  } else {
+    plot.HerzProfile = FALSE
+  }
+  plot.10m = TRUE
+  plot.100m = TRUE
+
   fname = paste0("Histogram_Lindenberg_", res.switch, '_', time.ext, "_",
                  fname_ext, ".pdf")
-  PlotHistogramsTower(outdir, fname, ana.time.res, lind.climobj)
+  PlotHistogramsTower(outdir, fname, ana.time.res, lind.climobj,
+                      plot.10m = plot.10m, plot.100m = plot.100m,
+                      plot.HerzProfile = plot.HerzProfile)
 
   fname = paste0("Histogram_Fino1_", res.switch, '_', time.ext, "_",
                  fname_ext, ".pdf")
-  PlotHistogramsTower(outdir, fname, ana.time.res, fino1.climobj)
+  PlotHistogramsTower(outdir, fname, ana.time.res, fino1.climobj,
+                      plot.10m = plot.10m, plot.100m = plot.100m,
+                      plot.HerzProfile = plot.HerzProfile)
 
   fname = paste0("Histogram_Fino2_", res.switch, '_', time.ext, "_",
                  fname_ext, ".pdf")
-  PlotHistogramsTower(outdir, fname, ana.time.res, fino2.climobj)
+  PlotHistogramsTower(outdir, fname, ana.time.res, fino2.climobj,
+                      plot.10m = plot.10m, plot.100m = plot.100m,
+                      plot.HerzProfile = plot.HerzProfile)
 
   fname = paste0("Histogram_Cabauw_", res.switch, '_', time.ext, "_",
                  fname_ext, ".pdf")
-  PlotHistogramsTower(outdir, fname, ana.time.res, cabauw.climobj)
+  PlotHistogramsTower(outdir, fname, ana.time.res, cabauw.climobj,
+                      plot.10m = plot.10m, plot.100m = plot.100m,
+                      plot.HerzProfile = plot.HerzProfile)
 }
 
 #-----------------------------------------------------------------------------
