@@ -1086,8 +1086,6 @@ PlotHistogramsTower <- function(outdir, fname, ana.time.res, tower.obj,
 
   if (plot.100m) {
 
-    # this is for Lindenberg, Cabauw, Fino1,2,3
-
     fname.new = fname
     # -- preparations
     data.100.vals = t.obj$obs$data$wind_speed
