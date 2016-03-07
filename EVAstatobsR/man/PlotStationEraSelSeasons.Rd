@@ -2,7 +2,7 @@
 \name{PlotStationEraSelSeasons}
 \alias{PlotStationEraSelSeasons}
 \title{Prepare and plot seasonal time series of station data and ERA20C, ERA-I,
-  and HErZ data.}
+  and COSMO-REA6 data.}
 \usage{
 PlotStationEraSelSeasons(Era20cXts, EraIXts, HerzXts, StatXts, titname, outdir,
   fname, anomaly = FALSE, seasons = FALSE)
@@ -13,7 +13,7 @@ corresponding to the station location}
 
 \item{EraIXts}{same as above for ERA-Interim}
 
-\item{HerzXts}{same as above for HErZ}
+\item{HerzXts}{same as above for COSMO-REA6}
 
 \item{StatXts}{monthly mean extended time series of the station values}
 

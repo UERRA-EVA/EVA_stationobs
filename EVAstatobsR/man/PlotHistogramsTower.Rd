@@ -3,7 +3,8 @@
 \alias{PlotHistogramsTower}
 \title{Plot histrograms for tower measurements.}
 \usage{
-PlotHistogramsTower(outdir, fname, ana.time.res, tower.obj)
+PlotHistogramsTower(outdir, fname, ana.time.res, tower.obj, plot.10m = FALSE,
+  plot.100m = FALSE, plot.HerzProfile = FALSE)
 }
 \arguments{
 \item{outdir}{is a string containing the output path of the plot}

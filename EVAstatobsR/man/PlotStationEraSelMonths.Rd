@@ -2,7 +2,7 @@
 \name{PlotStationEraSelMonths}
 \alias{PlotStationEraSelMonths}
 \title{Prepare and plot specifically selected months of station data and ERA20C,
-  ERA-I, and HErZ data.}
+  ERA-I, and COSMO-REA6 data.}
 \usage{
 PlotStationEraSelMonths(Era20cXts, EraIXts, HerzXts, StatXts, titname, outdir,
   fname, anomaly = FALSE)
@@ -13,7 +13,7 @@ corresponding to the station location}
 
 \item{EraIXts}{same as above for ERA-Interim}
 
-\item{HerzXts}{same as above for HErZ}
+\item{HerzXts}{same as above for COSMO-REA6}
 
 \item{StatXts}{monthly mean extended time series of the station values}
 
@@ -27,7 +27,7 @@ corresponding to the station location}
 }
 \description{
 \code{PlotStationEraSelMonths} prepares extended time series of
-  station data, ERA20C, ERA-I, and HErZ data - for specific months only. These
+  station data, ERA20C, ERA-I, and COSMO-REA6 data - for specific months only. These
   months are set hard-coded within this function. Of course, this setting can be
   put into the Settings.R file if necessary.
   Optionally, it is possible to prepare the anomalies. A generic plotting routine

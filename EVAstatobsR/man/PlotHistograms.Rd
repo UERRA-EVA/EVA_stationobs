@@ -26,7 +26,7 @@ of the data to be read.}
 10m and 100m height}
 
 \item{HerzXts10,HerzXts35,HerzXts69,HerzXts116,HerzXts178,HerzXts258}{extended
-time series of available HErZ data at different heights}
+time series of available COSMO-REA6 data at different heights}
 
 \item{StatXts}{extended time series of station data}
 

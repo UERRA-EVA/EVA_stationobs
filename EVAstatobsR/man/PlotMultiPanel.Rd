@@ -17,7 +17,7 @@ PlotMultiPanel(outdir, fname, titname, Era20c, EraI, Herz, Stat, length.plot,
 
 \item{EraI}{extended time series of momthly or seasonal ERA-Interim data}
 
-\item{Herz}{extended time series of monthly or seasonal HErZ data}
+\item{Herz}{extended time series of monthly or seasonal COSMO-REA6 data}
 
 \item{Stat}{extended time series of monthly or seasonal station data}
 
@@ -36,7 +36,7 @@ default value is to plot the absolute values of each time series
 \description{
 This is supposed to be a rather generic routine to plot a 2-by-2
   multi panel plot. So far, it is used to plot the four different data sources
-  (ERA20C, ERA-Interim, HErZ, station data) for monthly and seasonal values. The
+  (ERA20C, ERA-Interim, COSMO-REA6, station data) for monthly and seasonal values. The
   plot is saved into a pdf file, and the function does not have a return value.
 }
 
