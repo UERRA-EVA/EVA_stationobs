@@ -9,7 +9,7 @@ res.switch = high.res
 hourly="hourly"
 daily="daily"
 monthly="monthly"
-time.res=monthly
+time.res=hourly
 ana.time.res = list(hourly=hourly, daily=daily, monthly=monthly, time.res=time.res)
 if (ana.time.res$time.res == ana.time.res$monthly) {
   time.ext = "Monthly"
@@ -21,7 +21,7 @@ if (ana.time.res$time.res == ana.time.res$monthly) {
 
 # choose whether to analyse the profile (T) of six model levels of HErZ data or only
 # 10m and 116m (F)
-herz.profile = F
+herz.profile = T
 
 #=== diagnostics (verbose) ===
 verb.era.dat = FALSE

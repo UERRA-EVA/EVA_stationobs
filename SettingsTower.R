@@ -94,6 +94,8 @@ cabauw.tsend = c(2015,07)
 
 plot.TowerEraProfile = F
 plot.histograms = F
-plot.ProfileTS = T
+plot.separate.hist = T
+plot.ProfileTS = F
 plot.Extremes = F
 plot.DailyCycle = F
+calc.threshold = F

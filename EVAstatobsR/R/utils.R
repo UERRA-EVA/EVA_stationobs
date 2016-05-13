@@ -7,6 +7,7 @@
 #'   which is the new normal and already works for tower data.
 #' @return is a named list holding all the parameters.
 #' @importFrom xts is.xts
+#' @export
 PlottingSettings <- function(data.vals) {
 
   land.a4width = 29.7/2.54

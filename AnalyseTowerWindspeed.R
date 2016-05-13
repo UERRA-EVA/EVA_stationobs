@@ -1,7 +1,9 @@
 #!/usr/bin/env Rscript
 
-library(EVAstatobsR)
 rm(list=ls())
+library(EVAstatobsR)
+source("~/work/UERRA/EVA_stationobs/PlotHist_SeparatePlots.R")
+source("~/work/UERRA/EVA_stationobs/Calc.thresholds.R")
 
 interactive = F
 if (interactive) {
@@ -362,6 +364,13 @@ cabauw.climobj = climobj$obs.object
 
 #-----------------------------------------------------------------------------
 
+if (calc.threshold) {
+  Calc.thresholds(fino1.climobj$climate_data_objects)
+  Calc.thresholds(fino2.climobj$climate_data_objects)
+  Calc.thresholds(lind.climobj$climate_data_objects)
+  Calc.thresholds(cabauw.climobj$climate_data_objects)
+}
+
 if (plot.TowerEraProfile) {
   cat("  **  Plotting tower-ERA profile box plots\n")
   fname = paste0(outdir, "LindenbergHErZERA20C_boxPlots_", time.ext,"_",
@@ -382,6 +391,80 @@ if (plot.TowerEraProfile) {
 }
 
 #-----------------------------------------------------------------------------
+
+if (plot.separate.hist) {
+  cat("  **  Plotting histograms separately one on each page")
+
+  fname = paste0(outdir, "Histogram_Lindenberg-98m_", res.switch, ".pdf")
+  titname = "Hourly wind speed at Lindenberg in 98m"
+  PlotHist_SeparatePlots(fname,
+                         lind.climobj$climate_data_objects$obs$data$wind_speed,
+                         lind.climobj$climate_data_objects$obs$data$date,
+                         titname)
+
+  fname = paste0(outdir, "Histogram_REA6atLindenberg-116m_", res.switch, ".pdf")
+  titname = "Hourly wind speed of COSMO-REA6\nat Lindenberg in 116m"
+  PlotHist_SeparatePlots(fname,
+                         lind.climobj$climate_data_objects$herz116$data$wind_speed,
+                         lind.climobj$climate_data_objects$herz116$data$date,
+                         titname)
+
+  fname = paste0(outdir, "Histogram_Cabauw-80m_", res.switch, ".pdf")
+  titname = "Hourly wind speed at Cabauw in 80m"
+  PlotHist_SeparatePlots(fname,
+                         cabauw.climobj$climate_data_objects$obs3$data$wind_speed,
+                         cabauw.climobj$climate_data_objects$obs3$data$date,
+                         titname)
+
+  fname = paste0(outdir, "Histogram_REA6atCabauw-69m_", res.switch, ".pdf")
+  titname = "Hourly wind speed of COSMO-REA6\nat Cabauw in 69m"
+  PlotHist_SeparatePlots(fname,
+                         cabauw.climobj$climate_data_objects$herz69$data$wind_speed,
+                         cabauw.climobj$climate_data_objects$herz69$data$date,
+                         titname)
+
+  fname = paste0(outdir, "Histogram_Cabauw-140m_", res.switch, ".pdf")
+  titname = "Hourly wind speed at Cabauw in 140m"
+  PlotHist_SeparatePlots(fname,
+                         cabauw.climobj$climate_data_objects$obs2$data$wind_speed,
+                         cabauw.climobj$climate_data_objects$obs2$data$date,
+                         titname)
+
+  fname = paste0(outdir, "Histogram_REA6atCabauw-116m_", res.switch, ".pdf")
+  titname = "Hourly wind speed of COSMO-REA6\nat Cabauw in 116m"
+  PlotHist_SeparatePlots(fname,
+                         cabauw.climobj$climate_data_objects$herz116$data$wind_speed,
+                         cabauw.climobj$climate_data_objects$herz116$data$date,
+                         titname)
+
+  fname = paste0(outdir, "Histogram_FINO1-100m_", res.switch, ".pdf")
+  titname = "Hourly wind speed at FINO1 in 100m"
+  PlotHist_SeparatePlots(fname,
+                         fino1.climobj$climate_data_objects$obs$data$wind_speed,
+                         fino1.climobj$climate_data_objects$obs$data$date,
+                         titname)
+
+  fname = paste0(outdir, "Histogram_REA6atFINO1-116m_", res.switch, ".pdf")
+  titname = "Hourly wind speed of COSMO-REA6\nat FINO1 in 116m"
+  PlotHist_SeparatePlots(fname,
+                         fino1.climobj$climate_data_objects$herz116$data$wind_speed,
+                         fino1.climobj$climate_data_objects$herz116$data$date,
+                         titname)
+
+  fname = paste0(outdir, "Histogram_FINO2-102m_", res.switch, ".pdf")
+  titname = "Hourly wind speed at FINO2 in 102m"
+  PlotHist_SeparatePlots(fname,
+                         fino2.climobj$climate_data_objects$obs$data$wind_speed,
+                         fino2.climobj$climate_data_objects$obs$data$date,
+                         titname)
+
+  fname = paste0(outdir, "Histogram_REA6atFINO2-116m_", res.switch, ".pdf")
+  titname = "Hourly wind speed of COSMO-REA6\nat FINO2 in 116m"
+  PlotHist_SeparatePlots(fname,
+                         fino2.climobj$climate_data_objects$herz116$data$wind_speed,
+                         fino2.climobj$climate_data_objects$herz116$data$date,
+                         titname)
+}
 
 if(plot.histograms) {
   cat("  **  Plotting Histograms\n")
