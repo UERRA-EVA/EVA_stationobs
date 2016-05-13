@@ -966,12 +966,6 @@ PlotHistogramsTower <- function(outdir, fname, ana.time.res, tower.obj,
   } else {
     dummy = xts(t.obj$era20c10$data$wind_speed, order.by=tower.date)
   }
-  Ylims = GetYlims(dummy,
-                   xts(t.obj$herz116$data$wind_speed, order.by=tower.date),
-                   xts(t.obj$herz10$data$wind_speed, order.by=tower.date),
-                   xts(t.obj$herz10$data$wind_speed, order.by=tower.date))
-  yliml = Ylims$yll
-  ylimh = Ylims$ylh
 
   xlabname.empty = ""
   xlabname.full = "wind speed [m/s]"
@@ -3840,8 +3834,10 @@ scatterPlot <- function(X, Y, yliml, ylimh, titname, xlabname, ylabname,
 #'   y-axis (xaxis='s', yaxis='s') or omit either one (either set to 'n'). It not
 #'   set the default value will be used which is set to 's' meaning that the axis
 #'   will be plotted.
+#' @export
 histoPlot <- function(X, Y, breaks, xlims, titname='', xlabname='', ylabname='',
-                      xaxis='s', yaxis='s', addPlot=FALSE) {
+                      xaxis='s', yaxis='s', axis.cex=1.2, tit.cex=1.1,
+                      addPlot=FALSE) {
 
   if (addPlot) {
     # get high ylim for overplotting histograms
@@ -3859,16 +3855,16 @@ histoPlot <- function(X, Y, breaks, xlims, titname='', xlabname='', ylabname='',
     #     lines(density(X, na.rm=TRUE), col="red", lw=1.5)
   }
   if (xaxis == 's') {
-    mtext(xlabname, side=1, line=2, cex=1.2)
+    mtext(xlabname, side=1, line=2, cex=axis.cex)
   } else {
-    mtext(xlabname, side=1, line=0, cex=1.2)
+    mtext(xlabname, side=1, line=0, cex=axis.cex)
   }
   if(yaxis == 's') {
-    mtext(ylabname, side=2, line=2, cex=1.2)
+    mtext(ylabname, side=2, line=2, cex=axis.cex)
   } else {
-    mtext(ylabname, side=2, line=0, cex=1.2)
+    mtext(ylabname, side=2, line=0, cex=axis.cex)
   }
-  mtext(titname, side=3, line=0, font=2, cex=1.1)
+  mtext(titname, side=3, line=1, cex=tit.cex)
 }
 
 #-----------------------------------------------------------------------------------
@@ -3917,9 +3913,9 @@ qqPlot <- function(X, Y, yliml, ylimh,
 #' @param xlims the limits of the x-axis in the form c(low,high)
 #' @param vals vector of the plotted values of which the statistics are calculated
 #' @importFrom fitdistrplus fitdist
-plotLegendStats <- function(xlims, vals) {
+#' @export
+plotLegendStats <- function(xlims, vals, weibull=TRUE) {
 
-  weibull = TRUE
   if (any(!is.finite(vals))) weibull = FALSE
   if (weibull) {
     daily.weibull <- fitdist(vals, distr="weibull")
