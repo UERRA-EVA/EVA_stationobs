@@ -72,8 +72,8 @@ lind.lon = 14.12222
 lind.lat = 52.16653
 cabauw.lon = 4.927
 cabauw.lat = 51.971
-hamburg.lon = 53.51917
-hamburg.lat = 10.10286
+hamburg.lon = 10.10286
+hamburg.lat = 53.51917
 
 #=== time period ===
 # available data of the tower measurements, ERA20C, and HErZ
@@ -94,8 +94,8 @@ cabauw.tsend = c(2015,07)
 
 plot.TowerEraProfile = F
 plot.histograms = F
-plot.separate.hist = T
+plot.separate.hist = F
 plot.ProfileTS = F
 plot.Extremes = F
-plot.DailyCycle = F
+plot.DailyCycle = T
 calc.threshold = F

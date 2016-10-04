@@ -61,10 +61,12 @@ era20c.param = c("windspeed_10m", "windspeed_100m")
 if (ana.time.res$time.res == ana.time.res$monthly) {
   if (res.switch == high.res) {
     eraI.fname =
-      "./data/10mWindSpeedDirection-2mTemp_ERAInterim_MonMean_highRes_1979to2014.nc"
+      c("./data/10mWindSpeedDirection-2mTemp_ERAInterim_MonMean_highRes_1979to2014.nc",
+      "./data/ERAInterim_100m_windspeed_MonMean_highRes.nc")
   } else if (res.switch == orig.res) {
     eraI.fname =
-      "./data/10mWindSpeedDirection-2mTemp_ERAInterim_MonMean_origRes_1979to2014.nc"
+      C("./data/10mWindSpeedDirection-2mTemp_ERAInterim_MonMean_origRes_1979to2014.nc",
+      "./data/ERAInterim_100m_windspeed_MonMean_origRes.nc")
   }
   CheckFile(eraI.fname)
 } else if (ana.time.res$time.res == ana.time.res$daily) {
@@ -78,7 +80,7 @@ if (ana.time.res$time.res == ana.time.res$monthly) {
   CheckFile(eraI.fname)
 }
 # variable names to read from above files
-eraI.param = "windspeed_10m"
+eraI.param = c("windspeed_10m", "windspeed_100m")
 
 #=== HErZ ===
 # decide whether to read herz grid file in grb (T) or in nc (F) format

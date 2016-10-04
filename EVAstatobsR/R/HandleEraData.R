@@ -262,38 +262,65 @@ ReadHerzNetcdfHourly2Xts <- function(rra.para, rra.fname,
 ReadEraNetcdf2Xts <- function(era.param, era.fname,
                               era.tsstart, era.tsend,
                               lonidx, latidx, ana.time.res,
-                              era20c=TRUE, verb.dat=FALSE) {
+                              read.10m=FALSE, read.100m=FALSE, verb.dat=FALSE) {
+
+  # sanity check
+  if (!(read.10m) & !(read.100m)) {
+    CallStop(paste0("You need to read at least one of 10m or 100m data! ",
+                    "Now both are set to FALSE "))
+  }
 
   # Read ERA-I or ERA20C monthly or daily data
-  era10m = ReadNetcdf(era.param[1], era.fname, count=c(1,1,-1),
-                      start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-  if (era20c) {
-    era20c100m = ReadNetcdf(era.param[2], era.fname, count=c(1,1,-1),
-                            start=c(lonidx, latidx, 1), verb.dat=verb.dat)
-    df = data.frame(era10m$time, era10m$data, era20c100m$data)
-  } else {
+  if (read.10m) {
+    era10m = ReadNetcdf(era.param[1], era.fname[1], count=c(1,1,-1),
+                        start=c(lonidx, latidx, 1), verb.dat=verb.dat)
+  }
+  if (read.100m) {
+    era100m = ReadNetcdf(era.param[2], era.fname[2], count=c(1,1,-1),
+                         start=c(lonidx, latidx, 1), verb.dat=verb.dat)
+  }
+  if (read.10m & !read.100m) {
     df = data.frame(era10m$time, era10m$data)
+  } else if (read.100m & !read.10m) {
+    df = data.frame(era100m$time, era100m$data)
+  } else if (read.10m & read.100m) {
+    df = data.frame(era10m$time, era10m$data, era100m$data)
   }
 
   # convert ERA data and time values into an extended time series
   # and apply start and end date
   if (ana.time.res$time.res == ana.time.res$monthly) {
-    df$era10m.time = as.yearmon(df$era10m.time)
+    if (read.100m & !(read.10m)) {
+      df$era100m.time = as.yearmon(df$era100m.time)
+    } else {
+      df$era10m.time = as.yearmon(df$era10m.time)
+    }
   } else if (ana.time.res$time.res == ana.time.res$daily) {
-    df$era10m.time = as.POSIXct(strptime(df$era10m.time, format="%Y-%m-%d"),
-                                format="%Y-%m-%d", tz = "UTC")
+    if (read.100m & !(read.10m)) {
+      df$era100m.time = as.POSIXct(strptime(df$era100m.time, format="%Y-%m-%d"),
+                                   format="%Y-%m-%d", tz = "UTC")
+    } else {
+      df$era10m.time = as.POSIXct(strptime(df$era10m.time, format="%Y-%m-%d"),
+                                  format="%Y-%m-%d", tz = "UTC")
+    }
   }
   timestr = SetToDate(era.tsstart, era.tsend)
-  era.xts = xts(df$era10m.data, order.by=df$era10m.time)
-  era.xts = era.xts[timestr]
-  if (era20c) {
-    era20c100.xts = xts(df$era20c100m.data, order.by=df$era10m.time)
-    era20c100.xts = era20c100.xts[timestr]
-  } else {
-    era20c100.xts = NULL
+  era10m.xts = NULL
+  era100m.xts = NULL
+  if (read.10m) {
+    era10m.xts = xts(df$era10m.data, order.by=df$era10m.time)
+    era10m.xts = era10m.xts[timestr]
+  }
+  if (read.100m) {
+    if (read.100m & !(read.10m)) {
+      era100m.xts = xts(df$era100m.data, order.by=df$era100m.time)
+    } else {
+      era100m.xts = xts(df$era100m.data, order.by=df$era10m.time)
+    }
+    era100m.xts = era100m.xts[timestr]
   }
 
-  return(list(era10=era.xts, era20c100=era20c100.xts))
+  return(list(era10=era10m.xts, era100=era100m.xts))
 }
 
 #-----------------------------------------------------------------------------------
@@ -427,7 +454,8 @@ GetTowerProfileTS <- function(tower.xts, tower2.xts=NULL, tower3.xts=NULL,
 GetObsObject <- function(obs.xts, obs2.xts=NULL, obs3.xts=NULL,
                          obs4.xts=NULL, obs5.xts=NULL, obs6.xts=NULL,
                          herz10.xts, herz35.xts=NULL, herz69.xts=NULL, herz116.xts,
-                         herz178.xts=NULL, herz258.xts=NULL, eraI10.xts=NULL,
+                         herz178.xts=NULL, herz258.xts=NULL,
+                         eraI10.xts=NULL, eraI100.xts=NULL,
                          era20c10.xts=NULL, era20c100.xts=NULL,
                          obs.tsstart, obs.tsend, herz.tsend,
                          eraI.tsend=NULL, era20c.tsend=NULL,
@@ -471,6 +499,7 @@ GetObsObject <- function(obs.xts, obs2.xts=NULL, obs3.xts=NULL,
     herz258.xts = herz258.xts[timestr]
   }
   if (!is.null(eraI10.xts)) eraI10.xts = eraI10.xts[timestr]
+  if (!is.null(eraI100.xts)) eraI100.xts = eraI100.xts[timestr]
   if (!is.null(era20c10.xts)) era20c10.xts = era20c10.xts[timestr]
   if (!is.null(era20c100.xts)) era20c100.xts = era20c100.xts[timestr]
 
@@ -572,6 +601,13 @@ GetObsObject <- function(obs.xts, obs2.xts=NULL, obs3.xts=NULL,
                              wind_speed=coredata(era20c10.xts),
                              height=strsplit(era20c.param, '_')[[1]][[2]])
   }
+  if (!is.null(eraI100.xts)) {
+    eraI100.df = data.frame(date=index(eraI100.xts),
+                            ReanaName="ERA-I", StationName=obs.name,
+                            latitude=obs.lat, longitude=obs.lon,
+                            wind_speed=coredata(eraI100.xts),
+                            height=strsplit(eraI.param, '_')[[1]][[2]])
+  }
   if (!is.null(era20c100.xts)) {
     era20c100.df = data.frame(date=index(era20c100.xts),
                               ReanaName="ERA20C", StationName=obs.name,
@@ -582,7 +618,8 @@ GetObsObject <- function(obs.xts, obs2.xts=NULL, obs3.xts=NULL,
 
   # -- create clim objects
   if (!is.null(obs6.xts)) {
-    if (!is.null(era20c10.xts) & !is.null(era20c100.xts) & !is.null(eraI10.xts)) {
+    if (!is.null(era20c10.xts) & !is.null(era20c100.xts) & !is.null(eraI10.xts) &
+        !is.null(eraI100.xts)) {
       climate.obs.object = climate(data_tables=
                                      list(obs=obs.df, obs2=obs2.df,
                                           obs3=obs3.df, obs4=obs4.df,
@@ -591,6 +628,7 @@ GetObsObject <- function(obs.xts, obs2.xts=NULL, obs3.xts=NULL,
                                           herz69=herz69.df, herz116=herz116.df,
                                           herz178=herz178.df, herz258=herz258.df,
                                           eraI10=eraI10.df,
+                                          eraI100=eraI100.df,
                                           era20c10=era20c10.df,
                                           era20c100=era20c100.df))
     }  else {
@@ -603,12 +641,14 @@ GetObsObject <- function(obs.xts, obs2.xts=NULL, obs3.xts=NULL,
                                           herz178=herz178.df, herz258=herz258.df))
     }
   } else {
-    if (!is.null(era20c10.xts) & !is.null(era20c100.xts) & !is.null(eraI10.xts)) {
+    if (!is.null(era20c10.xts) & !is.null(era20c100.xts) & !is.null(eraI10.xts) &
+        !is.null(eraI100.xts)) {
       climate.obs.object = climate(data_tables=
                                      list(obs=obs.df, herz10=herz10.df,
                                           herz35=herz35.df, herz69=herz69.df,
                                           herz116=herz116.df, herz178=herz178.df,
                                           herz258=herz258.df, eraI10=eraI10.df,
+                                          eraI100=eraI100.df,
                                           era20c10=era20c10.df,
                                           era20c100=era20c100.df))
     } else {

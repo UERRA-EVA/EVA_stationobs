@@ -88,65 +88,97 @@ if (ana.time.res$time.res == monthly | ana.time.res$time.res == daily) {
   idx = GetLonLatIdx(era20c.fname, fino1.lon, fino1.lat)
   lonidx = idx$lonidx
   latidx = idx$latidx
-  era20c.data = ReadEraNetcdf2Xts(era20c.param, era20c.fname,
+  era20c.data = ReadEraNetcdf2Xts(era20c.param, c(era20c.fname,era20c.fname),
                                   era20c.tsstart, era20c.tsend,
                                   lonidx, latidx, ana.time.res,
-                                  era20c=TRUE, verb.dat=verb.era.dat)
+                                  read.10m=TRUE, read.100m=TRUE, verb.dat=verb.era.dat)
   era20c10.fino1.xts = era20c.data$era10
-  era20c100.fino1.xts = era20c.data$era20c100
+  era20c100.fino1.xts = era20c.data$era100
   eraI.data = ReadEraNetcdf2Xts(eraI.param, eraI.fname,
                                 eraI.tsstart, eraI.tsend,
                                 lonidx, latidx, ana.time.res,
-                                era20c=FALSE, verb.dat=verb.era.dat)
+                                read.10m=TRUE, read.100m=FALSE, verb.dat=verb.era.dat)
   eraI10.fino1.xts = eraI.data$era10
+  idx = GetLonLatIdx(eraI.fname[2], fino1.lon, fino1.lat)
+  lonidx = idx$lonidx
+  latidx = idx$latidx
+  eraI.data = ReadEraNetcdf2Xts(eraI.param, eraI.fname,
+                                eraI.tsstart, eraI.tsend,
+                                lonidx, latidx, ana.time.res,
+                                read.10m=FALSE, read.100m=TRUE, verb.dat=verb.era.dat)
+  eraI100.fino1.xts = eraI.data$era100
 
   # for FINO2
   idx = GetLonLatIdx(era20c.fname, fino2.lon, fino2.lat)
   lonidx = idx$lonidx
   latidx = idx$latidx
-  era20c.data = ReadEraNetcdf2Xts(era20c.param, era20c.fname,
+  era20c.data = ReadEraNetcdf2Xts(era20c.param, c(era20c.fname,era20c.fname),
                                   era20c.tsstart, era20c.tsend,
                                   lonidx, latidx, ana.time.res,
-                                  era20c=TRUE, verb.dat=verb.era.dat)
+                                  read.10m=TRUE, read.100m=TRUE, verb.dat=verb.era.dat)
   era20c10.fino2.xts = era20c.data$era10
-  era20c100.fino2.xts = era20c.data$era20c100
+  era20c100.fino2.xts = era20c.data$era100
   eraI.data = ReadEraNetcdf2Xts(eraI.param, eraI.fname,
                                 eraI.tsstart, eraI.tsend,
                                 lonidx, latidx, ana.time.res,
-                                era20c=FALSE, verb.dat=verb.era.dat)
+                                read.10m=TRUE, read.100m=FALSE, verb.dat=verb.era.dat)
   eraI10.fino2.xts = eraI.data$era10
+  idx = GetLonLatIdx(eraI.fname[2], fino1.lon, fino1.lat)
+  lonidx = idx$lonidx
+  latidx = idx$latidx
+  eraI.data = ReadEraNetcdf2Xts(eraI.param, eraI.fname,
+                                eraI.tsstart, eraI.tsend,
+                                lonidx, latidx, ana.time.res,
+                                read.10m=FALSE, read.100m=TRUE, verb.dat=verb.era.dat)
+  eraI100.fino2.xts = eraI.data$era100
 
   # for Lindenberg
   idx = GetLonLatIdx(era20c.fname, lind.lon, lind.lat)
   lonidx = idx$lonidx
   latidx = idx$latidx
-  era20c.data = ReadEraNetcdf2Xts(era20c.param, era20c.fname,
+  era20c.data = ReadEraNetcdf2Xts(era20c.param, c(era20c.fname,era20c.fname),
                                   era20c.tsstart, era20c.tsend,
                                   lonidx, latidx, ana.time.res,
-                                  era20c=TRUE, verb.dat=verb.era.dat)
+                                  read.10m=TRUE, read.100m=TRUE, verb.dat=verb.era.dat)
   era20c10.lind.xts = era20c.data$era10
-  era20c100.lind.xts = era20c.data$era20c100
+  era20c100.lind.xts = era20c.data$era100
   eraI.data = ReadEraNetcdf2Xts(eraI.param, eraI.fname,
                                 eraI.tsstart, eraI.tsend,
                                 lonidx, latidx, ana.time.res,
-                                era20c=FALSE, verb.dat=verb.era.dat)
+                                read.10m=TRUE, read.100m=FALSE, verb.dat=verb.era.dat)
   eraI10.lind.xts = eraI.data$era10
+  idx = GetLonLatIdx(eraI.fname[2], fino1.lon, fino1.lat)
+  lonidx = idx$lonidx
+  latidx = idx$latidx
+  eraI.data = ReadEraNetcdf2Xts(eraI.param, eraI.fname,
+                                eraI.tsstart, eraI.tsend,
+                                lonidx, latidx, ana.time.res,
+                                read.10m=FALSE, read.100m=TRUE, verb.dat=verb.era.dat)
+  eraI100.lind.xts = eraI.data$era100
 
   # for Cabauw
   idx = GetLonLatIdx(era20c.fname, cabauw.lon, cabauw.lat)
   lonidx = idx$lonidx
   latidx = idx$latidx
-  era20c.data = ReadEraNetcdf2Xts(era20c.param, era20c.fname,
+  era20c.data = ReadEraNetcdf2Xts(era20c.param, c(era20c.fname,era20c.fname),
                                   era20c.tsstart, era20c.tsend,
                                   lonidx, latidx, ana.time.res,
-                                  era20c=TRUE, verb.dat=verb.era.dat)
+                                  read.10m=TRUE, read.100m=TRUE, verb.dat=verb.era.dat)
   era20c10.cabauw.xts = era20c.data$era10
-  era20c100.cabauw.xts = era20c.data$era20c100
+  era20c100.cabauw.xts = era20c.data$era100
   eraI.data = ReadEraNetcdf2Xts(eraI.param, eraI.fname,
                                 eraI.tsstart, eraI.tsend,
                                 lonidx, latidx, ana.time.res,
-                                era20c=FALSE, verb.dat=verb.era.dat)
+                                read.10m=TRUE, read.100m=FALSE, verb.dat=verb.era.dat)
   eraI10.cabauw.xts = eraI.data$era10
+  idx = GetLonLatIdx(eraI.fname[2], fino1.lon, fino1.lat)
+  lonidx = idx$lonidx
+  latidx = idx$latidx
+  eraI.data = ReadEraNetcdf2Xts(eraI.param, eraI.fname,
+                                eraI.tsstart, eraI.tsend,
+                                lonidx, latidx, ana.time.res,
+                                read.10m=FALSE, read.100m=TRUE, verb.dat=verb.era.dat)
+  eraI100.cabauw.xts = eraI.data$era100
 
   # == read HErZ data ==
   cat(paste0("  **  Reading HErZ reanalysis data\n"))
@@ -290,6 +322,7 @@ climobj = GetObsObject(obs.xts=fino1.100.xts,
                        herz178.xts=herz178.fino1.xts,
                        herz258.xts=herz258.fino1.xts,
                        eraI10.xts=eraI10.fino1.xts,
+                       eraI100.xts=eraI100.fino1.xts,
                        era20c10.xts=era20c10.fino1.xts,
                        era20c100.xts=era20c100.fino1.xts,
                        obs.tsstart=fino1.tsstart, obs.tsend=fino1.tsend,
@@ -309,6 +342,7 @@ climobj = GetObsObject(obs.xts=fino2.102.xts,
                        herz178.xts=herz178.fino2.xts,
                        herz258.xts=herz258.fino2.xts,
                        eraI10.xts=eraI10.fino2.xts,
+                       eraI100.xts=eraI100.fino2.xts,
                        era20c10.xts=era20c10.fino2.xts,
                        era20c100.xts=era20c100.fino2.xts,
                        obs.tsstart=fino2.tsstart, obs.tsend=fino2.tsend,
@@ -330,6 +364,7 @@ climobj = GetObsObject(obs.xts=lind.98.xts, obs2.xts=lind.80.xts,
                        herz178.xts=herz178.lind.xts,
                        herz258.xts=herz258.lind.xts,
                        eraI10.xts=eraI10.lind.xts,
+                       eraI100.xts=eraI100.lind.xts,
                        era20c10.xts=era20c10.lind.xts,
                        era20c100.xts=era20c100.lind.xts,
                        obs.tsstart=lind.tsstart, obs.tsend=lind.tsend,
@@ -351,6 +386,7 @@ climobj = GetObsObject(obs.xts=cabauw.200.xts, obs2.xts=cabauw.140.xts,
                        herz178.xts=herz178.cabauw.xts,
                        herz258.xts=herz258.cabauw.xts,
                        eraI10.xts=eraI10.cabauw.xts,
+                       eraI100.xts=eraI100.cabauw.xts,
                        era20c10.xts=era20c10.cabauw.xts,
                        era20c100.xts=era20c100.cabauw.xts,
                        obs.tsstart=cabauw.tsstart, obs.tsend=cabauw.tsend,
