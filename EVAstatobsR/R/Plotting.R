@@ -1610,6 +1610,10 @@ PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
   lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col=color$herz)
   lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$obs)
   corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
+  cat(paste0("\n116m C-REA6 at station: ", t.obj$obs$data$StationName[1],
+             "\n    correlation = ", round(corr$estimate, 4),
+             "\n    conf interv = ", round(corr$conf.int[[1]], 4), "  ",
+             round(corr$conf.int[[2]], 4), "\n"))
   legend("bottomleft", legend=c("COSMO-REA6 at 116m", plot.100.ext,
                                 paste0("correlation = ", round(corr$estimate, 2))),
          text.col=c(color$herz, color$obs, color$black), horiz=T)
@@ -1620,6 +1624,10 @@ PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
   lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col=color$era)
   lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$obs)
   corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
+  cat(paste0("\n100m ERA-I at station: ", t.obj$obs$data$StationName[1],
+             "\n    correlation = ", round(corr$estimate, 4),
+             "\n    conf interv = ", round(corr$conf.int[[1]], 4), "  ",
+             round(corr$conf.int[[2]], 4), "\n"))
   legend("bottomleft", legend=c("Era-Interim at 100m", plot.100.ext,
                                 paste0("correlation = ", round(corr$estimate, 2))),
          text.col=c(color$era, color$obs, color$black), horiz=T)
@@ -1638,6 +1646,10 @@ PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
   lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col=color$era)
   lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$obs)
   corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
+  cat(paste0("\n100m ERA20C at station: ", t.obj$obs$data$StationName[1],
+             "\n    correlation = ", round(corr$estimate, 4),
+             "\n    conf interv = ", round(corr$conf.int[[1]], 4), "  ",
+             round(corr$conf.int[[2]], 4), "\n"))
   legend("bottomleft", legend=c("ER20C at 100m", plot.100.ext,
                                 paste0("correlation = ", round(corr$estimate, 2))),
          text.col=c(color$era, color$obs, color$black), horiz=T)
@@ -1662,6 +1674,10 @@ PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
     lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col=color$herz)
     lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$obs)
     corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
+    cat(paste0("\n10m C-REA6 at station: ", t.obj$obs$data$StationName[1],
+               "\n    correlation = ", round(corr$estimate, 4),
+               "\n    conf interv = ", round(corr$conf.int[[1]], 4), "  ",
+               round(corr$conf.int[[2]], 4), "\n"))
     legend("bottomleft", legend=c("COSMO-REA6 at 10m", plot.10.ext,
                                   paste0("correlation = ", round(corr$estimate, 2))),
            text.col=c(color$herz, color$obs, color$black), horiz=T)
@@ -1672,6 +1688,10 @@ PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
     lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col=color$era)
     lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$obs)
     corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
+    cat(paste0("\n10m ERA-I at station: ", t.obj$obs$data$StationName[1],
+               "\n    correlation = ", round(corr$estimate, 4),
+               "\n    conf interv = ", round(corr$conf.int[[1]], 4), "  ",
+               round(corr$conf.int[[2]], 4), "\n"))
     legend("bottomleft", legend=c("Era-Interim at 10m", plot.10.ext,
                                   paste0("correlation = ", round(corr$estimate, 2))),
            text.col=c(color$era, color$obs, color$black), horiz=T)
@@ -1690,6 +1710,10 @@ PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
     lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col="cyan2")
     lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$obs)
     corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
+    cat(paste0("\n10m ERA20C at station: ", t.obj$obs$data$StationName[1],
+               "\n    correlation = ", round(corr$estimate, 4),
+               "\n    conf interv = ", round(corr$conf.int[[1]], 4), "  ",
+               round(corr$conf.int[[2]], 4), "\n"))
     legend("bottomleft", legend=c("Era20C at 10m", plot.10.ext,
                                   paste0("correlation = ", round(corr$estimate, 2))),
            text.col=c("cyan2", color$obs, color$black), horiz=T)
@@ -2321,7 +2345,7 @@ PlotTowerERAprofileAnnualCycle <- function(tower.obj, fname) {
     axis(1, labels=all.months, at = 1:12, las=1, cex=xylab.cex)
     axis(2, labels=c(yliml.rel,0,ylimh.rel), at=c(yliml.rel,0,ylimh.rel), las=1)
     lines(RelDiff(mon.Cabauw140, mean(mon.Cabauw140)), type="b", pch=16,
-          col="orange",lw=2)
+          col="cyan2",lw=2)
     lines(RelDiff(mon.Herz116, mean(mon.Herz116)), type="b", pch=16,
           col="red",lw=2)
     lines(RelDiff(mon.Era20c100, mean(mon.Era20c100)), type="b", pch=16,
@@ -2341,7 +2365,7 @@ PlotTowerERAprofileAnnualCycle <- function(tower.obj, fname) {
     legend("top", legend=c("Cabauw at 140m", "C-REA6 at 116m", "Era20C at 100m",
                            "Era-I at 100m", "Cabauw at 80m ",
                            "C-REA6 at 10m", "Era20C at 10m", "Era-I at 10m", "Cabauw at 10m"),
-           text.col=c("orange", "red", "darkgreen", "magenta", "purple2",
+           text.col=c("cyan2", "red", "darkgreen", "magenta", "purple2",
                       "darkorange", "black", "green", "blue"), cex=legend.cex)
     mtext("Annual cycle of relative\nwind speed at Cabauw", line=1, cex=title.cex)
 
@@ -2633,6 +2657,119 @@ PreparePlottingTowerDailyCycle <- function(tower.obj, fname) {
 #' @param fname is a string holding the file name of the plot.
 #' @importFrom xts xts
 #' @export
+PreparePlottingDifferenceDailyCycle <- function(tower.obj, fname) {
+
+  t.obj = tower.obj$climate_data_objects
+  tower.date <- as.POSIXlt(t.obj$obs$data$date)
+
+  # extended time series COSMO-REA6 at tower location
+  tower10.xts = NULL
+  tower100.xts = NULL
+  if (t.obj$obs$data$StationName[1] == "Fino1" |
+      t.obj$obs$data$StationName[1] == "Fino2") {
+    tower100.xts = xts(t.obj$obs$data$wind_speed, order.by=tower.date)
+  } else if (t.obj$obs$data$StationName[1] == "Lindenberg" |
+             t.obj$obs$data$StationName[1] == "Cabauw") {
+    tower10.xts = xts(t.obj$obs6$data$wind_speed, order.by=tower.date)
+    if (t.obj$obs$data$StationName[1] == "Lindenberg") {
+      tower100.xts = xts(t.obj$obs$data$wind_speed, order.by=tower.date)
+    }
+    if (t.obj$obs$data$StationName[1] == "Cabauw") {
+      tower100.xts = xts(t.obj$obs2$data$wind_speed, order.by=tower.date)
+    }
+  }
+  Herz116Xts = xts(t.obj$herz116$data$wind_speed, order.by=tower.date)
+  Herz10Xts = xts(t.obj$herz10$data$wind_speed, order.by=tower.date)
+  Era20C10Xts = xts(t.obj$era20c10$data$wind_speed, order.by=tower.date)
+  Era20C100Xts = xts(t.obj$era20c100$data$wind_speed, order.by=tower.date)
+  EraI10Xts = xts(t.obj$eraI10$data$wind_speed, order.by=tower.date)
+  EraI100Xts = xts(t.obj$eraI100$data$wind_speed, order.by=tower.date)
+
+  # these lists are used for the complete time period
+  dayhourTower100 = list()
+  dayhourHerz116 = list()
+  dayhourHerz10 = list()
+  dayhourEra20c10 = list()
+  dayhourEra20c100 = list()
+  dayhourEraI10 = list()
+  dayhourEraI100 = list()
+
+  if (t.obj$obs$data$StationName[1] != "Fino1" |
+      t.obj$obs$data$StationName[1] != "Fino2") {
+    dayhourTower10 = list()
+    for (cnt in seq(24)) {
+      dayhourTower10$vals[[cnt]] = tower10.xts[which( tower.date$hour==cnt-1 )]
+      dayhourTower10$mean[[cnt]] = mean(dayhourTower10$vals[[cnt]], na.rm=T)
+      dayhourTower10$sd[[cnt]] = sd(dayhourTower10$vals[[cnt]], na.rm=T)
+    }
+  } else {dayhourTower10 = NULL}
+
+  for (cnt in seq(24)) {
+    dayhourTower100$vals[[cnt]] = tower100.xts[which( tower.date$hour==cnt-1 )]
+    dayhourTower100$mean[[cnt]] = mean(dayhourTower100$vals[[cnt]], na.rm=T)
+    dayhourTower100$sd[[cnt]] = sd(dayhourTower100$vals[[cnt]], na.rm=T)
+    dayhourEra20c10$vals[[cnt]] = Era20C10Xts[which( tower.date$hour==cnt-1 )]
+    dayhourEra20c10$mean[[cnt]] = mean(dayhourEra20c10$vals[[cnt]])
+    dayhourEra20c10$sd[[cnt]] = sd(dayhourEra20c10$vals[[cnt]])
+    dayhourEra20c100$vals[[cnt]] = Era20C100Xts[which( tower.date$hour==cnt-1 )]
+    dayhourEra20c100$mean[[cnt]] = mean(dayhourEra20c100$vals[[cnt]])
+    dayhourEra20c100$sd[[cnt]] = sd(dayhourEra20c100$vals[[cnt]])
+    dayhourEraI10$vals[[cnt]] = EraI10Xts[which( tower.date$hour==cnt-1 )]
+    dayhourEraI10$mean[[cnt]] = mean(dayhourEraI10$vals[[cnt]])
+    dayhourEraI10$sd[[cnt]] = sd(dayhourEraI10$vals[[cnt]])
+    dayhourEraI100$vals[[cnt]] = EraI100Xts[which( tower.date$hour==cnt-1 )]
+    dayhourEraI100$mean[[cnt]] = mean(dayhourEraI100$vals[[cnt]])
+    dayhourEraI100$sd[[cnt]] = sd(dayhourEraI100$vals[[cnt]])
+    dayhourHerz116$vals[[cnt]] = Herz116Xts[which( tower.date$hour==cnt-1 )]
+    dayhourHerz116$mean[[cnt]] = mean(dayhourHerz116$vals[[cnt]])
+    dayhourHerz116$sd[[cnt]] = sd(dayhourHerz116$vals[[cnt]])
+    dayhourHerz10$vals[[cnt]] = Herz10Xts[which( tower.date$hour==cnt-1 )]
+    dayhourHerz10$mean[[cnt]] = mean(dayhourHerz10$vals[[cnt]])
+    dayhourHerz10$sd[[cnt]] = sd(dayhourHerz10$vals[[cnt]])
+  }
+
+  PS116 = PlottingSettings(t.obj$herz116$data)
+  PS10 = PlottingSettings(t.obj$herz10$data)
+  PSEC10 = PlottingSettings(t.obj$era20c10$data)
+  PSEC100 = PlottingSettings(t.obj$era20c100$data)
+  PSEI10 = PlottingSettings(t.obj$eraI10$data)
+  PSEI100 = PlottingSettings(t.obj$eraI100$data)
+  if (t.obj$obs$data$StationName[1] == "Fino1" |
+      t.obj$obs$data$StationName[1] == "Fino2") {
+    PST100 = PlottingSettings(t.obj$obs$data)
+    PS = list(PS10=PS10, PS116=PS116, PSEC10=PSEC10,
+              PSEC100=PSEC100, PSEI10=PSEI10, PSEI100=PSEI100, PST100=PST100)
+  } else if (t.obj$obs$data$StationName[1] == "Lindenberg") {
+    PST10 = PlottingSettings(t.obj$obs6$data)
+    PST100 = PlottingSettings(t.obj$obs$data)
+    PS = list(PS10=PS10, PS116=PS116, PSEC10=PSEC10,
+              PSEC100=PSEC100, PSEI10=PSEI10, PSEI100=PSEI100, PST10=PST10,
+              PST100=PST100)
+  } else if (t.obj$obs$data$StationName[1] == "Cabauw") {
+    PST10 = PlottingSettings(t.obj$obs6$data)
+    PST100 = PlottingSettings(t.obj$obs2$data)
+    PS = list(PS10=PS10, PS116=PS116, PSEC10=PSEC10,
+              PSEC100=PSEC100, PSEI10=PSEI10, PSEI100=PSEI100, PST10=PST10,
+              PST100=PST100)
+  }
+  fname.new = c(gsub("Difference", "10m-Difference", fname),
+                gsub("Difference", "100m-Difference", fname))
+  PlotDifferenceDailyCycle(dayhourHerz10, dayhourHerz116,
+                        dayhourTower10, dayhourTower100,
+                        dayhourEra20c10, dayhourEra20c100,
+                        dayhourEraI10, dayhourEraI100, PS, fname.new)
+}
+
+#-----------------------------------------------------------------------------------
+
+#' @title Prepare plotting daily cycle of COSMO-REA6 data.
+#' @description Preparing to plot the daily cycle of the COSMO-REA6 RRA by creating
+#'   lists holding the mean and standard deviation of hourly COSMO-REA6 data. This is done
+#'   for (a) all data and (b) for selected months only.
+#' @param tower.obj ClimObject holding tower and corresponding reanalysis data.
+#' @param fname is a string holding the file name of the plot.
+#' @importFrom xts xts
+#' @export
 PreparePlottingHerzDailyCycle <- function(tower.obj, fname) {
 
   # names include all months to be analysed; counts is the month of year
@@ -2651,6 +2788,10 @@ PreparePlottingHerzDailyCycle <- function(tower.obj, fname) {
   Era20C100Xts = xts(t.obj$era20c100$data$wind_speed, order.by=tower.date)
   EraI10Xts = xts(t.obj$eraI10$data$wind_speed, order.by=tower.date)
   EraI100Xts = xts(t.obj$eraI100$data$wind_speed, order.by=tower.date)
+  if (t.obj$obs$data$StationName[1] == "Fino1" |
+      t.obj$obs$data$StationName[1] == "Fino2") {
+    tower1.xts = xts(t.obj$obs$data$wind_speed, order.by=tower.date)
+  }
 
   # these lists are used for the complete time period
   dayhourHerz116 = list()
@@ -2661,11 +2802,22 @@ PreparePlottingHerzDailyCycle <- function(tower.obj, fname) {
   dayhourEra20c100 = list()
   dayhourEraI10 = list()
   dayhourEraI100 = list()
+
+  if (t.obj$obs$data$StationName[1] == "Fino1" |
+      t.obj$obs$data$StationName[1] == "Fino2") {
+    dayhour.tower1 = list()
+    for (cnt in seq(24)) {
+      dayhour.tower1$vals[[cnt]] = tower1.xts[which( tower.date$hour==cnt-1 )]
+      dayhour.tower1$mean[[cnt]] = mean(dayhour.tower1$vals[[cnt]], na.rm=T)
+      dayhour.tower1$sd[[cnt]] = sd(dayhour.tower1$vals[[cnt]], na.rm=T)
+    }
+  } else { dayhour.tower1= NULL }
+
   for (cnt in seq(24)) {
-    dayhourEra20c10$vals[[cnt]] = Era20c10Xts[which( tower.date$hour==cnt-1 )]
+    dayhourEra20c10$vals[[cnt]] = Era20C10Xts[which( tower.date$hour==cnt-1 )]
     dayhourEra20c10$mean[[cnt]] = mean(dayhourEra20c10$vals[[cnt]])
     dayhourEra20c10$sd[[cnt]] = sd(dayhourEra20c10$vals[[cnt]])
-    dayhourEra20c100$vals[[cnt]] = Era20c100Xts[which( tower.date$hour==cnt-1 )]
+    dayhourEra20c100$vals[[cnt]] = Era20C100Xts[which( tower.date$hour==cnt-1 )]
     dayhourEra20c100$mean[[cnt]] = mean(dayhourEra20c100$vals[[cnt]])
     dayhourEra20c100$sd[[cnt]] = sd(dayhourEra20c100$vals[[cnt]])
     dayhourEraI10$vals[[cnt]] = EraI10Xts[which( tower.date$hour==cnt-1 )]
@@ -2696,12 +2848,20 @@ PreparePlottingHerzDailyCycle <- function(tower.obj, fname) {
   PSEC100 = PlottingSettings(t.obj$era20c100$data)
   PSEI10 = PlottingSettings(t.obj$eraI10$data)
   PSEI100 = PlottingSettings(t.obj$eraI100$data)
-  PS = list(PS10=PS10, PS35=PS35, PS69=PS69, PS116=PS116, PSEC10=PSEC10,
-            PSEC100=PSEC100, PSEI10=PSEI10, PSEI100=PSEI100)
+  if (t.obj$obs$data$StationName[1] == "Fino1" |
+      t.obj$obs$data$StationName[1] == "Fino2") {
+    PSF100 = PlottingSettings(t.obj$obs$data)
+    PS = list(PS10=PS10, PS35=PS35, PS69=PS69, PS116=PS116, PSEC10=PSEC10,
+              PSEC100=PSEC100, PSEI10=PSEI10, PSEI100=PSEI100, PSF100=PSF100)
+  } else {
+    PS = list(PS10=PS10, PS35=PS35, PS69=PS69, PS116=PS116, PSEC10=PSEC10,
+              PSEC100=PSEC100, PSEI10=PSEI10, PSEI100=PSEI100)
+  }
   fname.new = c(gsub("DailyCycle", "DailyCycle_allTime-line", fname),
+                gsub("DailyCycle", "DailyCycle_allTime-ERAline", fname),
                 gsub("DailyCycle", "DailyCycle_allTime-boxPlot", fname))
   PlotDailyCycleHerz(dayhourHerz10, dayhourHerz35,
-                     dayhourHerz69, dayhourHerz116,
+                     dayhourHerz69, dayhourHerz116, dayhour.tower1,
                      dayhourEra20c10, dayhourEra20c100,
                      dayhourEraI10, dayhourEraI100,
                      month.names, PS, fname.new)
@@ -2771,8 +2931,8 @@ PreparePlottingHerzDailyCycle <- function(tower.obj, fname) {
     dayhour.month.Herz10[[cnt]] = dummy10
     dayhour.month.EraI10[[cnt]] = dummyEI10
     dayhour.month.EraI100[[cnt]] = dummyEI100
-    dayhour.month.Era20C10[[cnt]] = dummyEC10
-    dayhour.month.Era20C100[[cnt]] = dummyEC100
+    dayhour.month.Era20c10[[cnt]] = dummyEC10
+    dayhour.month.Era20c100[[cnt]] = dummyEC100
   }
   dayhour.month.Herz116 = setNames(dayhour.month.Herz116, month.names$names)
   dayhour.month.Herz69 = setNames(dayhour.month.Herz69, month.names$names)
@@ -2787,6 +2947,7 @@ PreparePlottingHerzDailyCycle <- function(tower.obj, fname) {
                 gsub("DailyCycle", "DailyCycle_selectMonths-boxPlot", fname))
   PlotDailyCycleHerz(dayhour.month.Herz10, dayhour.month.Herz35,
                      dayhour.month.Herz69, dayhour.month.Herz116,
+                     F100=NULL,
                      dayhour.month.EraI10, dayhour.month.EraI100,
                      dayhour.month.Era20c10, dayhour.month.Era20c100,
                      month.names, PS,
@@ -2810,7 +2971,7 @@ PreparePlottingHerzDailyCycle <- function(tower.obj, fname) {
 #'   \code{\link{PlottingSettings}}.
 #' @param fname is a string of the file name of the plot file
 #' @importFrom zoo coredata
-PlotDailyCycleHerz <- function(Herz10, Herz35, Herz69, Herz116,
+PlotDailyCycleHerz <- function(Herz10, Herz35, Herz69, Herz116, F100,
                                Era20c10, Era20c100, EraI10, EraI100,
                                month.names, PS, fname) {
 
@@ -2871,6 +3032,8 @@ PlotDailyCycleHerz <- function(Herz10, Herz35, Herz69, Herz116,
     ylim.set=c(1,15)
     legend.place = "bottom"
     if (as.character(PS$PS10$obs.name) == "Lindenberg") {ylim.set=c(2.5, 6.5)}
+    if (as.character(PS$PS10$obs.name) == "Fino1") {ylim.set=c(5.5, 10.5)}
+    if (as.character(PS$PS10$obs.name) == "Fino2") {ylim.set=c(1.5, 10.5)}
     if (as.character(PS$PS10$obs.name) == "Cabauw") {
       ylim.set=c(2.5, 8.5)
       legend.place = "top"
@@ -2880,11 +3043,22 @@ PlotDailyCycleHerz <- function(Herz10, Herz35, Herz69, Herz116,
     lines(Herz69$mean, col="red", pch=16, type="b")
     lines(Herz35$mean, col="orange", pch=16, type="b")
     lines(Herz10$mean, col="green", pch=16, type="b")
-    legend(legend.place, legend=c(paste0("COSMO-REA6 at ", as.character(PS$PS116$obs.height)),
-                                  paste0("COSMO-REA6 at ", as.character(PS$PS69$obs.height)),
-                                  paste0("COSMO-REA6 at ", as.character(PS$PS35$obs.height)),
-                                  paste0("COSMO-REA6 at ", as.character(PS$PS10$obs.height))),
-           text.col=c("blue", "red", "orange", "green"), cex=legend.cex)
+    if (as.character(PS$PS10$obs.name) == "Fino1" | as.character(PS$PS10$obs.name) == "Fino2") {
+      lines(F100$mean, col="magenta", pch=16, type="b")
+      legend(legend.place, legend=c(paste0("COSMO-REA6 at ", as.character(PS$PS116$obs.height)),
+                                    paste0("COSMO-REA6 at ", as.character(PS$PS69$obs.height)),
+                                    paste0("COSMO-REA6 at ", as.character(PS$PS35$obs.height)),
+                                    paste0("COSMO-REA6 at ", as.character(PS$PS10$obs.height)),
+                                    paste0(as.character(PS$PSF100$obs.name), " at ",
+                                           as.character(PS$PSF100$obs.height))),
+             text.col=c("blue", "red", "orange", "green", "magenta"), cex=legend.cex)
+    } else {
+      legend(legend.place, legend=c(paste0("COSMO-REA6 at ", as.character(PS$PS116$obs.height)),
+                                    paste0("COSMO-REA6 at ", as.character(PS$PS69$obs.height)),
+                                    paste0("COSMO-REA6 at ", as.character(PS$PS35$obs.height)),
+                                    paste0("COSMO-REA6 at ", as.character(PS$PS10$obs.height))),
+             text.col=c("blue", "red", "orange", "green"), cex=legend.cex)
+    }
     mtext(paste0("Daily cycle of COSMO-REA6 wind speed\nat tower location ",
                  PS$PS10$obs.name), line=0.5, cex=title.cex)
     title(xlab=x.lab, line=2)
@@ -2892,8 +3066,51 @@ PlotDailyCycleHerz <- function(Herz10, Herz35, Herz69, Herz116,
   }
   dev.off()
 
+  # new plot for global ERAs only
+  pdf(fname[2], width=PS$PS10$land.a4width, height=PS$PS10$land.a4height*1.25)
+  par(mfrow=c(1,1), mar=c(3.5,3,3.5,0.5), mgp=c(3,1,0), cex=2,
+      cex.lab=xylab.cex, cex.axis=xylab.cex)
+
+  ylim.set=c(1,15)
+  if (as.character(PS$PS10$obs.name) == "Lindenberg") {ylim.set=c(2.5, 6.5)}
+  if (as.character(PS$PS10$obs.name) == "Fino1") {ylim.set=c(6.5, 10.5)}
+  if (as.character(PS$PS10$obs.name) == "Fino2") {ylim.set=c(2.5, 10.5)}
+  if (as.character(PS$PS10$obs.name) == "Cabauw") {
+    ylim.set=c(2.5, 8.5)
+    legend.place = "top"
+  }
+  legend.place = "bottom"
+
+  plot(Era20c10$mean, col="yellowgreen", pch=17, type="b", ylim=ylim.set,
+       xlab="", ylab="", las=1)
+  lines(Era20c100$mean, col="cyan2", pch=17, type="b")
+  lines(EraI10$mean, col="green", pch=19, type="b")
+  lines(EraI100$mean, col="blue", pch=19, type="b")
+  if (as.character(PS$PS10$obs.name) == "Fino1" | as.character(PS$PS10$obs.name) == "Fino2") {
+    lines(F100$mean, col="magenta", pch=16, type="b")
+    legend(legend.place, legend=c(paste0("ERA-I at ", as.character(PS$PSEI100$obs.height)),
+                                  paste0("ERA20C at ", as.character(PS$PSEC100$obs.height)),
+                                  paste0("ERA-I at ", as.character(PS$PSEI10$obs.height)),
+                                  paste0("ERA20C at ", as.character(PS$PSEC10$obs.height)),
+                                  paste0(as.character(PS$PSF100$obs.name), " at ",
+                                         as.character(PS$PSF100$obs.height))),
+           text.col=c("blue", "cyan2", "green", "yellowgreen", "magenta"), cex=legend.cex)
+  } else {
+    legend(legend.place, legend=c(paste0("ERA-I at ", as.character(PS$PSEI100$obs.height)),
+                                  paste0("ERA20C at ", as.character(PS$PSEC10069$obs.height)),
+                                  paste0("ERA-I at ", as.character(PS$PSEI10$obs.height)),
+                                  paste0("ERA20C at ", as.character(PS$PSEC10$obs.height))),
+           text.col=c("blue", "red", "orange", "green"), cex=legend.cex)
+  }
+
+  mtext(paste0("Daily cycle of ERA20C and ERA-I wind speed\nat tower location ",
+  PS$PSEC10$obs.name), line=0.5, cex=title.cex)
+  title(xlab=x.lab, line=2)
+  title(ylab=y.lab, line=2)
+  dev.off()
+
   # plot box plots
-  pdf(fname[2], width=PS$PS10$land.a4width, height=PS$PS10$land.a4height)
+  pdf(fname[3], width=PS$PS10$land.a4width, height=PS$PS10$land.a4height)
   par(mfrow=c(2,1), oma=c(0.5,0.5,0.5,0.5), mar=c(4,4,2,0), cex.lab=2, cex.axis=2)
 
   swex = 0.4
@@ -3233,6 +3450,114 @@ PlotDailyCycleTower <- function(tower1, tower2, tower3, tower4, tower5, tower6,
                         PS$PST6$obs.height), line=1, cex=1.5)
     }
   }
+  dev.off()
+
+}
+
+#-----------------------------------------------------------------------------------
+
+#' @title Plotting the daily cycle differences between tower measurements and
+#'   regional and global reanalyses.
+#' @description This function actually performs the plotting of the anomalies of the
+#'   daily cycle between the hourly tower measurements and the regional and global
+#'   reanalyses.
+#' @param Herz10,Herz116,Tower10,Tower100,Era20c10,Era20c100,EraI10,EraI100 are
+#'   lists holding the tower measurement data and regional and global reanalysis
+#'   data at diffferent height levels.
+#'   their corresponding number within the year (list(names=, count=)).
+#' @param PS is a plotting setting object (list) derived of function
+#'   \code{\link{PlottingSettings}}.
+#' @param fname is a string holding file name of the pdf plot to be created.
+#' @importFrom zoo zoo
+PlotDifferenceDailyCycle <- function(Herz10, Herz116, Tower10, Tower100,
+                                     Era20c10, Era20c100, EraI10, EraI100, PS, fname) {
+
+  x.lab = "time of day [hours]"
+  y.lab = "wind speed in [m/s]"
+
+  legend.cex = 0.65
+  xylab.cex = 0.9
+  title.cex = 2
+  legend.place = "top"
+  if (as.character(PS$PST10$obs.name) == "Fino1" |
+      as.character(PS$PST10$obs.name) == "Fino2") {
+    mfrow.set = c(1,1)
+    height.mult = 0.67
+  } else {
+    mfrow.set = c(2,1)
+    height.mult = 1.
+  }
+
+  # plot difference plot
+  dummy = numeric(length=length(Herz10$vals)) * NA
+
+  pdf(fname[1], width=PS$PS10$land.a4width, height=PS$PS10$land.a4height*1.25*height.mult)
+  par(mfrow=mfrow.set, oma=c(4,4,3,0.5), mar=c(0,0,0,0), mgp=c(3,1,0), cex=2,
+      cex.lab=xylab.cex, cex.axis=xylab.cex)
+
+  if (as.character(PS$PST10$obs.name) == "Fino2") {
+    ylim.set=c(-3,1)
+  } else {
+    ylim.set=c(-2,1)
+  }
+  if (as.character(PS$PST10$obs.name) == "Lindenberg") {legend.place="bottom"}
+
+  if (as.character(PS$PST10$obs.name) != "Fino1" &
+      as.character(PS$PST10$obs.name) != "Fino2") {
+    # plot 10m differences
+    plot(dummy, ylim=ylim.set, xlab="", xaxt="n", ylab="", las=1)
+    lines((Herz10$mean - Tower10$mean), col="red", pch=17, type="b")
+    lines((Era20c10$mean - Tower10$mean), col="blue", pch=17, type="b")
+    lines((EraI10$mean - Tower10$mean), col="green", pch=17, type="b")
+    title(ylab=y.lab, line=3, outer=T)
+    title(main=paste0("Difference of daily cylce wind speed\nbetween reanalysis and ",
+                      as.character(PS$PST100$obs.name)), line=0.5, cex=1.5, outer=T)
+
+    legend(legend.place, legend=c(paste0(as.character(PS$PS10$rea.name), " - ",
+                                         as.character(PS$PST10$obs.name), " at ",
+                                         as.character(PS$PST10$obs.height)),
+                                  paste0(as.character(PS$PSEC10$rea.name), " - ",
+                                         as.character(PS$PST10$obs.name), " at ",
+                                         as.character(PS$PST10$obs.height)),
+                                  paste0(as.character(PS$PSEI10$rea.name), " - ",
+                                         as.character(PS$PST10$obs.name), " at ",
+                                         as.character(PS$PST10$obs.height))),
+           cex=legend.cex, text.col=c("red", "blue", "green"))
+  }
+
+  if (as.character(PS$PST10$obs.name) == "Fino2") {
+    ylim.set=c(-3,1)
+  } else if (as.character(PS$PST10$obs.name) == "Fino1") {
+    legend.place="bottom"
+  } else
+  {
+    ylim.set=c(-2,1)
+  }
+
+  # plot 100m differences
+  plot(dummy, ylim=ylim.set, xlab="", ylab="", las=1)
+  lines((Herz116$mean - Tower100$mean), col="red", pch=17, type="b")
+  lines((Era20c100$mean - Tower100$mean), col="blue", pch=17, type="b")
+  lines((EraI100$mean - Tower100$mean), col="green", pch=17, type="b")
+  if (as.character(PS$PST10$obs.name) == "Fino1" |
+      as.character(PS$PST10$obs.name) == "Fino2") {
+    title(main=paste0("Difference of daily cylce wind speed\nbetween reanalysis and ",
+                    as.character(PS$PST100$obs.name)), line=0.5, cex=1.5, outer=T)
+  }
+
+  legend(legend.place, legend=c(paste0(as.character(PS$PS116$rea.name), " - ",
+                                       as.character(PS$PST100$obs.name), " at ",
+                                       as.character(PS$PST100$obs.height)),
+                                paste0(as.character(PS$PSEC100$rea.name), " - ",
+                                       as.character(PS$PST100$obs.name), " at ",
+                                       as.character(PS$PST100$obs.height)),
+                                paste0(as.character(PS$PSEI100$rea.name), " - ",
+                                       as.character(PS$PST100$obs.name), " at ",
+                                       as.character(PS$PST100$obs.height))),
+         cex=legend.cex, text.col=c("red", "blue", "green"))
+  title(xlab=x.lab, line=2, outer=T)
+  title(ylab=y.lab, line=3, outer=T)
+
   dev.off()
 
 }

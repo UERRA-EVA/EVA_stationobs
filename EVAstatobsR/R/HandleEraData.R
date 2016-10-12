@@ -231,6 +231,82 @@ ReadHerzNetcdfHourly2Xts <- function(rra.para, rra.fname,
 
 #-----------------------------------------------------------------------------------
 
+#' @title Read 6-hourly ERA-Interim and ERA20C wind speed data.
+#' @description Read 6-hourly ERA-Interim and ERA20C netCDF files of wind speed at
+#'   10m and 100m height and fill the six hourly data with NA to an hourly time
+#'   series.
+#' @return a list holding the wind speed values in extended time series for each
+#'   height and global reanalysis.
+#' @importFrom xts xts
+#' @export
+ReadERANetcdfHourly2Xts <- function(era.para10m, era.para100m,
+                                    era.fname10m, era.fname100m,
+                                    era.tsstart, era.tsend,
+                                    read.10m=TRUE, read.100m=FALSE) {
+
+  # sanity check
+  if (!(read.10m) & !(read.100m)) {
+    CallStop(paste0("You need to read at least one of 10m or 100m data! ",
+                    "Now both are set to FALSE "))
+  }
+
+  # read ERA data into a data.frame
+  if (read.10m) {
+    dat10 = ReadNetcdf(era.para10m, era.fname10m)
+    if (!read.100m) {
+      ndf = data.frame(dat10$time, dat10$data)
+    }
+  }
+  if (read.100m) {
+    dat100 = ReadNetcdf(era.para100m, era.fname100m)
+    if (!read.10m) {
+      ndf = data.frame(dat100$time, dat100$data)
+    }
+  }
+  if (read.10m & read.100m) {
+    ndf = data.frame(dat10$time, dat10$data, dat100$data)
+  }
+
+  # convert data.frame of ERA data into an extended time series
+  if (read.10m) {
+    ndf$dat10.time = as.POSIXct(strptime(ndf$dat10.time, format="%Y-%m-%d %H:%M:%S"),
+                              format="%Y-%m-%d %H:%M:%S", tz = "UTC")
+  } else {
+    ndf$dat100.time = as.POSIXct(strptime(ndf$dat100.time, format="%Y-%m-%d %H:%M:%S"),
+                                format="%Y-%m-%d %H:%M:%S", tz = "UTC")
+  }
+  timestr = SetToDate(era.tsstart, era.tsend)
+  if (read.10m) {
+    era10.xts = xts(ndf$dat10.data, order.by=ndf$dat10.time)
+    era10.xts = era10.xts[timestr]
+    if (read.100m) {
+      era100.xts = xts(ndf$dat100.data, order.by=ndf$dat10.time)
+      era100.xts = era100.xts[timestr]
+    } else {
+      era100.xts = NULL
+    }
+  } else {
+    era100.xts = xts(ndf$dat100.data, order.by=ndf$dat100.time)
+    era10.xts = NULL
+  }
+
+  # fill era xts to hourly time series *** HARDCODED***
+  time.vals = seq.POSIXt(from=as.POSIXct("200001010000", format="%Y%m%d%H%M", tz="UTC"),
+                         by=3600, to=as.POSIXct("201012312300", format="%Y%m%d%H%M", tz="UTC"))
+  ts.na = xts(numeric(length=length(time.vals))*NA, order.by=time.vals)
+
+  if (!is.null(era10.xts)) {
+    era10.xts = merge.xts(ts.na, era10.xts, join="left")[,2]
+  }
+  if (!is.null(era100.xts)) {
+    era100.xts = merge.xts(ts.na, era100.xts, join="left")[,2]
+  }
+
+  return(list(era10=era10.xts, era100=era100.xts))
+}
+
+#-----------------------------------------------------------------------------------
+
 #' @title Read monthly or daily ERA20C or ERA-Interim data and convert to xts
 #' @description This function reads monthly or daily Era data at the location of the
 #'   station location. The time steps of the monthly time series is given with
@@ -279,9 +355,9 @@ ReadEraNetcdf2Xts <- function(era.param, era.fname,
     era100m = ReadNetcdf(era.param[2], era.fname[2], count=c(1,1,-1),
                          start=c(lonidx, latidx, 1), verb.dat=verb.dat)
   }
-  if (read.10m & !read.100m) {
+  if (read.10m & !(read.100m)) {
     df = data.frame(era10m$time, era10m$data)
-  } else if (read.100m & !read.10m) {
+  } else if (read.100m & !(read.10m)) {
     df = data.frame(era100m$time, era100m$data)
   } else if (read.10m & read.100m) {
     df = data.frame(era10m$time, era10m$data, era100m$data)
@@ -545,13 +621,6 @@ GetObsObject <- function(obs.xts, obs2.xts=NULL, obs3.xts=NULL,
                          height=strsplit(obs.param, '_')[[6]][[2]])
   }
 
-  herz10.df = data.frame()
-  herz35.df = data.frame()
-  herz69.df = data.frame()
-  herz116.df = data.frame()
-  herz178.df = data.frame()
-  herz258.df = data.frame()
-
   herz10.df = data.frame(date=index(herz10.xts),
                          ReanaName="HErZ", StationName=obs.name,
                          latitude=obs.lat, longitude=obs.lon,
@@ -593,6 +662,7 @@ GetObsObject <- function(obs.xts, obs2.xts=NULL, obs3.xts=NULL,
                            latitude=obs.lat, longitude=obs.lon,
                            wind_speed=coredata(eraI10.xts),
                            height=strsplit(eraI.param, '_')[[1]][[2]])
+    colnames(eraI10.df)[6] = "wind_speed"
   }
   if (!is.null(era20c10.xts)) {
     era20c10.df = data.frame(date=index(era20c10.xts),
@@ -600,13 +670,15 @@ GetObsObject <- function(obs.xts, obs2.xts=NULL, obs3.xts=NULL,
                              latitude=obs.lat, longitude=obs.lon,
                              wind_speed=coredata(era20c10.xts),
                              height=strsplit(era20c.param, '_')[[1]][[2]])
+    colnames(era20c10.df)[6] = "wind_speed"
   }
   if (!is.null(eraI100.xts)) {
     eraI100.df = data.frame(date=index(eraI100.xts),
                             ReanaName="ERA-I", StationName=obs.name,
                             latitude=obs.lat, longitude=obs.lon,
                             wind_speed=coredata(eraI100.xts),
-                            height=strsplit(eraI.param, '_')[[1]][[2]])
+                            height=strsplit(eraI.param, '_')[[2]][[2]])
+    colnames(eraI100.df)[6] = "wind_speed"
   }
   if (!is.null(era20c100.xts)) {
     era20c100.df = data.frame(date=index(era20c100.xts),
@@ -614,6 +686,7 @@ GetObsObject <- function(obs.xts, obs2.xts=NULL, obs3.xts=NULL,
                               latitude=obs.lat, longitude=obs.lon,
                               wind_speed=coredata(era20c100.xts),
                               height=strsplit(era20c.param, '_')[[2]][[2]])
+    colnames(era20c100.df)[6] = "wind_speed"
   }
 
   # -- create clim objects

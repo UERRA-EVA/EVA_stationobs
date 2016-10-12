@@ -52,6 +52,19 @@ if (ana.time.res$time.res == ana.time.res$monthly) {
       "./data/10m100m_WindSpeedDirection_ERA20C_DayMean_origRes_1900to2010.nc"
   }
   CheckFile(era20c.fname)
+} else if (ana.time.res$time.res == ana.time.res$hourly) {
+  if (res.switch == high.res) {
+    era20c.fname =
+      list(Fino1=c("./data/ERA20C_windspeed10m100m_2000to2010_Fino1.nc"),
+           Fino2=c("./data/ERA20C_windspeed10m100m_2000to2010_Fino2.nc"),
+           Lindenberg=c("./data/ERA20C_windspeed10m100m_2000to2010_Lindenberg.nc"),
+           Cabauw=c("./data/ERA20C_windspeed10m100m_2000to2010_Cabauw.nc"))
+  } else if (res.switch == orig.res) {
+    CallStop("No ERA20C orig res hourly data included!")
+    era20c.fname = ""
+  }
+  CheckFile(c(era20c.fname$Fino1, era20c.fname$Fino2, era20c.fname$Lindenberg,
+              era20c.fname$Cabauw))
 }
 # variable names to read from above files
 era20c.param = c("windspeed_10m", "windspeed_100m")
@@ -72,12 +85,32 @@ if (ana.time.res$time.res == ana.time.res$monthly) {
 } else if (ana.time.res$time.res == ana.time.res$daily) {
   if (res.switch == high.res) {
     eraI.fname =
-      "./data/10mWindSpeedDirection-2mTemp_ERAInterim_DayMean_highRes_1979to2014.nc"
+      c("./data/10mWindSpeedDirection-2mTemp_ERAInterim_DayMean_highRes_1979to2014.nc",
+        "./data/100mWindSpeed_ERAInterim_DayMean_highRes_200to2014.nc")
   } else if (res.switch == orig.res) {
     eraI.fname =
       "./data/10mWindSpeedDirection-2mTemp_ERAInterim_DayMean_origRes_1979to2014.nc"
   }
   CheckFile(eraI.fname)
+} else if (ana.time.res$time.res == ana.time.res$hourly) {
+  if (res.switch == high.res) {
+    eraI.fname =
+      list(Fino1=c("./data/ERA-Interim_windspeed10m_2000to2015_Fino1.nc",
+                   "./data/ERA-Interim_windspeed100m_19802014_highRes_Fino1.nc"),
+           Fino2=c("./data/ERA-Interim_windspeed10m_2000to2015_Fino2.nc",
+                   "./data/ERA-Interim_windspeed100m_19802014_highRes_Fino2.nc"),
+           Lindenberg=c("./data/ERA-Interim_windspeed10m_2000to2015_Lindenberg.nc",
+                       "./data/ERA-Interim_windspeed100m_19802014_highRes_Lindenberg.nc"),
+           Cabauw=c("./data/ERA-Interim_windspeed10m_2000to2015_Cabauw.nc",
+                    "./data/ERA-Interim_windspeed100m_19802014_highRes_Cabauw.nc"))
+  } else if (res.switch == orig.res) {
+    CallStop("No ERA-Interim orig res hourly data included!")
+        eraI.fname = ""
+  }
+  CheckFile(c(eraI.fname$Fino1[[1]], eraI.fname$Fino1[[2]], eraI.fname$Fino2[[1]],
+              eraI.fname$Fino2[[2]], eraI.fname$Lindenberg[[1]],
+              eraI.fname$Lindenberg[[2]], eraI.fname$Cabauw[[1]],
+              eraI.fname$Cabauw[[2]]))
 }
 # variable names to read from above files
 eraI.param = c("windspeed_10m", "windspeed_100m")
@@ -150,13 +183,13 @@ stat.param = "windspeed_10m"
 #- era20c: 1900 to 2010
 #- eraI: 1979 to 2014
 #- herz: 1995 to 2014
-era20c.tsstart = c(1995,1)
+era20c.tsstart = c(2000,1)
 era20c.tsend = c(2010,12)
-eraI.tsstart = c(1995,1)
+eraI.tsstart = c(2000,1)
 eraI.tsend = c(2010,12)
-herz.tsstart = c(1995,1)
+herz.tsstart = c(2000,1)
 herz.tsend = c(2010,12)
-fname_ext = "1995to2010"
+fname_ext = "2000to2010"
 
 #=== plotting ===
 # The following switches decide on which plots to generate

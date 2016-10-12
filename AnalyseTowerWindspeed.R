@@ -83,7 +83,8 @@ cabauw.200.xts = dat[[cabauw.param[[1]]]]
 
 if (ana.time.res$time.res == monthly | ana.time.res$time.res == daily) {
   # == read ERA20C data ==
-  cat(paste0("  **  Reading global reanalysis data\n"))
+  cat(paste0("  **  Reading monthly or daily global reanalysis data\n"))
+
   # for FINO1
   idx = GetLonLatIdx(era20c.fname, fino1.lon, fino1.lat)
   lonidx = idx$lonidx
@@ -94,11 +95,16 @@ if (ana.time.res$time.res == monthly | ana.time.res$time.res == daily) {
                                   read.10m=TRUE, read.100m=TRUE, verb.dat=verb.era.dat)
   era20c10.fino1.xts = era20c.data$era10
   era20c100.fino1.xts = era20c.data$era100
+
+  idx = GetLonLatIdx(eraI.fname[1], fino1.lon, fino1.lat)
+  lonidx = idx$lonidx
+  latidx = idx$latidx
   eraI.data = ReadEraNetcdf2Xts(eraI.param, eraI.fname,
                                 eraI.tsstart, eraI.tsend,
                                 lonidx, latidx, ana.time.res,
                                 read.10m=TRUE, read.100m=FALSE, verb.dat=verb.era.dat)
   eraI10.fino1.xts = eraI.data$era10
+
   idx = GetLonLatIdx(eraI.fname[2], fino1.lon, fino1.lat)
   lonidx = idx$lonidx
   latidx = idx$latidx
@@ -118,12 +124,17 @@ if (ana.time.res$time.res == monthly | ana.time.res$time.res == daily) {
                                   read.10m=TRUE, read.100m=TRUE, verb.dat=verb.era.dat)
   era20c10.fino2.xts = era20c.data$era10
   era20c100.fino2.xts = era20c.data$era100
+
+  idx = GetLonLatIdx(eraI.fname[1], fino2.lon, fino2.lat)
+  lonidx = idx$lonidx
+  latidx = idx$latidx
   eraI.data = ReadEraNetcdf2Xts(eraI.param, eraI.fname,
                                 eraI.tsstart, eraI.tsend,
                                 lonidx, latidx, ana.time.res,
                                 read.10m=TRUE, read.100m=FALSE, verb.dat=verb.era.dat)
   eraI10.fino2.xts = eraI.data$era10
-  idx = GetLonLatIdx(eraI.fname[2], fino1.lon, fino1.lat)
+
+  idx = GetLonLatIdx(eraI.fname[2], fino2.lon, fino2.lat)
   lonidx = idx$lonidx
   latidx = idx$latidx
   eraI.data = ReadEraNetcdf2Xts(eraI.param, eraI.fname,
@@ -142,12 +153,17 @@ if (ana.time.res$time.res == monthly | ana.time.res$time.res == daily) {
                                   read.10m=TRUE, read.100m=TRUE, verb.dat=verb.era.dat)
   era20c10.lind.xts = era20c.data$era10
   era20c100.lind.xts = era20c.data$era100
+
+  idx = GetLonLatIdx(eraI.fname[1], lind.lon, lind.lat)
+  lonidx = idx$lonidx
+  latidx = idx$latidx
   eraI.data = ReadEraNetcdf2Xts(eraI.param, eraI.fname,
                                 eraI.tsstart, eraI.tsend,
                                 lonidx, latidx, ana.time.res,
                                 read.10m=TRUE, read.100m=FALSE, verb.dat=verb.era.dat)
   eraI10.lind.xts = eraI.data$era10
-  idx = GetLonLatIdx(eraI.fname[2], fino1.lon, fino1.lat)
+
+  idx = GetLonLatIdx(eraI.fname[2], lind.lon, lind.lat)
   lonidx = idx$lonidx
   latidx = idx$latidx
   eraI.data = ReadEraNetcdf2Xts(eraI.param, eraI.fname,
@@ -166,12 +182,17 @@ if (ana.time.res$time.res == monthly | ana.time.res$time.res == daily) {
                                   read.10m=TRUE, read.100m=TRUE, verb.dat=verb.era.dat)
   era20c10.cabauw.xts = era20c.data$era10
   era20c100.cabauw.xts = era20c.data$era100
+
+  idx = GetLonLatIdx(eraI.fname[1], cabauw.lon, cabauw.lat)
+  lonidx = idx$lonidx
+  latidx = idx$latidx
   eraI.data = ReadEraNetcdf2Xts(eraI.param, eraI.fname,
                                 eraI.tsstart, eraI.tsend,
                                 lonidx, latidx, ana.time.res,
                                 read.10m=TRUE, read.100m=FALSE, verb.dat=verb.era.dat)
   eraI10.cabauw.xts = eraI.data$era10
-  idx = GetLonLatIdx(eraI.fname[2], fino1.lon, fino1.lat)
+
+  idx = GetLonLatIdx(eraI.fname[2], cabauw.lon, cabauw.lat)
   lonidx = idx$lonidx
   latidx = idx$latidx
   eraI.data = ReadEraNetcdf2Xts(eraI.param, eraI.fname,
@@ -181,7 +202,7 @@ if (ana.time.res$time.res == monthly | ana.time.res$time.res == daily) {
   eraI100.cabauw.xts = eraI.data$era100
 
   # == read HErZ data ==
-  cat(paste0("  **  Reading HErZ reanalysis data\n"))
+  cat(paste0("  **  Reading monthly or daily HErZ reanalysis data\n"))
   if (herz.grid.read.grb) {
     nlon = 848
     nlat = 824
@@ -260,56 +281,142 @@ if (ana.time.res$time.res == monthly | ana.time.res$time.res == daily) {
 
 } else if (ana.time.res$time.res == ana.time.res$hourly) {
 
+  cat(paste0("  **  Reading hourly HErZ reanalysis data\n"))
   herz.fname.names = names(herz.fname)
   for (name.step in seq(herz.fname.names)) {
-    tower.hourly.data = ReadHerzNetcdfHourly2Xts(herz.param, herz.fname[[name.step]],
+    herz.at.tower.hourly.data = ReadHerzNetcdfHourly2Xts(herz.param, herz.fname[[name.step]],
                                                  herz.tsstart, herz.tsend,
                                                  herz.profile)
     if (herz.fname.names[name.step] == "Fino1") {
-      herz10.fino1.xts = tower.hourly.data$herz10
-      herz35.fino1.xts = tower.hourly.data$herz35
-      herz69.fino1.xts = tower.hourly.data$herz69
-      herz116.fino1.xts = tower.hourly.data$herz116
-      herz178.fino1.xts = tower.hourly.data$herz178
-      herz258.fino1.xts = tower.hourly.data$herz258
+      herz10.fino1.xts = herz.at.tower.hourly.data$herz10
+      herz35.fino1.xts = herz.at.tower.hourly.data$herz35
+      herz69.fino1.xts = herz.at.tower.hourly.data$herz69
+      herz116.fino1.xts = herz.at.tower.hourly.data$herz116
+      herz178.fino1.xts = herz.at.tower.hourly.data$herz178
+      herz258.fino1.xts = herz.at.tower.hourly.data$herz258
     } else if (herz.fname.names[name.step] == "Fino2") {
-      herz10.fino2.xts = tower.hourly.data$herz10
-      herz35.fino2.xts = tower.hourly.data$herz35
-      herz69.fino2.xts = tower.hourly.data$herz69
-      herz116.fino2.xts = tower.hourly.data$herz116
-      herz178.fino2.xts = tower.hourly.data$herz178
-      herz258.fino2.xts = tower.hourly.data$herz258
+      herz10.fino2.xts = herz.at.tower.hourly.data$herz10
+      herz35.fino2.xts = herz.at.tower.hourly.data$herz35
+      herz69.fino2.xts = herz.at.tower.hourly.data$herz69
+      herz116.fino2.xts = herz.at.tower.hourly.data$herz116
+      herz178.fino2.xts = herz.at.tower.hourly.data$herz178
+      herz258.fino2.xts = herz.at.tower.hourly.data$herz258
     } else if (herz.fname.names[name.step] == "Lindenberg") {
-      herz10.lind.xts = tower.hourly.data$herz10
-      herz35.lind.xts = tower.hourly.data$herz35
-      herz69.lind.xts = tower.hourly.data$herz69
-      herz116.lind.xts = tower.hourly.data$herz116
-      herz178.lind.xts = tower.hourly.data$herz178
-      herz258.lind.xts = tower.hourly.data$herz258
+      herz10.lind.xts = herz.at.tower.hourly.data$herz10
+      herz35.lind.xts = herz.at.tower.hourly.data$herz35
+      herz69.lind.xts = herz.at.tower.hourly.data$herz69
+      herz116.lind.xts = herz.at.tower.hourly.data$herz116
+      herz178.lind.xts = herz.at.tower.hourly.data$herz178
+      herz258.lind.xts = herz.at.tower.hourly.data$herz258
     } else if (herz.fname.names[name.step] == "Cabauw") {
-      herz10.cabauw.xts = tower.hourly.data$herz10
-      herz35.cabauw.xts = tower.hourly.data$herz35
-      herz69.cabauw.xts = tower.hourly.data$herz69
-      herz116.cabauw.xts = tower.hourly.data$herz116
-      herz178.cabauw.xts = tower.hourly.data$herz178
-      herz258.cabauw.xts = tower.hourly.data$herz258
+      herz10.cabauw.xts = herz.at.tower.hourly.data$herz10
+      herz35.cabauw.xts = herz.at.tower.hourly.data$herz35
+      herz69.cabauw.xts = herz.at.tower.hourly.data$herz69
+      herz116.cabauw.xts = herz.at.tower.hourly.data$herz116
+      herz178.cabauw.xts = herz.at.tower.hourly.data$herz178
+      herz258.cabauw.xts = herz.at.tower.hourly.data$herz258
     } else {
       CallStop(paste0("This tower name was not expected: ",
                       herz.fname.names[name.step]))
     }
   }
-  era20c10.fino1.xts = NULL
-  era20c100.fino1.xts = NULL
-  eraI10.fino1.xts = NULL
-  era20c10.fino2.xts = NULL
-  era20c100.fino2.xts = NULL
-  eraI10.fino2.xts = NULL
-  era20c10.lind.xts = NULL
-  era20c100.lind.xts = NULL
-  eraI10.lind.xts = NULL
-  era20c10.cabauw.xts = NULL
-  era20c100.cabauw.xts = NULL
-  eraI10.cabauw.xts = NULL
+
+  cat(paste0("  **  Reading hourly ERA-Interim reanalysis data\n"))
+  eraI.fname.names = names(eraI.fname)
+  for (name.step in seq(eraI.fname.names)) {
+    if (eraI.fname.names[name.step] == "Lindenberg") {
+      eraI.at.tower.hourly.data = ReadERANetcdfHourly2Xts(eraI.param[1], eraI.param[2],
+                                                         eraI.fname[name.step][[1]][1],
+                                                         eraI.fname[name.step][[1]][2],
+                                                         eraI.tsstart, eraI.tsend,
+                                                         read.10m=T, read.100m=F)
+      eraI10.lind.xts = eraI.at.tower.hourly.data$era10
+      eraI.at.tower.hourly.data = ReadERANetcdfHourly2Xts(eraI.param[1], eraI.param[2],
+                                                         eraI.fname[name.step][[1]][1],
+                                                         eraI.fname[name.step][[1]][2],
+                                                         eraI.tsstart, eraI.tsend,
+                                                         read.10m=F, read.100m=T)
+      eraI100.lind.xts = eraI.at.tower.hourly.data$era100
+    } else if (eraI.fname.names[name.step] == "Cabauw") {
+      eraI.at.tower.hourly.data = ReadERANetcdfHourly2Xts(eraI.param[1], eraI.param[2],
+                                                          eraI.fname[name.step][[1]][1],
+                                                          eraI.fname[name.step][[1]][2],
+                                                          eraI.tsstart, eraI.tsend,
+                                                          read.10m=T, read.100m=F)
+      eraI10.cabauw.xts = eraI.at.tower.hourly.data$era10
+      eraI.at.tower.hourly.data = ReadERANetcdfHourly2Xts(eraI.param[1], eraI.param[2],
+                                                          eraI.fname[name.step][[1]][1],
+                                                          eraI.fname[name.step][[1]][2],
+                                                          eraI.tsstart, eraI.tsend,
+                                                          read.10m=F, read.100m=T)
+      eraI100.cabauw.xts = eraI.at.tower.hourly.data$era100
+    } else if (eraI.fname.names[name.step] == "Fino1") {
+      eraI.at.tower.hourly.data = ReadERANetcdfHourly2Xts(eraI.param[1], eraI.param[2],
+                                                          eraI.fname[name.step][[1]][1],
+                                                          eraI.fname[name.step][[1]][2],
+                                                          eraI.tsstart, eraI.tsend,
+                                                          read.10m=T, read.100m=F)
+      eraI10.fino1.xts = eraI.at.tower.hourly.data$era10
+      eraI.at.tower.hourly.data = ReadERANetcdfHourly2Xts(eraI.param[1], eraI.param[2],
+                                                          eraI.fname[name.step][[1]][1],
+                                                          eraI.fname[name.step][[1]][2],
+                                                          eraI.tsstart, eraI.tsend,
+                                                          read.10m=F, read.100m=T)
+      eraI100.fino1.xts = eraI.at.tower.hourly.data$era100
+    } else if (eraI.fname.names[name.step] == "Fino2") {
+      eraI.at.tower.hourly.data = ReadERANetcdfHourly2Xts(eraI.param[1], eraI.param[2],
+                                                          eraI.fname[name.step][[1]][1],
+                                                          eraI.fname[name.step][[1]][2],
+                                                          eraI.tsstart, eraI.tsend,
+                                                          read.10m=T, read.100m=F)
+      eraI10.fino2.xts = eraI.at.tower.hourly.data$era10
+      eraI.at.tower.hourly.data = ReadERANetcdfHourly2Xts(eraI.param[1], eraI.param[2],
+                                                          eraI.fname[name.step][[1]][1],
+                                                          eraI.fname[name.step][[1]][2],
+                                                          eraI.tsstart, eraI.tsend,
+                                                          read.10m=F, read.100m=T)
+      eraI100.fino2.xts = eraI.at.tower.hourly.data$era100
+    }
+  }
+
+  cat(paste0("  **  Reading hourly ERA20C reanalysis data\n"))
+  era20c.fname.names = names(era20c.fname)
+  for (name.step in seq(era20c.fname.names)) {
+    if (era20c.fname.names[name.step] == "Lindenberg") {
+      era.at.tower.hourly.data = ReadERANetcdfHourly2Xts(era20c.param[1], era20c.param[2],
+                                                         era20c.fname[name.step][[1]][1],
+                                                         era20c.fname[name.step][[1]][1],
+                                                         era20c.tsstart, era20c.tsend,
+                                                         read.10m=T, read.100m=T)
+      era20c10.lind.xts = era.at.tower.hourly.data$era10
+      era20c100.lind.xts = era.at.tower.hourly.data$era100
+    } else if (era20c.fname.names[name.step] == "Cabauw") {
+      era.at.tower.hourly.data = ReadERANetcdfHourly2Xts(era20c.param[1], era20c.param[2],
+                                                         era20c.fname[name.step][[1]][1],
+                                                         era20c.fname[name.step][[1]][1],
+                                                         era20c.tsstart, era20c.tsend,
+                                                         read.10m=T, read.100m=T)
+      era20c10.cabauw.xts = era.at.tower.hourly.data$era10
+      era20c100.cabauw.xts = era.at.tower.hourly.data$era100
+    } else if (era20c.fname.names[name.step] == "Fino1") {
+      era.at.tower.hourly.data = ReadERANetcdfHourly2Xts(era20c.param[1], era20c.param[2],
+                                                         era20c.fname[name.step][[1]][1],
+                                                         era20c.fname[name.step][[1]][1],
+                                                         era20c.tsstart, era20c.tsend,
+                                                         read.10m=T, read.100m=T)
+      era20c10.fino1.xts = era.at.tower.hourly.data$era10
+      era20c100.fino1.xts = era.at.tower.hourly.data$era100
+    } else if (era20c.fname.names[name.step] == "Fino2") {
+      era.at.tower.hourly.data = ReadERANetcdfHourly2Xts(era20c.param[1], era20c.param[2],
+                                                         era20c.fname[name.step][[1]][1],
+                                                         era20c.fname[name.step][[1]][1],
+                                                         era20c.tsstart, era20c.tsend,
+                                                         read.10m=T, read.100m=T)
+      era20c10.fino2.xts = era.at.tower.hourly.data$era10
+      era20c100.fino2.xts = era.at.tower.hourly.data$era100
+    }
+  }
+
 }
 
 # == get time series of same length ==
@@ -540,7 +647,7 @@ if(plot.histograms) {
 
 #-----------------------------------------------------------------------------
 
-if (plot.ProfileTS & ana.time.res$time.res == ana.time.res$monthly) {
+if (plot.ProfileTS) {# & ana.time.res$time.res == ana.time.res$monthly) {
   cat("  **  Plotting tower-ERA profile TS\n")
   fname = paste0(outdir, "LindenbergHErZERA20C_relativeDifferences_", time.ext,"_",
                  res.switch, '_', fname_ext, ".pdf")
@@ -621,23 +728,32 @@ if(plot.Extremes) {
 
 if(plot.DailyCycle & ana.time.res$time.res == ana.time.res$hourly) {
   cat("  **  Plotting the daily cycle of tower measurements\n")
-  fname = paste0(outdir, "HErZ-Fino1_DailyCycle_", res.switch, '_', fname_ext, ".pdf")
-  PreparePlottingHerzDailyCycle(fino1.climobj, fname)
-  fname = paste0(outdir, "HErZ-Fino2_DailyCycle_", res.switch, '_', fname_ext, ".pdf")
-  PreparePlottingHerzDailyCycle(fino2.climobj, fname)
-  fname = paste0(outdir, "HErZ-Cabauw_DailyCycle_", res.switch, '_', fname_ext, ".pdf")
-  PreparePlottingHerzDailyCycle(cabauw.climobj, fname)
-  fname = paste0(outdir, "HErZ-Lindenberg_DailyCycle_", res.switch, '_', fname_ext, ".pdf")
-  PreparePlottingHerzDailyCycle(lind.climobj, fname)
+#   fname = paste0(outdir, "HErZ-Fino1_DailyCycle_", res.switch, '_', fname_ext, ".pdf")
+#   PreparePlottingHerzDailyCycle(fino1.climobj, fname)
+#   fname = paste0(outdir, "HErZ-Fino2_DailyCycle_", res.switch, '_', fname_ext, ".pdf")
+#   PreparePlottingHerzDailyCycle(fino2.climobj, fname)
+#   fname = paste0(outdir, "HErZ-Cabauw_DailyCycle_", res.switch, '_', fname_ext, ".pdf")
+#   PreparePlottingHerzDailyCycle(cabauw.climobj, fname)
+#   fname = paste0(outdir, "HErZ-Lindenberg_DailyCycle_", res.switch, '_', fname_ext, ".pdf")
+#   PreparePlottingHerzDailyCycle(lind.climobj, fname)
+#
+#   fname = paste0(outdir, "Fino1_DailyCycle_", res.switch, '_', fname_ext, ".pdf")
+#   PreparePlottingTowerDailyCycle(fino1.climobj, fname)
+#   fname = paste0(outdir, "Fino2_DailyCycle_", res.switch, '_', fname_ext, ".pdf")
+#   PreparePlottingTowerDailyCycle(fino2.climobj, fname)
+#   fname = paste0(outdir, "Cabauw_DailyCycle_", res.switch, '_', fname_ext, ".pdf")
+#   PreparePlottingTowerDailyCycle(cabauw.climobj, fname)
+#   fname = paste0(outdir, "Lindenberg_DailyCycle_", res.switch, '_', fname_ext, ".pdf")
+#   PreparePlottingTowerDailyCycle(lind.climobj, fname)
 
-  fname = paste0(outdir, "Fino1_DailyCycle_", res.switch, '_', fname_ext, ".pdf")
-  PreparePlottingTowerDailyCycle(fino1.climobj, fname)
-  fname = paste0(outdir, "Fino2_DailyCycle_", res.switch, '_', fname_ext, ".pdf")
-  PreparePlottingTowerDailyCycle(fino2.climobj, fname)
-  fname = paste0(outdir, "Cabauw_DailyCycle_", res.switch, '_', fname_ext, ".pdf")
-  PreparePlottingTowerDailyCycle(cabauw.climobj, fname)
-  fname = paste0(outdir, "Lindenberg_DailyCycle_", res.switch, '_', fname_ext, ".pdf")
-  PreparePlottingTowerDailyCycle(lind.climobj, fname)
+  fname = paste0(outdir, "Cabauw_Difference_DailyCycle_", res.switch, '_', fname_ext, ".pdf")
+  PreparePlottingDifferenceDailyCycle(cabauw.climobj, fname)
+  fname = paste0(outdir, "Lindenberg_Difference_DailyCycle_", res.switch, '_', fname_ext, ".pdf")
+  PreparePlottingDifferenceDailyCycle(lind.climobj, fname)
+  fname = paste0(outdir, "Fino1_Difference_DailyCycle_", res.switch, '_', fname_ext, ".pdf")
+  PreparePlottingDifferenceDailyCycle(fino1.climobj, fname)
+  fname = paste0(outdir, "Fino2_Difference_DailyCycle_", res.switch, '_', fname_ext, ".pdf")
+  PreparePlottingDifferenceDailyCycle(fino2.climobj, fname)
 }
 
 #-----------------------------------------------------------------------------
