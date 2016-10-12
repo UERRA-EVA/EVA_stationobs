@@ -3,7 +3,7 @@
 \alias{plotLegendStats}
 \title{Plot legend with statistics for histogram plot.}
 \usage{
-plotLegendStats(xlims, vals)
+plotLegendStats(xlims, vals, weibull = TRUE)
 }
 \arguments{
 \item{xlims}{the limits of the x-axis in the form c(low,high)}
