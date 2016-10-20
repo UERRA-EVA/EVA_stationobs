@@ -169,6 +169,7 @@ if (herz.profile) {
 # specify the file as one string of which the indices of the lon, lat locations of
 # the tower sites are to be specified
 ifile.lonlat.idx = herz.grid.nc
+lonlat.idx.crea6 = T # specify whether to read COSMO-REA6 data or not (ERA-I, ERA20C)
 
 #=== Station data ===
 # station data based on daily (T) or hourly (F) measurements; hourly DWD station

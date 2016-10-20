@@ -410,13 +410,20 @@ GetYlims <- function(xts1, xts2, xts3, xts4) {
 #' @description A geographic file with lon, lat values is provided (reanalysis file)
 #'   together with single lon, lat values for which their indices are to be
 #'   determined.
-#' @param infile a string to the geographical file
+#' @param infile a string to the geographical file; it is assumed that it is in
+#'   netCDF format
 #' @param lon,lat two numeric values specifying the longitude and latitude values
 #'   for which the indices whithin the geographical file are to be determined
 #' @export
 PrintLonLatIdx <- function(infile, lon, lat, t.name) {
 
-  idx = GetLonLatIdx(infile, lon, lat)
+  if (lonlat.idx.crea6) {
+    herz.lon = ReadNetcdf("longitude", infile, conv.time=F)$data
+    herz.lat = ReadNetcdf("latitude", infile, conv.time=F)$data
+    idx = GetLonLatIdx(infile, lon, lat, herz.lon, herz.lat)
+  } else {
+    idx = GetLonLatIdx(infile, lon, lat)
+  }
 
   cat(paste0("For station: ", t.name, "\n    lon = ", lon, "\n    lon index = ",
              idx$lonidx, "\n    lat = ", lat, "\n    lat index = ", idx$latidx, "\n"))
