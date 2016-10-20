@@ -161,14 +161,14 @@ ReadNetcdf <- function(variable, infile, start=NULL, count=NULL,
     lat <- nc$dim$lat$vals
   }
 
-  close.ncdf(nc)
-
   # read time
   if (conv.time) {
     time.vals <- convertDateNcdf2R(infile)
   } else {
     time.vals <- NULL
   }
+
+  close.ncdf(nc)
 
   #=== reverse latitude vector
   if (revert) {
