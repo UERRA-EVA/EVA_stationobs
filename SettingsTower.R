@@ -99,4 +99,5 @@ plot.ProfileTS = F
 plot.Extremes = F
 plot.DailyCycle = F
 calc.threshold = F
-get.cor.vals = T
+get.cor.vals = F
+print.lonlat.idx = T

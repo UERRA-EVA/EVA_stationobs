@@ -297,7 +297,13 @@ GetLonLatIdx <- function(fname, point.lon, point.lat,
   if (is.null(grid.lon)) { # ERA20C, ERA-Interim data
     dat = ReadNetcdfLonLat(fname)
     grid.lon = dat$lon
+    if (is.null(grid.lon)) {
+      CallStop(paste0("File does not include longitude values: ", fname))
+    }
     grid.lat = dat$lat
+    if (is.null(grid.lon)) {
+      CallStop(paste0("File does not include latitude values: ", fname))
+    }
     latidx = GetNearestIdx(grid.lat, point.lat)
     lonidx = GetNearestIdx(grid.lon, point.lon)
     return(list(lonidx=lonidx, latidx=latidx))
@@ -396,6 +402,25 @@ GetYlims <- function(xts1, xts2, xts3, xts4) {
   }
 
   return(list(yll=yliml, ylh=ylimh))
+}
+
+#-----------------------------------------------------------------------------------
+
+#' @title Print the longitude and latitude indices.
+#' @description A geographic file with lon, lat values is provided (reanalysis file)
+#'   together with single lon, lat values for which their indices are to be
+#'   determined.
+#' @param infile a string to the geographical file
+#' @param lon,lat two numeric values specifying the longitude and latitude values
+#'   for which the indices whithin the geographical file are to be determined
+#' @export
+PrintLonLatIdx <- function(infile, lon, lat, t.name) {
+
+  idx = GetLonLatIdx(infile, lon, lat)
+
+  cat(paste0("For station: ", t.name, "\n    lon = ", lon, "\n    lon index = ",
+             idx$lonidx, "\n    lat = ", lat, "\n    lat index = ", idx$latidx, "\n"))
+
 }
 
 #-----------------------------------------------------------------------------------

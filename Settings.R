@@ -9,7 +9,7 @@ res.switch = high.res
 hourly="hourly"
 daily="daily"
 monthly="monthly"
-time.res=hourly
+time.res=monthly
 ana.time.res = list(hourly=hourly, daily=daily, monthly=monthly, time.res=time.res)
 if (ana.time.res$time.res == ana.time.res$monthly) {
   time.ext = "Monthly"
@@ -117,7 +117,7 @@ eraI.param = c("windspeed_10m", "windspeed_100m")
 
 #=== HErZ ===
 # decide whether to read herz grid file in grb (T) or in nc (F) format
-herz.grid.read.grb = T
+herz.grid.read.grb = F
 # grid file name of the COSMO HErZ reanalysis
 if (herz.grid.read.grb) {
   herz.grid.grb = "./data/COSMO_REA6_CONST_withOUTsponge.grb"
@@ -164,6 +164,11 @@ if (herz.profile) {
 } else {
   herz.param = c("windspeed_116m", "windspeed_10m")
 }
+
+#=== lon lat idx file ===
+# specify the file as one string of which the indices of the lon, lat locations of
+# the tower sites are to be specified
+ifile.lonlat.idx = herz.grid.nc
 
 #=== Station data ===
 # station data based on daily (T) or hourly (F) measurements; hourly DWD station

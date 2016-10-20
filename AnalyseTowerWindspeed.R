@@ -81,6 +81,15 @@ cabauw.80.xts = dat[[cabauw.param[[3]]]]
 cabauw.140.xts = dat[[cabauw.param[[2]]]]
 cabauw.200.xts = dat[[cabauw.param[[1]]]]
 
+if (print.lonlat.idx) {
+  PrintLonLatIdx(ifile.lonlat.idx, fino1.lon, fino1.lat, t.name="Fino1")
+  PrintLonLatIdx(ifile.lonlat.idx, fino2.lon, fino2.lat, t.name="Fino2")
+  PrintLonLatIdx(ifile.lonlat.idx, lind.lon, lind.lat, t.name="Lindenberg")
+  PrintLonLatIdx(ifile.lonlat.idx, cabauw.lon, cabauw.lat, t.name="Cabauw")
+  # usually, I like to break here when the above information is obtained
+  CallStop("And thanks for all the fish!")
+}
+
 if (ana.time.res$time.res == monthly | ana.time.res$time.res == daily) {
   # == read ERA20C data ==
   cat(paste0("  **  Reading monthly or daily global reanalysis data\n"))
