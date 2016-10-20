@@ -1561,9 +1561,9 @@ get_labels <- function(tower.date) {
 PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
 
   t.obj = tower.obj$climate_data_objects
-  cex.legend = 1.75
   tower.date <- as.POSIXlt(t.obj$obs$data$date)
 
+  cex.legend = 1.75
   yliml.rel = -0.75
   ylimh.rel = 0.75
   color = list(obs="blue", herz="red", era="green3", black="black")
@@ -1610,12 +1610,8 @@ PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
   lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col=color$herz)
   lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$obs)
   corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
-  cat(paste0("\n116m C-REA6 at station: ", t.obj$obs$data$StationName[1],
-             "\n    correlation = ", round(corr$estimate, 4),
-             "\n    conf interv = ", round(corr$conf.int[[1]], 4), "  ",
-             round(corr$conf.int[[2]], 4), "\n"))
-  legend("bottomleft", legend=c("COSMO-REA6 at 116m", plot.100.ext,
-                                paste0("correlation = ", round(corr$estimate, 2))),
+  legend("bottomleft", legend=c("COSMO-REA6 at 116m", plot.100.ext),
+                                # paste0("correlation = ", round(corr$estimate, 2))),
          text.col=c(color$herz, color$obs, color$black), horiz=T)
 
   h.xts = xts(t.obj$eraI100$data$wind_speed, order.by=tower.date)
@@ -1624,14 +1620,10 @@ PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
   lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col=color$era)
   lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$obs)
   corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
-  cat(paste0("\n100m ERA-I at station: ", t.obj$obs$data$StationName[1],
-             "\n    correlation = ", round(corr$estimate, 4),
-             "\n    conf interv = ", round(corr$conf.int[[1]], 4), "  ",
-             round(corr$conf.int[[2]], 4), "\n"))
-  legend("bottomleft", legend=c("Era-Interim at 100m", plot.100.ext,
-                                paste0("correlation = ", round(corr$estimate, 2))),
+  legend("bottomleft", legend=c("Era-Interim at 100m", plot.100.ext),
+                                # paste0("correlation = ", round(corr$estimate, 2))),
          text.col=c(color$era, color$obs, color$black), horiz=T)
-  mtext("relative difference", side=2, line=4, cex=3)
+  mtext("relative anomaly", side=2, line=4, cex=3)
 
   h.xts = xts(t.obj$era20c100$data$wind_speed, order.by=tower.date)
   #l.xts from above
@@ -1646,15 +1638,11 @@ PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
   lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col=color$era)
   lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$obs)
   corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
-  cat(paste0("\n100m ERA20C at station: ", t.obj$obs$data$StationName[1],
-             "\n    correlation = ", round(corr$estimate, 4),
-             "\n    conf interv = ", round(corr$conf.int[[1]], 4), "  ",
-             round(corr$conf.int[[2]], 4), "\n"))
-  legend("bottomleft", legend=c("ER20C at 100m", plot.100.ext,
-                                paste0("correlation = ", round(corr$estimate, 2))),
+  legend("bottomleft", legend=c("ER20C at 100m", plot.100.ext),
+                                # paste0("correlation = ", round(corr$estimate, 2))),
          text.col=c(color$era, color$obs, color$black), horiz=T)
 
-  mtext(paste0("Monthly relative wind speed\ndifferences at ",
+  mtext(paste0("Monthly relative wind speed\nanomalies at ",
                t.obj$obs$data$StationName[1]),
         outer=TRUE, line=1, cex=3.75)
 
@@ -1674,12 +1662,8 @@ PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
     lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col=color$herz)
     lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$obs)
     corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
-    cat(paste0("\n10m C-REA6 at station: ", t.obj$obs$data$StationName[1],
-               "\n    correlation = ", round(corr$estimate, 4),
-               "\n    conf interv = ", round(corr$conf.int[[1]], 4), "  ",
-               round(corr$conf.int[[2]], 4), "\n"))
-    legend("bottomleft", legend=c("COSMO-REA6 at 10m", plot.10.ext,
-                                  paste0("correlation = ", round(corr$estimate, 2))),
+    legend("bottomleft", legend=c("COSMO-REA6 at 10m", plot.10.ext),
+                                  # paste0("correlation = ", round(corr$estimate, 2))),
            text.col=c(color$herz, color$obs, color$black), horiz=T)
 
     h.xts = xts(t.obj$eraI10$data$wind_speed, order.by=tower.date)
@@ -1688,14 +1672,10 @@ PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
     lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col=color$era)
     lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$obs)
     corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
-    cat(paste0("\n10m ERA-I at station: ", t.obj$obs$data$StationName[1],
-               "\n    correlation = ", round(corr$estimate, 4),
-               "\n    conf interv = ", round(corr$conf.int[[1]], 4), "  ",
-               round(corr$conf.int[[2]], 4), "\n"))
-    legend("bottomleft", legend=c("Era-Interim at 10m", plot.10.ext,
-                                  paste0("correlation = ", round(corr$estimate, 2))),
+    legend("bottomleft", legend=c("Era-Interim at 10m", plot.10.ext),
+                                  # paste0("correlation = ", round(corr$estimate, 2))),
            text.col=c(color$era, color$obs, color$black), horiz=T)
-    mtext("relative difference", side=2, line=4, cex=3)
+    mtext("relative anomaly", side=2, line=4, cex=3)
 
     h.xts = xts(t.obj$era20c10$data$wind_speed, order.by=tower.date)
     l.xts = xts(t.obj$obs6$data$wind_speed, order.by=tower.date)
@@ -1710,15 +1690,11 @@ PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
     lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col="cyan2")
     lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$obs)
     corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
-    cat(paste0("\n10m ERA20C at station: ", t.obj$obs$data$StationName[1],
-               "\n    correlation = ", round(corr$estimate, 4),
-               "\n    conf interv = ", round(corr$conf.int[[1]], 4), "  ",
-               round(corr$conf.int[[2]], 4), "\n"))
-    legend("bottomleft", legend=c("Era20C at 10m", plot.10.ext,
-                                  paste0("correlation = ", round(corr$estimate, 2))),
+    legend("bottomleft", legend=c("Era20C at 10m", plot.10.ext),
+                                  # paste0("correlation = ", round(corr$estimate, 2))),
            text.col=c("cyan2", color$obs, color$black), horiz=T)
 
-    mtext(paste0("Monthly relative wind speed\ndifferences at ",
+    mtext(paste0("Monthly relative wind speed\nanomalies at ",
                  t.obj$obs$data$StationName[1]), outer=TRUE, line=1, cex=3.75)
     dev.off()
   }
@@ -2179,7 +2155,7 @@ PlotTowerERAprofileAnnualCycle <- function(tower.obj, fname) {
     lines(RelDiff(mon.Lind98, mean(mon.Lind98)), type="b", pch=16,
           col="purple2",lw=2)
     lines(RelDiff(mon.Era20c100, mean(mon.Era20c100)), type="b", pch=16,
-          col="darkgreen",lw=2)
+          col="forestgreen",lw=2)
     lines(RelDiff(mon.EraI100, mean(mon.EraI100)), type="b", pch=16,
           col="magenta",lw=2)
     lines(RelDiff(mon.Lind10, mean(mon.Lind10)), type="b", pch=16,
@@ -2193,7 +2169,7 @@ PlotTowerERAprofileAnnualCycle <- function(tower.obj, fname) {
     legend("top", legend=c("C-REA6 at 116m", "Era20C at 100m", "Era-I at 100m", "Lind at 98m ",
                            # "C-REA6 at 69m", "Lind at 60m", "Lind at 40m", "C-REA6 at 35m",
                            "C-REA6 at 10m", "Era20C at 10m", "Era-I at 10m", "Lind at 10m"),
-           text.col=c("red", "darkgreen", "magenta", "purple2",
+           text.col=c("red", "forestgreen", "magenta", "purple2",
                       # "chocolate", "deepskyblue", "blue", "red",
                       "darkorange", "black", "green", "blue"), cex=legend.cex)
     mtext("Annual cycle of relative\nwind speed at Lindenberg", line=1, cex=title.cex)
@@ -2349,7 +2325,7 @@ PlotTowerERAprofileAnnualCycle <- function(tower.obj, fname) {
     lines(RelDiff(mon.Herz116, mean(mon.Herz116)), type="b", pch=16,
           col="red",lw=2)
     lines(RelDiff(mon.Era20c100, mean(mon.Era20c100)), type="b", pch=16,
-          col="darkgreen",lw=2)
+          col="forestgreen",lw=2)
     lines(RelDiff(mon.EraI100, mean(mon.EraI100)), type="b", pch=16,
           col="magenta",lw=2)
     lines(RelDiff(mon.Cabauw80, mean(mon.Cabauw80)), type="b", pch=16,
@@ -2365,7 +2341,7 @@ PlotTowerERAprofileAnnualCycle <- function(tower.obj, fname) {
     legend("top", legend=c("Cabauw at 140m", "C-REA6 at 116m", "Era20C at 100m",
                            "Era-I at 100m", "Cabauw at 80m ",
                            "C-REA6 at 10m", "Era20C at 10m", "Era-I at 10m", "Cabauw at 10m"),
-           text.col=c("cyan2", "red", "darkgreen", "magenta", "purple2",
+           text.col=c("cyan2", "red", "forestgreen", "magenta", "purple2",
                       "darkorange", "black", "green", "blue"), cex=legend.cex)
     mtext("Annual cycle of relative\nwind speed at Cabauw", line=1, cex=title.cex)
 
@@ -2465,7 +2441,7 @@ PlotTowerERAprofileAnnualCycle <- function(tower.obj, fname) {
     lines(RelDiff(mon.tower, mean(mon.tower)), type="b", pch=16,
           col="purple2",lw=2)
     lines(RelDiff(mon.Era20c100, mean(mon.Era20c100)), type="b", pch=16,
-          col="darkgreen",lw=2)
+          col="forestgreen",lw=2)
     lines(RelDiff(mon.EraI100, mean(mon.EraI100)), type="b", pch=16,
           col="magenta",lw=2)
     lines(RelDiff(mon.EraI10, mean(mon.EraI10)), type="b", pch=16,
@@ -2476,7 +2452,7 @@ PlotTowerERAprofileAnnualCycle <- function(tower.obj, fname) {
           col="darkorange",lw=2)
     legend("top", legend=c("C-REA6 at 116m", "Era20C at 100m", "Era-I at 100m", plot.ext,
                            "C-REA6 at 10m", "Era20C at 10m", "Era-I at 10m"),
-           text.col=c("red", "darkgreen", "magenta", "purple2", "darkorange", "black", "green"),
+           text.col=c("red", "forestgreen", "magenta", "purple2", "darkorange", "black", "green"),
            cex=legend.cex)
     mtext(paste0("Annual cycle of relative\nwind speed at ",
                  t.obj$obs$data$StationName[1]), line=1, cex=title.cex)
@@ -3067,52 +3043,56 @@ PlotDailyCycleHerz <- function(Herz10, Herz35, Herz69, Herz116, F100,
   dev.off()
 
   # new plot for global ERAs only
-  pdf(fname[2], width=PS$PS10$land.a4width, height=PS$PS10$land.a4height*1.25)
-  par(mfrow=c(1,1), mar=c(3.5,3,3.5,0.5), mgp=c(3,1,0), cex=2,
-      cex.lab=xylab.cex, cex.axis=xylab.cex)
+  if (!is.null(Herz10$mean)) {
+    pdf(fname[2], width=PS$PS10$land.a4width, height=PS$PS10$land.a4height*1.25)
+    par(mfrow=c(1,1), mar=c(3.5,3,3.5,0.5), mgp=c(3,1,0), cex=2,
+        cex.lab=xylab.cex, cex.axis=xylab.cex)
 
-  ylim.set=c(1,15)
-  if (as.character(PS$PS10$obs.name) == "Lindenberg") {ylim.set=c(2.5, 6.5)}
-  if (as.character(PS$PS10$obs.name) == "Fino1") {ylim.set=c(6.5, 10.5)}
-  if (as.character(PS$PS10$obs.name) == "Fino2") {ylim.set=c(2.5, 10.5)}
-  if (as.character(PS$PS10$obs.name) == "Cabauw") {
-    ylim.set=c(2.5, 8.5)
-    legend.place = "top"
+    ylim.set=c(1,15)
+    if (as.character(PS$PS10$obs.name) == "Lindenberg") {ylim.set=c(2.5, 6.5)}
+    if (as.character(PS$PS10$obs.name) == "Fino1") {ylim.set=c(6.5, 10.5)}
+    if (as.character(PS$PS10$obs.name) == "Fino2") {ylim.set=c(2.5, 10.5)}
+    if (as.character(PS$PS10$obs.name) == "Cabauw") {
+      ylim.set=c(2.5, 8.5)
+      legend.place = "top"
+    }
+    legend.place = "bottom"
+
+    plot(Era20c10$mean, col="green", pch=17, type="b", ylim=ylim.set,
+         xlab="", ylab="", las=1)
+    lines(Era20c100$mean, col="cyan2", pch=17, type="b")
+    lines(EraI10$mean, col="forestgreen", pch=19, type="b")
+    lines(EraI100$mean, col="blue", pch=19, type="b")
+    if (as.character(PS$PS10$obs.name) == "Fino1" | as.character(PS$PS10$obs.name) == "Fino2") {
+      lines(F100$mean, col="magenta", pch=16, type="b")
+      legend(legend.place, legend=c(paste0("ERA-I at ", as.character(PS$PSEI100$obs.height)),
+                                    paste0("ERA20C at ", as.character(PS$PSEC100$obs.height)),
+                                    paste0("ERA-I at ", as.character(PS$PSEI10$obs.height)),
+                                    paste0("ERA20C at ", as.character(PS$PSEC10$obs.height)),
+                                    paste0(as.character(PS$PSF100$obs.name), " at ",
+                                           as.character(PS$PSF100$obs.height))),
+             text.col=c("blue", "cyan2", "forestgreen", "green", "magenta"), cex=legend.cex)
+    } else {
+      legend(legend.place, legend=c(paste0("ERA-I at ", as.character(PS$PSEI100$obs.height)),
+                                    paste0("ERA20C at ", as.character(PS$PSEC100$obs.height)),
+                                    paste0("ERA-I at ", as.character(PS$PSEI10$obs.height)),
+                                    paste0("ERA20C at ", as.character(PS$PSEC10$obs.height))),
+             text.col=c("blue", "cyan2", "forestgreen", "green"), cex=legend.cex)
+    }
+
+    mtext(paste0("Daily cycle of ERA20C and ERA-I wind speed\nat tower location ",
+                 PS$PSEC10$obs.name), line=0.5, cex=title.cex)
+    title(xlab=x.lab, line=2)
+    title(ylab=y.lab, line=2)
+    dev.off()
   }
-  legend.place = "bottom"
-
-  plot(Era20c10$mean, col="yellowgreen", pch=17, type="b", ylim=ylim.set,
-       xlab="", ylab="", las=1)
-  lines(Era20c100$mean, col="cyan2", pch=17, type="b")
-  lines(EraI10$mean, col="green", pch=19, type="b")
-  lines(EraI100$mean, col="blue", pch=19, type="b")
-  if (as.character(PS$PS10$obs.name) == "Fino1" | as.character(PS$PS10$obs.name) == "Fino2") {
-    lines(F100$mean, col="magenta", pch=16, type="b")
-    legend(legend.place, legend=c(paste0("ERA-I at ", as.character(PS$PSEI100$obs.height)),
-                                  paste0("ERA20C at ", as.character(PS$PSEC100$obs.height)),
-                                  paste0("ERA-I at ", as.character(PS$PSEI10$obs.height)),
-                                  paste0("ERA20C at ", as.character(PS$PSEC10$obs.height)),
-                                  paste0(as.character(PS$PSF100$obs.name), " at ",
-                                         as.character(PS$PSF100$obs.height))),
-           text.col=c("blue", "cyan2", "green", "yellowgreen", "magenta"), cex=legend.cex)
-  } else {
-    legend(legend.place, legend=c(paste0("ERA-I at ", as.character(PS$PSEI100$obs.height)),
-                                  paste0("ERA20C at ", as.character(PS$PSEC10069$obs.height)),
-                                  paste0("ERA-I at ", as.character(PS$PSEI10$obs.height)),
-                                  paste0("ERA20C at ", as.character(PS$PSEC10$obs.height))),
-           text.col=c("blue", "red", "orange", "green"), cex=legend.cex)
-  }
-
-  mtext(paste0("Daily cycle of ERA20C and ERA-I wind speed\nat tower location ",
-  PS$PSEC10$obs.name), line=0.5, cex=title.cex)
-  title(xlab=x.lab, line=2)
-  title(ylab=y.lab, line=2)
-  dev.off()
 
   # plot box plots
   pdf(fname[3], width=PS$PS10$land.a4width, height=PS$PS10$land.a4height)
-  par(mfrow=c(2,1), oma=c(0.5,0.5,0.5,0.5), mar=c(4,4,2,0), cex.lab=2, cex.axis=2)
+  par(mfrow=c(2,1), oma=c(0.5,0.5,0.5,0.5), mar=c(4,4,2,0),
+      cex.axis=2, cex.lab=xylab.cex, cex.axis=xylab.cex)
 
+  title.cex = 1.75
   swex = 0.4
   bwex = 0.3
   hori = F
