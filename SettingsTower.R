@@ -97,5 +97,6 @@ plot.histograms = F
 plot.separate.hist = F
 plot.ProfileTS = F
 plot.Extremes = F
-plot.DailyCycle = T
+plot.DailyCycle = F
 calc.threshold = F
+get.cor.vals = T

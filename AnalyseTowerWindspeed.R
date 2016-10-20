@@ -757,3 +757,10 @@ if(plot.DailyCycle & ana.time.res$time.res == ana.time.res$hourly) {
 }
 
 #-----------------------------------------------------------------------------
+
+if (get.cor.vals) {
+  GetCorVals(fino1.climobj, ana.time.res)
+  GetCorVals(fino2.climobj, ana.time.res)
+  GetCorVals(lind.climobj, ana.time.res)
+  GetCorVals(cabauw.climobj, ana.time.res)
+}
