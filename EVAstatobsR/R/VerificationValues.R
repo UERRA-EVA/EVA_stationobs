@@ -373,6 +373,73 @@ PrepareRandomData <- function(num, use.distr) {
 
 #-----------------------------------------------------------------------------------
 
+IsFinite <- function(val) {
+  if (!is.atomic(val)) {
+    return(c(round(val$conf.int[1],4),
+             round(val$estimate[[1]],4),
+             round(val$conf.int[2],4)))
+  } else {
+    return(c(NA,NA,NA))
+  }
+}
+
+#-----------------------------------------------------------------------------------
+
+#' @title Fill the correlation list with the correlation values
+#' @param t.obj
+#' @param corr.lst previous list holding all values so far which is to be appended
+#' @param corr10.crea,corr10.eraI,corr10.era20c,corr100.crea,corr100.eraI,corr100.era20c
+#'   correlation values of the regional and global reanalyses
+#' @return corr.lst appended (updated) list holding all correlation values
+GetCorList <- function(t.obj, corr.lst, corr10.crea, corr10.eraI, corr10.era20c,
+                       corr100.crea, corr100.eraI, corr100.era20c) {
+
+  # fill out the list corr.lst
+  if (t.obj$obs$data$StationName[1] == "Fino1") {
+    l.name100 = "Fino1"
+    t.height100 = t.obj$obs$data$height[1]
+    t.name100 = paste0(t.obj$obs$data$StationName[1], "\nat ", as.character(t.height100))
+  }
+  if (t.obj$obs$data$StationName[1] == "Fino2") {
+    l.name100 = "Fino2"
+    t.height100 = t.obj$obs$data$height[1]
+    t.name100 = paste0(t.obj$obs$data$StationName[1], "\nat ", as.character(t.height100))
+  } else if (t.obj$obs$data$StationName[1] == "Lindenberg") {
+    t.height100 = t.obj$obs$data$height[1]
+    t.height10 = t.obj$obs6$data$height[1]
+    l.name100 = "Lind100"
+    l.name10 = "Lind10"
+    t.name100 = paste0(t.obj$obs$data$StationName[1], "\nat ", as.character(t.height100))
+    t.name10 = paste0(t.obj$obs$data$StationName[1], "\nat ", as.character(t.height10))
+  } else if (t.obj$obs$data$StationName[1] == "Cabauw") {
+    t.height100 = t.obj$obs2$data$height[1]
+    t.height10 = t.obj$obs6$data$height[1]
+    t.name100 = paste0(t.obj$obs$data$StationName[1], "\nat ", as.character(t.height100))
+    t.name10 = paste0(t.obj$obs$data$StationName[1], "\nat ", as.character(t.height10))
+    l.name100 = "Cab100"
+    l.name10 = "Cab10"
+  }
+  corr.lst = append(corr.lst, list(dummy.name = list(name = paste0(as.character(t.name100,
+                                                                                "\nat", t.height100)),
+                                                     CREA6 = IsFinite(corr100.crea),
+                                                     ERAI = IsFinite(corr100.eraI),
+                                                     ERA20C = IsFinite(corr100.era20c))))
+  names(corr.lst)[which(names(corr.lst)=="dummy.name")] = l.name100
+  if (t.obj$obs$data$StationName[1] != "Fino1" &
+      t.obj$obs$data$StationName[1] != "Fino2") {
+    corr.lst = append(corr.lst, list(dummy.name = list(name = paste0(as.character(t.name10,
+                                                                                  "\nat ", t.height10)),
+                                                       CREA6 = IsFinite(corr10.crea),
+                                                       ERAI = IsFinite(corr10.eraI),
+                                                       ERA20C = IsFinite(corr10.era20c))))
+    names(corr.lst)[which(names(corr.lst)=="dummy.name")] = l.name10
+  }
+
+  return(corr.lst)
+}
+
+#-----------------------------------------------------------------------------------
+
 #' @title Calcualte correlation values between reanalyses and tower measurements.
 #' @description The function cor.test ist used to calculate correlation values
 #'   between reanalyses and tower measurements. Since the reanalyses have a different
@@ -381,8 +448,11 @@ PrepareRandomData <- function(num, use.distr) {
 #'   time steps.
 #' @param tower.obj is a ClimObject holding the data of tower measurements and
 #'   corresponding reanalysis data.
+#' @param ana.time.res named list holding parameters monthly="monthly",
+#'   daily="daily", hourly="hourly", and time.res= to determine the time resolution
+#'   of the data to be read.
 #' @export
-GetCorVals <- function(tower.obj, ana.time.res) {
+GetCorVals <- function(tower.obj, ana.time.res, cor.list, print.cor=TRUE) {
 
   if (ana.time.res$time.res == ana.time.res$hourly) {
     t.obj = tower.obj$climate_data_objects
@@ -392,25 +462,34 @@ GetCorVals <- function(tower.obj, ana.time.res) {
     if (t.obj$obs$data$StationName[1] == "Fino1" |
         t.obj$obs$data$StationName[1] == "Fino2") {
       corr100 = cor.test(t.obj$herz116$data$wind_speed, t.obj$obs$data$wind_speed)
+      dummy.lst = GetCorList(t.obj, list(), corr10.crea=NA, corr10.eraI=NA, corr10.era20c=NA,
+                             corr100, corr100.eraI=NA, corr100.era20c=NA)
     } else if (t.obj$obs$data$StationName[1] == "Lindenberg") {
       corr10 = cor.test(t.obj$herz10$data$wind_speed, t.obj$obs6$data$wind_speed)
       corr100 = cor.test(t.obj$herz116$data$wind_speed, t.obj$obs$data$wind_speed)
+      dummy.lst = GetCorList(t.obj, list(), corr10, corr10.eraI=NA, corr10.era20c=NA,
+                             corr100, corr100.eraI=NA, corr100.era20c=NA)
     } else if (t.obj$obs$data$StationName[1] == "Cabauw") {
       corr10 = cor.test(t.obj$herz10$data$wind_speed, t.obj$obs6$data$wind_speed)
       corr100 = cor.test(t.obj$herz116$data$wind_speed, t.obj$obs2$data$wind_speed)
+      dummy.lst = GetCorList(t.obj, list(), corr10, corr10.eraI=NA, corr10.era20c=NA,
+                             corr100, corr100.eraI=NA, corr100.era20c=NA)
     }
+    lst.hourly = list(Hourly = dummy.lst)
 
-    cat(paste0("\n   ***   HOURLY   ***\n116m C-REA6 at station: ", t.obj$obs$data$StationName[1],
-               "\n    correlation = ", round(corr100$estimate, 4),
-               "\n    conf interv = ", round(corr100$conf.int[[1]], 4), "  ",
-               round(corr100$conf.int[[2]], 4), "\n"))
+    if (print.cor) {
+      cat(paste0("\n   ***   HOURLY   ***\n116m C-REA6 at station: ", t.obj$obs$data$StationName[1],
+                 "\n    correlation = ", round(corr100$estimate, 4),
+                 "\n    conf interv = ", round(corr100$conf.int[[1]], 4), "  ",
+                 round(corr100$conf.int[[2]], 4), "\n"))
 
-    if (t.obj$obs$data$StationName[1] != "Fino1" &
-        t.obj$obs$data$StationName[1] != "Fino2") {
-      cat(paste0("\n10m C-REA6 at station: ", t.obj$obs$data$StationName[1],
-                 "\n    correlation = ", round(corr10$estimate, 4),
-                 "\n    conf interv = ", round(corr10$conf.int[[1]], 4), "  ",
-                 round(corr10$conf.int[[2]], 4), "\n"))
+      if (t.obj$obs$data$StationName[1] != "Fino1" &
+          t.obj$obs$data$StationName[1] != "Fino2") {
+        cat(paste0("\n10m C-REA6 at station: ", t.obj$obs$data$StationName[1],
+                   "\n    correlation = ", round(corr10$estimate, 4),
+                   "\n    conf interv = ", round(corr10$conf.int[[1]], 4), "  ",
+                   round(corr10$conf.int[[2]], 4), "\n"))
+      }
     }
 
     # three-hourly correlation between COSMO-REA6, ERA20C and tower at 10m and 100m
@@ -430,6 +509,8 @@ GetCorVals <- function(tower.obj, ana.time.res) {
     corr100.era20c = cor.test(era20c100.xts[idx], t100.xts[idx])
     corr100.crea = cor.test(crea116.xts[idx], t100.xts[idx])
 
+    corr10.era20c = NA
+    corr10.crea = NA
     if (t.obj$obs$data$StationName[1] != "Fino1" &
         t.obj$obs$data$StationName[1] != "Fino2") {
       era20c10.xts = xts(t.obj$era20c10$data$wind_speed, order.by=tower.date)
@@ -437,34 +518,41 @@ GetCorVals <- function(tower.obj, ana.time.res) {
       idx = which(is.finite(era20c10.xts))
       corr10.era20c = cor.test(era20c10.xts[idx], t10.xts[idx])
       corr10.crea = cor.test(crea10.xts[idx], t10.xts[idx])
+
     }
+    dummy.lst = GetCorList(t.obj, list(), corr10.crea, corr10.eraI=NA,
+                           corr10.era20c, corr100.crea, corr100.eraI=NA,
+                           corr100.era20c)
+    lst.threehourly = list(ThreeHourly = dummy.lst)
 
-    cat(paste0("\n   ***   THREE (3) HOURLY   ***\n100m ERA20C at station: ",
-               t.obj$obs$data$StationName[1],
-               "\n    correlation = ", round(corr100.era20c$estimate, 4),
-               "\n    conf interv = ", round(corr100.era20c$conf.int[[1]], 4), "  ",
-               round(corr100.era20c$conf.int[[2]], 4), "\n"))
+    if (print.cor) {
+      cat(paste0("\n   ***   THREE (3) HOURLY   ***\n100m ERA20C at station: ",
+                 t.obj$obs$data$StationName[1],
+                 "\n    correlation = ", round(corr100.era20c$estimate, 4),
+                 "\n    conf interv = ", round(corr100.era20c$conf.int[[1]], 4), "  ",
+                 round(corr100.era20c$conf.int[[2]], 4), "\n"))
 
-    if (t.obj$obs$data$StationName[1] != "Fino1" &
-        t.obj$obs$data$StationName[1] != "Fino2") {
-      cat(paste0("\n10m ERA20C at station: ", t.obj$obs$data$StationName[1],
-                 "\n    correlation = ", round(corr10.era20c$estimate, 4),
-                 "\n    conf interv = ", round(corr10.era20c$conf.int[[1]], 4), "  ",
-                 round(corr10.era20c$conf.int[[2]], 4), "\n"))
-    }
+      if (t.obj$obs$data$StationName[1] != "Fino1" &
+          t.obj$obs$data$StationName[1] != "Fino2") {
+        cat(paste0("\n10m ERA20C at station: ", t.obj$obs$data$StationName[1],
+                   "\n    correlation = ", round(corr10.era20c$estimate, 4),
+                   "\n    conf interv = ", round(corr10.era20c$conf.int[[1]], 4), "  ",
+                   round(corr10.era20c$conf.int[[2]], 4), "\n"))
+      }
 
-    cat(paste0("\n   ***   THREE (3) HOURLY   ***\n116m COSMO-REA6 at station: ",
-               t.obj$obs$data$StationName[1],
-               "\n    correlation = ", round(corr100.crea$estimate, 4),
-               "\n    conf interv = ", round(corr100.crea$conf.int[[1]], 4), "  ",
-               round(corr100.crea$conf.int[[2]], 4), "\n"))
+      cat(paste0("\n   ***   THREE (3) HOURLY   ***\n116m COSMO-REA6 at station: ",
+                 t.obj$obs$data$StationName[1],
+                 "\n    correlation = ", round(corr100.crea$estimate, 4),
+                 "\n    conf interv = ", round(corr100.crea$conf.int[[1]], 4), "  ",
+                 round(corr100.crea$conf.int[[2]], 4), "\n"))
 
-    if (t.obj$obs$data$StationName[1] != "Fino1" &
-        t.obj$obs$data$StationName[1] != "Fino2") {
-      cat(paste0("\n10m COSMO-REA6 at station: ", t.obj$obs$data$StationName[1],
-                 "\n    correlation = ", round(corr10.crea$estimate, 4),
-                 "\n    conf interv = ", round(corr10.crea$conf.int[[1]], 4), "  ",
-                 round(corr10.crea$conf.int[[2]], 4), "\n"))
+      if (t.obj$obs$data$StationName[1] != "Fino1" &
+          t.obj$obs$data$StationName[1] != "Fino2") {
+        cat(paste0("\n10m COSMO-REA6 at station: ", t.obj$obs$data$StationName[1],
+                   "\n    correlation = ", round(corr10.crea$estimate, 4),
+                   "\n    conf interv = ", round(corr10.crea$conf.int[[1]], 4), "  ",
+                   round(corr10.crea$conf.int[[2]], 4), "\n"))
+      }
     }
 
     # six-hourly correlation between COSMO-REA6, ERA20C, ERA-I and tower at 10m and 100m
@@ -486,6 +574,9 @@ GetCorVals <- function(tower.obj, ana.time.res) {
     corr100.crea = cor.test(crea116.xts[idx], t100.xts[idx])
     corr100.eraI = cor.test(eraI100.xts[idx], t100.xts[idx])
 
+    corr10.era20c = NA
+    corr10.crea = NA
+    corr10.eraI = NA
     if (t.obj$obs$data$StationName[1] != "Fino1" &
         t.obj$obs$data$StationName[1] != "Fino2") {
       era20c10.xts = xts(t.obj$era20c10$data$wind_speed, order.by=tower.date)
@@ -496,47 +587,52 @@ GetCorVals <- function(tower.obj, ana.time.res) {
       corr10.crea = cor.test(crea10.xts[idx], t10.xts[idx])
       corr10.eraI = cor.test(eraI10.xts[idx], t10.xts[idx])
     }
+    dummy.lst = GetCorList(t.obj, list(), corr10.crea, corr10.eraI, corr10.era20c,
+                           corr100.crea, corr100.eraI, corr100.era20c)
+    lst.sixhourly = list(SixHourly = dummy.lst)
+    cor.list = c(list(SixHourly = c(cor.list$SixHourly, lst.sixhourly$SixHourly)),
+                 list(ThreeHourly = c(cor.list$ThreeHourly, lst.threehourly$ThreeHourly)),
+                 list(Hourly = c(cor.list$Hourly, lst.hourly$Hourly)))
 
-    cat(paste0("\n   ***   SIX (6) HOURLY   ***\n100m ERA20C at station: ",
-               t.obj$obs$data$StationName[1],
-               "\n    correlation = ", round(corr100.era20c$estimate, 4),
-               "\n    conf interv = ", round(corr100.era20c$conf.int[[1]], 4), "  ",
-               round(corr100.era20c$conf.int[[2]], 4), "\n"))
+    if (print.cor) {
+      cat(paste0("\n   ***   SIX (6) HOURLY   ***\n100m ERA20C at station: ",
+                 t.obj$obs$data$StationName[1],
+                 "\n    correlation = ", round(corr100.era20c$estimate, 4),
+                 "\n    conf interv = ", round(corr100.era20c$conf.int[[1]], 4), "  ",
+                 round(corr100.era20c$conf.int[[2]], 4), "\n"))
+      if (t.obj$obs$data$StationName[1] != "Fino1" &
+          t.obj$obs$data$StationName[1] != "Fino2") {
+        cat(paste0("\n10m ERA20C at station: ", t.obj$obs$data$StationName[1],
+                   "\n    correlation = ", round(corr10.era20c$estimate, 4),
+                   "\n    conf interv = ", round(corr10.era20c$conf.int[[1]], 4), "  ",
+                   round(corr10.era20c$conf.int[[2]], 4), "\n"))
+      }
 
-    if (t.obj$obs$data$StationName[1] != "Fino1" &
-        t.obj$obs$data$StationName[1] != "Fino2") {
-      cat(paste0("\n10m ERA20C at station: ", t.obj$obs$data$StationName[1],
-                 "\n    correlation = ", round(corr10.era20c$estimate, 4),
-                 "\n    conf interv = ", round(corr10.era20c$conf.int[[1]], 4), "  ",
-                 round(corr10.era20c$conf.int[[2]], 4), "\n"))
-    }
+      cat(paste0("\n   ***   SIX (6) HOURLY   ***\n100m ERA-Interim at station: ",
+                 t.obj$obs$data$StationName[1],
+                 "\n    correlation = ", round(corr100.eraI$estimate, 4),
+                 "\n    conf interv = ", round(corr100.eraI$conf.int[[1]], 4), "  ",
+                 round(corr100.eraI$conf.int[[2]], 4), "\n"))
+      if (t.obj$obs$data$StationName[1] != "Fino1" &
+          t.obj$obs$data$StationName[1] != "Fino2") {
+        cat(paste0("\n10m ERA-Interim at station: ", t.obj$obs$data$StationName[1],
+                   "\n    correlation = ", round(corr10.eraI$estimate, 4),
+                   "\n    conf interv = ", round(corr10.eraI$conf.int[[1]], 4), "  ",
+                   round(corr10.eraI$conf.int[[2]], 4), "\n"))
+      }
 
-    cat(paste0("\n   ***   SIX (6) HOURLY   ***\n100m ERA-Interim at station: ",
-               t.obj$obs$data$StationName[1],
-               "\n    correlation = ", round(corr100.eraI$estimate, 4),
-               "\n    conf interv = ", round(corr100.eraI$conf.int[[1]], 4), "  ",
-               round(corr100.eraI$conf.int[[2]], 4), "\n"))
-
-    if (t.obj$obs$data$StationName[1] != "Fino1" &
-        t.obj$obs$data$StationName[1] != "Fino2") {
-      cat(paste0("\n10m ERA-Interim at station: ", t.obj$obs$data$StationName[1],
-                 "\n    correlation = ", round(corr10.eraI$estimate, 4),
-                 "\n    conf interv = ", round(corr10.eraI$conf.int[[1]], 4), "  ",
-                 round(corr10.eraI$conf.int[[2]], 4), "\n"))
-    }
-
-    cat(paste0("\n   ***   SIX (6) HOURLY   ***\n116m COSMO-REA6 at station: ",
-               t.obj$obs$data$StationName[1],
-               "\n    correlation = ", round(corr100.crea$estimate, 4),
-               "\n    conf interv = ", round(corr100.crea$conf.int[[1]], 4), "  ",
-               round(corr100.crea$conf.int[[2]], 4), "\n"))
-
-    if (t.obj$obs$data$StationName[1] != "Fino1" &
-        t.obj$obs$data$StationName[1] != "Fino2") {
-      cat(paste0("\n10m COSMO-REA6 at station: ", t.obj$obs$data$StationName[1],
-                 "\n    correlation = ", round(corr10.crea$estimate, 4),
-                 "\n    conf interv = ", round(corr10.crea$conf.int[[1]], 4), "  ",
-                 round(corr10.crea$conf.int[[2]], 4), "\n"))
+      cat(paste0("\n   ***   SIX (6) HOURLY   ***\n116m COSMO-REA6 at station: ",
+                 t.obj$obs$data$StationName[1],
+                 "\n    correlation = ", round(corr100.crea$estimate, 4),
+                 "\n    conf interv = ", round(corr100.crea$conf.int[[1]], 4), "  ",
+                 round(corr100.crea$conf.int[[2]], 4), "\n"))
+      if (t.obj$obs$data$StationName[1] != "Fino1" &
+          t.obj$obs$data$StationName[1] != "Fino2") {
+        cat(paste0("\n10m COSMO-REA6 at station: ", t.obj$obs$data$StationName[1],
+                   "\n    correlation = ", round(corr10.crea$estimate, 4),
+                   "\n    conf interv = ", round(corr10.crea$conf.int[[1]], 4), "  ",
+                   round(corr10.crea$conf.int[[2]], 4), "\n"))
+      }
     }
 
   } else if (ana.time.res$time.res == ana.time.res$daily |
@@ -550,6 +646,9 @@ GetCorVals <- function(tower.obj, ana.time.res) {
       corr100.crea = cor.test(t.obj$herz116$data$wind_speed, t.obj$obs$data$wind_speed)
       corr100.eraI = cor.test(t.obj$eraI100$data$wind_speed, t.obj$obs$data$wind_speed)
       corr100.era20c = cor.test(t.obj$era20c100$data$wind_speed, t.obj$obs$data$wind_speed)
+
+      cor.list = GetCorList(t.obj, cor.list, corr10.crea=NULL, corr10.eraI=NULL, corr10.era20c=NULL,
+                            corr100.crea, corr100.eraI, corr100.era20c)
     } else if (t.obj$obs$data$StationName[1] == "Lindenberg") {
       corr10.crea = cor.test(t.obj$herz10$data$wind_speed, t.obj$obs6$data$wind_speed)
       corr10.eraI = cor.test(t.obj$eraI10$data$wind_speed, t.obj$obs6$data$wind_speed)
@@ -557,6 +656,9 @@ GetCorVals <- function(tower.obj, ana.time.res) {
       corr100.crea = cor.test(t.obj$herz116$data$wind_speed, t.obj$obs$data$wind_speed)
       corr100.eraI = cor.test(t.obj$eraI100$data$wind_speed, t.obj$obs$data$wind_speed)
       corr100.era20c = cor.test(t.obj$era20c100$data$wind_speed, t.obj$obs$data$wind_speed)
+
+      cor.list = GetCorList(t.obj, cor.list, corr10.crea, corr10.eraI, corr10.era20c,
+                            corr100.crea, corr100.eraI, corr100.era20c)
     } else if (t.obj$obs$data$StationName[1] == "Cabauw") {
       corr10.crea = cor.test(t.obj$herz10$data$wind_speed, t.obj$obs6$data$wind_speed)
       corr10.eraI = cor.test(t.obj$eraI10$data$wind_speed, t.obj$obs6$data$wind_speed)
@@ -564,55 +666,59 @@ GetCorVals <- function(tower.obj, ana.time.res) {
       corr100.crea = cor.test(t.obj$herz116$data$wind_speed, t.obj$obs2$data$wind_speed)
       corr100.eraI = cor.test(t.obj$eraI100$data$wind_speed, t.obj$obs2$data$wind_speed)
       corr100.era20c = cor.test(t.obj$era20c100$data$wind_speed, t.obj$obs2$data$wind_speed)
+
+      cor.list = GetCorList(t.obj, cor.list, corr10.crea, corr10.eraI, corr10.era20c,
+                            corr100.crea, corr100.eraI, corr100.era20c)
     }
 
+    # print out the values
     if (ana.time.res$time.res == ana.time.res$daily) { time.res = "DAILY" }
     if (ana.time.res$time.res == ana.time.res$monthly) { time.res = "MONTHLY" }
-    cat(paste0("\n   ***   ", time.res,"   ***\n116m C-REA6 at station: ",
-               t.obj$obs$data$StationName[1],
-               "\n    correlation = ", round(corr100.crea$estimate, 4),
-               "\n    conf interv = ", round(corr100.crea$conf.int[[1]], 4), "  ",
-               round(corr100.crea$conf.int[[2]], 4), "\n"))
+    if (print.cor) {
+      cat(paste0("\n   ***   ", time.res,"   ***\n116m C-REA6 at station: ",
+                 t.obj$obs$data$StationName[1],
+                 "\n    correlation = ", round(corr100.crea$estimate, 4),
+                 "\n    conf interv = ", round(corr100.crea$conf.int[[1]], 4), "  ",
+                 round(corr100.crea$conf.int[[2]], 4), "\n"))
+      if (t.obj$obs$data$StationName[1] != "Fino1" &
+          t.obj$obs$data$StationName[1] != "Fino2") {
+        cat(paste0("\n10m C-REA6 at station: ", t.obj$obs$data$StationName[1],
+                   "\n    correlation = ", round(corr10.crea$estimate, 4),
+                   "\n    conf interv = ", round(corr10.crea$conf.int[[1]], 4), "  ",
+                   round(corr10.crea$conf.int[[2]], 4), "\n"))
+      }
 
-    if (t.obj$obs$data$StationName[1] != "Fino1" &
-        t.obj$obs$data$StationName[1] != "Fino2") {
-      cat(paste0("\n10m C-REA6 at station: ", t.obj$obs$data$StationName[1],
-                 "\n    correlation = ", round(corr10.crea$estimate, 4),
-                 "\n    conf interv = ", round(corr10.crea$conf.int[[1]], 4), "  ",
-                 round(corr10.crea$conf.int[[2]], 4), "\n"))
-    }
+      cat(paste0("\n   ***   ", time.res,"   ***\n100m ERA-Interim at station: ",
+                 t.obj$obs$data$StationName[1],
+                 "\n    correlation = ", round(corr100.eraI$estimate, 4),
+                 "\n    conf interv = ", round(corr100.eraI$conf.int[[1]], 4), "  ",
+                 round(corr100.eraI$conf.int[[2]], 4), "\n"))
+      if (t.obj$obs$data$StationName[1] != "Fino1" &
+          t.obj$obs$data$StationName[1] != "Fino2") {
+        cat(paste0("\n10m ERA-Interim at station: ", t.obj$obs$data$StationName[1],
+                   "\n    correlation = ", round(corr10.eraI$estimate, 4),
+                   "\n    conf interv = ", round(corr10.eraI$conf.int[[1]], 4), "  ",
+                   round(corr10.eraI$conf.int[[2]], 4), "\n"))
+      }
 
-    cat(paste0("\n   ***   ", time.res,"   ***\n100m ERA-Interim at station: ",
-               t.obj$obs$data$StationName[1],
-               "\n    correlation = ", round(corr100.eraI$estimate, 4),
-               "\n    conf interv = ", round(corr100.eraI$conf.int[[1]], 4), "  ",
-               round(corr100.eraI$conf.int[[2]], 4), "\n"))
-
-    if (t.obj$obs$data$StationName[1] != "Fino1" &
-        t.obj$obs$data$StationName[1] != "Fino2") {
-      cat(paste0("\n10m ERA-Interim at station: ", t.obj$obs$data$StationName[1],
-                 "\n    correlation = ", round(corr10.eraI$estimate, 4),
-                 "\n    conf interv = ", round(corr10.eraI$conf.int[[1]], 4), "  ",
-                 round(corr10.eraI$conf.int[[2]], 4), "\n"))
-    }
-
-    cat(paste0("\n   ***   ", time.res,"   ***\n100m ERA20C at station: ",
-               t.obj$obs$data$StationName[1],
-               "\n    correlation = ", round(corr100.era20c$estimate, 4),
-               "\n    conf interv = ", round(corr100.era20c$conf.int[[1]], 4), "  ",
-               round(corr100.era20c$conf.int[[2]], 4), "\n"))
-
-    if (t.obj$obs$data$StationName[1] != "Fino1" &
-        t.obj$obs$data$StationName[1] != "Fino2") {
-      cat(paste0("\n10m ERA20C at station: ", t.obj$obs$data$StationName[1],
-                 "\n    correlation = ", round(corr10.era20c$estimate, 4),
-                 "\n    conf interv = ", round(corr10.era20c$conf.int[[1]], 4), "  ",
-                 round(corr10.era20c$conf.int[[2]], 4), "\n"))
+      cat(paste0("\n   ***   ", time.res,"   ***\n100m ERA20C at station: ",
+                 t.obj$obs$data$StationName[1],
+                 "\n    correlation = ", round(corr100.era20c$estimate, 4),
+                 "\n    conf interv = ", round(corr100.era20c$conf.int[[1]], 4), "  ",
+                 round(corr100.era20c$conf.int[[2]], 4), "\n"))
+      if (t.obj$obs$data$StationName[1] != "Fino1" &
+          t.obj$obs$data$StationName[1] != "Fino2") {
+        cat(paste0("\n10m ERA20C at station: ", t.obj$obs$data$StationName[1],
+                   "\n    correlation = ", round(corr10.era20c$estimate, 4),
+                   "\n    conf interv = ", round(corr10.era20c$conf.int[[1]], 4), "  ",
+                   round(corr10.era20c$conf.int[[2]], 4), "\n"))
+      }
     }
 
   } else {
     CallStop(paste0("This time resolution is not yet supported: ", ana.time.res$time.res))
   }
+  return(cor.list)
 }
 
 #-----------------------------------------------------------------------------------

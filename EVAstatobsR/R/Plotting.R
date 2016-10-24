@@ -4355,3 +4355,112 @@ plotLegendStats <- function(xlims, vals, weibull=TRUE) {
   }
 }
 
+#-----------------------------------------------------------------------------------
+
+#' @title Plot the correlation values of regional and global reanalyses against
+#'   tower measurements
+#' @param cor.list list holding the correlation values
+#' @export
+plotCorVals <- function(cor.list, ana.time.res, outdir) {
+
+  if (ana.time.res$time.res == "hourly") {
+
+    x = numeric(length = length(cor.list[[1]])) * NA
+    v1 = c(1:length(cor.list[[1]]))
+    v2 = c(cor.list[[1]][[1]]$name, cor.list[[1]][[2]]$name, cor.list[[1]][[3]]$name,
+           cor.list[[1]][[4]]$name, cor.list[[1]][[5]]$name, cor.list[[1]][[6]]$name)
+
+    title.versions = c("Six hourly correlation values",
+                       "Three hourly correlation values",
+                       "Hourly correlation values")
+    fname.versions = c(paste0(outdir, simpleCap(ana.time.res$time.res), "Mean_6hrs_correlation.pdf"),
+                       paste0(outdir, simpleCap(ana.time.res$time.res), "Mean_3hrs_correlation.pdf"),
+                       paste0(outdir, simpleCap(ana.time.res$time.res), "Mean_1hr_correlation.pdf"))
+
+    for (tres in seq(1,3)) {
+      pdf(fname.versions[tres], height=5, width=7.5)
+      par(mar=c(5.5,4,2,0.5), las=1, cex=1.2, cex.lab=1.15)
+
+      plot(x, xaxt = "n", xlab="", ylab="", ylim=c(0.75,0.99))
+      axis(side = 1, at = v1, labels = v2, las=2)
+
+      for (cnt in seq(1,6)) {
+        points(cnt, cor.list[[tres]][[cnt]]$CREA6[2], col="red", pch=0)
+        arrows(cnt, cor.list[[tres]][[cnt]]$CREA6[2],
+               cnt, cor.list[[tres]][[cnt]]$CREA6[1],
+               length=0.075, angle=90, code=2, col="red")
+        arrows(cnt, cor.list[[tres]][[cnt]]$CREA6[2],
+               cnt, cor.list[[tres]][[cnt]]$CREA6[3],
+               length=0.075, angle=90, code=2, col="red")
+        points(cnt+0.05, cor.list[[tres]][[cnt]]$ERAI[2], col="darkgreen", pch=1)
+        arrows(cnt+0.05, cor.list[[tres]][[cnt]]$ERAI[2],
+               cnt+0.05, cor.list[[tres]][[cnt]]$ERAI[1],
+               length=0.075, angle=90, code=2, col="darkgreen")
+        arrows(cnt+0.05, cor.list[[tres]][[cnt]]$ERAI[2],
+               cnt+0.05, cor.list[[tres]][[cnt]]$ERAI[3],
+               length=0.075, angle=90, code=2, col="darkgreen")
+        points(cnt-0.05, cor.list[[tres]][[cnt]]$ERA20C[2], col="blue", pch=2)
+        arrows(cnt-0.05, cor.list[[tres]][[cnt]]$ERA20C[2],
+               cnt-0.05, cor.list[[tres]][[cnt]]$ERA20C[1],
+               length=0.075, angle=90, code=2, col="blue")
+        arrows(cnt-0.05, cor.list[[tres]][[cnt]]$ERA20C[2],
+               cnt-0.05, cor.list[[tres]][[cnt]]$ERA20C[3],
+               length=0.075, angle=90, code=2, col="blue")
+      }
+      legend("top", legend=c(paste0("COSMO-REA6"),
+                             paste0("ERA-Interim"),
+                             paste0("ERA20C")),
+             pch=c(0,1,2), col=c("red", "darkgreen", "blue"),
+             text.col=c("red", "darkgreen", "blue"), cex=0.9)
+      mtext(title.versions[tres], line=0.5, cex=1.5)
+      title(ylab="Pearson's correlation", line=3)
+
+      dev.off()
+    }
+
+  } else {
+
+    x = numeric(length = length(cor.list)) * NA
+    v1 = c(1:length(cor.list))
+    v2 = c(cor.list[[1]]$name, cor.list[[2]]$name, cor.list[[3]]$name,
+           cor.list[[4]]$name, cor.list[[5]]$name, cor.list[[6]]$name)
+
+    pdf(paste0(outdir, simpleCap(ana.time.res$time.res), "Mean_correlation.pdf"),
+        height=5, width=7.5)
+    par(mar=c(5.5,4,2,0.5), las=1, cex=1.2, cex.lab=1.15)
+
+    plot(x, xaxt = "n", xlab="", ylab="", ylim=c(0.85,0.99))
+    axis(side = 1, at = v1, labels = v2, las=2)
+
+    for (cnt in seq(1,length(cor.list))) {
+      points(cnt, cor.list[[cnt]]$CREA6[2], col="red", pch=0)
+      arrows(cnt, cor.list[[cnt]]$CREA6[2], cnt, cor.list[[cnt]]$CREA6[1],
+             length=0.075, angle=90, code=2, col="red")
+      arrows(cnt, cor.list[[cnt]]$CREA6[2], cnt, cor.list[[cnt]]$CREA6[3],
+             length=0.075, angle=90, code=2, col="red")
+      points(cnt+0.05, cor.list[[cnt]]$ERAI[2], col="darkgreen", pch=1)
+      arrows(cnt+0.05, cor.list[[cnt]]$ERAI[2], cnt+0.05, cor.list[[cnt]]$ERAI[1],
+             length=0.075, angle=90, code=2, col="darkgreen")
+      arrows(cnt+0.05, cor.list[[cnt]]$ERAI[2], cnt+0.05, cor.list[[cnt]]$ERAI[3],
+             length=0.075, angle=90, code=2, col="darkgreen")
+      points(cnt-0.05, cor.list[[cnt]]$ERA20C[2], col="blue", pch=2)
+      arrows(cnt-0.05, cor.list[[cnt]]$ERA20C[2], cnt-0.05, cor.list[[cnt]]$ERA20C[1],
+             length=0.075, angle=90, code=2, col="blue")
+      arrows(cnt-0.05, cor.list[[cnt]]$ERA20C[2], cnt-0.05, cor.list[[cnt]]$ERA20C[3],
+             length=0.075, angle=90, code=2, col="blue")
+    }
+    legend("bottom", legend=c(paste0("COSMO-REA6"),
+                              paste0("ERA-Interim"),
+                              paste0("ERA20C")),
+           pch=c(0,1,2), col=c("red", "darkgreen", "blue"),
+           text.col=c("red", "darkgreen", "blue"), cex=0.9)
+    mtext(paste0(simpleCap(ana.time.res$time.res), " correlation values"),
+          line=0.5, cex=1.5)
+    title(ylab="Pearson's correlation", line=3)
+
+    dev.off()
+  }
+
+}
+
+#-----------------------------------------------------------------------------------

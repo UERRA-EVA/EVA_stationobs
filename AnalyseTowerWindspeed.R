@@ -768,8 +768,13 @@ if(plot.DailyCycle & ana.time.res$time.res == ana.time.res$hourly) {
 #-----------------------------------------------------------------------------
 
 if (get.cor.vals) {
-  GetCorVals(fino1.climobj, ana.time.res)
-  GetCorVals(fino2.climobj, ana.time.res)
-  GetCorVals(lind.climobj, ana.time.res)
-  GetCorVals(cabauw.climobj, ana.time.res)
-}
+  cor.list = list()
+  # get and print out correlation values
+  cor.list = GetCorVals(lind.climobj, ana.time.res, cor.list, print.c=F)
+  cor.list = GetCorVals(cabauw.climobj, ana.time.res, cor.list, print.c=F)
+  cor.list = GetCorVals(fino1.climobj, ana.time.res, cor.list, print.c=F)
+  cor.list = GetCorVals(fino2.climobj, ana.time.res, cor.list, print.c=F)
+
+  # plot correlation values
+  plotCorVals(cor.list, ana.time.res, outdir)
+  }

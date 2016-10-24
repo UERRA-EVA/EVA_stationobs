@@ -414,6 +414,7 @@ GetYlims <- function(xts1, xts2, xts3, xts4) {
 #'   netCDF format
 #' @param lon,lat two numeric values specifying the longitude and latitude values
 #'   for which the indices whithin the geographical file are to be determined
+#' @param t.name is a string holding the name of the (tower) site
 #' @export
 PrintLonLatIdx <- function(infile, lon, lat, t.name) {
 
@@ -428,6 +429,18 @@ PrintLonLatIdx <- function(infile, lon, lat, t.name) {
   cat(paste0("For station: ", t.name, "\n    lon = ", lon, "\n    lon index = ",
              idx$lonidx, "\n    lat = ", lat, "\n    lat index = ", idx$latidx, "\n"))
 
+}
+
+#-----------------------------------------------------------------------------------
+
+#' @title Capitalize each word in a string.
+#' @description This function is taken from the help page of toupper(x)
+#' @param x string of one or more words which to capitalize
+#' @export
+simpleCap <- function(x) {
+  s <- strsplit(x, " ")[[1]]
+  paste(toupper(substring(s, 1,1)), substring(s, 2),
+        sep="", collapse=" ")
 }
 
 #-----------------------------------------------------------------------------------
