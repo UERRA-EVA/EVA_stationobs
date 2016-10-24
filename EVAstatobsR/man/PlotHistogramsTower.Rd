@@ -17,6 +17,10 @@ of the data to be read.}
 
 \item{tower.obj}{is a ClimObject holding the data of tower measurements and
 corresponding reanalysis data}
+
+\item{plot.10m,plot.100m,plot.HerzProfile}{optional parameters setting whether
+to plot only 10m values, only 100m values, or the herz profile, respectively.
+The default value is FALSE for all three settings.}
 }
 \description{
 Plot histograms for the Lindenberg, Cabauw, Fino1 and Fino2 tower

@@ -26,6 +26,10 @@ off the ERA grid.}
 daily="daily", hourly="hourly", and time.res= to determine the time resolution
 of the data to be read.}
 
+\item{read.10m,read.100m}{optional boolean parameters setting whether to read
+data at only 10m, only 100m, or at both heights. The default setting is to
+read 10m and not to read 100m data.}
+
 \item{verb.dat}{optional boolean to determine whether to print out what's going
 on (T). The default is to suppress printing (verb.dat = FALSE).}
 

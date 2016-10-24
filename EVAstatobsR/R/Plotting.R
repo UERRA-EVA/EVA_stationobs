@@ -947,6 +947,9 @@ PlotHistogramsHerzHeights <- function(fname, PS, herz10, herz35, herz69,
 #'   of the data to be read.
 #' @param tower.obj is a ClimObject holding the data of tower measurements and
 #'   corresponding reanalysis data
+#' @param plot.10m,plot.100m,plot.HerzProfile optional parameters setting whether
+#'   to plot only 10m values, only 100m values, or the herz profile, respectively.
+#'   The default value is FALSE for all three settings.
 #' @importFrom xts xts
 #' @export
 PlotHistogramsTower <- function(outdir, fname, ana.time.res, tower.obj,
@@ -2939,8 +2942,11 @@ PreparePlottingHerzDailyCycle <- function(tower.obj, fname) {
 #'   showing the evolution of the daily cycle of the mean; and box plots showing the
 #'   variability at each hourly time step. This is done each for the complete time
 #'   period and for selected months only.
-#' @param Herz10,Herz35,Herz69,Herz116 are lists holding the COSMO-REA6 reanalysis data
+#' @param Herz10,Herz35,Herz69,Herz116 lists holding the COSMO-REA6 reanalysis data
 #'   at diffferent height levels.
+#' @param F100 list holding the tower measurement data.
+#' @param Era20c10,Era20c100,EraI10,EraI100 lists holding the means of the global
+#'   reanalyses ERA20C and ERA-Interim at diffferent heights.
 #' @param month.names is a named list holding the names of the month of year and
 #'   their corresponding number within the year (list(names=, count=)).
 #' @param PS is a plotting setting object (list) derived of function
@@ -4348,3 +4354,4 @@ plotLegendStats <- function(xlims, vals, weibull=TRUE) {
            cex = 0.8)
   }
 }
+

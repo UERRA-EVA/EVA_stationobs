@@ -235,6 +235,12 @@ ReadHerzNetcdfHourly2Xts <- function(rra.para, rra.fname,
 #' @description Read 6-hourly ERA-Interim and ERA20C netCDF files of wind speed at
 #'   10m and 100m height and fill the six hourly data with NA to an hourly time
 #'   series.
+#' @param era.para10m,era.para100m strings of length n holding the parameters of the
+#'   n different model levels (one for ERA-I, two for ERA20C).
+#' @param era.fname10m,era.fname100m strings holding the file names of the ERA data.
+#' @param read.10m,read.100m optional boolean parameters setting whether to read
+#'   data at only 10m, only 100m, or at both heights. The default setting is to
+#'   read 10m and not to read 100m data.
 #' @return a list holding the wind speed values in extended time series for each
 #'   height and global reanalysis.
 #' @importFrom xts xts
@@ -327,6 +333,9 @@ ReadERANetcdfHourly2Xts <- function(era.para10m, era.para100m,
 #'   of the data to be read.
 #' @param era20c boolean to determine whether the data is ERA20C (T) or
 #'   ERA-Interim (F).
+#' @param read.10m,read.100m optional boolean parameters setting whether to read
+#'   data at only 10m, only 100m, or at both heights. The default setting is to
+#'   read 10m and not to read 100m data.
 #' @param verb.dat optional boolean to determine whether to print out what's going
 #'   on (T). The default is to suppress printing (verb.dat = FALSE).
 #' @return A named list holding the extended time series of the ERA data at 10m
@@ -508,9 +517,10 @@ GetTowerProfileTS <- function(tower.xts, tower2.xts=NULL, tower3.xts=NULL,
 #' @param herz10.xts,herz35.xts,herz69.xts,herz116.xts,herz178.xts,herz258.xts
 #'   extended time series of HErZ data at different height levels if available; if
 #'   not available it is set to NULL.
-#' @param eraI10.xts extended time series of ERA-Interim data at 10m.
-#' @param era20c10.xts extended time series of ERA20C data at 10m.
-#' @param era20c100.xts extended time series of ERA20C data at 100m.
+#' @param eraI10.xts,eraI100.xts extended time series of ERA-Interim data at 10m and
+#'   100m, respectively.
+#' @param era20c10.xts,era20c100.xts extended time series of ERA20C data at 10m and
+#'   100m, respectively.
 #' @param obs.tsstart start time in the format c(yyyy,mm) of the observation data
 #' @param obs.tsend,herz.tsend,eraI.tsend,era20c.tsend end time in the format
 #'   c(yyyy,mm) of the observations, HErZ, ERA_Interim, and ERA20C reanalyses,
