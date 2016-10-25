@@ -203,21 +203,28 @@ ReadHerzNetcdfHourly2Xts <- function(rra.para, rra.fname,
                               format="%Y-%m-%d %H:%M:%S", tz = "UTC")
   timestr = SetToDate(rra.tsstart, rra.tsend)
   herz10.xts = xts(ndf$dat10.data, order.by=ndf$dat10.time)
-  herz10.xts = herz10.xts[timestr]
+
+  # fill xts with hourly NA values if applicable
+  lg = length(ndf$dat10.time)
+  last.step = ndf$dat10.time[lg] + difftime(ndf$dat10.time[lg],ndf$dat10.time[lg-1])
+  time.vals = seq.POSIXt(from=ndf$dat10.time[1], by=3600, to=last.step)
+  ts.na = xts(numeric(length=length(time.vals))*NA, order.by=time.vals)
+  herz10.xts = merge.xts(ts.na[timestr], herz10.xts[timestr], join="left")[,2]
+
   herz116.xts = NULL
   if (!only.10m) {
     herz116.xts = xts(ndf$dat116.data, order.by=ndf$dat10.time)
-    herz116.xts = herz116.xts[timestr]
+    herz116.xts = merge.xts(ts.na[timestr], herz116.xts[timestr], join="left")[,2]
   }
   if (herz.profile) {
     herz35.xts = xts(ndf$dat35.data, order.by=ndf$dat10.time)
-    herz35.xts = herz35.xts[timestr]
+    herz35.xts = merge.xts(ts.na[timestr], herz116.xts[timestr], join="left")[,2]
     herz69.xts = xts(ndf$dat69.data, order.by=ndf$dat10.time)
-    herz69.xts = herz69.xts[timestr]
+    herz69.xts = merge.xts(ts.na[timestr], herz116.xts[timestr], join="left")[,2]
     herz178.xts = xts(ndf$dat178.data, order.by=ndf$dat10.time)
-    herz178.xts = herz178.xts[timestr]
+    herz178.xts = merge.xts(ts.na[timestr], herz116.xts[timestr], join="left")[,2]
     herz258.xts = xts(ndf$dat258.data, order.by=ndf$dat10.time)
-    herz258.xts = herz258.xts[timestr]
+    herz258.xts = merge.xts(ts.na[timestr], herz116.xts[timestr], join="left")[,2]
   } else {
     herz35.xts = NULL
     herz69.xts = NULL
@@ -276,10 +283,10 @@ ReadERANetcdfHourly2Xts <- function(era.para10m, era.para100m,
   # convert data.frame of ERA data into an extended time series
   if (read.10m) {
     ndf$dat10.time = as.POSIXct(strptime(ndf$dat10.time, format="%Y-%m-%d %H:%M:%S"),
-                              format="%Y-%m-%d %H:%M:%S", tz = "UTC")
+                                format="%Y-%m-%d %H:%M:%S", tz = "UTC")
   } else {
     ndf$dat100.time = as.POSIXct(strptime(ndf$dat100.time, format="%Y-%m-%d %H:%M:%S"),
-                                format="%Y-%m-%d %H:%M:%S", tz = "UTC")
+                                 format="%Y-%m-%d %H:%M:%S", tz = "UTC")
   }
   timestr = SetToDate(era.tsstart, era.tsend)
   if (read.10m) {
@@ -296,15 +303,18 @@ ReadERANetcdfHourly2Xts <- function(era.para10m, era.para100m,
     era10.xts = NULL
   }
 
-  # fill era xts to hourly time series *** HARDCODED***
-  time.vals = seq.POSIXt(from=as.POSIXct("200001010000", format="%Y%m%d%H%M", tz="UTC"),
-                         by=3600, to=as.POSIXct("201012312300", format="%Y%m%d%H%M", tz="UTC"))
-  ts.na = xts(numeric(length=length(time.vals))*NA, order.by=time.vals)
-
   if (!is.null(era10.xts)) {
+    lg = length(era10.xts)
+    last.step = index(era10.xts[lg]) + difftime(index(era10.xts[lg]),index(era10.xts[lg-1]))
+    time.vals = seq.POSIXt(from=index(era10.xts)[1], by=3600, to=last.step)
+    ts.na = xts(numeric(length=length(time.vals))*NA, order.by=time.vals)
     era10.xts = merge.xts(ts.na, era10.xts, join="left")[,2]
   }
   if (!is.null(era100.xts)) {
+    lg = length(era100.xts)
+    last.step = index(era100.xts[lg]) + difftime(index(era100.xts[lg]),index(era100.xts[lg-1]))
+    time.vals = seq.POSIXt(from=index(era100.xts)[1], by=3600, to=last.step)
+    ts.na = xts(numeric(length=length(time.vals))*NA, order.by=time.vals)
     era100.xts = merge.xts(ts.na, era100.xts, join="left")[,2]
   }
 
@@ -505,6 +515,30 @@ GetTowerProfileTS <- function(tower.xts, tower2.xts=NULL, tower3.xts=NULL,
 }
 
 #-----------------------------------------------------------------------------------
+#' @title Define data.frane to write into Climate Object.
+#' @description This is an internal function. It defines the data.frame and names
+#'   the columnes correctly.
+#' @param xts.vals an xts holding the data to store
+#' @param rea.name,obs.name,obs.height string, holding the name of the reanalysis
+#'   (if applicable), and the name and height of the data to be stored, respectively
+#' @param obs.lat,obs.lon numeric, holding the latitude and longitude of the data to
+#'   be stored, respectively
+#' @return df is the newly defined data.frame
+DefineDataDF <- function(xts.vals, rea.name, obs.name, obs.lat, obs.lon, obs.height) {
+
+  df = data.frame(date=index(xts.vals),
+                  ReanaName=rea.name, StationName=obs.name,
+                  latitude=obs.lat, longitude=obs.lon,
+                  wind_speed=coredata(xts.vals),
+                  height=obs.height)
+  colnames(df) = c("date", "Reananame", "StationName", "latitude", "longitude",
+                   "wind_speed", "height")
+
+  return(df)
+
+}
+
+#-----------------------------------------------------------------------------------
 
 #' @title Create climate objects of passed wind speed data of up to all six levels.
 #' @description Wind speed observation data of up to six height levels (tower) or
@@ -590,113 +624,61 @@ GetObsObject <- function(obs.xts, obs2.xts=NULL, obs3.xts=NULL,
   if (!is.null(era20c100.xts)) era20c100.xts = era20c100.xts[timestr]
 
   # -- create data frames to be saved into clim objects
-  obs.df = data.frame(date=index(obs.xts),
-                      ReanaName="", StationName=obs.name,
-                      latitude=obs.lat, longitude=obs.lon,
-                      wind_speed=coredata(obs.xts),
-                      height=strsplit(obs.param, '_')[[1]][[2]])
+  obs.df = DefineDataDF(obs.xts, rea.name="", obs.name, obs.lat, obs.lon,
+                        obs.height=strsplit(obs.param, '_')[[1]][[2]])
   if (!is.null(obs2.xts)) {
-    obs2.df = data.frame(date=index(obs2.xts),
-                         ReanaName="", StationName=obs.name,
-                         latitude=obs.lat, longitude=obs.lon,
-                         wind_speed=coredata(obs2.xts),
-                         height=strsplit(obs.param, '_')[[2]][[2]])
+    obs2.df = DefineDataDF(obs2.xts, rea.name="", obs.name, obs.lat, obs.lon,
+                           obs.height=strsplit(obs.param, '_')[[2]][[2]])
   }
   if (!is.null(obs3.xts)) {
-    obs3.df = data.frame(date=index(obs3.xts),
-                         ReanaName="", StationName=obs.name,
-                         latitude=obs.lat, longitude=obs.lon,
-                         wind_speed=coredata(obs3.xts),
-                         height=strsplit(obs.param, '_')[[3]][[2]])
+    obs3.df = DefineDataDF(obs3.xts, rea.name="", obs.name, obs.lat, obs.lon,
+                           obs.height=strsplit(obs.param, '_')[[3]][[2]])
   }
   if (!is.null(obs4.xts)) {
-    obs4.df = data.frame(date=index(obs4.xts),
-                         ReanaName="", StationName=obs.name,
-                         latitude=obs.lat, longitude=obs.lon,
-                         wind_speed=coredata(obs4.xts),
-                         height=strsplit(obs.param, '_')[[4]][[2]])
+    obs4.df = DefineDataDF(obs4.xts, rea.name="", obs.name, obs.lat, obs.lon,
+                           obs.height=strsplit(obs.param, '_')[[4]][[2]])
   }
   if (!is.null(obs5.xts)) {
-    obs5.df = data.frame(date=index(obs5.xts),
-                         ReanaName="", StationName=obs.name,
-                         latitude=obs.lat, longitude=obs.lon,
-                         wind_speed=coredata(obs5.xts),
-                         height=strsplit(obs.param, '_')[[5]][[2]])
+    obs5.df = DefineDataDF(obs5.xts, rea.name="", obs.name, obs.lat, obs.lon,
+                           obs.height=strsplit(obs.param, '_')[[5]][[2]])
   }
   if (!is.null(obs6.xts)) {
-    obs6.df = data.frame(date=index(obs6.xts),
-                         ReanaName="", StationName=obs.name,
-                         latitude=obs.lat, longitude=obs.lon,
-                         wind_speed=coredata(obs6.xts),
-                         height=strsplit(obs.param, '_')[[6]][[2]])
+    obs6.df = DefineDataDF(obs6.xts, rea.name="", obs.name, obs.lat, obs.lon,
+                           obs.height=strsplit(obs.param, '_')[[6]][[2]])
   }
 
-  herz10.df = data.frame(date=index(herz10.xts),
-                         ReanaName="HErZ", StationName=obs.name,
-                         latitude=obs.lat, longitude=obs.lon,
-                         wind_speed=coredata(herz10.xts),
-                         height="10m")
+  herz10.df = DefineDataDF(herz10.xts, rea.name="HErZ", obs.name, obs.lat, obs.lon,
+                           obs.height="10m")
   if (!only.10m) {
-    herz116.df = data.frame(date=index(herz116.xts),
-                            ReanaName="HErZ", StationName=obs.name,
-                            latitude=obs.lat, longitude=obs.lon,
-                            wind_speed=coredata(herz116.xts),
-                            height="116m")
+    herz116.df = DefineDataDF(herz116.xts, rea.name="HErZ", obs.name, obs.lat, obs.lon,
+                              obs.height="116m")
   }
   if (herz.profile) {
-    herz35.df = data.frame(date=index(herz35.xts),
-                           ReanaName="HErZ", StationName=obs.name,
-                           latitude=obs.lat, longitude=obs.lon,
-                           wind_speed=coredata(herz35.xts),
-                           height="35m")
-    herz69.df = data.frame(date=index(herz69.xts),
-                           ReanaName="HErZ", StationName=obs.name,
-                           latitude=obs.lat, longitude=obs.lon,
-                           wind_speed=coredata(herz69.xts),
-                           height="69m")
-    herz178.df = data.frame(date=index(herz178.xts),
-                            ReanaName="HErZ", StationName=obs.name,
-                            latitude=obs.lat, longitude=obs.lon,
-                            wind_speed=coredata(herz178.xts),
-                            height="178m")
-    herz258.df = data.frame(date=index(herz258.xts),
-                            ReanaName="HErZ", StationName=obs.name,
-                            latitude=obs.lat, longitude=obs.lon,
-                            wind_speed=coredata(herz258.xts),
-                            height="258m")
+    herz35.df = DefineDataDF(herz35.xts, rea.name="HErZ", obs.name, obs.lat, obs.lon,
+                             obs.height="35m")
+    herz69.df = DefineDataDF(herz69.xts, rea.name="HErZ", obs.name, obs.lat, obs.lon,
+                             obs.height="69m")
+    herz178.df = DefineDataDF(herz178.xts, rea.name="HErZ", obs.name, obs.lat, obs.lon,
+                              obs.height="178m")
+    herz258.df = DefineDataDF(herz258.xts, rea.name="HErZ", obs.name, obs.lat, obs.lon,
+                              obs.height="258m")
   }
 
   if (!is.null(eraI10.xts)) {
-    eraI10.df = data.frame(date=index(eraI10.xts),
-                           ReanaName="ERA-I", StationName=obs.name,
-                           latitude=obs.lat, longitude=obs.lon,
-                           wind_speed=coredata(eraI10.xts),
-                           height=strsplit(eraI.param, '_')[[1]][[2]])
-    colnames(eraI10.df)[6] = "wind_speed"
+    eraI10.df = DefineDataDF(eraI10.xts, rea.name="ERA-I", obs.name, obs.lat, obs.lon,
+                             obs.height=strsplit(eraI.param, '_')[[1]][[2]])
   }
   if (!is.null(era20c10.xts)) {
-    era20c10.df = data.frame(date=index(era20c10.xts),
-                             ReanaName="ERA20C", StationName=obs.name,
-                             latitude=obs.lat, longitude=obs.lon,
-                             wind_speed=coredata(era20c10.xts),
-                             height=strsplit(era20c.param, '_')[[1]][[2]])
-    colnames(era20c10.df)[6] = "wind_speed"
+    era20c10.df = DefineDataDF(era20c10.xts, rea.name="ERA20C", obs.name, obs.lat,
+                               obs.lon, obs.height=strsplit(era20c.param, '_')[[1]][[2]])
   }
   if (!is.null(eraI100.xts)) {
-    eraI100.df = data.frame(date=index(eraI100.xts),
-                            ReanaName="ERA-I", StationName=obs.name,
-                            latitude=obs.lat, longitude=obs.lon,
-                            wind_speed=coredata(eraI100.xts),
-                            height=strsplit(eraI.param, '_')[[2]][[2]])
-    colnames(eraI100.df)[6] = "wind_speed"
+    eraI100.df = DefineDataDF(eraI100.xts, rea.name="ERA-I", obs.name, obs.lat,
+                              obs.lon, obs.height=strsplit(eraI.param, '_')[[2]][[2]])
   }
   if (!is.null(era20c100.xts)) {
-    era20c100.df = data.frame(date=index(era20c100.xts),
-                              ReanaName="ERA20C", StationName=obs.name,
-                              latitude=obs.lat, longitude=obs.lon,
-                              wind_speed=coredata(era20c100.xts),
-                              height=strsplit(era20c.param, '_')[[2]][[2]])
-    colnames(era20c100.df)[6] = "wind_speed"
+    era20c100.df = DefineDataDF(era20c100.xts, rea.name="ERA20C", obs.name, obs.lat,
+                                obs.lon, obs.height=strsplit(era20c.param, '_')[[2]][[2]])
   }
 
   # -- create clim objects
@@ -822,10 +804,10 @@ Get10mRRAObsObject <- function(obs.xts, rra10.xts, rra10.hourly.xts=NULL,
 
   if (!is.null(eraI10.xts)) {
     eraI10.df = data.frame(date=index(eraI10.xts),
-                         ReanaName=eraI.name, StationName=obs.name,
-                         latitude=obs.lat, longitude=obs.lon,
-                         wind_speed=coredata(eraI10.xts),
-                         height="10m")
+                           ReanaName=eraI.name, StationName=obs.name,
+                           latitude=obs.lat, longitude=obs.lon,
+                           wind_speed=coredata(eraI10.xts),
+                           height="10m")
   }
 
   # -- create clim objects
@@ -844,9 +826,9 @@ Get10mRRAObsObject <- function(obs.xts, rra10.xts, rra10.hourly.xts=NULL,
   } else {
     if (!is.null(rra10.hourly.xts) & !is.null(stats.atrra10.xts)) {
       climate.obs.object = climate(data_tables=
-                                   list(obs=obs.df, rra10=rra10.df,
-                                        rra10.hourly=rra10.hourly.df,
-                                        stats.atrra10=stats.atrra10.df))
+                                     list(obs=obs.df, rra10=rra10.df,
+                                          rra10.hourly=rra10.hourly.df,
+                                          stats.atrra10=stats.atrra10.df))
     } else {
       climate.obs.object = climate(data_tables=
                                      list(obs=obs.df, rra10=rra10.df))

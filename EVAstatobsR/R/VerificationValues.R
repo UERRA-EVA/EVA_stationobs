@@ -459,21 +459,25 @@ GetCorVals <- function(tower.obj, ana.time.res, cor.list, print.cor=TRUE) {
     tower.date <- as.POSIXlt(t.obj$herz10$data$date)
 
     # hourly correlation between C-REA6 and tower at 10m and 100m
-    if (t.obj$obs$data$StationName[1] == "Fino1" |
-        t.obj$obs$data$StationName[1] == "Fino2") {
-      corr100 = cor.test(t.obj$herz116$data$wind_speed, t.obj$obs$data$wind_speed)
-      dummy.lst = GetCorList(t.obj, list(), corr10.crea=NA, corr10.eraI=NA, corr10.era20c=NA,
-                             corr100, corr100.eraI=NA, corr100.era20c=NA)
-    } else if (t.obj$obs$data$StationName[1] == "Lindenberg") {
-      corr10 = cor.test(t.obj$herz10$data$wind_speed, t.obj$obs6$data$wind_speed)
-      corr100 = cor.test(t.obj$herz116$data$wind_speed, t.obj$obs$data$wind_speed)
-      dummy.lst = GetCorList(t.obj, list(), corr10, corr10.eraI=NA, corr10.era20c=NA,
-                             corr100, corr100.eraI=NA, corr100.era20c=NA)
-    } else if (t.obj$obs$data$StationName[1] == "Cabauw") {
-      corr10 = cor.test(t.obj$herz10$data$wind_speed, t.obj$obs6$data$wind_speed)
-      corr100 = cor.test(t.obj$herz116$data$wind_speed, t.obj$obs2$data$wind_speed)
-      dummy.lst = GetCorList(t.obj, list(), corr10, corr10.eraI=NA, corr10.era20c=NA,
-                             corr100, corr100.eraI=NA, corr100.era20c=NA)
+    if (length(tower.date) == length(t.obj$obs$data$date)) {
+      if (t.obj$obs$data$StationName[1] == "Fino1" |
+          t.obj$obs$data$StationName[1] == "Fino2") {
+        corr100 = cor.test(t.obj$herz116$data$wind_speed, t.obj$obs$data$wind_speed)
+        dummy.lst = GetCorList(t.obj, list(), corr10.crea=NA, corr10.eraI=NA, corr10.era20c=NA,
+                               corr100, corr100.eraI=NA, corr100.era20c=NA)
+      } else if (t.obj$obs$data$StationName[1] == "Lindenberg") {
+        corr10 = cor.test(t.obj$herz10$data$wind_speed, t.obj$obs6$data$wind_speed)
+        corr100 = cor.test(t.obj$herz116$data$wind_speed, t.obj$obs$data$wind_speed)
+        dummy.lst = GetCorList(t.obj, list(), corr10, corr10.eraI=NA, corr10.era20c=NA,
+                               corr100, corr100.eraI=NA, corr100.era20c=NA)
+      } else if (t.obj$obs$data$StationName[1] == "Cabauw") {
+        corr10 = cor.test(t.obj$herz10$data$wind_speed, t.obj$obs6$data$wind_speed)
+        corr100 = cor.test(t.obj$herz116$data$wind_speed, t.obj$obs2$data$wind_speed)
+        dummy.lst = GetCorList(t.obj, list(), corr10, corr10.eraI=NA, corr10.era20c=NA,
+                               corr100, corr100.eraI=NA, corr100.era20c=NA)
+      }
+    } else {
+      dummy.lst = GetCorList(t.obj, list(), NA, NA, NA, NA, NA, NA)
     }
     lst.hourly = list(Hourly = dummy.lst)
 
@@ -493,36 +497,41 @@ GetCorVals <- function(tower.obj, ana.time.res, cor.list, print.cor=TRUE) {
     }
 
     # three-hourly correlation between COSMO-REA6, ERA20C and tower at 10m and 100m
-    if (t.obj$obs$data$StationName[1] == "Fino1" |
-        t.obj$obs$data$StationName[1] == "Fino2") {
-      t100.xts = xts(t.obj$obs$data$wind_speed, order.by=tower.date)
-    } else if (t.obj$obs$data$StationName[1] == "Lindenberg") {
-      t10.xts = xts(t.obj$obs6$data$wind_speed, order.by=tower.date)
-      t100.xts = xts(t.obj$obs$data$wind_speed, order.by=tower.date)
-    } else if (t.obj$obs$data$StationName[1] == "Cabauw") {
-      t10.xts = xts(t.obj$obs6$data$wind_speed, order.by=tower.date)
-      t100.xts = xts(t.obj$obs2$data$wind_speed, order.by=tower.date)
-    }
-    era20c100.xts = xts(t.obj$era20c100$data$wind_speed, order.by=tower.date)
-    crea116.xts = xts(t.obj$herz116$data$wind_speed, order.by=tower.date)
-    idx = which(is.finite(era20c100.xts))
-    corr100.era20c = cor.test(era20c100.xts[idx], t100.xts[idx])
-    corr100.crea = cor.test(crea116.xts[idx], t100.xts[idx])
+    if (length(tower.date) == length(t.obj$obs$data$date)) {
+      if (t.obj$obs$data$StationName[1] == "Fino1" |
+          t.obj$obs$data$StationName[1] == "Fino2") {
+        t100.xts = xts(t.obj$obs$data$wind_speed, order.by=tower.date)
+      } else if (t.obj$obs$data$StationName[1] == "Lindenberg") {
+        t10.xts = xts(t.obj$obs6$data$wind_speed, order.by=tower.date)
+        t100.xts = xts(t.obj$obs$data$wind_speed, order.by=tower.date)
+      } else if (t.obj$obs$data$StationName[1] == "Cabauw") {
+        t10.xts = xts(t.obj$obs6$data$wind_speed, order.by=tower.date)
+        t100.xts = xts(t.obj$obs2$data$wind_speed, order.by=tower.date)
+      }
+      era20c100.xts = xts(t.obj$era20c100$data$wind_speed, order.by=tower.date)
+      crea116.xts = xts(t.obj$herz116$data$wind_speed, order.by=tower.date)
+      idx = which(is.finite(era20c100.xts))
+      corr100.era20c = cor.test(era20c100.xts[idx], t100.xts[idx])
+      corr100.crea = cor.test(crea116.xts[idx], t100.xts[idx])
 
-    corr10.era20c = NA
-    corr10.crea = NA
-    if (t.obj$obs$data$StationName[1] != "Fino1" &
-        t.obj$obs$data$StationName[1] != "Fino2") {
-      era20c10.xts = xts(t.obj$era20c10$data$wind_speed, order.by=tower.date)
-      crea10.xts = xts(t.obj$herz10$data$wind_speed, order.by=tower.date)
-      idx = which(is.finite(era20c10.xts))
-      corr10.era20c = cor.test(era20c10.xts[idx], t10.xts[idx])
-      corr10.crea = cor.test(crea10.xts[idx], t10.xts[idx])
-
+      corr10.era20c = NA
+      corr10.crea = NA
+      if (t.obj$obs$data$StationName[1] != "Fino1" &
+          t.obj$obs$data$StationName[1] != "Fino2") {
+        era20c10.xts = xts(t.obj$era20c10$data$wind_speed, order.by=tower.date)
+        crea10.xts = xts(t.obj$herz10$data$wind_speed, order.by=tower.date)
+        idx = which(is.finite(era20c10.xts))
+        corr10.era20c = cor.test(era20c10.xts[idx], t10.xts[idx])
+        corr10.crea = cor.test(crea10.xts[idx], t10.xts[idx])
+      }
+      dummy.lst = GetCorList(t.obj, list(), corr10.crea, corr10.eraI=NA,
+                             corr10.era20c, corr100.crea, corr100.eraI=NA,
+                             corr100.era20c)
+    } else {
+      dummy.lst = GetCorList(t.obj, list(), corr10.crea=NA, corr10.eraI=NA,
+                             corr10.era20c=NA, corr100.crea=NA, corr100.eraI=NA,
+                             corr100.era20c=NA)
     }
-    dummy.lst = GetCorList(t.obj, list(), corr10.crea, corr10.eraI=NA,
-                           corr10.era20c, corr100.crea, corr100.eraI=NA,
-                           corr100.era20c)
     lst.threehourly = list(ThreeHourly = dummy.lst)
 
     if (print.cor) {
@@ -556,39 +565,44 @@ GetCorVals <- function(tower.obj, ana.time.res, cor.list, print.cor=TRUE) {
     }
 
     # six-hourly correlation between COSMO-REA6, ERA20C, ERA-I and tower at 10m and 100m
-    if (t.obj$obs$data$StationName[1] == "Fino1" |
-        t.obj$obs$data$StationName[1] == "Fino2") {
-      t100.xts = xts(t.obj$obs$data$wind_speed, order.by=tower.date)
-    } else if (t.obj$obs$data$StationName[1] == "Lindenberg") {
-      t10.xts = xts(t.obj$obs6$data$wind_speed, order.by=tower.date)
-      t100.xts = xts(t.obj$obs$data$wind_speed, order.by=tower.date)
-    } else if (t.obj$obs$data$StationName[1] == "Cabauw") {
-      t10.xts = xts(t.obj$obs6$data$wind_speed, order.by=tower.date)
-      t100.xts = xts(t.obj$obs2$data$wind_speed, order.by=tower.date)
-    }
-    era20c100.xts = xts(t.obj$era20c100$data$wind_speed, order.by=tower.date)
-    eraI100.xts = xts(t.obj$eraI100$data$wind_speed, order.by=tower.date)
-    crea116.xts = xts(t.obj$herz116$data$wind_speed, order.by=tower.date)
-    idx = which(is.finite(eraI100.xts))
-    corr100.era20c = cor.test(era20c100.xts[idx], t100.xts[idx])
-    corr100.crea = cor.test(crea116.xts[idx], t100.xts[idx])
-    corr100.eraI = cor.test(eraI100.xts[idx], t100.xts[idx])
+    if (length(tower.date) == length(t.obj$obs$data$date)) {
+      if (t.obj$obs$data$StationName[1] == "Fino1" |
+          t.obj$obs$data$StationName[1] == "Fino2") {
+        t100.xts = xts(t.obj$obs$data$wind_speed, order.by=tower.date)
+      } else if (t.obj$obs$data$StationName[1] == "Lindenberg") {
+        t10.xts = xts(t.obj$obs6$data$wind_speed, order.by=tower.date)
+        t100.xts = xts(t.obj$obs$data$wind_speed, order.by=tower.date)
+      } else if (t.obj$obs$data$StationName[1] == "Cabauw") {
+        t10.xts = xts(t.obj$obs6$data$wind_speed, order.by=tower.date)
+        t100.xts = xts(t.obj$obs2$data$wind_speed, order.by=tower.date)
+      }
+      era20c100.xts = xts(t.obj$era20c100$data$wind_speed, order.by=tower.date)
+      eraI100.xts = xts(t.obj$eraI100$data$wind_speed, order.by=tower.date)
+      crea116.xts = xts(t.obj$herz116$data$wind_speed, order.by=tower.date)
+      idx = which(is.finite(eraI100.xts))
+      corr100.era20c = cor.test(era20c100.xts[idx], t100.xts[idx])
+      corr100.crea = cor.test(crea116.xts[idx], t100.xts[idx])
+      corr100.eraI = cor.test(eraI100.xts[idx], t100.xts[idx])
 
-    corr10.era20c = NA
-    corr10.crea = NA
-    corr10.eraI = NA
-    if (t.obj$obs$data$StationName[1] != "Fino1" &
-        t.obj$obs$data$StationName[1] != "Fino2") {
-      era20c10.xts = xts(t.obj$era20c10$data$wind_speed, order.by=tower.date)
-      eraI10.xts = xts(t.obj$eraI10$data$wind_speed, order.by=tower.date)
-      crea10.xts = xts(t.obj$herz10$data$wind_speed, order.by=tower.date)
-      idx = which(is.finite(eraI10.xts))
-      corr10.era20c = cor.test(era20c10.xts[idx], t10.xts[idx])
-      corr10.crea = cor.test(crea10.xts[idx], t10.xts[idx])
-      corr10.eraI = cor.test(eraI10.xts[idx], t10.xts[idx])
+      corr10.era20c = NA
+      corr10.crea = NA
+      corr10.eraI = NA
+      if (t.obj$obs$data$StationName[1] != "Fino1" &
+          t.obj$obs$data$StationName[1] != "Fino2") {
+        era20c10.xts = xts(t.obj$era20c10$data$wind_speed, order.by=tower.date)
+        eraI10.xts = xts(t.obj$eraI10$data$wind_speed, order.by=tower.date)
+        crea10.xts = xts(t.obj$herz10$data$wind_speed, order.by=tower.date)
+        idx = which(is.finite(eraI10.xts))
+        corr10.era20c = cor.test(era20c10.xts[idx], t10.xts[idx])
+        corr10.crea = cor.test(crea10.xts[idx], t10.xts[idx])
+        corr10.eraI = cor.test(eraI10.xts[idx], t10.xts[idx])
+      }
+      dummy.lst = GetCorList(t.obj, list(), corr10.crea, corr10.eraI, corr10.era20c,
+                             corr100.crea, corr100.eraI, corr100.era20c)
+    } else {
+      dummy.lst = GetCorList(t.obj, list(), corr10.crea=NA, corr10.eraI=NA, corr10.era20c=NA,
+                             corr100.crea=NA, corr100.eraI=NA, corr100.era20c=NA)
     }
-    dummy.lst = GetCorList(t.obj, list(), corr10.crea, corr10.eraI, corr10.era20c,
-                           corr100.crea, corr100.eraI, corr100.era20c)
     lst.sixhourly = list(SixHourly = dummy.lst)
     cor.list = c(list(SixHourly = c(cor.list$SixHourly, lst.sixhourly$SixHourly)),
                  list(ThreeHourly = c(cor.list$ThreeHourly, lst.threehourly$ThreeHourly)),

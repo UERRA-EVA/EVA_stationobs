@@ -249,9 +249,18 @@ ExtractTowerData <- function(file.name, para.name, ana.time.res) {
                              format="%Y-%m-%d %H:%M:%S", tz = "UTC")
     }
     data.xts = xts(dat$data, order.by=time.vals)
+
+    # fill to hourly if applicable
+    if (ana.time.res$time.res == ana.time.res$hourly) {
+      # choose arbitrary date to get a difftime class of 1 hour time difference
+      if (difftime(ISOdate(2010,1,1,1), ISOdate(2010,1,1,0)) <=
+          difftime(dat$time[2], dat$time[1])) {
+        time.vals.hourly = seq.POSIXt(from=dat$time[1], by=3600, to=tail(dat$time,1))
+        ts.na = xts(numeric(length=length(time.vals.hourly))*NA, order.by=time.vals.hourly)
+        data.xts = merge.xts(ts.na, data.xts, join="left")[,2]
+      }
+    }
     data.lst[[para.name[cnt]]] = data.xts
   }
   return(data.lst)
 }
-
-#-----------------------------------------------------------------------------------
