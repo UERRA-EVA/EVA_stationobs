@@ -1614,7 +1614,7 @@ PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
   lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$obs)
   corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
   legend("bottomleft", legend=c("COSMO-REA6 at 116m", plot.100.ext),
-                                # paste0("correlation = ", round(corr$estimate, 2))),
+         # paste0("correlation = ", round(corr$estimate, 2))),
          text.col=c(color$herz, color$obs, color$black), horiz=T)
 
   h.xts = xts(t.obj$eraI100$data$wind_speed, order.by=tower.date)
@@ -1624,7 +1624,7 @@ PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
   lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$obs)
   corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
   legend("bottomleft", legend=c("Era-Interim at 100m", plot.100.ext),
-                                # paste0("correlation = ", round(corr$estimate, 2))),
+         # paste0("correlation = ", round(corr$estimate, 2))),
          text.col=c(color$era, color$obs, color$black), horiz=T)
   mtext("relative anomaly", side=2, line=4, cex=3)
 
@@ -1642,7 +1642,7 @@ PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
   lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$obs)
   corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
   legend("bottomleft", legend=c("ER20C at 100m", plot.100.ext),
-                                # paste0("correlation = ", round(corr$estimate, 2))),
+         # paste0("correlation = ", round(corr$estimate, 2))),
          text.col=c(color$era, color$obs, color$black), horiz=T)
 
   mtext(paste0("Monthly relative wind speed\nanomalies at ",
@@ -1666,7 +1666,7 @@ PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
     lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$obs)
     corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
     legend("bottomleft", legend=c("COSMO-REA6 at 10m", plot.10.ext),
-                                  # paste0("correlation = ", round(corr$estimate, 2))),
+           # paste0("correlation = ", round(corr$estimate, 2))),
            text.col=c(color$herz, color$obs, color$black), horiz=T)
 
     h.xts = xts(t.obj$eraI10$data$wind_speed, order.by=tower.date)
@@ -1676,7 +1676,7 @@ PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
     lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$obs)
     corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
     legend("bottomleft", legend=c("Era-Interim at 10m", plot.10.ext),
-                                  # paste0("correlation = ", round(corr$estimate, 2))),
+           # paste0("correlation = ", round(corr$estimate, 2))),
            text.col=c(color$era, color$obs, color$black), horiz=T)
     mtext("relative anomaly", side=2, line=4, cex=3)
 
@@ -1694,7 +1694,7 @@ PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
     lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$obs)
     corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
     legend("bottomleft", legend=c("Era20C at 10m", plot.10.ext),
-                                  # paste0("correlation = ", round(corr$estimate, 2))),
+           # paste0("correlation = ", round(corr$estimate, 2))),
            text.col=c("cyan2", color$obs, color$black), horiz=T)
 
     mtext(paste0("Monthly relative wind speed\nanomalies at ",
@@ -2734,9 +2734,9 @@ PreparePlottingDifferenceDailyCycle <- function(tower.obj, fname) {
   fname.new = c(gsub("Difference", "10m-Difference", fname),
                 gsub("Difference", "100m-Difference", fname))
   PlotDifferenceDailyCycle(dayhourHerz10, dayhourHerz116,
-                        dayhourTower10, dayhourTower100,
-                        dayhourEra20c10, dayhourEra20c100,
-                        dayhourEraI10, dayhourEraI100, PS, fname.new)
+                           dayhourTower10, dayhourTower100,
+                           dayhourEra20c10, dayhourEra20c100,
+                           dayhourEraI10, dayhourEraI100, PS, fname.new)
 }
 
 #-----------------------------------------------------------------------------------
@@ -2865,12 +2865,12 @@ PreparePlottingHerzDailyCycle <- function(tower.obj, fname) {
     dummyEI100 = list()
     for (tstep in seq(24)) {
       dummyEC10$vals[[tstep]] = Era20C10Xts[which( tower.date$hour==tstep-1 &
-                                                   tower.date$mon==month.names$counts[cnt])]
+                                                     tower.date$mon==month.names$counts[cnt])]
       dummyEC10$mean[[tstep]] = mean(dummyEC10$vals[[tstep]])
       dummyEC10$sd[[tstep]] = sd(dummyEC10$vals[[tstep]])
 
       dummyEC100$vals[[tstep]] = Era20C100Xts[which( tower.date$hour==tstep-1 &
-                                                   tower.date$mon==month.names$counts[cnt])]
+                                                       tower.date$mon==month.names$counts[cnt])]
       dummyEC100$mean[[tstep]] = mean(dummyEC100$vals[[tstep]])
       dummyEC100$sd[[tstep]] = sd(dummyEC100$vals[[tstep]])
 
@@ -2880,7 +2880,7 @@ PreparePlottingHerzDailyCycle <- function(tower.obj, fname) {
       dummyEI10$sd[[tstep]] = sd(dummyEI10$vals[[tstep]])
 
       dummyEI100$vals[[tstep]] = EraI100Xts[which( tower.date$hour==tstep-1 &
-                                                   tower.date$mon==month.names$counts[cnt])]
+                                                     tower.date$mon==month.names$counts[cnt])]
       dummyEI100$mean[[tstep]] = mean(dummyEI100$vals[[tstep]])
       dummyEI100$sd[[tstep]] = sd(dummyEI100$vals[[tstep]])
 
@@ -3528,7 +3528,7 @@ PlotDifferenceDailyCycle <- function(Herz10, Herz116, Tower10, Tower100,
   if (as.character(PS$PST10$obs.name) == "Fino1" |
       as.character(PS$PST10$obs.name) == "Fino2") {
     title(main=paste0("Difference of daily cylce wind speed\nbetween reanalysis and ",
-                    as.character(PS$PST100$obs.name)), line=0.5, cex=1.5, outer=T)
+                      as.character(PS$PST100$obs.name)), line=0.5, cex=1.5, outer=T)
   }
 
   legend(legend.place, legend=c(paste0(as.character(PS$PS116$rea.name), " - ",
@@ -4373,9 +4373,12 @@ plotCorVals <- function(cor.list, ana.time.res, outdir) {
     title.versions = c("Six hourly correlation values",
                        "Three hourly correlation values",
                        "Hourly correlation values")
-    fname.versions = c(paste0(outdir, simpleCap(ana.time.res$time.res), "Mean_6hrs_correlation.pdf"),
-                       paste0(outdir, simpleCap(ana.time.res$time.res), "Mean_3hrs_correlation.pdf"),
-                       paste0(outdir, simpleCap(ana.time.res$time.res), "Mean_1hr_correlation.pdf"))
+    fname.versions = c(paste0(outdir, "test/", simpleCap(ana.time.res$time.res),
+                              "Mean_6hrs_correlation.pdf"),
+                       paste0(outdir, "test/", simpleCap(ana.time.res$time.res),
+                              "Mean_3hrs_correlation.pdf"),
+                       paste0(outdir, "test/", simpleCap(ana.time.res$time.res),
+                              "Mean_1hr_correlation.pdf"))
 
     for (tres in seq(1,3)) {
       pdf(fname.versions[tres], height=5, width=7.5)
