@@ -3077,13 +3077,15 @@ PlotDailyCycleHerz <- function(Herz10, Herz35, Herz69, Herz116, F100,
                                     paste0("ERA20C at ", as.character(PS$PSEC10$obs.height)),
                                     paste0(as.character(PS$PSF100$obs.name), " at ",
                                            as.character(PS$PSF100$obs.height))),
-             text.col=c("blue", "cyan2", "forestgreen", "green", "magenta"), cex=legend.cex)
+             pch=c(19,17,19,17), col=c("blue", "cyan2", "forestgreen", "green", "magenta"),
+             cex=legend.cex, text.col=c("blue", "cyan2", "forestgreen", "green", "magenta"))
     } else {
       legend(legend.place, legend=c(paste0("ERA-I at ", as.character(PS$PSEI100$obs.height)),
                                     paste0("ERA20C at ", as.character(PS$PSEC100$obs.height)),
                                     paste0("ERA-I at ", as.character(PS$PSEI10$obs.height)),
                                     paste0("ERA20C at ", as.character(PS$PSEC10$obs.height))),
-             text.col=c("blue", "cyan2", "forestgreen", "green"), cex=legend.cex)
+             pch=c(19,17,19,17), col=c("blue", "cyan2", "forestgreen", "green", "magenta"),
+             cex=legend.cex, text.col=c("blue", "cyan2", "forestgreen", "green"))
     }
 
     mtext(paste0("Daily cycle of ERA20C and ERA-I wind speed\nat tower location ",
@@ -4432,7 +4434,7 @@ plotCorVals <- function(cor.list, ana.time.res, outdir) {
         height=5, width=7.5)
     par(mar=c(5.5,4,2,0.5), las=1, cex=1.2, cex.lab=1.15)
 
-    plot(x, xaxt = "n", xlab="", ylab="", ylim=c(0.85,0.99))
+    plot(x, xaxt = "n", xlab="", ylab="", ylim=c(0.75,0.99))
     axis(side = 1, at = v1, labels = v2, las=2)
 
     for (cnt in seq(1,length(cor.list))) {
@@ -4457,7 +4459,7 @@ plotCorVals <- function(cor.list, ana.time.res, outdir) {
                               paste0("ERA20C")),
            pch=c(0,1,2), col=c("red", "darkgreen", "blue"),
            text.col=c("red", "darkgreen", "blue"), cex=0.9)
-    mtext(paste0(simpleCap(ana.time.res$time.res), " correlation values"),
+    mtext(paste0(simpleCap(ana.time.res$time.res), " correlations based on native temporal resolution"),
           line=0.5, cex=1.5)
     title(ylab="Pearson's correlation", line=3)
 
