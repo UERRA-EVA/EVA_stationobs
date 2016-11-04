@@ -647,20 +647,20 @@ GetObsObject <- function(obs.xts, obs2.xts=NULL, obs3.xts=NULL,
                            obs.height=strsplit(obs.param, '_')[[6]][[2]])
   }
 
-  herz10.df = DefineDataDF(herz10.xts, rea.name="HErZ", obs.name, obs.lat, obs.lon,
+  herz10.df = DefineDataDF(herz10.xts, rea.name="COSMO-REA6", obs.name, obs.lat, obs.lon,
                            obs.height="10m")
   if (!only.10m) {
-    herz116.df = DefineDataDF(herz116.xts, rea.name="HErZ", obs.name, obs.lat, obs.lon,
+    herz116.df = DefineDataDF(herz116.xts, rea.name="COSMO-REA6", obs.name, obs.lat, obs.lon,
                               obs.height="116m")
   }
   if (herz.profile) {
-    herz35.df = DefineDataDF(herz35.xts, rea.name="HErZ", obs.name, obs.lat, obs.lon,
+    herz35.df = DefineDataDF(herz35.xts, rea.name="COSMO-REA6", obs.name, obs.lat, obs.lon,
                              obs.height="35m")
-    herz69.df = DefineDataDF(herz69.xts, rea.name="HErZ", obs.name, obs.lat, obs.lon,
+    herz69.df = DefineDataDF(herz69.xts, rea.name="COSMO-REA6", obs.name, obs.lat, obs.lon,
                              obs.height="69m")
-    herz178.df = DefineDataDF(herz178.xts, rea.name="HErZ", obs.name, obs.lat, obs.lon,
+    herz178.df = DefineDataDF(herz178.xts, rea.name="COSMO-REA6", obs.name, obs.lat, obs.lon,
                               obs.height="178m")
-    herz258.df = DefineDataDF(herz258.xts, rea.name="HErZ", obs.name, obs.lat, obs.lon,
+    herz258.df = DefineDataDF(herz258.xts, rea.name="COSMO-REA6", obs.name, obs.lat, obs.lon,
                               obs.height="258m")
   }
 
@@ -776,12 +776,18 @@ Get10mRRAObsObject <- function(obs.xts, rra10.xts, rra10.hourly.xts=NULL,
                       latitude=obs.lat, longitude=obs.lon,
                       wind_speed=coredata(obs.xts),
                       height="10m")
+  col.names = c("date", "ReanaName", "StationName", "latitude", "longitude",
+                "wind_speed", "height")
+  colnames(obs.df) = col.names
 
   rra10.df = data.frame(date=index(rra10.xts),
                         ReanaName=rra.name, StationName=obs.name,
                         latitude=obs.lat, longitude=obs.lon,
                         wind_speed=coredata(rra10.xts),
                         height="10m")
+  col.names = c("date", "ReanaName", "StationName", "latitude", "longitude",
+                "wind_speed", "height")
+  colnames(rra10.df) = col.names
 
   if (!is.null(rra10.hourly.xts)) {
     rra10.hourly.df = data.frame(date=index(rra10.hourly.xts),
@@ -870,11 +876,7 @@ GetRandomClimObject <- function(obs.xts, forec.xts) {
 #' @importFrom xts merge.xts
 #' @export
 AligneRRA2Obsxts <- function(stat.xts, rra.xts) {
-
-  merged.xts = merge.xts(rra.xts, stat.xts)
-  aligned.rra.xts = merged.xts$rra.xts
-
-  return(aligned.rra.xts)
+  return(merge.xts(rra.xts, stat.xts)[,1])
 }
 
 #-----------------------------------------------------------------------------------

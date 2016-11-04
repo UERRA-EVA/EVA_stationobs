@@ -156,7 +156,7 @@ rra.param = c("windspeed_10m")
 
 # names of the reanalyses
 eraI.name = "ERA-Interim"
-herz.name = "HErZ"
+herz.name = "COSMO-REA6"
 smhi.name = "SMHI"
 mo.name = "MetOffice"
 mf.name = "Meteo France"
