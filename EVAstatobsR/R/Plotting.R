@@ -1623,7 +1623,7 @@ PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
   lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col=color$era)
   lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$obs)
   corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
-  legend("bottomleft", legend=c("Era-Interim at 100m", plot.100.ext),
+  legend("bottomleft", legend=c("ERA-Interim at 100m", plot.100.ext),
          # paste0("correlation = ", round(corr$estimate, 2))),
          text.col=c(color$era, color$obs, color$black), horiz=T)
   mtext("relative anomaly", side=2, line=4, cex=3)
@@ -1675,7 +1675,7 @@ PlotTowerERAprofileRelDiff <- function(tower.obj, fname) {
     lines(RelDiff(h.xts, mean(h.xts)), type="b", pch=16, col=color$era)
     lines(RelDiff(l.xts, mean(l.xts)), type="b", pch=16, col=color$obs)
     corr = cor.test(as.numeric(h.xts), as.numeric(l.xts))
-    legend("bottomleft", legend=c("Era-Interim at 10m", plot.10.ext),
+    legend("bottomleft", legend=c("ERA-Interim at 10m", plot.10.ext),
            # paste0("correlation = ", round(corr$estimate, 2))),
            text.col=c(color$era, color$obs, color$black), horiz=T)
     mtext("relative anomaly", side=2, line=4, cex=3)
@@ -4015,7 +4015,7 @@ PlotTowerExtremesList <- function(fname, scores, ylims.df, threshold, PS,
   score.names = names(scores[[1]])
   col.names = c("green", "blue", "red", "magenta", "black", "orange")
   pdf(fname, width=PS$PST1$land.a4width, height=PS$PST1$land.a4height)
-  par(mfrow=c(2,2), oma=c(0.5,0.5,0.5,0.5), mar=c(2,2,2,0), cex=0.8)
+  par(mfrow=c(2,2), oma=c(0.5,0.5,0.5,0.5), mar=c(2,2,2,0), cex=1.2)
 
   for (plot.step in seq(score.names)) {
     for (cnt in seq(scores)) {
@@ -4023,7 +4023,7 @@ PlotTowerExtremesList <- function(fname, scores, ylims.df, threshold, PS,
       if (cnt==1) {
         if (is.null(title.name)) {
           titleName = paste0(score.names[plot.step]," of ", PS$PST1$time.agg, " means at ",
-                             PS$PST1$obs.name, " at different heights")
+                             PS$PST1$obs.name)
         } else {
           titleName = gsub(" of", paste0(score.names[plot.step], " of"), title.name)
         }
@@ -4055,8 +4055,8 @@ PlotTowerExtremesList <- function(fname, scores, ylims.df, threshold, PS,
       }
     }
     # placement of legend depending on plot of score
-    if (plot.step <= 3 | plot.step >= 9 & plot.step <= 11) legend.place="top"
-    if (plot.step >= 4 & plot.step <= 6 | plot.step == 8 | plot.step == 12) legend.place="bottom"
+    if (plot.step >= 2 & plot.step <= 3 | plot.step >= 9 & plot.step <= 10) legend.place="top"
+    if (plot.step == 1 | plot.step >= 4 & plot.step <= 6 | plot.step == 8 | plot.step >= 11) legend.place="bottom"
     if (plot.step == 7) legend.place == "topleft"
     if (length(scores) == 5) { # now this is Cabauw
       legend(legend.place, legend=c(as.character(PS$PST1$obs.height),
@@ -4099,15 +4099,21 @@ PlotTowerExtremesList <- function(fname, scores, ylims.df, threshold, PS,
 PlotTowerHRvsFAR <- function(fname, FAR, HR, threshold, PS,
                              title.name=NULL) {
 
+  cex.labs = 1.5
+  cex.title = 1.75
   pdf(fname, width=PS$land.a4width, height=PS$land.a4height)
+  par(mfrow=c(1,1), mar=c(3,4,4,0.5))
 
   if(is.null(title.name)) {
     title.name = paste0("Hit rate and False alarm ratio of ", PS$time.agg, " ",
                         PS$obs.height, " WS at ", PS$obs.name, " vs ", PS$rea.name)
   }
   plot(threshold, HR, xlim = c(0,1), ylim=c(0,1), col="blue", pch=16, type="p",
-       main = title.name, xlab="", ylab="")
+       main = "", xlab="", ylab="")
   lines(threshold, FAR, col="red", pch=16, type="p", xlab="", ylab="")
+  mtext("percentile", side=1, line=2, cex=cex.labs)
+  mtext("skill score value", side=2, line=2.5, cex=cex.labs)
+  mtext(title.name, side=3, line=1.5, cex=cex.title)
 
   dev.off()
 }
@@ -4125,21 +4131,25 @@ PlotTowerHRvsFAR <- function(fname, FAR, HR, threshold, PS,
 #' @param title.name a string as title can be passed, otherwise it is NULL by default.
 PlotTowerHRvsFARList <- function(fname, scores, threshold, PS, title.name=NULL) {
 
+  cex.labs = 1.5
+  cex.title = 1.75
   score.names = names(scores[[1]])
   col.names = c("green", "blue", "red", "magenta", "black", "orange")
   pdf(fname, width=PS$PST1$land.a4width, height=PS$PST1$land.a4height)
+  par(mfrow=c(1,1), mar=c(3,4,4,0.5))
 
   if(is.null(title.name)) {
     title.name = paste0("Hit rate vs False alarm ratio of ", PS$PST1$time.agg,
-                        " means at ", PS$PST1$obs.name, " at different heights")
+                        " means at ", PS$PST1$obs.name)
   }
 
   for (cnt in seq(scores)) {
     if (cnt==1) {
       plot(threshold, scores[[cnt]]$hit.rate, xlim = c(0,1), ylim=c(0,1),
-           col=col.names[[cnt]], pch=16, type="p", main = title.name, xlab="", ylab="")
+           col=col.names[[cnt]], pch=16, type="p", xlab="", ylab="", main = "",
+           cex.axis=cex.labs)
       lines(threshold, scores[[cnt]]$false.alarm.ratio, col=col.names[[cnt]], pch=16,
-            type="p", xlab="", ylab="")
+            type="p")
     } else {
       lines(threshold, scores[[cnt]]$hit.rate, col=col.names[[cnt]], pch=16,
             type="p")
@@ -4169,6 +4179,9 @@ PlotTowerHRvsFARList <- function(fname, scores, threshold, PS, title.name=NULL) 
            pch=16, col=col.names[1:length(scores)],
            text.col=col.names[1:length(scores)])
   }
+  mtext("percentile", side=1, line=2, cex=cex.labs)
+  mtext("skill score value", side=2, line=2.5, cex=cex.labs)
+  mtext(title.name, side=3, line=1.5, cex=cex.title)
 
   dev.off()
 }
@@ -4241,7 +4254,7 @@ scatterPlot <- function(X, Y, yliml, ylimh, titname, xlabname, ylabname,
 #'   will be plotted.
 #' @export
 histoPlot <- function(X, Y, breaks, xlims, titname='', xlabname='', ylabname='',
-                      xaxis='s', yaxis='s', axis.cex=1.2, tit.cex=1.1,
+                      xaxis='s', yaxis='s', axis.cex=1.1, lab.cex= 1.1, tit.cex=1.2,
                       addPlot=FALSE) {
 
   if (addPlot) {
@@ -4252,24 +4265,24 @@ histoPlot <- function(X, Y, breaks, xlims, titname='', xlabname='', ylabname='',
     # plot both histograms
     hist(X, freq=F, breaks=breaks, xlim=xlims, ylim=c(0.0, ylimh),
          col="green", border="blue", main="", xlab="", ylab="",
-         xaxt=xaxis, yaxt=yaxis)
+         xaxt=xaxis, yaxt=yaxis, cex.axis=axis.cex)
     hist(Y, freq=F, add=T, breaks=breaks, border="blue", density=10, angle=45)
   } else {
     hist(X, freq=F, breaks=breaks, xlim=xlims, col="green", border="blue",
-         main="", xlab="", ylab="", xaxt=xaxis, yaxt=yaxis)
+         main="", xlab="", ylab="", xaxt=xaxis, yaxt=yaxis, cex.axis=axis.cex)
     #     lines(density(X, na.rm=TRUE), col="red", lw=1.5)
   }
   if (xaxis == 's') {
-    mtext(xlabname, side=1, line=2, cex=axis.cex)
+    mtext(xlabname, side=1, line=3, cex=lab.cex)
   } else {
-    mtext(xlabname, side=1, line=0, cex=axis.cex)
+    mtext(xlabname, side=1, line=0, cex=lab.cex)
   }
   if(yaxis == 's') {
-    mtext(ylabname, side=2, line=2, cex=axis.cex)
+    mtext(ylabname, side=2, line=3, cex=lab.cex)
   } else {
-    mtext(ylabname, side=2, line=0, cex=axis.cex)
+    mtext(ylabname, side=2, line=0, cex=lab.cex)
   }
-  mtext(titname, side=3, line=1, cex=tit.cex)
+  mtext(titname, side=3, line=2, cex=tit.cex)
 }
 
 #-----------------------------------------------------------------------------------
@@ -4319,7 +4332,7 @@ qqPlot <- function(X, Y, yliml, ylimh,
 #' @param vals vector of the plotted values of which the statistics are calculated
 #' @importFrom fitdistrplus fitdist
 #' @export
-plotLegendStats <- function(xlims, vals, weibull=TRUE) {
+plotLegendStats <- function(xlims, vals, cex.text=1.0, weibull=TRUE) {
 
   if (any(!is.finite(vals))) weibull = FALSE
   if (weibull) {
@@ -4334,26 +4347,29 @@ plotLegendStats <- function(xlims, vals, weibull=TRUE) {
   }
 
   if (weibull) {
-    legend("topright", bty = "n",
-           legend = c(paste0("n = ", length(vals),
-                             "\nmean = ", round(mean(vals, na.rm = TRUE), 2),
-                             "\nmedian = ", round(median(vals, na.rm = TRUE), 2),
-                             "\n1% = ", round(quantile(vals, 0.01, na.rm = TRUE), 2),
-                             "\n99% = ", round(quantile(vals, 0.99, na.rm = TRUE), 2)),
-                      paste0("Weibull fit with", "\n  k =",
-                             format(round(daily.weibull$estimate[1], 2)),
-                             " (", round(SshapeCI[1],2), "-", round(SshapeCI[2], 2), ")",
-                             "\n  c =", format(round(daily.weibull$estimate[2],2)),
-                             " (", round(SscaleCI[1], 2), "-", round(SscaleCI[2],2), ")")),
-           cex = 0.8)
+    text(par("usr")[1]+0.67*diff(par("usr")[1:2]),
+         par("usr")[3]+0.75*diff(par("usr")[3:4]),
+         paste0("n = ", length(vals),
+                "\nmean = ", round(mean(vals, na.rm = TRUE), 2),
+                "\nmedian = ", round(median(vals, na.rm = TRUE), 2),
+                "\n1% = ", round(quantile(vals, 0.01, na.rm = TRUE), 2),
+                "\n99% = ", round(quantile(vals, 0.99, na.rm = TRUE), 2),
+                "\n\nWeibull fit with", "\n  k =",
+                format(round(daily.weibull$estimate[1], 2)),
+                " (", round(SshapeCI[1],2), "-", round(SshapeCI[2], 2), ")",
+                "\n  c =", format(round(daily.weibull$estimate[2],2)),
+                " (", round(SscaleCI[1], 2), "-", round(SscaleCI[2],2), ")"),
+         cex=cex.text, adj=c(0,NA))
   } else {
-    legend("topright", bty = "n",
-           legend = c(paste0("n = ", length(vals), " d"),
-                      paste0("mean = ", round(mean(vals, na.rm = TRUE), 2)),
-                      paste0("median = ", round(median(vals, na.rm = TRUE), 2)),
-                      paste0("1% = ", round(quantile(vals, 0.01, na.rm = TRUE), 2)),
-                      paste0("99% = ", round(quantile(vals, 0.99, na.rm = TRUE), 2))),
-           cex = 0.8)
+    text(par("usr")[1]+0.67*diff(par("usr")[1:2]),
+         par("usr")[3]+0.75*diff(par("usr")[3:4]),
+         paste0(
+                # "n = ", length(vals),
+                "mean = ", round(mean(vals, na.rm = TRUE), 2),
+                "\nmedian = ", round(median(vals, na.rm = TRUE), 2),
+                "\n1% = ", round(quantile(vals, 0.01, na.rm = TRUE), 2),
+                "\n99% = ", round(quantile(vals, 0.99, na.rm = TRUE), 2)),
+                cex=cex.text, adj=c(0,NA))
   }
 }
 

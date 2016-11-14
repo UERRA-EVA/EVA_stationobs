@@ -197,8 +197,10 @@ fname_ext = "2008to2009"
 # The following switches decide on which plots to generate
 
 # time series between reanalyses and station data at 10m height
-plot.TS = T
+plot.TS = F
 # scatter (and QQ) plot between reanalyses and station data at 10m height
-plot.scatter = T
+plot.scatter = F
+# frequency distribution plot of reanalyses and station data at 10m height
+plot.distribution = F
 # plot extreme value analysis
 plot.Extremes = T

@@ -14,13 +14,17 @@ PlotHist_SeparatePlots <- function(fname, data.vals, data.date, titname) {
   xlabname = "wind speed [m/s]"
   ylabname = "Density"
 
-  xycex=3.0
+  xycex=1.5
+  tit.cex=3.0
+  lab.cex=2.0
+  cex.text=1.5
   pdf(fname, width=PS$land.a4width/0.75, height=PS$land.a4height)
-  par(mar=c(3,3,3.25,0.5), mgp=c(3,0.5,0), cex=xycex)
+  par(mar=c(4,4,6,0.5), mgp=c(3,1,0), cex=xycex)
 
   histoPlot(data.vals, dummy, breaks, xlims=c(0,30),
-            titname, xlabname, ylabname, axis.cex=xycex, tit.cex=3.5)
-  # plotLegendStats(xlims=c(min.val, max.val), as.numeric(data.vals), weibull=T)
+            titname, xlabname, ylabname, axis.cex=xycex, lab.cex=lab.cex, tit.cex=tit.cex)
+  plotLegendStats(xlims=c(min.val, max.val), as.numeric(data.vals),
+                  cex.text=cex.text, weibull=F)
 
   dev.off()
 }

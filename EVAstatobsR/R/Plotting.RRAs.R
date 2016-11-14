@@ -33,7 +33,7 @@ LegendWithCorr <- function(obs.vals, rra.vals, conf.lev,
 #'   of the data to be read.
 #' @param hourly.switch a boolean to decided whether to plot hourly data (T); or at
 #'   time res of the RRA only (F)
-#' @param fname is a string holding file name of the pdf plot to be created.
+#' @param fname is a string holding the file name of the pdf plot to be created.
 #' @param station.name is a string holding the station name at which location the
 #'   distribution data was extraced
 #' @importFrom xts xts
@@ -94,7 +94,7 @@ GetRRAxts <- function(herz.obj, smhi.obj, mo.obj, mf.obj, ana.time.res,
 #'   of the data to be read.
 #' @param hourly.switch a boolean to decided whether to plot hourly data (T); or at
 #'   time res of the RRA only (F)
-#' @param fname is a string holding file name of the pdf plot to be created.
+#' @param fname is a string holding the file name of the pdf plot to be created.
 #' @param station.name is a string holding the station name at which location the
 #'   distribution data was extraced
 #' @importFrom zoo index
@@ -161,7 +161,7 @@ PlotRRAtimeSeries <- function(herz.obj, smhi.obj, mo.obj, mf.obj, fname,
     dummy = xts(numeric(length=length(herz.obj$rra10$data$wind_speed)) * NA,
                 order.by=herz.obj$rra10$data$date)
     plot(dummy, ylim=c(yliml, ylimh), xaxt="n",
-         main=paste0(titname, "HErZ reanalysis"))
+         main=paste0(titname, "COSMO-REA6 reanalysis"))
     lines(herz.obs.xts, col=col.obs, pch=pch.obs, type="p", cex=cex.size)
     lines(herz.rra.xts, col=col.herz, pch=pch.rra, type="p", cex=cex.size)
     corr = cor.test(as.numeric(herz.obs.xts), as.numeric(herz.rra.xts),
@@ -169,7 +169,7 @@ PlotRRAtimeSeries <- function(herz.obj, smhi.obj, mo.obj, mf.obj, fname,
     legend("topright", legend=c(paste0("corr = ", round(corr$estimate, 2),
                                        " (", round(corr$conf.int[[1]], 2), ", ",
                                        round(corr$conf.int[[2]], 2), ")"),
-                                station.name, "HErZ"),
+                                station.name, "COSMO-REA6"),
            text.col=c("black", "black", "green"), cex=legend.cex)
 
     plot(dummy, ylim=c(yliml, ylimh), xaxt="n",
@@ -203,7 +203,7 @@ PlotRRAtimeSeries <- function(herz.obj, smhi.obj, mo.obj, mf.obj, fname,
     lines(mo.rra.xts, col=col.mo, pch=pch.rra, type="p", cex=cex.size)
     lines(herz.obs.xts, col=col.light.obs, pch=pch.obs, type="p", cex=cex.size)
     # lines(mf.rra.xts, col="magenta", pch=pch.rra, type="p")
-    legend("topright", legend=c("HErZ", "SMHI", "MetOffice"),
+    legend("topright", legend=c("COSMO-REA6", "SMHI", "MetOffice"),
            text.col=c("green", col.smhi, col.mo), cex=legend.cex)
 
     dev.off()
@@ -211,8 +211,10 @@ PlotRRAtimeSeries <- function(herz.obj, smhi.obj, mo.obj, mf.obj, fname,
 
   } else {
 
-    start.time = "2009-08-08 00:00:00"
-    end.time = "2009-08-10 23:00:00"
+    # start.time = "2009-08-08 00:00:00"
+    # end.time = "2009-08-10 23:00:00"
+    start.time = "2008-02-26 00:00:00"
+    end.time = "2008-03-05 23:00:00"
     idx.herz = (which(index(herz.rra.xts) >=
                         as.POSIXct(as.POSIXct(strptime(start.time, format="%Y-%m-%d %H:%M:%S"),
                                               format="%Y-%m-%d %H:%M:%S", tz = "UTC"))
@@ -236,11 +238,11 @@ PlotRRAtimeSeries <- function(herz.obj, smhi.obj, mo.obj, mf.obj, fname,
 
     dummy.herz = xts(numeric(length=length(herz.rra.xts)) * NA, order.by=index(herz.rra.xts))
     plot(dummy.herz[idx.herz], ylim=c(yliml, ylimh), xaxt="n",
-         main=paste0(titname, "HErZ reanalysis"))
+         main=paste0(titname, "COSMO-REA6 reanalysis"))
     lines(herz.obs.xts[idx.herz], col=col.obs, pch=pch.obs, type="p", cex=cex.size)
     lines(herz.rra.xts[idx.herz], col=col.herz, pch=pch.rra, type="p", cex=cex.size)
     LegendWithCorr(as.numeric(herz.obs.xts[idx.herz]), as.numeric(herz.rra.xts[idx.herz]),
-                   conf.lev=conf.lev, stat.name=station.name, rra.name="HErZ",
+                   conf.lev=conf.lev, stat.name=station.name, rra.name="COSMO-REA6",
                    leg.pos="topright", col.rra=col.herz, col.obs=col.obs, leg.cex=legend.cex)
 
     dummy = xts(numeric(length=length(smhi.rra.xts)) * NA, order.by=index(smhi.rra.xts))
@@ -262,13 +264,13 @@ PlotRRAtimeSeries <- function(herz.obj, smhi.obj, mo.obj, mf.obj, fname,
                    leg.pos="topright", col.rra=col.mo, col.obs=col.obs, leg.cex=legend.cex)
 
     plot(dummy.herz[idx.herz], ylim=c(yliml, ylimh),
-         main="Wind speed of HErZ, SMHI, and MetOffice reanalysis")
+         main="Wind speed of COSMO-REA6, SMHI, and MetOffice reanalysis")
     lines(herz.rra.xts[idx.herz], col=col.herz, pch=pch.rra, type="p", cex=cex.size)
     lines(smhi.rra.xts[idx.smhi], col=col.smhi, pch=pch.rra, type="p", cex=cex.size)
     lines(mo.rra.xts[idx.mo], col=col.mo, pch=pch.rra, type="p", cex=cex.size)
     # lines(mf.rra.xts, col="magenta", pch=pch.rra, type="p")
     lines(herz.obs.xts, col=col.light.obs, pch=pch.obs, type="p", cex=cex.size)
-    legend("topleft", legend=c("HErZ", "SMHI", "MetOffice"),
+    legend("topleft", legend=c("COSMO-REA6", "SMHI", "MetOffice"),
            text.col=c(col.herz, col.smhi, col.mo), cex=legend.cex)
 
     dev.off()
@@ -286,7 +288,7 @@ PlotRRAtimeSeries <- function(herz.obj, smhi.obj, mo.obj, mf.obj, fname,
 #'   of the data to be read.
 #' @param hourly.switch a boolean to decided whether to plot hourly data (T); or at
 #'   time res of the RRA only (F)
-#' @param fname is a string holding file name of the pdf plot to be created.
+#' @param fname is a string holding the file name of the pdf plot to be created.
 #' @param station.name is a string holding the station name at which location the
 #'   distribution data was extraced
 #' @importFrom xts xts
@@ -330,7 +332,7 @@ PlotRRAscatterQQ <- function(herz.obj, smhi.obj, mo.obj, mf.obj, fname,
       onefile=TRUE, pointsize=13)
   par(mfrow=c(1,1), mar=c(4,3,2,0), oma=c(0,1,0,0.5), cex.main=1.0)
 
-  text.str = "10m HErZ wind speed"
+  text.str = "10m COSMO-REA6 wind speed"
   scatterPlot(coredata(herz.rra.xts), coredata(herz.obs.xts), yliml, ylimh, titname,
               xlabname, ylabname, text.str=text.str, plot.col=col.herz)
 
@@ -356,16 +358,94 @@ PlotRRAscatterQQ <- function(herz.obj, smhi.obj, mo.obj, mf.obj, fname,
 
 #-----------------------------------------------------------------------------------
 
+#' @title Plot frequency distribution of different RRAs.
+#' @param herz.obj,smhi.obj,mo.obj,mf.obj ClimObjects of the differenct regional
+#'   reanalyses
+#' @param fname is a string holding the file name of the pdf plot to be created.
+#' @param station.name is a string holding the station name for which the plot is
+#'   created.
+#' @param threshold numeric sequence of percentiles between 0 and 1
+#' @export
+PlotRRAhisto <- function(herz.obj, smhi.obj, mo.obj, mf.obj, fname,
+                         station.name) {
+
+  PS = PlottingSettings(herz.obj$rra10$data)
+  pdf(fname, width=PS$land.a4width, height=PS$land.a4height,
+      onefile=TRUE, pointsize=13)
+  par(mfrow=c(1,1), mar=c(5,5,6,0))
+
+  rra.ws = herz.obj$rra10$data$wind_speed
+  stat.ws = herz.obj$obs$data$wind_speed
+  min.val = floor(min(min(rra.ws, na.rm=TRUE), min(stat.ws, na.rm=TRUE)))
+  max.val = ceiling(max(max(rra.ws, na.rm=TRUE), max(stat.ws, na.rm=TRUE)))
+  breaks = seq(min.val, max.val, 0.5)
+
+  xlabname = "wind speed [m/s]"
+  ylabname = "Density"
+  titname.hist = paste0("\nFrequency distribution for COSMO-REA6\nat location ", station.name,
+                        " for 2008/2009")
+  dummy = numeric(length=length(rra.ws)) * NA
+  histoPlot(rra.ws, dummy, breaks, xlims=c(min.val, max.val),
+            titname.hist, xlabname, ylabname, axis.cex=2.0, tit.cex=2.0)
+  plotLegendStats(xlims=c(min.val, max.val), rra.ws, cex.text=1.5, weibull=F)
+  titname.hist = paste0("Frequency distribution of station ", station.name,
+                        " for 2008/2009")
+  histoPlot(stat.ws, dummy, breaks, xlims=c(min.val, max.val),
+            titname.hist, xlabname, ylabname, axis.cex=2.0, tit.cex=2.0)
+  plotLegendStats(xlims=c(min.val, max.val), stat.ws, cex.text=1.5, weibull=F)
+  titname.hist = paste0("\nFrequency distribution for COSMO-REA6 (green)\nand station ",
+                        station.name, " (shaded) for 2008/2009")
+  histoPlot(rra.ws, stat.ws, breaks, xlims=c(min.val, max.val),
+            titname.hist, xlabname, ylabname, axis.cex=2.0, tit.cex=2.0, addPlot=T)
+
+
+  rra.ws = smhi.obj$rra10$data$wind_speed
+  stat.ws = smhi.obj$obs$data$wind_speed
+  min.val = floor(min(min(rra.ws, na.rm=TRUE), min(stat.ws, na.rm=TRUE)))
+  max.val = ceiling(max(max(rra.ws, na.rm=TRUE), max(stat.ws, na.rm=TRUE)))
+  breaks = seq(min.val, max.val, 0.5)
+  titname.hist = paste0("\nFrequency distribution for SMHI\nat location ", station.name,
+                        " for 2008/2009")
+  histoPlot(rra.ws, dummy, breaks, xlims=c(min.val, max.val),
+            titname.hist, xlabname, ylabname, axis.cex=2.0, tit.cex=2.0)
+  plotLegendStats(xlims=c(min.val, max.val), rra.ws, cex.text=1.5, weibull=F)
+  titname.hist = paste0("\nFrequency distribution for SMHI (green)\nand station ",
+                        station.name, " (shaded) for 2008/2009")
+  histoPlot(rra.ws, stat.ws, breaks, xlims=c(min.val, max.val),
+            titname.hist, xlabname, ylabname, axis.cex=2.0, tit.cex=2.0, addPlot=T)
+
+
+  rra.ws = mo.obj$rra10$data$wind_speed
+  stat.ws = mo.obj$obs$data$wind_speed
+  min.val = floor(min(min(rra.ws, na.rm=TRUE), min(stat.ws, na.rm=TRUE)))
+  max.val = ceiling(max(max(rra.ws, na.rm=TRUE), max(stat.ws, na.rm=TRUE)))
+  breaks = seq(min.val, max.val, 0.5)
+  titname.hist = paste0("\nFrequency distribution for MetOffice\nat location ",
+                        station.name, " for 2008/2009")
+  histoPlot(rra.ws, dummy, breaks, xlims=c(min.val, max.val),
+            titname.hist, xlabname, ylabname, axis.cex=2.0, tit.cex=2.0)
+  plotLegendStats(xlims=c(min.val, max.val), rra.ws, cex.text=1.5, weibull=F)
+  titname.hist = paste0("\nFrequency distribution for MetOffice (green)\nand station ",
+                        station.name, " (shaded) for 2008/2009")
+  histoPlot(rra.ws, stat.ws, breaks, xlims=c(min.val, max.val),
+            titname.hist, xlabname, ylabname, axis.cex=2.0, tit.cex=2.0, addPlot=T)
+
+  dev.off()
+
+}
+
+#-----------------------------------------------------------------------------------
+
 #' @title Plot RRA monthly and hourly scatter plots.
 #' @param rra.obj is a ClimObject which holds the RRA data.
-#' @param fname is a string holding file name of the pdf plot to be created.
+#' @param fname is a string holding the file name of the pdf plot to be created.
 #' @param threshold numeric sequence of percentiles between 0 and 1
 #' @export
 PlotRRAextremes <- function(rra.obj, fname, threshold) {
 
   PS = PlottingSettings(rra.obj$rra10$data)
 
-  if (PS$rea.name == "HErZ") {
+  if (PS$rea.name == "COSMO-REA6") {
     obs = rra.obj$obs$data$wind_speed
   } else {
     obs = rra.obj$stats.atrra$data$wind_speed
@@ -386,7 +466,7 @@ PlotRRAextremes <- function(rra.obj, fname, threshold) {
 #' @title Plot (four/)three RRA monthly and hourly scatter plots.
 #' @param herz.obj,smhi.obj,mo.obj ClimObjects of the differenct regional
 #'   reanalyses
-#' @param fname is a string holding file name of the pdf plot to be created.
+#' @param fname is a string holding the file name of the pdf plot to be created.
 #' @param threshold numeric sequence of percentiles between 0 and 1
 #' @export
 PlotAllRRAextremes <- function(herz.obj, smhi.obj, mo.obj, fname, threshold) {
